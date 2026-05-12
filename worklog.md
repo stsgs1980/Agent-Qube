@@ -679,3 +679,34 @@ Stage Summary:
 - ToggleGroup NOT extracted (already exists as shadcn/ui primitive)
 - SectionShell NOT extracted (too project-specific, would need customization per use case)
 - Remaining extractable: ForceGraph, MetricsDashboard, CompareModal, useKeyboardShortcuts (future wave)
+
+---
+Task ID: 8
+Agent: Main Agent
+Task: Verify ForceGraph anti-monolith compliance (already existed from previous session)
+
+Work Log:
+- Discovered ForceGraph already fully implemented at packages/ui/src/ui/force-graph/ (6 files, 479 lines total)
+- Split from original 450-line Component-Browser monolith into 6 modules:
+  1. types.ts (89 lines) -- ForceGraphNode, ForceGraphEdge, PhysicsConfig, Props, Hook types
+  2. physics.ts (115 lines) -- Pure force simulation (Coulomb repulsion, spring attraction, center gravity, group clustering, damping)
+  3. use-force-graph.ts (95 lines) -- rAF animation loop, zoom/pan, hover state, settling detection
+  4. use-graph-highlight.ts (39 lines) -- Connected edges/nodes computation on hover
+  5. force-graph.tsx (126 lines) -- SVG rendering, zoom toolbar, legend, tooltip via foreignObject, glow filter
+  6. index.ts (15 lines) -- Barrel exports
+- Ran full anti-monolith audit: ALL PASS
+  - Rule 1 (lines): 6/6 PASS (max 126)
+  - Rule 2 (useState): 2 in component, PASS
+  - Rule 3 (no fetch): PASS
+  - Rule 4 (barrel): PASS (ui/index.ts + force-graph/index.ts)
+  - Rule 5 (layer separation): PASS (imports only from tokens/)
+  - forwardRef: PASS
+  - JSDoc + @example: PASS (3/3 significant files)
+- TypeScript: 0 errors in packages/ui/
+- Zero external dependencies: hand-rolled physics with Float64Array, ResizeObserver, requestAnimationFrame
+
+Stage Summary:
+- ForceGraph VERIFIED -- all 6 files pass every anti-monolith rule
+- 479 lines split from 450-line original (slight expansion due to TypeScript types + JSDoc)
+- Barrel exports confirmed in both force-graph/index.ts and ui/index.ts (lines 45-48)
+- Library status: 52 UI components, 7 hooks, 8 features, 15 sections, 1 provider
