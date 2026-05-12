@@ -42,6 +42,10 @@ export { CopyButton } from './copy-button'
 export type { CopyButtonProps } from './copy-button'
 export { CodeBlock } from './code-block'
 export type { CodeBlockProps } from './code-block'
+export { ForceGraph } from './force-graph'
+export { useForceGraph } from './force-graph'
+export { runPhysics } from './force-graph'
+export type { ForceGraphProps, ForceGraphNode, ForceGraphEdge, PhysicsConfig } from './force-graph'
 
 // ─── shadcn/ui Components (48) ────────────────────────────────
 // Extracted from Component-Browser-Public-v1.0 browser-app
