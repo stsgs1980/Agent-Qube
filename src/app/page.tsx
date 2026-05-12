@@ -8,6 +8,7 @@ import { VariantPromptStudio } from '@/components/layout/prompt-studio'
 import { VariantLayoutExplorer } from '@/components/layout/layout-explorer'
 import { VariantAICanvas } from '@/components/layout/ai-canvas'
 import { LayoutThemeProvider, useLayoutTheme } from '@/lib/layout/theme'
+import { ProjectThemeProvider } from '@/lib/layout/project-theme'
 import { ThemePresetSelector } from '@/components/layout/theme-preset-selector'
 import { spacing, fontSize, fontWeight } from '@/lib/layout/tokens'
 
@@ -113,7 +114,9 @@ function AppContent() {
 export default function Home() {
   return (
     <LayoutThemeProvider>
-      <AppContent />
+      <ProjectThemeProvider>
+        <AppContent />
+      </ProjectThemeProvider>
     </LayoutThemeProvider>
   )
 }

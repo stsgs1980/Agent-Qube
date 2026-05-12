@@ -519,3 +519,44 @@ Stage Summary:
 - @stsgs/prompting fully created at src/lib/prompting/ (14 files, 3620 lines)
 - All integration points ready for route.ts and prompt-studio.tsx
 - Commit made locally; push requires GitHub token setup
+
+---
+Task ID: 3
+Agent: main (Super Z)
+Task: Implement Dual Theme System -- StudioThemeProvider + ProjectThemeProvider
+
+Work Log:
+- Analyzed current theme architecture: theme.tsx already uses registry, [data-theme] CSS, 5 presets
+- Confirmed theme engine refactoring (items 1-10 from studio-vision.md) was already completed
+- Designed dual theme architecture: Studio (outer, stable) + Project (inner, dynamic)
+- Created src/lib/layout/project-theme.tsx:
+  - ProjectThemeProvider with independent state (default: 'champagne')
+  - useProjectTheme() hook returning { mode, preset, tokens, toggle, setMode, setPreset }
+  - Sets data-project-theme attribute on wrapper div via ref
+  - SSR-safe via useMounted(), WCAG 2.4.7 focus ring support
+- Added studio aliases in theme.tsx:
+  - StudioThemeProvider = LayoutThemeProvider
+  - useStudioTheme = useLayoutTheme
+- Updated src/app/page.tsx:
+  - Wrapped AppContent with both providers: StudioThemeProvider > ProjectThemeProvider
+- Updated src/components/layout/grid-preview.tsx:
+  - Switched from useLayoutTheme() to useProjectTheme()
+  - Grid cells now render in project theme (colors, fonts, radius)
+- Updated src/components/layout/theme-preset-selector.tsx:
+  - State (preset, setPreset, mode, toggle) from useProjectTheme()
+  - Styling from useStudioTheme() (studioTokens)
+  - Selector now controls project theme, not studio theme
+- Updated src/lib/layout/index.ts:
+  - Added exports: StudioThemeProvider, useStudioTheme, ProjectThemeProvider, useProjectTheme
+- TypeScript: 0 errors
+- ESLint: 0 errors in changed files
+- Dev server: GET / 200 in 2.9s
+
+Stage Summary:
+- Dual Theme System implemented: Studio (Zinc, stable) + Project (Champagne, dynamic)
+- Studio chrome (nav, sidebar, controls) always Zinc -- neutral frame
+- Project preview (GridPreview cells) uses selected project theme
+- Theme selector in nav controls PROJECT theme
+- WireframePreview, CodeDrawer, ScoreGauge remain on studio theme (studio chrome)
+- Components choose context: useStudioTheme() vs useProjectTheme()
+- Both providers share the same registry (5 presets, same PresetDefinition)

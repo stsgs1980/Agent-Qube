@@ -90,6 +90,14 @@ export function useLayoutTheme() {
   return useContext(ThemeContext)
 }
 
+// ─── Studio aliases ──────────────────────────────────────────────
+// LayoutThemeProvider = Studio theme (stable, neutral).
+// In the Dual Theme architecture this is the OUTER provider.
+// Aliases provided for semantic clarity.
+
+export const StudioThemeProvider = LayoutThemeProvider
+export const useStudioTheme = useLayoutTheme
+
 // ─── Re-exports ──────────────────────────────────────────────────
 
 export type { ThemeMode, ThemePreset, ThemeTokens, ThemeContextValue } from './theme-types'

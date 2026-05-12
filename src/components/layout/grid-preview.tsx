@@ -1,7 +1,7 @@
 'use client'
 
 import type { LayoutRecipe } from '@/lib/layout/types'
-import { useLayoutTheme } from '@/lib/layout/theme'
+import { useProjectTheme } from '@/lib/layout/project-theme'
 import { radius } from '@/lib/layout/tokens'
 import { GridCodeBlock } from './grid-code-block'
 import { colors } from '@/lib/layout/tokens'
@@ -26,7 +26,7 @@ interface GridPreviewProps {
 }
 
 export function GridPreview({ recipe, compact, showCode, className }: GridPreviewProps) {
-  const { tokens } = useLayoutTheme()
+  const { tokens } = useProjectTheme()
   const template = recipe.gridTemplate
   const areaNames = new Set<string>()
   if (template.areas)

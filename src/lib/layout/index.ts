@@ -4,8 +4,9 @@
 export { scoreLayout, scoreLayoutMulti, parsePrompt, WEIGHTS, goalPreferences } from './scoring'
 
 // Theme Engine
-export { LayoutThemeProvider, useLayoutTheme } from './theme'
-export type { ThemeMode, ThemePreset, ThemeTokens, PresetDefinition, ThemeRecommendation } from './theme-types'
+export { LayoutThemeProvider, useLayoutTheme, StudioThemeProvider, useStudioTheme } from './theme'
+export { ProjectThemeProvider, useProjectTheme } from './project-theme'
+export type { ThemeMode, ThemePreset, ThemeTokens, PresetDefinition, ThemeRecommendation, ThemeContextValue } from './theme-types'
 export { registerPreset, getPreset, getPresetOrThrow, getByMode, getPair, getOppositeMode, getAllPresets } from './theme-registry'
 export { recommendTheme, recommendThemes } from './recommend-theme'
 export { auditThemeContrast, getContrastRatio, meetsWcagAA } from './contrast'
