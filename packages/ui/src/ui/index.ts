@@ -33,6 +33,16 @@ export type { BentoGridProps, BentoItemProps } from './bento-grid'
 export { MasonryGrid } from './masonry-grid'
 export type { MasonryGridProps } from './masonry-grid'
 
+// ─── Custom Controls (Extracted from Code-Realm monoliths) ─────
+export { SliderControl } from './slider-control'
+export type { SliderControlProps } from './slider-control'
+export { ColorPickerInput } from './color-picker-input'
+export type { ColorPickerInputProps } from './color-picker-input'
+export { CopyButton } from './copy-button'
+export type { CopyButtonProps } from './copy-button'
+export { CodeBlock } from './code-block'
+export type { CodeBlockProps } from './code-block'
+
 // ─── shadcn/ui Components (48) ────────────────────────────────
 // Extracted from Component-Browser-Public-v1.0 browser-app
 
