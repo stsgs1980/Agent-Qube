@@ -609,3 +609,34 @@ Stage Summary:
 - 2 new component files created: parse-pipeline.tsx, preset-list.tsx
 - 4 docs files updated to reflect Phase 2/3 completion
 - Phase 4 (Component Engine) is now the active next priority
+
+---
+Task ID: 6
+Agent: Main Agent
+Task: Phase 4 Component Library -- defer Component Engine, build Wave 1 sections
+
+Work Log:
+- Updated docs/planning/phase-plan.md: Phase 4 renamed to "Component Library -- NEXT", Component Engine moved to Phase 4b (DEFERRED) with blocker note
+- Scanned existing library: 7 sections + 5 features + 49 ui primitives + 2 hooks + 1 provider
+- Audited existing sections: all clean (forwardRef, TypeScript props, JSDoc, cn(), zero hardcoded colors)
+- Created 8 new section components:
+  1. faq-section (83 lines) -- accordion + grid variants, FaqItem[] props
+  2. testimonials-section (119 lines) -- grid + masonry variants, star ratings, avatars
+  3. stats-section (97 lines) -- row + grid + compact variants, prefix/suffix support
+  4. features-section (121 lines) -- grid + list + bento variants, icon support
+  5. pricing-cards (100 lines) -- tier cards with highlighted/badge support
+  6. contact-section (101 lines) -- centered + split variants, field config via props
+  7. logo-cloud (77 lines) -- grayscale toggle, max visible
+  8. newsletter-section (83 lines) -- default + compact + banner variants
+- All components follow same pattern: 'use client', forwardRef, JSDoc with @example, cn(), Tailwind semantic classes
+- Updated sections/index.ts barrel export: 15 sections now exported
+- PricingCards initially 153 lines (3 over limit), fixed by removing comparison variant (rarely used)
+- TypeScript: 0 errors
+- All files within 150-line Rule 1 limit
+
+Stage Summary:
+- Library grew from 7 to 15 sections (8 new components)
+- Total section code: 1308 lines across 15 files
+- All components are theme-agnostic (use Tailwind semantic CSS variables: text-foreground, bg-card, text-accent, etc.)
+- Component Engine deferred to Phase 4b until library has critical mass
+- Wave 1 complete: Hero, Navbar, Footer, CTA, FAQ, Testimonials, Stats, Features, Pricing, Contact, LogoCloud, Newsletter
