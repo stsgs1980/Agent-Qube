@@ -489,3 +489,33 @@ Stage Summary:
 - STD-GIT-001 already complete at v1.2 with sandbox deadlock prevention
 - AGENT_RULES.md merged to v1.9.0 with all project-specific and toolkit rules
 - @stsgs/prompting (src/lib/prompting/) NOT FOUND anywhere - needs recreation
+
+---
+Task ID: 2
+Agent: main (Super Z)
+Task: Create @stsgs/prompting library (src/lib/prompting/)
+
+Work Log:
+- Read integration points: route.ts, prompt-studio.tsx, use-ai-prompt.ts, types.ts
+- Created 14 files across 4 modules (3620 lines total)
+- core/types.ts: 30+ type definitions
+- core/techniques.ts: 20 prompting techniques with real examples
+- core/frameworks.ts: 11 frameworks with buildFromFramework()
+- core/system-prompt.ts: 5-layer architect with buildSystemPrompt()
+- templates/intent-templates.ts: 12 intents + matchIntent() with EN/RU
+- templates/agent-templates.ts: 12 roles with getBestAgentForIntent()
+- templates/flow-templates.ts: 8 flows with loop/iteration support
+- evaluation/scoring.ts: scorePrompt() 6 dimensions -> S/A/B/C/D/F
+- evaluation/blind-compare.ts: blindCompare() with delta analysis
+- evaluation/benchmark.ts: CORE-EEAT 40 checks across 8 categories
+- agents/cognitive-formulas.ts: 20 formulas across 8 categories
+- agents/orchestration.ts: 12 patterns across 5 topologies
+- agents/resilience.ts: withRetry() + CircuitBreaker + withTimeout()
+- TypeScript compilation: zero errors
+- Committed as ebfa4d2
+- Push failed: no GitHub token in sandbox
+
+Stage Summary:
+- @stsgs/prompting fully created at src/lib/prompting/ (14 files, 3620 lines)
+- All integration points ready for route.ts and prompt-studio.tsx
+- Commit made locally; push requires GitHub token setup
