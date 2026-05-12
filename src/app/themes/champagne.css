@@ -1,0 +1,79 @@
+/**
+ * Champagne theme — dark premium gold.
+ * Activated by data-theme="champagne" on root element.
+ */
+
+[data-theme="champagne"] {
+  --stsgs-bg-deep: #0B0B0F;
+  --stsgs-bg-base: #111114;
+  --stsgs-bg-surface: #16161A;
+  --stsgs-bg-elevated: #1E1E23;
+
+  --stsgs-text-primary: #EDEDEF;
+  --stsgs-text-secondary: #C8C8CC;
+  --stsgs-text-muted: #82828E;
+  --stsgs-text-dim: #8A8A96;
+
+  --stsgs-border-subtle: rgba(255,255,255,0.08);
+  --stsgs-border-default: rgba(255,255,255,0.1);
+  --stsgs-border-bright: rgba(200,169,126,0.3);
+
+  --stsgs-accent: #C8A97E;
+  --stsgs-accent-ai: #9A8468;
+  --stsgs-accent-glow: #C8A97E14;
+  --stsgs-accent-ai-glow: #9A846814;
+
+  --stsgs-focus-ring: #C8A97E;
+
+  --stsgs-sidebar-bg: #0F0F13;
+  --stsgs-sidebar-text: #EDEDEF;
+  --stsgs-sidebar-muted: #82828E;
+  --stsgs-sidebar-hover: #16161A;
+  --stsgs-sidebar-border: rgba(200,169,126,0.08);
+
+  --stsgs-code-bg: #0F0F13;
+  --stsgs-code-text: #B0B0B8;
+  --stsgs-code-muted: #82828E;
+  --stsgs-code-accent: #C8A97E;
+
+  --stsgs-card-border: rgba(255,255,255,0.08);
+  --stsgs-card-selected: #C8A97E;
+  --stsgs-card-hover: #16161A;
+
+  --stsgs-cell-bg: #16161A;
+  --stsgs-cell-featured-bg: #C8A97E10;
+  --stsgs-cell-text: #8A8A96;
+  --stsgs-cell-featured-text: #C8A97E;
+
+  --stsgs-text-on-accent: #0B0B0F;
+  --stsgs-bg-on-accent: #EDEDEF;
+
+  --stsgs-card-shadow: 0 4px 24px rgba(0,0,0,0.12);
+
+  --stsgs-font-body: 'Inter', -apple-system, sans-serif;
+  --stsgs-font-display: 'Playfair Display', Georgia, serif;
+  --stsgs-font-mono: 'JetBrains Mono', 'SF Mono', monospace;
+  --stsgs-font-weight-body: 300;
+  --stsgs-corner-radius: 2px;
+
+  /* shadcn/ui bridge */
+  --background: #0B0B0F;
+  --foreground: #EDEDEF;
+  --card: #16161A;
+  --card-foreground: #EDEDEF;
+  --popover: #111114;
+  --popover-foreground: #EDEDEF;
+  --primary: #C8A97E;
+  --primary-foreground: #0B0B0F;
+  --secondary: #1E1E23;
+  --secondary-foreground: #C8C8CC;
+  --muted: #16161A;
+  --muted-foreground: #82828E;
+  --accent: #1E1E23;
+  --accent-foreground: #EDEDEF;
+  --destructive: #ef4444;
+  --border: rgba(255,255,255,0.1);
+  --input: rgba(255,255,255,0.1);
+  --ring: #C8A97E;
+  --radius: 2px;
+}

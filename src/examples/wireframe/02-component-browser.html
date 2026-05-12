@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --text: #111827;
+    --text-sub: #6B7280;
+    --text-muted: #9CA3AF;
+    --bg: #FFFFFF;
+    --surface: #F9FAFB;
+    --border: #E5E7EB;
+    --blue: #3B82F6;
+    --sidebar-bg: #1E293B;
+    --sidebar-text: #E2E8F0;
+    --sidebar-muted: #94A3B8;
+    --sidebar-hover: #334155;
+    --sidebar-active: #3B82F6;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+  }
+  #root { width: 1200px; margin: 0 auto; }
+
+  /* ── Layout ── */
+  .browser-frame {
+    display: flex; height: 820px; border: 1px solid var(--border);
+    border-radius: 12px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    width: 260px; flex-shrink: 0;
+    background: var(--sidebar-bg); color: var(--sidebar-text);
+    display: flex; flex-direction: column;
+  }
+  .sidebar-header {
+    padding: 20px 20px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .sidebar-logo {
+    font-size: 16px; font-weight: 800; color: white;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .sidebar-logo .logo-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--blue);
+  }
+  .sidebar-version {
+    font-size: 11px; color: var(--sidebar-muted); margin-top: 4px;
+  }
+  .sidebar-search {
+    margin: 12px 16px; padding: 8px 12px;
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px; font-size: 12px; color: var(--sidebar-muted);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .sidebar-search kbd {
+    font-size: 10px; background: rgba(255,255,255,0.1);
+    padding: 1px 6px; border-radius: 3px; margin-left: auto;
+    font-family: inherit;
+  }
+  .sidebar-nav { flex: 1; overflow-y: auto; padding: 8px 0; }
+  .nav-group { margin-bottom: 4px; }
+  .nav-group-title {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1px; color: var(--sidebar-muted);
+    padding: 12px 20px 6px;
+  }
+  .nav-item {
+    font-size: 13px; padding: 7px 20px;
+    display: flex; align-items: center; gap: 8px;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .nav-item:hover { background: var(--sidebar-hover); }
+  .nav-item.active {
+    background: rgba(59,130,246,0.12);
+    color: #60A5FA;
+    border-right: 2px solid var(--blue);
+  }
+  .nav-item .nav-icon { font-size: 14px; opacity: 0.5; width: 20px; text-align: center; }
+  .nav-item.active .nav-icon { opacity: 1; }
+  .nav-item .nav-count {
+    font-size: 10px; margin-left: auto;
+    background: rgba(255,255,255,0.08); padding: 1px 6px;
+    border-radius: 10px; color: var(--sidebar-muted);
+  }
+
+  /* ── Main content ── */
+  .main-area {
+    flex: 1; display: flex; flex-direction: column; overflow: hidden;
+  }
+
+  /* ── Top bar ── */
+  .topbar {
+    height: 48px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; padding: 0 24px; gap: 16px;
+    background: var(--surface);
+  }
+  .topbar-breadcrumb { font-size: 13px; color: var(--text-sub); }
+  .topbar-breadcrumb strong { color: var(--text); font-weight: 600; }
+  .topbar-tabs { display: flex; gap: 0; margin-left: auto; }
+  .topbar-tab {
+    font-size: 12px; font-weight: 500; padding: 6px 14px;
+    border: 1px solid var(--border); background: white;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .topbar-tab:first-child { border-radius: 6px 0 0 6px; }
+  .topbar-tab:last-child { border-radius: 0 6px 6px 0; }
+  .topbar-tab.active {
+    background: var(--blue); color: white; border-color: var(--blue);
+  }
+
+  /* ── Content ── */
+  .content-area {
+    flex: 1; overflow-y: auto; padding: 24px;
+  }
+  .content-header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    margin-bottom: 24px;
+  }
+  .content-title { font-size: 20px; font-weight: 700; }
+  .content-desc { font-size: 13px; color: var(--text-sub); margin-top: 4px; }
+  .content-actions { display: flex; gap: 8px; }
+  .btn {
+    font-size: 12px; font-weight: 600; padding: 8px 16px;
+    border-radius: 6px; border: 1px solid var(--border);
+    background: white; cursor: pointer; display: flex; align-items: center; gap: 6px;
+  }
+  .btn-primary {
+    background: var(--blue); color: white; border-color: var(--blue);
+  }
+
+  /* ── Component preview grid ── */
+  .preview-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .preview-card {
+    border: 1px solid var(--border); border-radius: 12px;
+    overflow: hidden; background: white;
+  }
+  .preview-canvas {
+    height: 160px; background: var(--surface);
+    display: flex; align-items: center; justify-content: center;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .preview-canvas .mock-btn {
+    padding: 8px 20px; background: var(--blue); color: white;
+    border-radius: 6px; font-size: 13px; font-weight: 500;
+  }
+  .preview-canvas .mock-card {
+    width: 200px; background: white; border: 1px solid var(--border);
+    border-radius: 8px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .preview-canvas .mock-card-title {
+    font-size: 13px; font-weight: 600; margin-bottom: 4px;
+  }
+  .preview-canvas .mock-card-text {
+    font-size: 11px; color: var(--text-sub);
+  }
+  .preview-canvas .mock-dialog {
+    width: 280px; background: white; border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  }
+  .preview-canvas .mock-dialog-title {
+    font-size: 14px; font-weight: 600; margin-bottom: 8px;
+  }
+  .preview-canvas .mock-dialog-text {
+    font-size: 12px; color: var(--text-sub); margin-bottom: 12px; line-height: 1.5;
+  }
+  .preview-canvas .mock-input {
+    width: 200px; padding: 8px 12px; border: 1px solid var(--border);
+    border-radius: 6px; font-size: 13px; color: var(--text-muted);
+  }
+  .preview-canvas .mock-hero {
+    width: 100%; padding: 20px;
+    background: linear-gradient(135deg, #1E3A5F, #2D4A6F);
+    color: white; text-align: center; border-radius: 8px;
+  }
+  .preview-canvas .mock-hero-title {
+    font-size: 16px; font-weight: 700; margin-bottom: 6px;
+  }
+  .preview-canvas .mock-hero-text {
+    font-size: 11px; opacity: 0.7;
+  }
+  .preview-canvas .layer-tag {
+    position: absolute; top: 8px; right: 8px;
+    font-size: 9px; font-weight: 700; padding: 2px 8px;
+    border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .layer-tag.ui-tag { background: #DBEAFE; color: #1E40AF; }
+  .layer-tag.section-tag { background: #D1FAE5; color: #065F46; }
+  .layer-tag.feature-tag { background: #FEF3C7; color: #92400E; }
+  .preview-info {
+    padding: 12px 16px; display: flex; align-items: center; justify-content: space-between;
+  }
+  .preview-name { font-size: 13px; font-weight: 600; }
+  .preview-meta { font-size: 11px; color: var(--text-muted); }
+  .preview-copy-btn {
+    font-size: 10px; padding: 3px 8px; border-radius: 4px;
+    border: 1px solid var(--border); background: white; cursor: pointer;
+    color: var(--text-sub);
+  }
+
+  /* ── Code panel (bottom drawer) ── */
+  .code-drawer {
+    border-top: 1px solid var(--border); background: #0F172A;
+    height: 140px; padding: 16px 24px; overflow: hidden;
+  }
+  .code-drawer-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .code-drawer-title { font-size: 12px; color: #94A3B8; font-weight: 600; }
+  .code-drawer-copy {
+    font-size: 10px; color: #60A5FA; cursor: pointer;
+    padding: 3px 10px; border: 1px solid rgba(96,165,250,0.3);
+    border-radius: 4px;
+  }
+  .code-drawer pre {
+    font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12px;
+    color: #E2E8F0; line-height: 1.7;
+  }
+  .code-drawer .kw { color: #C084FC; }
+  .code-drawer .str { color: #86EFAC; }
+  .code-drawer .fn { color: #60A5FA; }
+  .code-drawer .cm { color: #64748B; }
+  .code-drawer .tag { color: #7DD3FC; }
+</style>
+</head>
+<body>
+<div id="root">
+  <div style="text-align:center; margin-bottom: 12px;">
+    <span style="font-size:20px; font-weight:800; color:#111827;">Component Browser</span>
+    <span style="font-size:13px; color:#6B7280; display:block; margin-top:4px;">Интерактивный каталог всех компонентов @stsgs/ui</span>
+  </div>
+
+  <div class="browser-frame">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <div class="logo-dot"></div>
+          @stsgs/ui
+        </div>
+        <div class="sidebar-version">v1.0.0 · 50+ components</div>
+      </div>
+      <div class="sidebar-search">
+        Поиск... <kbd>/</kbd>
+      </div>
+      <div class="sidebar-nav">
+        <div class="nav-group">
+          <div class="nav-group-title">Слои</div>
+          <div class="nav-item active">
+            <span class="nav-icon">◆</span> ui/
+            <span class="nav-count">50</span>
+          </div>
+          <div class="nav-item">
+            <span class="nav-icon">◇</span> sections/
+            <span class="nav-count">~100</span>
+          </div>
+          <div class="nav-item">
+            <span class="nav-icon">◈</span> features/
+            <span class="nav-count">~50</span>
+          </div>
+          <div class="nav-item">
+            <span class="nav-icon">⟳</span> hooks/
+            <span class="nav-count">8</span>
+          </div>
+          <div class="nav-item">
+            <span class="nav-icon">▢</span> providers/
+            <span class="nav-count">4</span>
+          </div>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Категории</div>
+          <div class="nav-item">
+            <span class="nav-icon">⬚</span> Формы
+            <span class="nav-count">12</span>
+          </div>
+          <div class="nav-item">
+            <span class="nav-icon">▤</span> Данные
+            <span class="nav-count">8</span>
+          </div>
+          <div class="nav-item">
+            <span class="nav-icon">◉</span> Навигация
+            <span class="nav-count">6</span>
+          </div>
+          <div class="nav-item">
+            <span class="nav-icon">⬡</span> Оверлеи
+            <span class="nav-count">9</span>
+          </div>
+          <div class="nav-item">
+            <span class="nav-icon">▱</span> Типографика
+            <span class="nav-count">5</span>
+          </div>
+          <div class="nav-item">
+            <span class="nav-icon">◰</span> Layout
+            <span class="nav-count">10</span>
+          </div>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Стартовые шаблоны</div>
+          <div class="nav-item">
+            <span class="nav-icon">★</span> SaaS Landing
+          </div>
+          <div class="nav-item">
+            <span class="nav-icon">★</span> Dashboard
+          </div>
+          <div class="nav-item">
+            <span class="nav-icon">★</span> Portfolio
+          </div>
+          <div class="nav-item">
+            <span class="nav-icon">★</span> Documentation
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main -->
+    <div class="main-area">
+      <div class="topbar">
+        <div class="topbar-breadcrumb">
+          @stsgs/ui / <strong>ui/</strong>
+        </div>
+        <div class="topbar-tabs">
+          <div class="topbar-tab active">Превью</div>
+          <div class="topbar-tab">Код</div>
+          <div class="topbar-tab">Документация</div>
+          <div class="topbar-tab">Playground</div>
+        </div>
+      </div>
+
+      <div class="content-area">
+        <div class="content-header">
+          <div>
+            <div class="content-title">ui/ — Base Components</div>
+            <div class="content-desc">50 базовых компонентов. Без state, без data-fetching. Чистая презентация.</div>
+          </div>
+          <div class="content-actions">
+            <div class="btn">Фильтры</div>
+            <div class="btn btn-primary">+ Установить всё</div>
+          </div>
+        </div>
+
+        <div class="preview-grid">
+          <!-- Button -->
+          <div class="preview-card">
+            <div class="preview-canvas">
+              <div class="mock-btn">Button</div>
+              <div class="layer-tag ui-tag">ui</div>
+            </div>
+            <div class="preview-info">
+              <div>
+                <div class="preview-name">Button</div>
+                <div class="preview-meta">31 копий в 45 репо → 1 файл</div>
+              </div>
+              <div class="preview-copy-btn">Копировать</div>
+            </div>
+          </div>
+
+          <!-- Card -->
+          <div class="preview-card">
+            <div class="preview-canvas">
+              <div class="mock-card">
+                <div class="mock-card-title">Card Title</div>
+                <div class="mock-card-text">Card description text</div>
+              </div>
+              <div class="layer-tag ui-tag">ui</div>
+            </div>
+            <div class="preview-info">
+              <div>
+                <div class="preview-name">Card</div>
+                <div class="preview-meta">31 копий → 1 файл</div>
+              </div>
+              <div class="preview-copy-btn">Копировать</div>
+            </div>
+          </div>
+
+          <!-- Dialog -->
+          <div class="preview-card">
+            <div class="preview-canvas">
+              <div class="mock-dialog">
+                <div class="mock-dialog-title">Dialog Title</div>
+                <div class="mock-dialog-text">Are you sure you want to proceed?</div>
+                <div style="display:flex; gap:8px; justify-content:flex-end;">
+                  <div class="mock-btn" style="background:var(--border); color:var(--text);">Cancel</div>
+                  <div class="mock-btn">Confirm</div>
+                </div>
+              </div>
+              <div class="layer-tag ui-tag">ui</div>
+            </div>
+            <div class="preview-info">
+              <div>
+                <div class="preview-name">Dialog</div>
+                <div class="preview-meta">30 копий → 1 файл</div>
+              </div>
+              <div class="preview-copy-btn">Копировать</div>
+            </div>
+          </div>
+
+          <!-- Input -->
+          <div class="preview-card">
+            <div class="preview-canvas">
+              <div class="mock-input">Enter text...</div>
+              <div class="layer-tag ui-tag">ui</div>
+            </div>
+            <div class="preview-info">
+              <div>
+                <div class="preview-name">Input</div>
+                <div class="preview-meta">30 копий → 1 файл</div>
+              </div>
+              <div class="preview-copy-btn">Копировать</div>
+            </div>
+          </div>
+
+          <!-- HeroSection (sections layer) -->
+          <div class="preview-card">
+            <div class="preview-canvas">
+              <div class="mock-hero">
+                <div class="mock-hero-title">Hero Section</div>
+                <div class="mock-hero-text">Build faster with @stsgs/ui</div>
+              </div>
+              <div class="layer-tag section-tag">section</div>
+            </div>
+            <div class="preview-info">
+              <div>
+                <div class="preview-name">HeroSection</div>
+                <div class="preview-meta">Композиция: ui/Button + ui/Badge</div>
+              </div>
+              <div class="preview-copy-btn">Копировать</div>
+            </div>
+          </div>
+
+          <!-- SearchPanel (feature layer) -->
+          <div class="preview-card">
+            <div class="preview-canvas">
+              <div style="width:240px;">
+                <div class="mock-input" style="width:100%; margin-bottom:8px;">Search components...</div>
+                <div style="background:white; border:1px solid var(--border); border-radius:6px; padding:8px;">
+                  <div style="font-size:12px; padding:4px 8px; background:var(--surface); border-radius:4px; margin-bottom:4px;">Button</div>
+                  <div style="font-size:12px; padding:4px 8px; background:#DBEAFE; border-radius:4px;">Card</div>
+                </div>
+              </div>
+              <div class="layer-tag feature-tag">feature</div>
+            </div>
+            <div class="preview-info">
+              <div>
+                <div class="preview-name">SearchPanel</div>
+                <div class="preview-meta">useState + useDebounce</div>
+              </div>
+              <div class="preview-copy-btn">Копировать</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Code drawer -->
+      <div class="code-drawer">
+        <div class="code-drawer-header">
+          <div class="code-drawer-title">Button.tsx — Исходный код</div>
+          <div class="code-drawer-copy">Копировать</div>
+        </div>
+        <pre><span class="kw">import</span> { <span class="fn">forwardRef</span> } <span class="kw">from</span> <span class="str">'react'</span>
+<span class="kw">import</span> { <span class="fn">Slot</span> } <span class="kw">from</span> <span class="str">'@radix-ui/react-slot'</span>
+<span class="kw">import</span> { <span class="fn">cva</span> } <span class="kw">from</span> <span class="str">'class-variance-authority'</span>
+<span class="kw">import</span> { <span class="fn">cn</span> } <span class="kw">from</span> <span class="str">'@stsgs/ui/tokens'</span>
+
+<span class="kw">const</span> <span class="fn">buttonVariants</span> = <span class="fn">cva</span>(<span class="str">'inline-flex items-center justify-center...'</span>, {
+  <span class="tag">variants</span>: { <span class="tag">variant</span>: { <span class="tag">default</span>: <span class="str">'bg-primary text-white'</span>, ... }, ... }
+})
+
+<span class="kw">export interface</span> <span class="fn">ButtonProps</span> <span class="kw">extends</span> <span class="fn">React.ButtonHTMLAttributes</span>&lt;<span class="fn">HTMLButtonElement</span>&gt; { ... }</pre>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

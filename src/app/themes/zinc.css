@@ -1,0 +1,79 @@
+/**
+ * Zinc theme — dark monochrome emerald.
+ * Activated by data-theme="zinc" on root element.
+ */
+
+[data-theme="zinc"] {
+  --stsgs-bg-deep: #0A0A0F;
+  --stsgs-bg-base: #111114;
+  --stsgs-bg-surface: #16161A;
+  --stsgs-bg-elevated: #1E1E23;
+
+  --stsgs-text-primary: #fafafa;
+  --stsgs-text-secondary: #C8C8CC;
+  --stsgs-text-muted: #83838C;
+  --stsgs-text-dim: #8A8A94;
+
+  --stsgs-border-subtle: rgba(255,255,255,0.08);
+  --stsgs-border-default: rgba(255,255,255,0.1);
+  --stsgs-border-bright: rgba(255,255,255,0.2);
+
+  --stsgs-accent: #10b981;
+  --stsgs-accent-ai: #f59e0b;
+  --stsgs-accent-glow: #10b98114;
+  --stsgs-accent-ai-glow: #f59e0b14;
+
+  --stsgs-focus-ring: #34d399;
+
+  --stsgs-sidebar-bg: #1E293B;
+  --stsgs-sidebar-text: #E2E8F0;
+  --stsgs-sidebar-muted: #94A3B8;
+  --stsgs-sidebar-hover: #334155;
+  --stsgs-sidebar-border: rgba(255,255,255,0.08);
+
+  --stsgs-code-bg: #0F172A;
+  --stsgs-code-text: #E2E8F0;
+  --stsgs-code-muted: #94A3B8;
+  --stsgs-code-accent: #60A5FA;
+
+  --stsgs-card-border: #27272a;
+  --stsgs-card-selected: #10b981;
+  --stsgs-card-hover: #27272a;
+
+  --stsgs-cell-bg: rgba(39,39,42,0.5);
+  --stsgs-cell-featured-bg: #064e3b50;
+  --stsgs-cell-text: #83838C;
+  --stsgs-cell-featured-text: #34d399;
+
+  --stsgs-text-on-accent: #0A0A0F;
+  --stsgs-bg-on-accent: #fafafa;
+
+  --stsgs-card-shadow: 0 4px 24px rgba(0,0,0,0.08);
+
+  --stsgs-font-body: 'Inter', -apple-system, sans-serif;
+  --stsgs-font-display: 'Inter', -apple-system, sans-serif;
+  --stsgs-font-mono: 'SF Mono', 'Fira Code', monospace;
+  --stsgs-font-weight-body: 400;
+  --stsgs-corner-radius: 12px;
+
+  /* shadcn/ui bridge */
+  --background: #0A0A0F;
+  --foreground: #fafafa;
+  --card: #16161A;
+  --card-foreground: #fafafa;
+  --popover: #111114;
+  --popover-foreground: #fafafa;
+  --primary: #10b981;
+  --primary-foreground: #0A0A0F;
+  --secondary: #1E1E23;
+  --secondary-foreground: #C8C8CC;
+  --muted: #16161A;
+  --muted-foreground: #83838C;
+  --accent: #1E1E23;
+  --accent-foreground: #fafafa;
+  --destructive: #ef4444;
+  --border: rgba(255,255,255,0.1);
+  --input: rgba(255,255,255,0.15);
+  --ring: #34d399;
+  --radius: 12px;
+}

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg-deep: #0a0a0f;
+  --bg-base: #0e0e18;
+  --bg-surface: #14141f;
+  --bg-elevated: #1c1c2a;
+  --border: rgba(255,255,255,0.06);
+  --border-bright: rgba(255,255,255,0.12);
+  --text: #F1F5F9;
+  --text-sub: #CBD5E1;
+  --text-muted: #64748B;
+  --text-dim: #475569;
+  --green: #10B981;
+  --green-glow: rgba(16,185,129,0.1);
+  --amber: #F59E0B;
+  --amber-glow: rgba(245,158,11,0.1);
+  --blue: #3B82F6;
+  --purple: #8B5CF6;
+  --cyan: #06B6D4;
+}
+body {
+  background: var(--bg-deep);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+#root { min-width: 960px; }
+
+/* ── Top Bar ── */
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 20px; border-bottom: 1px solid var(--border);
+  background: var(--bg-deep);
+}
+.topbar-left { display: flex; align-items: center; gap: 8px; }
+.topbar-logo { color: var(--green); width: 16px; height: 16px; }
+.topbar-path {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 13px; font-weight: 700;
+}
+.topbar-right { display: flex; align-items: center; gap: 8px; }
+.topbar-variant {
+  display: flex; align-items: center; gap: 5px;
+  padding: 5px 12px; border-radius: 6px;
+  font-size: 11px; font-weight: 500; color: var(--text-muted);
+  cursor: pointer; transition: all 0.15s;
+}
+.topbar-variant:hover { color: var(--text-sub); background: var(--bg-surface); }
+.topbar-variant.active { color: var(--text); background: var(--bg-elevated); }
+.topbar-counter {
+  font-size: 11px; font-weight: 600; color: var(--text-dim);
+  background: var(--bg-surface); padding: 4px 10px;
+  border-radius: 20px; margin-left: 8px;
+}
+
+/* ── Command button ── */
+.cmd-btn {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 14px; border-radius: 8px;
+  background: transparent; border: 1px solid var(--border-bright);
+  color: var(--text-muted); font-size: 13px; cursor: pointer;
+  transition: all 0.15s;
+}
+.cmd-btn:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
+.cmd-btn kbd {
+  font-family: 'SF Mono', monospace; font-size: 10px;
+  background: rgba(255,255,255,0.06); padding: 2px 6px;
+  border-radius: 3px;
+}
+
+/* ── Main Canvas ── */
+.canvas { display: flex; height: calc(100vh - 44px); }
+
+/* ── Left Panel ── */
+.left-panel {
+  width: 280px; flex-shrink: 0;
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  background: var(--bg-deep);
+}
+.lp-section {
+  padding: 16px 18px; border-bottom: 1px solid var(--border);
+}
+.lp-section-title {
+  font-size: 9px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1.5px; color: var(--text-dim); margin-bottom: 12px;
+}
+.lp-empty {
+  font-size: 12px; color: var(--text-dim); text-align: center;
+  padding: 16px 0;
+}
+
+/* ── Rankings ── */
+.rankings { flex: 1; overflow-y: auto; padding: 12px 18px; }
+.rankings-title {
+  font-size: 9px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1.5px; color: var(--text-dim); margin-bottom: 10px;
+}
+.rank-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 10px; border-radius: 8px; margin-bottom: 2px;
+  transition: background 0.15s; cursor: pointer;
+}
+.rank-item:hover { background: rgba(255,255,255,0.03); }
+.rank-item.best {
+  background: var(--green-glow); border: 1px solid rgba(16,185,129,0.2);
+}
+.rank-num {
+  font-size: 10px; font-family: 'SF Mono', monospace;
+  width: 18px; color: var(--text-dim);
+}
+.rank-item.best .rank-num { color: var(--green); }
+.rank-name {
+  font-size: 12px; flex: 1; white-space: nowrap; overflow: hidden;
+  text-overflow: ellipsis; color: var(--text-sub);
+}
+.rank-item.best .rank-name { color: var(--green); font-weight: 600; }
+.rank-score {
+  font-size: 10px; font-family: 'SF Mono', monospace; font-weight: 700;
+}
+.rank-score.high { color: var(--green); }
+.rank-score.mid { color: var(--amber); }
+.rank-score.low { color: #EF4444; }
+
+/* ── Center — Empty State ── */
+.center-area {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 40px;
+}
+.center-cube { width: 80px; height: 80px; margin-bottom: 20px; opacity: 0.15; }
+.center-title {
+  font-size: 20px; font-weight: 300; color: var(--text-muted);
+  margin-bottom: 8px;
+}
+.center-title kbd {
+  font-family: 'SF Mono', monospace; font-size: 16px;
+  background: rgba(255,255,255,0.06); padding: 4px 12px;
+  border-radius: 6px; color: var(--text-sub);
+}
+.center-subtitle { font-size: 14px; color: var(--text-dim); }
+
+/* ── Command Palette Overlay ── */
+.palette-overlay {
+  position: fixed; inset: 0; z-index: 50;
+  background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+  display: flex; align-items: flex-start; justify-content: center;
+  padding-top: 20vh;
+}
+.palette-card {
+  width: 480px; background: var(--bg-surface);
+  border: 1px solid var(--border-bright);
+  border-radius: 16px; box-shadow: 0 16px 64px rgba(0,0,0,0.5);
+  overflow: hidden;
+}
+.palette-input-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 16px 20px; border-bottom: 1px solid var(--border);
+}
+.palette-icon { color: var(--amber); flex-shrink: 0; }
+.palette-input {
+  flex: 1; border: none; outline: none;
+  font-size: 15px; font-family: inherit; color: var(--text);
+  background: transparent;
+}
+.palette-input::placeholder { color: var(--text-dim); }
+.palette-go {
+  padding: 7px 16px; border-radius: 8px;
+  background: var(--green); color: #000;
+  font-size: 13px; font-weight: 700; border: none; cursor: pointer;
+}
+.palette-suggestions { padding: 12px 20px; max-height: 240px; overflow-y: auto; }
+.palette-sug-title {
+  font-size: 9px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1.5px; color: var(--text-dim); margin-bottom: 8px;
+}
+.palette-sug-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px; border-radius: 8px;
+  font-size: 13px; color: var(--text-sub);
+  cursor: pointer; transition: all 0.1s;
+}
+.palette-sug-item:hover { background: rgba(255,255,255,0.04); color: var(--text); }
+.palette-sug-arrow { color: var(--green); width: 12px; height: 12px; }
+</style>
+</head>
+<body>
+<div id="root">
+  <!-- Top Bar -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <svg class="topbar-logo" viewBox="0 0 16 16" fill="none"><path d="M4 4L8 2L12 4V8L8 10L4 8V4Z" stroke="currentColor" stroke-width="1.2"/><path d="M8 10V14" stroke="currentColor" stroke-width="1.2"/><path d="M4 8L2 12" stroke="currentColor" stroke-width="1"/><path d="M12 8L14 12" stroke="currentColor" stroke-width="1"/></svg>
+      <span class="topbar-path">stsgs://layout-advisor</span>
+    </div>
+    <div class="topbar-right">
+      <div class="topbar-variant">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M8 1L10 6H15L11 9L12.5 14L8 11L3.5 14L5 9L1 6H6L8 1Z" stroke="currentColor" stroke-width="1.2"/></svg>
+        Prompt Studio
+      </div>
+      <div class="topbar-variant">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="9" y="1" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="1" y="9" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="9" y="9" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.2"/></svg>
+        Layout Explorer
+      </div>
+      <div class="topbar-variant active">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><rect x="1" y="2" width="14" height="10" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5 14H11" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        AI Canvas
+      </div>
+      <span class="topbar-counter">51 recipes</span>
+      <button class="cmd-btn">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.2"/><path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        Command <kbd>⌘K</kbd>
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Canvas -->
+  <div class="canvas">
+    <!-- Left Panel -->
+    <div class="left-panel">
+      <div class="lp-section">
+        <div class="lp-section-title">Context</div>
+        <div class="lp-empty">Press ⌘K to start</div>
+      </div>
+      <div class="rankings">
+        <div class="rankings-title">Rankings</div>
+        <div class="rank-item best">
+          <span class="rank-num">1</span>
+          <span class="rank-name">Bento Grid</span>
+          <span class="rank-score high">97</span>
+        </div>
+        <div class="rank-item">
+          <span class="rank-num">2</span>
+          <span class="rank-name">Dense Packing</span>
+          <span class="rank-score high">97</span>
+        </div>
+        <div class="rank-item">
+          <span class="rank-num">3</span>
+          <span class="rank-name">Cards Grid</span>
+          <span class="rank-score high">95</span>
+        </div>
+        <div class="rank-item">
+          <span class="rank-num">4</span>
+          <span class="rank-name">Magazine</span>
+          <span class="rank-score high">90</span>
+        </div>
+        <div class="rank-item">
+          <span class="rank-num">5</span>
+          <span class="rank-name">Bento Hero</span>
+          <span class="rank-score high">90</span>
+        </div>
+        <div class="rank-item">
+          <span class="rank-num">6</span>
+          <span class="rank-name">Bento Masonry</span>
+          <span class="rank-score high">87</span>
+        </div>
+        <div class="rank-item">
+          <span class="rank-num">7</span>
+          <span class="rank-name">Masonry Grid</span>
+          <span class="rank-score high">87</span>
+        </div>
+        <div class="rank-item">
+          <span class="rank-num">8</span>
+          <span class="rank-name">Responsive Grid</span>
+          <span class="rank-score high">87</span>
+        </div>
+        <div class="rank-item">
+          <span class="rank-num">9</span>
+          <span class="rank-name">Span Grid</span>
+          <span class="rank-score mid">82</span>
+        </div>
+        <div class="rank-item">
+          <span class="rank-num">10</span>
+          <span class="rank-name">Z-Stack Overlap</span>
+          <span class="rank-score mid">82</span>
+        </div>
+        <div class="rank-item">
+          <span class="rank-num">11</span>
+          <span class="rank-name">Top Navigation</span>
+          <span class="rank-score mid">80</span>
+        </div>
+        <div class="rank-item">
+          <span class="rank-num">12</span>
+          <span class="rank-name">Split Screen</span>
+          <span class="rank-score mid">80</span>
+        </div>
+        <div class="rank-item">
+          <span class="rank-num">13</span>
+          <span class="rank-name">Fullscreen Hero</span>
+          <span class="rank-score mid">80</span>
+        </div>
+        <div class="rank-item">
+          <span class="rank-num">14</span>
+          <span class="rank-name">Scroll Snap Grid</span>
+          <span class="rank-score mid">80</span>
+        </div>
+        <div class="rank-item">
+          <span class="rank-num">15</span>
+          <span class="rank-name">Nav: Logo+Menu+Action</span>
+          <span class="rank-score mid">80</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Center — Empty State -->
+    <div class="center-area">
+      <svg class="center-cube" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+        <path d="M2 17l10 5 10-5"/>
+        <path d="M2 12l10 5 10-5"/>
+      </svg>
+      <p class="center-title">Press <kbd>⌘K</kbd> to begin</p>
+      <p class="center-subtitle">Describe what you want to build</p>
+    </div>
+  </div>
+
+  <!-- Command Palette -->
+  <div class="palette-overlay">
+    <div class="palette-card">
+      <div class="palette-input-row">
+        <svg class="palette-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 1L10 6H15L11 9L12.5 14L8 11L3.5 14L5 9L1 6H6L8 1Z"/></svg>
+        <input class="palette-input" type="text" placeholder="Describe what you want to build..." autofocus />
+        <button class="palette-go">Go</button>
+      </div>
+      <div class="palette-suggestions">
+        <div class="palette-sug-title">Suggestions</div>
+        <div class="palette-sug-item">
+          <svg class="palette-sug-arrow" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L10 5M13 8L10 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          SaaS лендинг с дашбордом
+        </div>
+        <div class="palette-sug-item">
+          <svg class="palette-sug-arrow" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L10 5M13 8L10 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Create a SaaS landing page with pricing cards
+        </div>
+        <div class="palette-sug-item">
+          <svg class="palette-sug-arrow" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L10 5M13 8L10 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Build an admin dashboard with sidebar and data charts
+        </div>
+        <div class="palette-sug-item">
+          <svg class="palette-sug-arrow" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L10 5M13 8L10 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Make a blog with articles and sidebar
+        </div>
+        <div class="palette-sug-item">
+          <svg class="palette-sug-arrow" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L10 5M13 8L10 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Design a portfolio showcase with media gallery
+        </div>
+        <div class="palette-sug-item">
+          <svg class="palette-sug-arrow" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L10 5M13 8L10 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Build a CRM with contact list and detail panel
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg-deep: #0B0F1A;
+  --bg-base: #0F172A;
+  --bg-surface: #1E293B;
+  --bg-elevated: #273549;
+  --border-subtle: #1E293B;
+  --border-default: #334155;
+  --border-bright: #475569;
+  --text-primary: #F1F5F9;
+  --text-secondary: #CBD5E1;
+  --text-muted: #64748B;
+  --text-dim: #475569;
+  --blue: #3B82F6;
+  --green: #10B981;
+  --amber: #F59E0B;
+  --purple: #8B5CF6;
+  --cyan: #06B6D4;
+  --red: #EF4444;
+}
+body {
+  background: var(--bg-deep);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+#root { width: fit-content; min-width: 800px; margin: 0 auto; padding: 48px 40px; }
+
+/* ── Header ── */
+.page-header { text-align: center; margin-bottom: 36px; }
+.page-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 1.2px; color: var(--purple);
+  background: rgba(139,92,246,0.08); border: 1px solid rgba(139,92,246,0.2);
+  padding: 5px 14px; border-radius: 20px; margin-bottom: 16px;
+}
+.page-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--purple); }
+.page-title { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px; }
+.page-subtitle { font-size: 14px; color: var(--text-muted); max-width: 560px; margin: 0 auto; line-height: 1.6; }
+
+/* ── Split layout ── */
+.split-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+/* ── File tree ── */
+.file-tree {
+  background: var(--bg-base); border: 1px solid var(--border-default);
+  border-radius: 14px; overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+.ft-header {
+  background: var(--bg-surface); padding: 12px 18px;
+  display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid var(--border-default);
+}
+.ft-logo {
+  width: 28px; height: 28px; border-radius: 7px;
+  background: linear-gradient(135deg, var(--blue), var(--purple));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 800; color: white;
+}
+.ft-name { font-size: 14px; font-weight: 700; }
+.ft-badge {
+  font-size: 10px; font-weight: 600; padding: 2px 8px;
+  border-radius: 4px; background: rgba(59,130,246,0.12);
+  color: var(--blue); border: 1px solid rgba(59,130,246,0.2);
+  margin-left: auto;
+}
+.ft-body {
+  padding: 16px 18px; font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 12px; line-height: 1.9;
+}
+.ft-line {
+  display: flex; align-items: center; gap: 0;
+}
+.ft-indent { display: inline-block; }
+.i1 { width: 20px; }
+.i2 { width: 40px; }
+.i3 { width: 60px; }
+.ft-dir { color: #60A5FA; font-weight: 600; }
+.ft-react { color: #67E8F9; }
+.ft-style { color: #A78BFA; }
+.ft-config { color: #FBBF24; }
+.ft-ai { color: #F472B6; }
+.ft-json { color: #86EFAC; }
+.ft-comment { color: var(--text-dim); font-style: italic; margin-left: 8px; }
+.ft-highlight {
+  background: rgba(59,130,246,0.08);
+  border-left: 2px solid var(--blue);
+  padding-left: 18px; margin-left: -2px;
+}
+.ft-highlight.ft-indent-hl1 { padding-left: 38px; margin-left: -2px; }
+
+/* ── Code cards ── */
+.code-stack { display: flex; flex-direction: column; gap: 12px; }
+.code-card {
+  background: var(--bg-base); border: 1px solid var(--border-default);
+  border-radius: 14px; overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+.cc-header {
+  background: var(--bg-surface); padding: 10px 16px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--border-default);
+}
+.cc-title { font-size: 12px; font-weight: 600; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+.cc-badge {
+  font-size: 10px; padding: 1px 8px; border-radius: 4px; font-weight: 600;
+}
+.cc-green { background: rgba(16,185,129,0.15); color: var(--green); }
+.cc-ai { background: rgba(139,92,246,0.15); color: var(--purple); }
+.cc-body {
+  padding: 14px 18px; font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 11.5px; line-height: 1.7; color: var(--text-secondary);
+}
+.ck { color: #C084FC; }
+.cs { color: #86EFAC; }
+.cf { color: #60A5FA; }
+.cc-cm { color: var(--text-dim); }
+.ct { color: #7DD3FC; }
+.ca { color: #F9A8D4; }
+
+/* ── Comparison ── */
+.comparison {
+  margin-top: 32px; display: grid; grid-template-columns: 1fr 40px 1fr; gap: 0;
+  align-items: stretch;
+}
+.comp-side { border-radius: 12px; padding: 22px 24px; }
+.comp-before { background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.15); }
+.comp-after { background: rgba(16,185,129,0.06); border: 1px solid rgba(16,185,129,0.15); }
+.comp-title { font-size: 13px; font-weight: 700; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+.comp-before .comp-title { color: #FCA5A5; }
+.comp-after .comp-title { color: #6EE7B7; }
+.comp-item {
+  font-size: 12px; padding: 5px 0; display: flex; align-items: center; gap: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.comp-item:last-child { border-bottom: none; }
+.comp-dot {
+  width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
+}
+.comp-before .comp-dot { background: var(--red); }
+.comp-after .comp-dot { background: var(--green); }
+.comp-value { margin-left: auto; font-weight: 800; font-size: 16px; font-variant-numeric: tabular-nums; }
+.comp-before .comp-value { color: #FCA5A5; }
+.comp-after .comp-value { color: #6EE7B7; }
+.comp-label { color: var(--text-secondary); }
+
+.comp-arrow {
+  display: flex; align-items: center; justify-content: center;
+}
+.comp-arrow-inner {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--bg-surface); border: 1px solid var(--border-default);
+  display: flex; align-items: center; justify-content: center;
+}
+.comp-arrow-inner svg { width: 14px; height: 14px; }
+</style>
+</head>
+<body>
+<div id="root">
+  <div class="page-header">
+    <div class="page-badge"><div class="page-badge-dot"></div>Starter Kit</div>
+    <div class="page-title">New Project Structure</div>
+    <div class="page-subtitle">Result of npx create-stsgs-app — modular architecture powered by @stsgs/ui</div>
+  </div>
+
+  <div class="split-layout">
+    <!-- File tree -->
+    <div class="file-tree">
+      <div class="ft-header">
+        <div class="ft-logo">@</div>
+        <div class="ft-name">my-project/</div>
+        <div class="ft-badge">stsgs starter</div>
+      </div>
+      <div class="ft-body">
+        <div class="ft-line"><span class="ft-dir">app/</span></div>
+        <div class="ft-line ft-highlight"><span class="ft-indent i1"></span><span class="ft-react">page.tsx</span><span class="ft-comment">38 lines</span></div>
+        <div class="ft-line"><span class="ft-indent i1"></span><span class="ft-react">layout.tsx</span><span class="ft-comment">22 lines</span></div>
+        <div class="ft-line"><span class="ft-indent i1"></span><span class="ft-style">globals.css</span></div>
+        <div class="ft-line"><span class="ft-indent i1"></span><span class="ft-dir">about/</span></div>
+        <div class="ft-line"><span class="ft-indent i2"></span><span class="ft-react">page.tsx</span><span class="ft-comment">24 lines</span></div>
+        <div class="ft-line"><span class="ft-indent i1"></span><span class="ft-dir">pricing/</span></div>
+        <div class="ft-line"><span class="ft-indent i2"></span><span class="ft-react">page.tsx</span><span class="ft-comment">18 lines</span></div>
+        <br>
+        <div class="ft-line"><span class="ft-dir">components/</span><span class="ft-comment">project-specific only</span></div>
+        <div class="ft-line"><span class="ft-indent i1"></span><span class="ft-dir">features/</span></div>
+        <div class="ft-line"><span class="ft-indent i2"></span><span class="ft-react">CustomWidget.tsx</span></div>
+        <div class="ft-line"><span class="ft-indent i2"></span><span class="ft-react">useCustomWidget.ts</span></div>
+        <div class="ft-line"><span class="ft-indent i2"></span><span class="ft-json">index.ts</span><span class="ft-comment">barrel</span></div>
+        <br>
+        <div class="ft-line"><span class="ft-dir">lib/</span></div>
+        <div class="ft-line"><span class="ft-indent i1"></span><span class="ft-config">utils.ts</span></div>
+        <div class="ft-line"><span class="ft-indent i1"></span><span class="ft-config">constants.ts</span></div>
+        <br>
+        <div class="ft-line"><span class="ft-ai">.cursorrules</span><span class="ft-comment">AI: use @stsgs/ui</span></div>
+        <div class="ft-line"><span class="ft-ai">CLAUDE.md</span><span class="ft-comment">AI: anti-monolith</span></div>
+        <div class="ft-line"><span class="ft-config">.eslintrc.js</span><span class="ft-comment">boundaries plugin</span></div>
+        <div class="ft-line"><span class="ft-config">next.config.ts</span></div>
+        <div class="ft-line"><span class="ft-config">tailwind.config.ts</span></div>
+        <div class="ft-line ft-highlight"><span class="ft-json">package.json</span><span class="ft-comment">@stsgs/ui: ^1.0.0</span></div>
+      </div>
+    </div>
+
+    <!-- Code previews -->
+    <div class="code-stack">
+      <div class="code-card">
+        <div class="cc-header">
+          <div class="cc-title">app/page.tsx <span class="cc-badge cc-green">38 lines</span></div>
+        </div>
+        <div class="cc-body">
+          <span class="ck">import</span> { <span class="cf">HeroSection</span>, <span class="cf">FeaturesSection</span> } <span class="ck">from</span> <span class="cs">'@stsgs/ui/sections'</span><br>
+          <span class="ck">import</span> { <span class="cf">PricingSection</span> } <span class="ck">from</span> <span class="cs">'@stsgs/ui/sections'</span><br>
+          <span class="ck">import</span> { <span class="cf">NavbarSection</span>, <span class="cf">FooterSection</span> } <span class="ck">from</span> <span class="cs">'@stsgs/ui/sections'</span><br>
+          <span class="ck">import</span> { <span class="cf">ThemeToggle</span> } <span class="ck">from</span> <span class="cs">'@stsgs/ui/features'</span><br>
+          <br>
+          <span class="ck">const</span> <span class="cf">features</span> = [<br>
+          &nbsp;&nbsp;{ <span class="ca">title</span>: <span class="cs">'Fast'</span>, <span class="ca">desc</span>: <span class="cs">'Built on Next.js 16'</span> },<br>
+          &nbsp;&nbsp;{ <span class="ca">title</span>: <span class="cs">'Modular'</span>, <span class="ca">desc</span>: <span class="cs">'@stsgs/ui components'</span> },<br>
+          &nbsp;&nbsp;{ <span class="ca">title</span>: <span class="cs">'AI-ready'</span>, <span class="ca">desc</span>: <span class="cs">'.cursorrules included'</span> },<br>
+          ]<br>
+          <br>
+          <span class="ck">export default function</span> <span class="cf">HomePage</span>() {<br>
+          &nbsp;&nbsp;<span class="ck">return</span> (<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="ct">main</span>&gt;<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="cf">NavbarSection</span> <span class="ca">actions</span>={&lt;<span class="cf">ThemeToggle</span> /&gt;} /&gt;<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="cf">HeroSection</span> <span class="ca">title</span>=<span class="cs">"My Project"</span> /&gt;<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="cf">FeaturesSection</span> <span class="ca">items</span>={<span class="cf">features</span>} /&gt;<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="cf">PricingSection</span> <span class="ca">plans</span>={<span class="cf">plans</span>} /&gt;<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="cf">FooterSection</span> /&gt;<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span class="ct">main</span>&gt;<br>
+          &nbsp;&nbsp;)<br>
+          }
+        </div>
+      </div>
+
+      <div class="code-card">
+        <div class="cc-header">
+          <div class="cc-title">.cursorrules <span class="cc-badge cc-ai">AI</span></div>
+        </div>
+        <div class="cc-body">
+          <span class="cc-cm"># STSGS Project Rules</span><br>
+          <br>
+          <span class="cc-cm">## Component Source</span><br>
+          <span class="cc-cm">- ALWAYS import from @stsgs/ui</span><br>
+          <span class="cc-cm">- NEVER create Button, Card, Dialog etc.</span><br>
+          <span class="cc-cm">&nbsp;&nbsp;from scratch — use @stsgs/ui</span><br>
+          <br>
+          <span class="cc-cm">## Anti-Monolith</span><br>
+          <span class="cc-cm">- Max 150 lines per component</span><br>
+          <span class="cc-cm">- Max 3 useState per component</span><br>
+          <span class="cc-cm">- No fetch in client components</span><br>
+          <span class="cc-cm">- Barrel exports in every directory</span><br>
+          <span class="cc-cm">- Layers: tokens &rarr; ui &rarr; sections &rarr; features</span><br>
+          <br>
+          <span class="cc-cm">## New Components</span><br>
+          <span class="cc-cm">- Check @stsgs/ui first</span><br>
+          <span class="cc-cm">- If missing &rarr; add to @stsgs/ui, then import</span><br>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Comparison -->
+  <div class="comparison">
+    <div class="comp-side comp-before">
+      <div class="comp-title">Before: Old Approach</div>
+      <div class="comp-item">
+        <div class="comp-dot"></div>
+        <span class="comp-label">page.tsx</span>
+        <span class="comp-value">1 212</span>
+      </div>
+      <div class="comp-item">
+        <div class="comp-dot"></div>
+        <span class="comp-label">useState in one file</span>
+        <span class="comp-value">18</span>
+      </div>
+      <div class="comp-item">
+        <div class="comp-dot"></div>
+        <span class="comp-label">Inline components</span>
+        <span class="comp-value">11</span>
+      </div>
+      <div class="comp-item">
+        <div class="comp-dot"></div>
+        <span class="comp-label">shadcn copies across repos</span>
+        <span class="comp-value">1 431</span>
+      </div>
+      <div class="comp-item">
+        <div class="comp-dot"></div>
+        <span class="comp-label">Reusable modules</span>
+        <span class="comp-value">0</span>
+      </div>
+    </div>
+    <div class="comp-arrow">
+      <div class="comp-arrow-inner">
+        <svg viewBox="0 0 14 14" fill="none"><path d="M3 7H11M11 7L8 4M11 7L8 10" stroke="#475569" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+    </div>
+    <div class="comp-side comp-after">
+      <div class="comp-title">After: @stsgs/ui Starter Kit</div>
+      <div class="comp-item">
+        <div class="comp-dot"></div>
+        <span class="comp-label">page.tsx</span>
+        <span class="comp-value">38</span>
+      </div>
+      <div class="comp-item">
+        <div class="comp-dot"></div>
+        <span class="comp-label">useState in page.tsx</span>
+        <span class="comp-value">0</span>
+      </div>
+      <div class="comp-item">
+        <div class="comp-dot"></div>
+        <span class="comp-label">Section imports</span>
+        <span class="comp-value">5</span>
+      </div>
+      <div class="comp-item">
+        <div class="comp-dot"></div>
+        <span class="comp-label">Component instances</span>
+        <span class="comp-value">1</span>
+      </div>
+      <div class="comp-item">
+        <div class="comp-dot"></div>
+        <span class="comp-label">Components in library</span>
+        <span class="comp-value">200+</span>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
