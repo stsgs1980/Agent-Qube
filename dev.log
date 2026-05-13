@@ -4,5 +4,5 @@
 - Environments: .env
 
 ✓ Starting...
-✓ Ready in 595ms
- GET /api/health 200 in 356ms (compile: 338ms, render: 17ms)
+✓ Ready in 633ms
+ GET /api/health 200 in 416ms (compile: 398ms, render: 18ms)
