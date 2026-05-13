@@ -299,7 +299,6 @@ P-MAS-v2/
     ws-service/                   # WebSocket service (port 3003)
     watchdog/                     # Dev server keepalive
   docs/                           # Project documentation
-  docs-pmas/                      # P-MAS specific documentation
   standards/                      # Code standards (No-Unicode, Markdown, etc.)
   instructions/                   # Agent behavioral instructions
   assets/                         # Static assets (logo, favicon)
@@ -360,7 +359,6 @@ See [ROADMAP.md](ROADMAP.md) for the full task-level roadmap with status.
 
 ## Known Issues
 
-- Agent names: 12 of 26 agent names in the sidebar AGENT_LIST don't match DB entries
 - Dev server stability: Process killed periodically in sandbox environment
 - Simulated status transitions: Status changes every 15s via client timer, not real events
 

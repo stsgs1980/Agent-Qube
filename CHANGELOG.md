@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Renamed all 26 agents from transliterated Russian to proper English (Arkhitektor → Architect, Analitik → Analyst, Strateg → Strategist, Taktik → Tactician, Kontroller → Controller, Ispolnitel → Executor, and 20 more)
-- Replaced all Russian `roleGroup` names with English equivalents (Стратегия → Strategy, Тактика → Tactics, Контроль → Control, Исполнение → Execution, Аналитика → Analytics, Инновации → Innovation, Поддержка → Support, Исследования → Research) across 16+ files (schema, seed data, sidebar, hierarchy, API routes, constants)
+- Renamed all 26 agents from transliterated Russian to proper English (e.g. Архитектор -> Architect, Аналитик -> Analyst, Визионер -> Visionary, Координатор -> Coordinator, Планировщик -> Planner, Коммуникатор -> Communicator, Ревизор -> Inspector, Оценщик -> Evaluator, Страж -> Guard, and 17 more)
+- Replaced all Russian `roleGroup` names with English equivalents (Стратегия -> Strategy, Тактика -> Tactics, Контроль -> Control, Исполнение -> Execution, Память -> Memory, Мониторинг -> Monitoring, Коммуникация -> Communication, Обучение -> Learning) across 16+ files (schema, seed data, sidebar, hierarchy, API routes, constants)
 - Replaced `next/dynamic` imports with static imports to fix `ChunkLoadError` caused by Turbopack incompatibility with dynamic imports in Next.js 16
 
 ### Fixed
@@ -43,7 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- P-MAS Dashboard with 26 agents across 8 role groups (Strategy, Tactics, Control, Execution, Analytics, Innovation, Support, Research)
+- P-MAS Dashboard with 26 agents across 8 role groups (Strategy, Tactics, Control, Execution, Memory, Monitoring, Communication, Learning)
 - Dark theme design system (#000000 background, Cyan #06B6D4 accent, monochrome + single color)
 - Quick Stats row with `AnimatedCounter` and `MiniSparkline` components
 - Status Distribution chart with semantic color mapping (Active=Cyan, Idle=Slate, Paused=Amber, Standby=Indigo, Error=Rose, Offline=Zinc)
