@@ -733,3 +733,44 @@ Stage Summary:
 - 2 files: compare-slider.tsx (149) + use-compare-slider.ts (86)
 - Zero external deps: pure CSS clip-path + pointer events
 - Library status: 52 UI components, 7 hooks, 9 features, 15 sections, 1 provider
+
+---
+Task ID: ormuz-1
+Agent: Main Agent (Super Z)
+Task: Revise Ormuz-monitor extraction plan -- ZERO SKIP, all 58 components generalized
+
+Work Log:
+- Analyzed all 67 scifi component files (24,901 lines total) in ormuz-monitor/src/components/scifi/
+- Identified 58 unique components + 1 duplicate (theme-toggle = existing ThemeToggle)
+- User rejected previous plan that marked 46+ components as "domain-specific/SKIP"
+- Revised plan: EVERY component generalized through generic TypeScript props/interfaces
+- Categorized into 11 tiers by complexity and pattern:
+  - Tier 1: Primitives (7) -- HUDCard, ScifiSectionHeader, AnimatedCounter, MiniSparkline, TypingEffect, ScifiScrollProgress, ScifiBackToTop
+  - Tier 2: Navigation (5) -- ScifiPeriodSelector, ScifiNavBar, ScifiLoadingScreen, TabbedChronology + skip theme-toggle
+  - Tier 3: Data feeds (4) -- LiveTicker, LiveDataFeed, MiniSparkline(dup), AlertFeed
+  - Tier 4: Matrices (4) -- RiskMatrix, CorrelationMatrix, AssetHeatmap, CompositeIndex
+  - Tier 5: Gauges (4) -- SentimentGauge, GaugeCluster, MarketPulse, ScifiCTA
+  - Tier 6: Status trackers (8) -- StatusTracker, SupplyChainTracker, DisruptionTracker, AssetTracker, IncidentTracker, FleetMonitor, TrafficMonitor, EntityPresenceTracker
+  - Tier 7: Analytics (8) -- PriceChartSection, FibonacciAnalyzer, TechnicalIndicators, BenchmarkGrid, ResourceReserves, MarginsTable, PriceForecast, ScenarioGrid
+  - Tier 8: Dashboards (8) -- OverviewDashboard, InfrastructureMap, FlowTracker, ImpactMatrix, WeatherMonitor, ImpactDashboard, SupplyRouteMap, TradeFlowDiagram
+  - Tier 9: News/Events (6) -- NewsFeed, EventTimeline, ActorGrid, EventCalendar, BeneficiaryList, AlertDashboard
+  - Tier 10: Calculators (3) -- ConfigurableCalculator, ScenarioEngine, InteractiveWorldMap, DataGlobe3D
+  - Tier 11: Hero (2) -- ScifiHero
+- Defined 12 generic UI patterns: Tracker<T>, Dashboard<T>, Matrix<T>, Feed<T>, Gauge<T>, Timeline<T>, Grid<T>, Calculator<T>, Map<T>, Chart<T>, Engine<T>, Section
+- Each domain component mapped to generic equivalent:
+  - sanctions-tracker -> StatusTracker<Entry>
+  - oil-rig-tracker -> AssetTracker<Region>
+  - oil-spill-tracker -> IncidentTracker<Event>
+  - naval-presence -> EntityPresenceTracker (4-tab layout)
+  - risk-matrix -> RiskMatrix<Item, ProbLvl, ImpactLvl>
+  - scenario-simulator -> ScenarioEngine<Factor>
+  - oil-price-calculator -> ConfigurableCalculator<Grade, Route>
+  - etc.
+
+Stage Summary:
+- Revised extraction plan: 57 components (ZERO SKIP), 1 duplicate excluded
+- 12 generic UI patterns identified covering all 58 original components
+- All "domain-specific" components generalized through TypeScript generics
+- Estimated total: ~15,000 lines of new scifi-themed dashboard components for @stsgs/ui
+- globals.css already split into 12 CSS modules (done in previous session)
+- Next: Begin Tier 1 extraction (7 primitives, ready to copy with minimal changes)
