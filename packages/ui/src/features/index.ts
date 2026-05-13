@@ -59,6 +59,13 @@ export type { ScifiScrollProgressProps } from './scifi-scroll-progress'
 export { BackToTop } from './back-to-top'
 export type { BackToTopProps } from './back-to-top'
 
+// ─── Tier 2: Small Composites ───────────────────────────────
+export { ScifiButtonGroup } from './scifi-button-group'
+export type { ScifiButtonGroupProps, ButtonGroupOption } from './scifi-button-group'
+
+export { ScifiTabbedView } from './scifi-tabbed-view'
+export type { ScifiTabbedViewProps, TabDefinition } from './scifi-tabbed-view'
+
 // ─── ScifiBadge ──────────────────────────────────────────────
 export { ScifiBadge } from './scifi-badge'
 export type { ScifiBadgeProps, BadgeVariant, BadgeSize, BadgePreset } from './scifi-badge'
