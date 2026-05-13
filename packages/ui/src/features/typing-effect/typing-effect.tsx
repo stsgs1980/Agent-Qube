@@ -104,7 +104,7 @@ export const TypingEffect = forwardRef<HTMLSpanElement, TypingEffectProps>(
     return (
       <span
         ref={forwardedRef}
-        className={className}
+        className={cn('inline-block', className)}
         data-slot="typing-effect"
       >
         {started ? text.slice(0, charIndex) : ''}

@@ -37,7 +37,7 @@ export type { UseCompareSliderOptions, UseCompareSliderReturn } from './compare-
 export { ScrollProgressBar } from './scroll-progress-bar'
 export type { ScrollProgressBarProps } from './scroll-progress-bar'
 
-// ─── Tier 1: Ormuz-monitor Sci-Fi Primitives ─────────────────
+// ─── Tier 1: Sci-Fi Primitives ────────────────────────────────
 export { HudCard } from './hud-card'
 export type { HudCardProps } from './hud-card'
 
@@ -58,3 +58,44 @@ export type { ScifiScrollProgressProps } from './scifi-scroll-progress'
 
 export { BackToTop } from './back-to-top'
 export type { BackToTopProps } from './back-to-top'
+
+// ─── ScifiBadge ──────────────────────────────────────────────
+export { ScifiBadge } from './scifi-badge'
+export type { ScifiBadgeProps, BadgeVariant, BadgeSize, BadgePreset } from './scifi-badge'
+
+// ─── ScifiGauge ──────────────────────────────────────────────
+export { ScifiGauge } from './scifi-gauge'
+export type {
+  ScifiGaugeProps,
+  GaugeVariant,
+  GaugeBaseProps,
+  RingGaugeProps,
+  ArcGaugeProps,
+  LinearGaugeProps,
+  SegmentedGaugeProps,
+} from './scifi-gauge'
+
+export { GaugeRing } from './scifi-gauge'
+export { GaugeArc } from './scifi-gauge'
+export { GaugeLinear } from './scifi-gauge'
+export { GaugeSegmented } from './scifi-gauge'
+
+// ─── ScifiCanvasChart ────────────────────────────────────────
+export { ScifiCanvasChart } from './scifi-canvas-chart'
+export type {
+  ScifiCanvasChartProps,
+  DataPoint,
+  Series,
+  ChartType,
+  ReferenceLine,
+  ZoneFill,
+  ChartBaseProps,
+  AreaChartProps,
+  LineChartProps,
+  BarChartProps,
+  MultiLineChartProps,
+} from './scifi-canvas-chart'
+
+export { ChartArea } from './scifi-canvas-chart'
+export { ChartBar } from './scifi-canvas-chart'
+export { ChartMultiLine } from './scifi-canvas-chart'

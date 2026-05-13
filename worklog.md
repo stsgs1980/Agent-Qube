@@ -816,3 +816,30 @@ Stage Summary:
 - BackToTop split into main (143) + pulse sub-component (60) to pass 150-line limit
 - Library status: 17 features (was 10), 52 UI components, 7 hooks, 15 sections, 1 provider
 - Next: Tier 2 extraction (5 navigation components: PeriodSelector, NavBar, LoadingScreen, TabbedChronology)
+---
+Task ID: 10
+Agent: Main Agent
+Task: Extract Tier 1 + shared sub-patterns (ScifiBadge, ScifiGauge, ScifiCanvasChart)
+
+Work Log:
+- Audited all 7 Tier 1 components for anti-monolith compliance (6/7 pass, 1 fix)
+- Fixed TypingEffect: applied cn() to className (was dead import)
+- Fixed features/index.ts: removed "Ormuz-monitor" domain reference from comment
+- Analyzed 44 remaining components in Ormuz-monitor (Tier 2-5)
+- Identified 3 shared sub-patterns: Badge (22 consumers), Gauge (100+ instances), CanvasChart (14 consumers)
+- Created ScifiBadge: 1 file (131 lines), 4 variants (filled/outline/hex/laser), 3 sizes, 7 presets
+- Created ScifiGauge: 7 files (844 lines total), 5 variants (ring/arc/linear/segmented + router)
+- Created ScifiCanvasChart: 8 files (932 lines total), 4 chart types (area/line/bar/multiLine) + utils
+- Extracted useAnimateProgress hook (shared animation loop for all chart variants)
+- Fixed 8 files exceeding 150-line Rule 1 limit by trimming JSDoc and extracting shared code
+- TypeScript: 0 errors across all packages/ui
+
+Stage Summary:
+- Total new files: 16 (3 components + 1 hook + barrel exports)
+- Total new lines: 1,876
+- All files pass Rule 1 (<=150 lines)
+- All components: forwardRef, data-slot, cn(), JSDoc + @example, zero domain refs
+- ScifiBadge replaces 6 inline badge patterns across 22 components
+- ScifiGauge replaces 100+ gauge instances across 17 files
+- ScifiCanvasChart replaces 20+ canvas chart implementations across 14 files
+- Next: Tier 2 extraction (PeriodSelector, Chronology)
