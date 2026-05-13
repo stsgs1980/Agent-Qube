@@ -1,22 +1,22 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { Database, Download, ArrowUp, Activity } from 'lucide-react'
 import { toast } from 'sonner'
 import { fetchWithRetry } from '@/lib/client-fetch'
 
-export function QuickActionsPanel() {
+function useQuickActions() {
   const [reseeding, setReseeding] = useState(false)
 
-  const handleReseed = async () => {
+  const handleReseed = useCallback(async () => {
     setReseeding(true)
     try {
       const res = await fetchWithRetry('/api/seed', { method: 'POST' })
       if (res.ok) { toast.success('Database reseeded successfully') } else { toast.error('Failed to reseed database') }
     } catch { toast.error('Failed to reseed database') } finally { setReseeding(false) }
-  }
+  }, [])
 
-  const handleExportConfig = async () => {
+  const handleExportConfig = useCallback(async () => {
     try {
       const res = await fetchWithRetry('/api/hierarchy')
       const data = await res.json()
@@ -26,7 +26,13 @@ export function QuickActionsPanel() {
       document.body.appendChild(a); a.click(); document.body.removeChild(a)
       URL.revokeObjectURL(url); toast.success('Config exported successfully')
     } catch { toast.error('Failed to export config') }
-  }
+  }, [])
+
+  return { reseeding, handleReseed, handleExportConfig }
+}
+
+export function QuickActionsPanel() {
+  const { reseeding, handleReseed, handleExportConfig } = useQuickActions()
 
   const actions = [
     { label: 'Reseed Data', icon: Database, onClick: handleReseed, loading: reseeding },

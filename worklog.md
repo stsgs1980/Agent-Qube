@@ -910,3 +910,212 @@ Stage Summary:
 - 2 bugs fixed: Diagnostician role typo + AgentEditModal missing export
 - DB recreated and re-seeded with correct data
 - Dashboard renders at / with 200 status code
+
+---
+Task ID: P-MAS-Docs-1
+Agent: Main Agent
+Task: Fix documentation consistency + run anti-monolith audit
+
+Work Log:
+- Scanned all docs/source for old transliterated agent names
+- Found 3 wireframe HTML files with old name "Strateg" instead of "Analyst"
+- Found same 3 files with "Archivist" in Execution group instead of "Executor-B"
+- Fixed all 3 wireframe files (docs/, docs-pmas/, public/public/)
+- Ran comprehensive anti-monolith audit: 53 files, 23 FAIL, 30 PASS
+- Identified 3 CRITICAL monoliths: workflow-pipeline (2552 lines), agent-hierarchy-v2 (1117 lines), panels (1051 lines)
+- Identified 8 missing barrel exports, 5 cross-layer violations
+
+Stage Summary:
+- All documentation now consistent with English agent names
+- Anti-monolith audit complete with full violation map
+
+---
+Task ID: P-MAS-Split-2
+Agent: Full-stack Developer Agent
+Task: Split workflow-pipeline.tsx monolith (2552 -> 87 lines)
+
+Work Log:
+- Split 2552-line monolith into 22 files
+- Created 4 hooks: use-workflow-data, use-workflow-state, use-execution-animation, use-workflow-create
+- Created 16 sub-components: workflow-node, workflow-edge, workflow-contracts, workflow-timeline, etc.
+- Created workflow-types.ts with shared types and constants
+- Created barrel export index.ts
+- All files <= 150 lines, 0 direct fetch in components
+
+Stage Summary:
+- workflow-pipeline.tsx: 2552 -> 87 lines (orchestrator)
+- 26 useState -> 0 in component (all in hooks)
+- 7 fetchWithRetry -> 0 in component (all in hooks)
+
+---
+Task ID: P-MAS-Split-3
+Agent: Full-stack Developer Agent
+Task: Split agent-hierarchy-v2.tsx monolith (1117 -> 94 lines)
+
+Work Log:
+- Split 1117-line monolith into 16 files
+- Created 2 hooks: use-hierarchy-data, use-hierarchy-state
+- Created 5 sub-components: hierarchy-header, hierarchy-controls, hierarchy-canvas, layer-labels, add-agent-modal
+- Split types.ts (347 lines) into types.ts (107) + layout-algorithms.ts (140) + build-connections.ts (82) + agent-icons.ts (66)
+- Split agent-node.tsx (212 -> 80) and agent-edge.tsx (175 -> 74 + edge-particles.tsx 73)
+- Created barrel export index.ts
+
+Stage Summary:
+- agent-hierarchy-v2.tsx: 1117 -> 94 lines
+- 20 useState -> 0 in component
+- 1 fetchWithRetry -> 0 in component
+
+---
+Task ID: P-MAS-Split-4
+Agent: Full-stack Developer Agent
+Task: Split panels.tsx monolith (1051 -> 84 lines)
+
+Work Log:
+- Split 1051-line monolith into 12 files
+- Created 2 hooks: use-agent-edit-form, use-agent-mutations
+- Created 9 sub-components: detail-panel-collapsed, detail-panel-empty, agent-edit-form, detail-panel-edit, agent-detail-header, agent-detail-info, group-sidebar, kpi-strip, stat-card
+
+Stage Summary:
+- panels.tsx: 1051 -> 84 lines
+- 12 useState -> 0 in component
+- 2 fetchWithRetry -> 0 in component
+
+---
+Task ID: P-MAS-Fix-5
+Agent: Main Agent
+Task: Fix broken imports + create barrel exports + fix cross-layer violations
+
+Work Log:
+- Fixed import: computeRadialLayout/computeGridLayout moved from types to layout-algorithms
+- Fixed import: buildConnections moved from types to build-connections
+- Created src/hooks/index.ts barrel export
+- Fixed quick-actions-panel.tsx: extracted useQuickActions hook (fetchWithRetry out of component)
+- Dev server: 200 OK, lint: 0 errors in P-MAS code
+
+Stage Summary:
+- All imports fixed after monolith splits
+- Barrel exports created for hooks/, workflows/, hierarchy/
+- Cross-layer violation fixed in quick-actions-panel
+- Dashboard renders correctly
+
+---
+Task ID: 4
+Agent: Extract Agent (Anti-Monolith)
+Task: Split panels.tsx monolith (1,051 lines, 12 useState, 2 fetchWithRetry) into focused modules
+
+Work Log:
+- Read entire panels.tsx: 1,051 lines containing GroupSidebar, DetailPanel (764 lines with 12 useState + 2 fetchWithRetry), StatCard, ConnItem, KPIStrip
+- Identified violations: Rule 1 (max 150 lines/component), Rule 2 (max 5 useState/component), Rule 3 (no fetch in components)
+- Extracted 2 hooks to src/hooks/:
+  1. use-agent-edit-form.ts (80 lines) -- 7 form-field useState + populateFromAgent + resetForm + React 19 render-time state sync pattern
+  2. use-agent-mutations.ts (68 lines) -- 2 fetchWithRetry calls (saveAgent, deleteAgent) + saving/deleting/showDeleteConfirm state
+- Extracted 9 sub-components to src/components/hierarchy/:
+  3. detail-panel-collapsed.tsx (62 lines) -- Collapsed detail panel strip with toggle
+  4. detail-panel-empty.tsx (44 lines) -- Empty/no-agent detail panel state
+  5. agent-edit-form.tsx (95 lines) -- Edit form fields + shared inputStyle/selectStyle/labelStyle
+  6. detail-panel-edit.tsx (113 lines) -- Edit mode wrapper (header + form + delete confirm + action buttons)
+  7. agent-detail-header.tsx (71 lines) -- View mode header (avatar, name, status badges, action buttons)
+  8. agent-detail-info.tsx (92 lines) -- View mode body (description, formula, skills, connections, tasks)
+  9. group-sidebar.tsx (101 lines) -- Role groups + stats + agent list sidebar
+  10. kpi-strip.tsx (32 lines) -- Bottom KPI status strip
+  11. stat-card.tsx (12 lines) -- Stat card helper
+- Rewrote panels.tsx: 1,051 -> 84 lines (thin orchestrator: DetailPanel uses 2 hooks + 5 sub-components)
+- Fixed React 19 lint errors: replaced useEffect setState patterns with render-time state sync (prevAgentId tracking)
+- All new files pass anti-monolith rules: max 113 lines, max 2 useState per component, zero fetchWithRetry in components
+- Backward compatibility preserved: panels.tsx re-exports GroupSidebar and KPIStrip
+- ESLint: 0 errors in all new/changed files (pre-existing errors in packages/ui/ only)
+- Dev server: GET / 200
+
+Stage Summary:
+- panels.tsx: 1,051 -> 84 lines (Rule 1 PASS)
+- 12 useState -> 2 in component + 7 in useAgentEditForm + 3 in useAgentMutations (Rule 2 PASS)
+- 2 fetchWithRetry calls moved from component to useAgentMutations hook (Rule 3 PASS)
+- 11 new files created (2 hooks + 9 components)
+- 0 visual/behavior changes -- pure extraction
+
+---
+Task ID: 3
+Agent: Anti-Monolith Agent
+Task: Split agent-hierarchy-v2.tsx monolith (1,117 lines, 20 useState, 1 fetchWithRetry)
+
+Work Log:
+- Read all 4 files: agent-hierarchy-v2.tsx (1117 lines), agent-node.tsx (212 lines), agent-edge.tsx (175 lines), types.ts (347 lines)
+- Split types.ts (347 lines) into:
+  - types.ts (107 lines) -- core types + constants + FORMULA_DESC
+  - layout-algorithms.ts (140 lines) -- computeDagreLayout, computeRadialLayout, computeGridLayout
+  - build-connections.ts (82 lines) -- buildConnections function
+- Split agent-node.tsx (212 lines) into:
+  - agent-icons.ts (66 lines) -- AVATAR_ICONS map + AgentNodeData type
+  - agent-node.tsx (80 lines) -- component only
+- Split agent-edge.tsx (175 lines) into:
+  - edge-particles.tsx (73 lines) -- EDGE_DURATIONS, PARTICLES, EdgeParticles component
+  - agent-edge.tsx (74 lines) -- simplified component
+- Created 2 hooks:
+  - use-hierarchy-data.ts (92 lines) -- fetchWithRetry, WebSocket, status simulation, connections (4 useState)
+  - use-hierarchy-state.ts (92 lines) -- selection, filter, view state, callbacks, keyboard shortcuts (9 useState)
+- Extracted 5 sub-components:
+  - hierarchy-header.tsx (63 lines) -- P-MAS branding, WS status, Refresh, Add Agent
+  - hierarchy-controls.tsx (100 lines) -- view mode, layers, search, edge filters, zoom
+  - hierarchy-canvas.tsx (68 lines) -- ReactFlow canvas with MiniMap, Background
+  - layer-labels.tsx (57 lines) -- LAYER_LABELS + LayerLabels Panel
+  - add-agent-modal.tsx (74 lines) -- modal form with 1 useState (form object)
+- Rewrote agent-hierarchy-v2.tsx as thin orchestrator (94 lines, 0 useState, 0 fetchWithRetry)
+- Created index.ts barrel export (25 lines)
+- Fixed lint issues: renamed reactFlowInstance to reactFlowInstanceRef (react-hooks/immutability), fixed ternary expression (no-unused-expressions), removed unused eslint-disable, consolidated add-agent form state into single object (6 useState -> 1)
+- ESLint: 0 errors in hierarchy/ files (remaining 10 errors are pre-existing in packages/ui/)
+- Dev server: GET / 200
+
+Stage Summary:
+- agent-hierarchy-v2.tsx: 1117 -> 94 lines (Rule 1 PASS)
+- agent-node.tsx: 212 -> 80 lines (Rule 1 PASS)
+- agent-edge.tsx: 175 -> 74 lines (Rule 1 PASS)
+- types.ts: 347 -> 107 lines (Rule 4 PASS, < 200)
+- useState in orchestrator: 20 -> 0 (Rule 2 PASS)
+- fetchWithRetry in components: 1 -> 0 (Rule 3 PASS)
+- 11 new files created (2 hooks + 5 components + 2 utils + 1 barrel + 1 icons)
+- 0 visual/behavior changes -- pure extraction
+
+---
+Task ID: 2
+Agent: Anti-Monolith Split Agent
+Task: Split workflow-pipeline.tsx monolith (2,553 lines, 26 useState, 7 fetchWithRetry calls) into anti-monolith compliant modules
+
+Work Log:
+- Read the entire 2,553-line monolith file and analyzed its structure
+- Identified 7 interfaces, 6 constants, 4 helpers, 15 sub-components, 7 fetchWithRetry calls, 26 useState
+- Created types/constants module: workflow-types.ts (88 lines)
+- Created 4 custom hooks:
+  1. use-workflow-data.ts (125 lines) -- all fetchWithRetry calls + data state
+  2. use-workflow-state.ts (76 lines) -- UI state + computed values (filteredWorkflows, pipelineStats)
+  3. use-execution-animation.ts (31 lines) -- animation state for ExecutionModal
+  4. use-workflow-create.ts (79 lines) -- create form state + save logic
+- Created 15 sub-components:
+  1. workflow-node.tsx (81 lines) -- PipelineStepNode + MiniPipeline
+  2. workflow-edge.tsx (59 lines) -- PipelineArrow + FeedbackLoopArrow
+  3. workflow-contracts.tsx (75 lines) -- DataContractCard
+  4. workflow-timeline.tsx (99 lines) -- TaskContextTimeline
+  5. workflow-execution-modal.tsx (133 lines) -- ExecutionModal
+  6. workflow-step-messages.tsx (44 lines) -- StepMessages
+  7. workflow-expanded-view.tsx (99 lines) -- ExpandedPipelineView
+  8. workflow-history.tsx (46 lines) -- ExecutionHistory
+  9. workflow-card.tsx (108 lines) -- WorkflowCard + TriggerIconDisplay
+  10. workflow-delete-dialog.tsx (47 lines) -- DeleteConfirmDialog
+  11. workflow-create-dialog.tsx (96 lines) -- CreateWorkflowDialog
+  12. workflow-step-editor-row.tsx (52 lines) -- StepEditorRow
+  13. workflow-sidebar.tsx (92 lines) -- WorkflowSidebar
+  14. workflow-sidebar-section.tsx (33 lines) -- SidebarSection
+  15. workflow-empty-states.tsx (45 lines) -- LoadingSkeleton, EmptyState, EmptyStateFull
+- Rewrote workflow-pipeline.tsx as thin orchestrator (87 lines)
+- Created barrel export index.ts (25 lines)
+- Fixed lint errors: TriggerIcon component created during render, (() => null) fallbacks replaced with stable components
+- All 22 files pass anti-monolith rules (component <= 150, hook <= 150, max 5 useState, no direct fetch in components)
+- Dev server: GET / 200
+
+Stage Summary:
+- 2,553-line monolith split into 22 files (1,620 lines total)
+- 0 visual/behavior changes, 0 API endpoint changes
+- All TypeScript types preserved
+- 7 fetchWithRetry calls moved to use-workflow-data hook
+- 26 useState distributed: main component 0, hooks 16, sub-components 10
+- All files under 150-line limit (max: 133 lines for workflow-execution-modal.tsx)
+- Barrel exports created at src/components/workflows/index.ts
