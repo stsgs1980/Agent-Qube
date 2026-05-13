@@ -1,0 +1,12 @@
+[ws-service] Installing dependencies...
+bun install v1.3.13 (bf2e2cec)
+
++ socket.io@4.8.3
+
+22 packages installed [102.00ms]
+[ws-service] Running bun run dev...
+$ bun --hot index.ts
+[ws-service] P-MAS WebSocket service running on port 3003
+[ws-service] DB: /home/z/my-project/db/custom.db
+[ws-service] Agents in DB: 0
+[ws-service] Status simulation started (every 10-15s)

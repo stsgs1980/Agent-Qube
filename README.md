@@ -4,15 +4,14 @@
 >
 > Repository: [github.com/stsgs1980/P-MAS-v2](https://github.com/stsgs1980/P-MAS-v2)
 
-## Overview
+## Features
 
-P-MAS-v2 is a real-time dashboard for managing and visualizing a Prompt-based Multi-Agent System. It renders 26 specialized AI agents organized into 8 role groups across 5 hierarchy layers (L0--L4), with interactive DAG visualization, workflow pipeline management, and live status simulation.
-
-The system provides three core views:
-
-1. **Dashboard** -- Agent stats, status distribution, KPIs, activity timeline, system health monitoring
-2. **Agent Hierarchy** -- Interactive React Flow + Dagre DAG layout with node search, context menus, layer bands, and connection strength visualization
-3. **Workflow Pipeline** -- Full CRUD for multi-step agent workflows with execution tracking, step-level status, and agent message logs
+- **Dashboard** -- Agent stats, status distribution, KPIs, activity timeline, system health monitoring
+- **Agent Hierarchy** -- Interactive React Flow + Dagre DAG layout with node search, context menus, layer bands, and connection strength visualization
+- **Workflow Pipeline** -- Full CRUD for multi-step agent workflows with execution tracking, step-level status, and agent message logs
+- **26 AI Agents** across 8 role groups and 5 hierarchy layers (L0--L4)
+- **6 Connection Types** -- command, sync, twin, delegate, supervise, broadcast
+- **Dark Design System** -- Black (#000000) background, monochrome + Cyan (#06B6D4) accent, glow effects on active nodes
 
 ## 26 Agents / 8 Role Groups
 
@@ -21,11 +20,11 @@ The system provides three core views:
 | **Strategy** | Architect, Analyst, Visionary | L0--L1 |
 | **Tactics** | Coordinator, Planner, Communicator | L1--L2 |
 | **Control** | Inspector, Evaluator, Guard | L1--L2 |
-| **Execution** | Executor-A, Executor-B, Debugger, Tester | L2--L3 |
-| **Memory** | Archivist, Observer, Diagnostician | L2--L3 |
-| **Monitoring** | Gateway, Protocolist, Dispatcher | L2--L3 |
-| **Communication** | Trainer, Scorer, Coder | L3--L4 |
-| **Learning** | Context-Manager, RAG-Specialist, Alert-Operator, Adapter | L3--L4 |
+| **Execution** | Executor-A, Executor-B, Debugger, Tester, Coder | L2--L3 |
+| **Memory** | Archivist, RAG-Specialist, Context-Manager | L2--L3 |
+| **Monitoring** | Observer, Alert-Operator, Diagnostician | L2--L3 |
+| **Communication** | Gateway, Protocolist, Dispatcher | L2--L3 |
+| **Learning** | Trainer, Adapter, Scorer | L3--L4 |
 
 ## 6 Connection Types
 
@@ -40,130 +39,23 @@ The system provides three core views:
 
 ## 5 Hierarchy Layers
 
-```
-L0  System Controller    (Architect)
-L1  Strategic Layer      (Analyst, Visionary, Inspector, Evaluator, Guard, Coordinator)
-L2  Operational Layer    (Planner, Communicator, Executor-A, Executor-B, Debugger, ...)
-L3  Specialist Layer     (Tester, Archivist, Observer, Diagnostician, Gateway, ...)
-L4  Interface Layer      (Trainer, Scorer, Coder, Context-Manager, RAG-Specialist, ...)
-```
-
-## Features
-
-### Dashboard
-
-- Quick Stats row (total agents, active tasks, success rate, avg response time)
-- Status distribution chart (Active, Idle, Paused, Standby, Error, Offline)
-- Agent performance metrics with sparklines
-- Activity timeline with real-time events
-- Connection heatmap between role groups
-- System health monitor
-- Architecture diagram
-- Add/Edit agent modals with form validation
-
-### Agent Hierarchy
-
-- Interactive DAG visualization via React Flow + Dagre layout
-- 5 hierarchy layer bands (L0--L4) with visual separation
-- 6 edge/connection types with distinct styling and strength indicators
-- Node search with glow highlighting and match count
-- Right-click context menu on nodes
-- Fit/Focus/Layout/Layers toolbar
-- Agent detail panel (status, formula, skills, connections)
-- Group sidebar filtering by role group
-- Connection flow animation (particle dots along edges)
-
-### Workflow Pipeline
-
-- Create workflows with multi-step pipelines
-- Assign agents or role groups to steps
-- Step actions: process, review, transform, delegate, broadcast, decision
-- Workflow execution with step-level status tracking
-- Agent message log per step execution
-- Workflow timeline and history views
-- Expanded view with detailed step configuration
-- Delete dialog with confirmation
-
-### Design System
-
-- Dark theme: black (#000000) background, monochrome + Cyan (#06B6D4) accent
-- Status colors: Active=Cyan, Idle=Slate, Paused=Amber, Standby=Indigo, Error=Rose, Offline=Zinc
-- Glow effects on active nodes ("breathing" animation)
-- Semi-transparent edges with strength-based stroke width
-- Real-time status simulation (15-second intervals)
+- **L0** System Controller -- Architect
+- **L1** Strategic Layer -- Analyst, Visionary, Inspector, Evaluator, Guard, Coordinator
+- **L2** Operational Layer -- Planner, Communicator, Executor-A, Executor-B, Debugger
+- **L3** Specialist Layer -- Tester, Archivist, Observer, Diagnostician, Gateway, Coder
+- **L4** Interface Layer -- Trainer, Scorer, Context-Manager, RAG-Specialist, Alert-Operator, Adapter
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|-----------|
-| Framework | Next.js 16 (App Router) + React 19 |
-| Language | TypeScript 5 (strict mode) |
-| Styling | Tailwind CSS 4 + shadcn/ui |
-| Database | SQLite via Prisma ORM |
-| Visualization | React Flow (@xyflow/react) + Dagre (DAG layout) |
-| Animation | Framer Motion |
-| State | Zustand + TanStack Query |
-| Real-time | Socket.IO (WebSocket mini-service, port 3003) |
-| Icons | Lucide React |
-
-## API Endpoints
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/agents` | GET, POST | List all agents / Create agent |
-| `/api/agents/[id]` | GET, PUT, DELETE | Get / Update / Delete agent |
-| `/api/agents/prompt` | POST | Prompt an agent (AI integration) |
-| `/api/tasks` | GET, POST | List all tasks / Create task |
-| `/api/tasks/[id]` | GET, PUT, DELETE | Get / Update / Delete task |
-| `/api/hierarchy` | GET | Full hierarchy tree with connections |
-| `/api/stats` | GET | Aggregated dashboard statistics |
-| `/api/health` | GET | System health check |
-| `/api/seed` | POST | Seed database (26 agents + tasks + groups) |
-| `/api/workflows` | GET, POST | List / Create workflows |
-| `/api/workflows/[id]` | GET, PUT, DELETE | Get / Update / Delete workflow |
-| `/api/workflows/execute` | POST | Execute a workflow |
-| `/api/workflows/seed` | POST | Seed sample workflows |
-
-## Database Schema
-
-```
-Agent
-  - id, name, role, roleGroup, status, formula
-  - parentId (hierarchy relation)
-  - twinId (twin agent relation)
-  - skills, description, avatar
-  - tasks[]
-
-Task
-  - id, title, description, status, priority
-  - agentId (assigned agent)
-  - createdAt, updatedAt
-
-Workflow
-  - id, name, description, status
-  - triggerType, triggerConfig, version, tags
-  - steps[], executions[]
-
-PipelineStep
-  - id, workflowId, order, name
-  - agentId, roleGroup, action
-  - inputSchema, outputSchema, condition
-  - fallbackStepId, timeout, retryPolicy, config
-
-WorkflowExecution
-  - id, workflowId, status
-  - taskContext, input, output, error
-  - steps[]
-
-StepExecution
-  - id, executionId, stepId, agentId, status
-  - inputData, outputData, error
-  - messages[]
-
-AgentMessage
-  - id, stepExecutionId, fromAgentId, toAgentId
-  - type, content, metadata, timestamp
-```
+- **Framework** -- Next.js 16 (App Router) + React 19
+- **Language** -- TypeScript 5 (strict mode)
+- **Styling** -- Tailwind CSS 4 + shadcn/ui
+- **Database** -- SQLite via Prisma ORM
+- **Visualization** -- React Flow (@xyflow/react) + Dagre (DAG layout)
+- **Animation** -- Framer Motion
+- **State** -- Zustand + TanStack Query
+- **Real-time** -- Socket.IO (WebSocket mini-service, port 3003)
+- **Icons** -- Lucide React
 
 ## Getting Started
 
@@ -178,8 +70,8 @@ AgentMessage
 git clone https://github.com/stsgs1980/P-MAS-v2.git
 cd P-MAS-v2
 bun install
+cp .env.example .env
 bun run db:push
-bun run seed
 bun run dev
 ```
 
@@ -199,163 +91,100 @@ Or the seed script:
 bun run seed
 ```
 
+## Scripts
+
+| Script | Description |
+|--------|-------------|
+| `bun run dev` | Development server on port 3000 |
+| `bun run build` | Production build |
+| `bun run lint` | ESLint check |
+| `bun run db:push` | Push Prisma schema to database |
+| `bun run db:generate` | Generate Prisma client |
+| `bun run db:migrate` | Run Prisma migrations |
+| `bun run db:reset` | Reset database |
+
+## Configuration
+
+### Environment Variables
+
+See `.env.example`:
+
+```env
+DATABASE_URL="file:./db/dev.db"
+```
+
+## API Reference
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/agents` | GET, POST | List all agents / Create agent |
+| `/api/agents/[id]` | GET, PUT, DELETE | Get / Update / Delete agent |
+| `/api/agents/prompt` | POST | Prompt an agent (AI integration) |
+| `/api/tasks` | GET, POST | List all tasks / Create task |
+| `/api/tasks/[id]` | GET, PUT, DELETE | Get / Update / Delete task |
+| `/api/hierarchy` | GET | Full hierarchy tree with connections |
+| `/api/stats` | GET | Aggregated dashboard statistics |
+| `/api/health` | GET | System health check |
+| `/api/seed` | POST | Seed database (26 agents + tasks + groups) |
+| `/api/workflows` | GET, POST | List / Create workflows |
+| `/api/workflows/[id]` | GET, PUT, DELETE | Get / Update / Delete workflow |
+| `/api/workflows/execute` | POST | Execute a workflow |
+| `/api/workflows/seed` | POST | Seed sample workflows |
+
 ## Project Structure
 
-```
-P-MAS-v2/
-  src/
-    app/
-      page.tsx                    # Main entry (Dashboard + Hierarchy + Workflows)
-      dashboard-panel.tsx         # Dashboard panel component
-      layout.tsx                  # Root layout
-      globals.css                 # Global styles (dark theme)
-      api/
-        agents/                   # Agent CRUD + prompt endpoint
-        tasks/                    # Task CRUD
-        hierarchy/                # Hierarchy tree data
-        stats/                    # Aggregated dashboard stats
-        health/                   # System health check
-        seed/                     # Database seeding
-        workflows/                # Workflow CRUD + execute + seed
-        prompting/                # Prompting library endpoint
-    components/
-      hierarchy/                  # Agent Hierarchy (React Flow + Dagre)
-        agent-hierarchy-v2.tsx    # Main hierarchy component
-        agent-node.tsx            # Custom React Flow node
-        agent-edge.tsx            # Custom edge with strength styling
-        agent-detail-header.tsx   # Agent detail panel header
-        agent-detail-info.tsx     # Agent detail panel info
-        agent-edit-form.tsx       # Agent edit form
-        agent-icons.ts            # Agent icon mappings
-        build-connections.ts      # Connection builder (6 types)
-        edge-particles.tsx        # Flow animation particles
-        group-sidebar.tsx         # Role group filter sidebar
-        hierarchy-canvas.tsx      # React Flow canvas wrapper
-        hierarchy-controls.tsx    # Fit/Focus/Layout toolbar
-        hierarchy-header.tsx      # Hierarchy view header
-        kpi-strip.tsx             # KPI metrics strip
-        layer-labels.tsx          # L0-L4 layer band labels
-        layout-algorithms.ts      # Dagre layout configuration
-        panels.tsx                # Detail panel components
-        add-agent-modal.tsx       # Add agent dialog
-        stat-card.tsx             # Stat card component
-        types.ts                  # Hierarchy type definitions
-      workflows/                  # Workflow Pipeline
-        workflow-pipeline.tsx     # Pipeline visualization (React Flow)
-        workflow-card.tsx         # Workflow list card
-        workflow-node.tsx         # Custom pipeline node
-        workflow-edge.tsx         # Custom pipeline edge
-        workflow-create-dialog.tsx # Create workflow dialog
-        workflow-delete-dialog.tsx # Delete confirmation dialog
-        workflow-execution-modal.tsx # Execution status modal
-        workflow-expanded-view.tsx # Expanded step detail view
-        workflow-timeline.tsx     # Execution timeline
-        workflow-history.tsx      # Workflow run history
-        workflow-sidebar.tsx      # Workflow list sidebar
-        workflow-types.ts         # Type definitions
-        workflow-contracts.tsx    # Step contract schemas
-      dashboard/                  # Dashboard components
-        dashboard-header.tsx      # Dashboard header
-        dashboard-sidebar.tsx     # Navigation sidebar
-        kpi-strip.tsx             # KPI metrics row
-        status-distribution-card.tsx # Status pie/bar chart
-        agent-performance.tsx     # Agent performance table
-        activity-timeline.tsx     # Real-time activity feed
-        system-health-monitor.tsx # System health gauge
-        connection-heatmap.tsx    # Role group connection matrix
-        architecture-diagram.tsx  # System architecture visual
-        agent-edit-modal.tsx      # Agent edit dialog
-        animated-counter.tsx      # Animated number counter
-        mini-sparkline.tsx        # Mini sparkline chart
-        collapsible-section.tsx   # Collapsible section wrapper
-      ui/                         # shadcn/ui base components
-    hooks/                        # Custom React hooks
-      use-dashboard-data.ts       # Dashboard data fetching
-      use-dashboard-ws.ts         # WebSocket connection
-      use-hierarchy-data.ts       # Hierarchy data fetching
-      use-hierarchy-state.ts      # Hierarchy UI state
-      use-agent-edit.ts           # Agent edit logic
-      use-agent-edit-form.ts      # Agent edit form state
-      use-agent-mutations.ts      # Agent CRUD mutations
-      use-workflow-data.ts        # Workflow data fetching
-      use-workflow-state.ts       # Workflow UI state
-      use-workflow-create.ts      # Workflow creation logic
-      use-execution-animation.ts  # Step execution animation
-    lib/
-      db.ts                       # Prisma client singleton
-      utils.ts                    # Utility functions (cn, etc.)
-      client-fetch.ts             # Client-side fetch wrapper
-      api-retry.ts                # API retry with backoff
-      resilience.ts               # Circuit breaker pattern
-      health-check.ts             # Health check utilities
-      circuit-breaker.ts          # Circuit breaker implementation
-      fallback-manager.ts         # Fallback provider strategy
-      prompting/                  # @stsgs/prompting library
-    data/
-      dashboard-constants.ts      # Dashboard configuration constants
-  prisma/
-    schema.prisma                 # Database schema (7 models)
-  mini-services/
-    ws-service/                   # WebSocket service (port 3003)
-    watchdog/                     # Dev server keepalive
-  docs/                           # Project documentation
-  standards/                      # Code standards (No-Unicode, Markdown, etc.)
-  instructions/                   # Agent behavioral instructions
-  assets/                         # Static assets (logo, favicon)
-```
+- `src/app/` -- Next.js App Router pages and API routes
+- `src/components/hierarchy/` -- Agent Hierarchy (React Flow + Dagre DAG)
+- `src/components/workflows/` -- Workflow Pipeline (CRUD, execution, tracking)
+- `src/components/dashboard/` -- Dashboard components (stats, KPIs, health)
+- `src/components/ui/` -- shadcn/ui base components
+- `src/hooks/` -- Custom React hooks
+- `src/lib/` -- Utilities, Prisma client, API helpers, prompting library
+- `src/data/` -- Dashboard configuration constants
+- `prisma/` -- Database schema and seed
+- `mini-services/ws-service/` -- WebSocket service (port 3003)
+- `mini-services/watchdog/` -- Dev server keepalive
+- `standards/` -- Code standards (Unicode Policy, Markdown, Frontend, GitHub, etc.)
+- `instructions/` -- Agent behavioral instructions
+- `skills/` -- Automated agent skills
+- `templates/` -- Operational templates (worklog, task template)
 
-## Architecture
+## Development Rules
 
-```
-Frontend (Next.js 16 + React 19)
-  |
-  +-- / (Dashboard) -- page.tsx
-  |     +-- Dashboard Panel (stats, KPIs, health, timeline)
-  |     +-- Agent Hierarchy (React Flow + Dagre DAG)
-  |     +-- Workflow Pipeline (CRUD, execution, tracking)
-  |
-  +-- API Routes (Next.js App Router)
-  |     +-- /api/agents      -- Agent CRUD + prompt
-  |     +-- /api/tasks       -- Task CRUD
-  |     +-- /api/hierarchy   -- Tree data with connections
-  |     +-- /api/stats       -- Aggregated dashboard data
-  |     +-- /api/health      -- System health check
-  |     +-- /api/seed        -- Database seeding
-  |     +-- /api/workflows   -- Workflow CRUD + execute
-  |
-  +-- Mini Services
-  |     +-- ws-service (port 3003) -- WebSocket real-time updates
-  |     +-- watchdog              -- Dev server keepalive
-  |
-  +-- Database (SQLite + Prisma)
-        +-- Agent (26 records)
-        +-- Task (26 records)
-        +-- Workflow + PipelineStep + WorkflowExecution
-        +-- StepExecution + AgentMessage
-```
+### Required Technologies
 
-## Design Principles
+- Next.js 16 with App Router (REQUIRED)
+- TypeScript 5 (REQUIRED)
+- Tailwind CSS 4 + shadcn/ui
+- Prisma ORM with SQLite
+- React Flow + Dagre for hierarchy visualization
 
-- **Dark background** (#000000) -- graphs and nodes "glow" on black
-- **Monochrome + one accent** (Cyan #06B6D4) -- no rainbow, data-first
-- **Radial/hierarchical layout** -- structure over chaos
-- **Glow effects** -- active nodes "breathe" with subtle animation
-- **Thin, semi-transparent edges** -- connections don't dominate the view
-- **High contrast** -- everything reads instantly against the dark canvas
-- **Minimalism** -- no decoration, data-first design
+### Anti-Monolith Rules
 
-## Development Phases
+- Component: max 150 lines, File: max 200 lines, Page: max 40 lines
+- Max 3 `useState` per component -- extract to custom hook
+- Components do not fetch data directly -- use hooks or props
+- Barrel exports for every module
+- Static imports only (no `next/dynamic` with Turbopack)
+- ESLint layer separation enforced
 
-| Phase | Focus | Status |
-|-------|-------|--------|
-| 1 | UI/UX Core (sidebar, W1280 layout, compact header) | Done |
-| 2 | Visual & Design System (Cyan accent, status colors, layer bands, search glow) | Done |
-| 3 | Data Layer (API endpoints, Prisma schema, DB seeding, 100% API-driven) | Done |
-| 4 | Animation & Interaction (edge flow, 3D shadows, cluster backgrounds) | In Progress |
-| 5 | Real-Time & CRUD (WebSocket, edit/delete agents, task management) | In Progress |
-| 6 | Quality & Production (name fixes, PDF export, mobile, performance, auth) | Planned |
+### Design System
 
-See [ROADMAP.md](ROADMAP.md) for the full task-level roadmap with status.
+- Dark background (#000000) -- graphs and nodes "glow" on black
+- Monochrome + one accent (Cyan #06B6D4) -- no rainbow, data-first
+- Status colors: Active=Cyan, Idle=Slate, Paused=Amber, Standby=Indigo, Error=Rose, Offline=Zinc
+- Glow effects -- active nodes "breathe" with subtle animation
+- High contrast -- everything reads instantly against the dark canvas
+
+## Agent Rules (Mandatory)
+
+Any AI agent working on this project MUST read and follow `AGENT_RULES.md` before performing any operations.
+
+- See `AGENT_RULES.md` for full behavioral rules
+- See `PROJECT_CONFIG.md` for project-specific settings (stack, server, paths)
+- See `instructions/` for complete rule descriptions
+- See `skills/` for automated tooling
+- See `standards/` for governance documents
 
 ## Known Issues
 
@@ -368,4 +197,4 @@ MIT
 
 ---
 
-Built with: Next.js 16 + TypeScript + Tailwind CSS 4 + Prisma + shadcn/ui + React Flow + Framer Motion + Zustand
+Built with: Next.js 16 + TypeScript + Tailwind CSS
