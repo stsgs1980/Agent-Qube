@@ -1,16 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-/* ─── Theme CSS files (per-preset [data-theme] selectors) ─── */
-@import "./themes/champagne.css";
-@import "./themes/cyan-night.css";
-@import "./themes/zinc.css";
-@import "./themes/champagne-light.css";
-@import "./themes/cyan-morning.css";
-
 @custom-variant dark (&:is(.dark *));
 
-/* ─── Tailwind v4 @theme inline — maps CSS vars to Tailwind tokens ─── */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -51,41 +43,110 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
-/* ─── Default theme fallback (zinc dark) ─── */
 :root {
-  /* Fallback: if no [data-theme] is set, use zinc dark values */
-  --radius: 12px;
-  --background: #0A0A0F;
-  --foreground: #fafafa;
-  --card: #16161A;
-  --card-foreground: #fafafa;
-  --popover: #111114;
-  --popover-foreground: #fafafa;
-  --primary: #10b981;
-  --primary-foreground: #0A0A0F;
-  --secondary: #1E1E23;
-  --secondary-foreground: #C8C8CC;
-  --muted: #16161A;
-  --muted-foreground: #83838C;
-  --accent: #1E1E23;
-  --accent-foreground: #fafafa;
-  --destructive: #ef4444;
-  --border: rgba(255,255,255,0.1);
-  --input: rgba(255,255,255,0.15);
-  --ring: #34d399;
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: #1E293B;
-  --sidebar-foreground: #E2E8F0;
-  --sidebar-primary: #10b981;
-  --sidebar-primary-foreground: #0A0A0F;
-  --sidebar-accent: #334155;
-  --sidebar-accent-foreground: #E2E8F0;
-  --sidebar-border: rgba(255,255,255,0.08);
-  --sidebar-ring: #34d399;
+  --radius: 0.625rem;
+
+  /* Monochrome Cyan Design System - Background Colors */
+  --color-bg-primary: #000000;
+  --color-bg-terrain-base: #1A1A1A;
+  --color-bg-terrain-highlight: #2D2D2D;
+  --color-bg-terrain-shadow: #0D0D0D;
+
+  /* Monochrome Cyan Design System - Accent Colors */
+  --color-road-primary: #06B6D4;
+  --color-road-secondary: #22D3EE;
+  --color-route-highlight: #FFC107;
+
+  /* Monochrome Cyan Design System - Text Colors */
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #B0B0B0;
+  --color-text-accent: #06B6D4;
+
+  /* Monochrome Cyan Design System - Grid Colors */
+  --color-grid-line: #333333;
+
+  /* Monochrome Cyan Design System - Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+
+  /* Monochrome Cyan Design System - Typography */
+  --font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-size-sm: 12px;
+  --font-size-md: 14px;
+  --font-size-lg: 16px;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --line-height: 1.5;
+
+  /* Shadcn overrides - Monochrome Cyan */
+  --background: #000000;
+  --foreground: #FFFFFF;
+  --card: #1A1A1A;
+  --card-foreground: #FFFFFF;
+  --popover: #1A1A1A;
+  --popover-foreground: #FFFFFF;
+  --primary: #06B6D4;
+  --primary-foreground: #FFFFFF;
+  --secondary: #2D2D2D;
+  --secondary-foreground: #FFFFFF;
+  --muted: #1A1A1A;
+  --muted-foreground: #B0B0B0;
+  --accent: #2D2D2D;
+  --accent-foreground: #FFFFFF;
+  --destructive: #FFC107;
+  --border: rgba(51, 51, 51, 0.5);
+  --input: rgba(51, 51, 51, 0.5);
+  --ring: #06B6D4;
+  --chart-1: #06B6D4;
+  --chart-2: #22D3EE;
+  --chart-3: #FFC107;
+  --chart-4: #6B7280;
+  --chart-5: #4B5563;
+  --sidebar: #1A1A1A;
+  --sidebar-foreground: #FFFFFF;
+  --sidebar-primary: #06B6D4;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #2D2D2D;
+  --sidebar-accent-foreground: #FFFFFF;
+  --sidebar-border: rgba(51, 51, 51, 0.5);
+  --sidebar-ring: #06B6D4;
+}
+
+.dark {
+  --background: #000000;
+  --foreground: #FFFFFF;
+  --card: #1A1A1A;
+  --card-foreground: #FFFFFF;
+  --popover: #1A1A1A;
+  --popover-foreground: #FFFFFF;
+  --primary: #06B6D4;
+  --primary-foreground: #FFFFFF;
+  --secondary: #2D2D2D;
+  --secondary-foreground: #FFFFFF;
+  --muted: #1A1A1A;
+  --muted-foreground: #B0B0B0;
+  --accent: #2D2D2D;
+  --accent-foreground: #FFFFFF;
+  --destructive: #FFC107;
+  --border: rgba(51, 51, 51, 0.5);
+  --input: rgba(51, 51, 51, 0.5);
+  --ring: #06B6D4;
+  --chart-1: #06B6D4;
+  --chart-2: #22D3EE;
+  --chart-3: #FFC107;
+  --chart-4: #6B7280;
+  --chart-5: #4B5563;
+  --sidebar: #1A1A1A;
+  --sidebar-foreground: #FFFFFF;
+  --sidebar-primary: #06B6D4;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #2D2D2D;
+  --sidebar-accent-foreground: #FFFFFF;
+  --sidebar-border: rgba(51, 51, 51, 0.5);
+  --sidebar-ring: #06B6D4;
 }
 
 @layer base {
@@ -94,27 +155,93 @@
   }
   body {
     @apply bg-background text-foreground;
-    /* Smooth theme transition */
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-  /* WCAG 2.4.7: Visible focus indicator — 2px solid ring with theme-aware color */
-  :focus-visible {
-    outline: 2px solid var(--stsgs-focus-ring, oklch(0.6 0.2 150));
-    outline-offset: 2px;
-    border-radius: 4px;
-  }
-  /* WCAG 2.1.1: Remove default focus for mouse clicks, keep for keyboard */
-  :focus:not(:focus-visible) {
-    outline: none;
+    font-family: var(--font-family);
+    line-height: var(--line-height);
   }
 }
 
-/* WCAG 2.3.3: Respect user preference for reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
+/* Terrain Theme Animations */
+@keyframes terrainGradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes terrainPulseGlow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+@keyframes terrainShimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes flowDash {
+  to { stroke-dashoffset: -20; }
+}
+
+@keyframes contourPulse {
+  0%, 100% { stroke-opacity: 0.06; }
+  50% { stroke-opacity: 0.12; }
+}
+
+@keyframes feedbackPulse {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+@keyframes pulseRing {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(1.3); opacity: 0; }
+}
+
+/* Thin Global Scrollbar 4px — Monochrome Cyan Theme */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(6, 182, 212, 0.35) transparent;
+}
+*::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+  background: rgba(6, 182, 212, 0.35);
+  border-radius: 2px;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(6, 182, 212, 0.55);
+}
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Terrain-scroll class — explicit overrides for dense panels */
+.terrain-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+.terrain-scroll::-webkit-scrollbar-track {
+  background: var(--color-bg-terrain-shadow);
+}
+.terrain-scroll::-webkit-scrollbar-thumb {
+  background: rgba(6, 182, 212, 0.35);
+  border-radius: 2px;
+}
+.terrain-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(6, 182, 212, 0.55);
+}
+
+/* Custom scrollbar — thin cyan for agent list panels */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(6, 182, 212, 0.35);
+  border-radius: 2px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
 }

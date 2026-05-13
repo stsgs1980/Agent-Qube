@@ -843,3 +843,47 @@ Stage Summary:
 - ScifiGauge replaces 100+ gauge instances across 17 files
 - ScifiCanvasChart replaces 20+ canvas chart implementations across 14 files
 - Next: Tier 2 extraction (PeriodSelector, Chronology)
+
+---
+Task ID: 1
+Agent: Deploy P-MAS-v2
+Task: Deploy P-MAS-v2 code into current sandbox
+
+Work Log:
+- Read worklog.md for context on previous agent work (UI-Kit monorepo, 9+ tasks)
+- Killed running dev server processes (next-server, postcss on port 3000)
+- Copied P-MAS-v2 source files from /tmp/P-MAS-v2-check/:
+  - src/ (100 files) - overwrote existing, includes hierarchy/, workflows/, components/ui/, lib/prompting/, lib/db.ts, API routes
+  - prisma/schema.prisma (7 models: Agent, Task, Workflow, PipelineStep, WorkflowExecution, StepExecution, AgentMessage)
+  - mini-services/ (ws-service, watchdog)
+  - docs/ (hierarchy wireframes, redesign analysis, usage docs)
+  - instructions/ (5 instruction files)
+  - skills/ (merged 50 P-MAS-v2 skills with existing skills, no skill loss)
+  - ROADMAP.md, AGENT_RULES.md
+  - examples/, public/, agent-ctx/, templates/, standards/, db/, screenshots/, download/
+- Merged package.json: added 4 missing dependencies (@types/dagre, @xyflow/react, dagre, socket.io-client)
+- Kept existing devDependencies and scripts (db:push, db:generate, db:migrate, db:reset)
+- Verified .env has DATABASE_URL=file:/home/z/my-project/db/custom.db
+- Ran bun install: 4 new packages installed successfully
+- Ran bun run db:push: schema synced, Prisma Client generated
+- Seeded database directly via bun script: 26 agents, 10 tasks created
+- Disabled Prisma query logging (changed from ['query'] to ['error']) to reduce memory overhead
+- Updated keep-alive.sh with health-check monitoring and auto-restart
+- Verified app functionality:
+  - Homepage returns HTTP 200 with P-MAS Dashboard content (23KB HTML)
+  - /api/health returns {"status":"ok","service":"p-mas"}
+  - /api/stats returns correct data: 26 agents, 8 role groups, 20 cognitive formulas, 6 edge types, 10 tasks
+  - /api/workflows returns 200
+  - /api/agents returns 200
+  - /hierarchy page returns 200
+- Preserved: .git directory, Caddyfile, tsconfig.json, next.config.ts, postcss.config.mjs, tailwind.config.ts
+- Built production bundle successfully (15 routes: 2 static + 13 dynamic)
+
+Stage Summary:
+- P-MAS-v2 fully deployed to /home/z/my-project/
+- Database: 26 agents across 8 role groups (Strategy, Tactics, Control, Execution, Memory, Monitoring, Comms, Learning) + 10 tasks
+- API routes working: health, stats, agents, tasks, workflows, hierarchy, prompting, seed
+- Dashboard page renders correctly with title "P-MAS Dashboard -- Multi-Agent System"
+- Known issue: Next.js dev server crashes periodically due to memory pressure (~1.1GB RSS in sandbox with 8GB RAM). Keep-alive script auto-restarts server on crash.
+- Production build available at .next/standalone/ as fallback (uses less memory)
+- All P-MAS-v2 skills (50+) merged with existing skills (no loss)
