@@ -25,15 +25,15 @@ and automated alerts to prevent issues before they affect users.
 ```javascript
 async function checkApiHealth(url) {
   const startTime = Date.now();
-  
+
   try {
     const response = await fetch(url, {
       method: 'HEAD', // Use HEAD for minimal data transfer
       signal: AbortSignal.timeout(5000) // 5 second timeout
     });
-    
+
     const responseTime = Date.now() - startTime;
-    
+
     return {
       healthy: response.ok,
       status: response.status,
@@ -42,7 +42,7 @@ async function checkApiHealth(url) {
     };
   } catch (error) {
     const responseTime = Date.now() - startTime;
-    
+
     return {
       healthy: false,
       error: error.message,
@@ -70,16 +70,16 @@ async function checkMultipleEndpoints(endpoints) {
       };
     })
   );
-  
+
   const results = {
     timestamp: new Date().toISOString(),
     overallHealthy: checks.every(c => c.healthy),
     endpoints: checks
   };
-  
+
   // Log to worklog
   logHealthCheck(results);
-  
+
   return results;
 }
 
@@ -101,23 +101,23 @@ class FailureTracker {
     this.failureThreshold = threshold;
     this.lastFailureTime = null;
   }
-  
+
   recordFailure() {
     this.consecutiveFailures++;
     this.lastFailureTime = new Date().toISOString();
-    
+
     if (this.consecutiveFailures >= this.failureThreshold) {
       this.alert('FAILURE_THRESHOLD_EXCEEDED');
     }
   }
-  
+
   recordSuccess() {
     if (this.consecutiveFailures > 0) {
       console.log(`Recovered from ${this.consecutiveFailures} consecutive failures`);
     }
     this.consecutiveFailures = 0;
   }
-  
+
   alert(type) {
     const alert = {
       type: type,
@@ -125,10 +125,10 @@ class FailureTracker {
       consecutiveFailures: this.consecutiveFailures,
       lastFailureTime: this.lastFailureTime
     };
-    
+
     console.error('HEALTH ALERT:', alert);
     logAlert(alert);
-    
+
     // Could send to monitoring service, email, etc.
   }
 }
@@ -153,27 +153,27 @@ class ResponseTimeMonitor {
     this.windowSize = windowSize;
     this.alertThreshold = alertThreshold;
   }
-  
+
   record(responseTime) {
     this.responseTimes.push(responseTime);
-    
+
     if (this.responseTimes.length > this.windowSize) {
       this.responseTimes.shift();
     }
-    
+
     const avgResponseTime = this.getAverage();
-    
+
     if (avgResponseTime > this.alertThreshold) {
       this.alert('SLOW_RESPONSE', avgResponseTime);
     }
   }
-  
+
   getAverage() {
     if (this.responseTimes.length === 0) return 0;
     const sum = this.responseTimes.reduce((a, b) => a + b, 0);
     return sum / this.responseTimes.length;
   }
-  
+
   alert(type, value) {
     const alert = {
       type: type,
@@ -181,7 +181,7 @@ class ResponseTimeMonitor {
       threshold: this.alertThreshold,
       timestamp: new Date().toISOString()
     };
-    
+
     console.warn('PERFORMANCE ALERT:', alert);
   }
 }
@@ -209,38 +209,38 @@ class HealthMonitor {
     );
     this.isRunning = false;
   }
-  
+
   start() {
     if (this.isRunning) return;
-    
+
     this.isRunning = true;
     console.log(`Starting health monitor for ${this.endpoint}`);
-    
+
     this.intervalId = setInterval(async () => {
       await this.check();
     }, this.interval);
   }
-  
+
   stop() {
     if (!this.isRunning) return;
-    
+
     clearInterval(this.intervalId);
     this.isRunning = false;
     console.log(`Stopped health monitor for ${this.endpoint}`);
   }
-  
+
   async check() {
     try {
       const health = await checkApiHealth(this.endpoint);
-      
+
       if (health.healthy) {
         this.failureTracker.recordSuccess();
       } else {
         this.failureTracker.recordFailure();
       }
-      
+
       this.responseTimeMonitor.record(health.responseTime);
-      
+
       return health;
     } catch (error) {
       this.failureTracker.recordFailure();
@@ -270,7 +270,7 @@ monitor.start();
 ```javascript
 async function checkChatZaiHealth() {
   const url = 'https://chat.z.ai/health';
-  
+
   try {
     const response = await fetch(url, {
       method: 'GET',
@@ -279,7 +279,7 @@ async function checkChatZaiHealth() {
         'User-Agent': 'AgentToolkit/1.4.0'
       }
     });
-    
+
     const health = {
       timestamp: new Date().toISOString(),
       status: response.status,
@@ -287,10 +287,10 @@ async function checkChatZaiHealth() {
       responseTime: Date.now() - startTime,
       contentType: response.headers.get('content-type')
     };
-    
+
     // Log to worklog
     logHealthCheck('chat.z.ai', health);
-    
+
     return health;
   } catch (error) {
     const health = {
@@ -300,7 +300,7 @@ async function checkChatZaiHealth() {
       error: error.message,
       responseTime: Date.now() - startTime
     };
-    
+
     logHealthCheck('chat.z.ai', health);
     return health;
   }
@@ -313,27 +313,27 @@ async function checkChatZaiHealth() {
 async function agentWorkflowWithHealthCheck() {
   // Step 1: Check health before making requests
   const health = await checkChatZaiHealth();
-  
+
   if (!health.healthy) {
     console.warn('chat.z.ai is unhealthy, using fallback');
     return await fallbackProvider();
   }
-  
+
   // Step 2: Make request with retry logic
   try {
     const response = await apiRetry.chatZaiRequest('/api/completions', options);
     return response;
   } catch (error) {
     console.error('Request failed after retries, checking health...');
-    
+
     // Step 3: Re-check health after failure
     const recheckHealth = await checkChatZaiHealth();
-    
+
     if (!recheckHealth.healthy) {
       console.warn('chat.z.ai confirmed unhealthy');
       return await fallbackProvider();
     }
-    
+
     throw error;
   }
 }
@@ -353,7 +353,7 @@ function logHealthCheck(service, health) {
     responseTime: health.responseTime,
     circuitBreakerState: circuitBreaker?.state || 'N/A'
   };
-  
+
   // Append to worklog
   appendToWorklog(`HEALTH_CHECK: ${JSON.stringify(logEntry)}`);
 }
@@ -364,10 +364,10 @@ function logAlert(alert) {
     type: alert.type,
     details: alert
   };
-  
+
   // Append to worklog
   appendToWorklog(`HEALTH_ALERT: ${JSON.stringify(logEntry)}`);
-  
+
   // Could also send to external monitoring
 }
 ```
