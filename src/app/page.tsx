@@ -1,11 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import dynamic from 'next/dynamic'
-
-const DashboardPanel = dynamic(() => import('./dashboard-panel'), { ssr: false })
-const AgentHierarchy = dynamic(() => import('@/components/hierarchy/agent-hierarchy-v2'), { ssr: false })
-const WorkflowPipeline = dynamic(() => import('@/components/workflows/workflow-pipeline'), { ssr: false })
+import DashboardPanel from './dashboard-panel'
+import AgentHierarchy from '@/components/hierarchy/agent-hierarchy-v2'
+import WorkflowPipeline from '@/components/workflows/workflow-pipeline'
 
 export default function Home() {
   const [activeView, setActiveView] = useState<'dashboard' | 'hierarchy' | 'workflows'>('dashboard')
