@@ -14,8 +14,8 @@ export async function POST() {
     await db.workflow.deleteMany()
 
     // ─── Workflow 1: Full Development Pipeline ────────────────────────────
-    // Request → Analitik → Koordinator → Koder → Testirovshchik → Revizor
-    // With feedback loop: if Testirovshchik finds bugs → back to Koder
+    // Request → Analyst → Coordinator → Coder → Tester → Inspector
+    // With feedback loop: if Tester finds bugs → back to Coder
     const devPipeline = await db.workflow.create({
       data: {
         name: 'Development Pipeline',

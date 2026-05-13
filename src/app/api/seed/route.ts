@@ -3,46 +3,46 @@ import { NextResponse } from 'next/server'
 
 const sampleAgents = [
   // === Стратегия (Strategy) ===
-  { name: 'Arkhitektor', role: 'Chief Strategy Agent', roleGroup: 'Стратегия', status: 'active', formula: 'ToT', skills: 'planning,architecture,strategy', description: 'Chief strategic agent that formulates goals and paths to achieve them', avatar: 'building-2' },
-  { name: 'Analitik', role: 'Strategy Analyst', roleGroup: 'Стратегия', status: 'active', formula: 'CoVe', skills: 'analysis,forecasting,modeling', description: 'Analyzes input data and forms strategic recommendations', avatar: 'bar-chart-3' },
-  { name: 'Vizioner', role: 'Vision Agent', roleGroup: 'Стратегия', status: 'active', formula: 'GoT', skills: 'creativity,vision,innovation', description: 'Generates long-term visions and explores branching possibilities via graph reasoning', avatar: 'sparkles' },
+  { name: 'Architect', role: 'Chief Strategy Agent', roleGroup: 'Стратегия', status: 'active', formula: 'ToT', skills: 'planning,architecture,strategy', description: 'Chief strategic agent that formulates goals and paths to achieve them', avatar: 'building-2' },
+  { name: 'Analyst', role: 'Strategy Analyst', roleGroup: 'Стратегия', status: 'active', formula: 'CoVe', skills: 'analysis,forecasting,modeling', description: 'Analyzes input data and forms strategic recommendations', avatar: 'bar-chart-3' },
+  { name: 'Visionary', role: 'Vision Agent', roleGroup: 'Стратегия', status: 'active', formula: 'GoT', skills: 'creativity,vision,innovation', description: 'Generates long-term visions and explores branching possibilities via graph reasoning', avatar: 'sparkles' },
 
   // === Тактика (Tactics) ===
-  { name: 'Koordinator', role: 'Tactical Coordinator', roleGroup: 'Тактика', status: 'active', formula: 'ReWOO', skills: 'coordination,delegation,management', description: 'Coordinates the tactical group and distributes tasks', avatar: 'target' },
-  { name: 'Planirovshchik', role: 'Task Planner', roleGroup: 'Тактика', status: 'active', formula: 'ReAct', skills: 'planning,estimation,prioritization', description: 'Breaks down strategic goals into concrete tasks', avatar: 'clipboard-list' },
-  { name: 'Kommunikator', role: 'Inter-Agent Comm', roleGroup: 'Тактика', status: 'idle', formula: 'SelfConsistency', skills: 'communication,synchronization,transfer', description: 'Ensures communication between agents and groups, uses majority vote for message consistency', avatar: 'radio' },
+  { name: 'Coordinator', role: 'Tactical Coordinator', roleGroup: 'Тактика', status: 'active', formula: 'ReWOO', skills: 'coordination,delegation,management', description: 'Coordinates the tactical group and distributes tasks', avatar: 'target' },
+  { name: 'Planner', role: 'Task Planner', roleGroup: 'Тактика', status: 'active', formula: 'ReAct', skills: 'planning,estimation,prioritization', description: 'Breaks down strategic goals into concrete tasks', avatar: 'clipboard-list' },
+  { name: 'Communicator', role: 'Inter-Agent Comm', roleGroup: 'Тактика', status: 'idle', formula: 'SelfConsistency', skills: 'communication,synchronization,transfer', description: 'Ensures communication between agents and groups, uses majority vote for message consistency', avatar: 'radio' },
 
   // === Контроль (Control) ===
-  { name: 'Revizor', role: 'Quality Controller', roleGroup: 'Контроль', status: 'active', formula: 'Reflexion', skills: 'inspection,validation,quality_control', description: 'Controls task execution quality and standard compliance', avatar: 'search' },
-  { name: 'Ocenshchik', role: 'Performance Evaluator', roleGroup: 'Контроль', status: 'active', formula: 'CoVe', skills: 'evaluation,metrics,reporting', description: 'Evaluates agent performance and result quality', avatar: 'trending-up' },
-  { name: 'Strazh', role: 'Safety Guard', roleGroup: 'Контроль', status: 'active', formula: 'ReAct', skills: 'security,filtering,protection', description: 'Ensures security and prevents undesirable actions', avatar: 'shield-check' },
+  { name: 'Inspector', role: 'Quality Controller', roleGroup: 'Контроль', status: 'active', formula: 'Reflexion', skills: 'inspection,validation,quality_control', description: 'Controls task execution quality and standard compliance', avatar: 'search' },
+  { name: 'Evaluator', role: 'Performance Evaluator', roleGroup: 'Контроль', status: 'active', formula: 'CoVe', skills: 'evaluation,metrics,reporting', description: 'Evaluates agent performance and result quality', avatar: 'trending-up' },
+  { name: 'Guard', role: 'Safety Guard', roleGroup: 'Контроль', status: 'active', formula: 'ReAct', skills: 'security,filtering,protection', description: 'Ensures security and prevents undesirable actions', avatar: 'shield-check' },
 
   // === Исполнение (Execution) ===
-  { name: 'Ispolnitel-A', role: 'Primary Executor', roleGroup: 'Исполнение', status: 'active', formula: 'ReAct', skills: 'execution,coding,generation', description: 'Primary execution agent for content and code generation', avatar: 'zap' },
-  { name: 'Ispolnitel-B', role: 'Secondary Executor', roleGroup: 'Исполнение', status: 'active', formula: 'MoA', skills: 'execution,analysis,processing', description: 'Secondary execution agent, works in tandem with Ispolnitel-A', avatar: 'flame' },
-  { name: 'Otladchik', role: 'Debug Agent', roleGroup: 'Исполнение', status: 'idle', formula: 'SelfRefine', skills: 'debugging,correction,optimization', description: 'Fixes errors and iteratively refines results from other executors', avatar: 'bug' },
-  { name: 'Testirovshchik', role: 'Test Agent', roleGroup: 'Исполнение', status: 'active', formula: 'PoT', skills: 'testing,verification,validation', description: 'Tests work results via programmatic reasoning and code execution', avatar: 'check-circle' },
-  { name: 'Koder', role: 'Code Generator', roleGroup: 'Исполнение', status: 'active', formula: 'PoT', skills: 'coding,implementation,generation', description: 'Generates code via Program of Thought reasoning', avatar: 'binary' },
+  { name: 'Executor-A', role: 'Primary Executor', roleGroup: 'Исполнение', status: 'active', formula: 'ReAct', skills: 'execution,coding,generation', description: 'Primary execution agent for content and code generation', avatar: 'zap' },
+  { name: 'Executor-B', role: 'Secondary Executor', roleGroup: 'Исполнение', status: 'active', formula: 'MoA', skills: 'execution,analysis,processing', description: 'Secondary execution agent, works in tandem with Executor-A', avatar: 'flame' },
+  { name: 'Debugger', role: 'Debug Agent', roleGroup: 'Исполнение', status: 'idle', formula: 'SelfRefine', skills: 'debugging,correction,optimization', description: 'Fixes errors and iteratively refines results from other executors', avatar: 'bug' },
+  { name: 'Tester', role: 'Test Agent', roleGroup: 'Исполнение', status: 'active', formula: 'PoT', skills: 'testing,verification,validation', description: 'Tests work results via programmatic reasoning and code execution', avatar: 'check-circle' },
+  { name: 'Coder', role: 'Code Generator', roleGroup: 'Исполнение', status: 'active', formula: 'PoT', skills: 'coding,implementation,generation', description: 'Generates code via Program of Thought reasoning', avatar: 'binary' },
 
   // === Память (Memory/Knowledge) ===
-  { name: 'Arkhivarius', role: 'Knowledge Archivist', roleGroup: 'Память', status: 'active', formula: 'CoT', skills: 'indexing,retrieval,archiving', description: 'Maintains the knowledge base and indexes information for retrieval', avatar: 'book-open' },
+  { name: 'Archivist', role: 'Knowledge Archivist', roleGroup: 'Память', status: 'active', formula: 'CoT', skills: 'indexing,retrieval,archiving', description: 'Maintains the knowledge base and indexes information for retrieval', avatar: 'book-open' },
   { name: 'RAG-Specialist', role: 'RAG Retrieval Agent', roleGroup: 'Память', status: 'active', formula: 'AoT', skills: 'retrieval,augmentation,context', description: 'Retrieves relevant context via algorithmic reasoning and augments agent inputs', avatar: 'file-search' },
-  { name: 'Kontekst-Manager', role: 'Context Manager', roleGroup: 'Память', status: 'standby', formula: 'SoT', skills: 'context,window,prioritization', description: 'Manages context windows and prioritizes information within token limits', avatar: 'hard-drive' },
+  { name: 'Context-Manager', role: 'Context Manager', roleGroup: 'Память', status: 'standby', formula: 'SoT', skills: 'context,window,prioritization', description: 'Manages context windows and prioritizes information within token limits', avatar: 'hard-drive' },
 
   // === Мониторинг (Monitoring) ===
-  { name: 'Nablyudatel', role: 'System Observer', roleGroup: 'Мониторинг', status: 'active', formula: 'CoT', skills: 'observation,logging,metrics', description: 'Observes all agent activity and collects runtime metrics', avatar: 'monitor' },
+  { name: 'Observer', role: 'System Observer', roleGroup: 'Мониторинг', status: 'active', formula: 'CoT', skills: 'observation,logging,metrics', description: 'Observes all agent activity and collects runtime metrics', avatar: 'monitor' },
   { name: 'Alert-Operator', role: 'Alert Agent', roleGroup: 'Мониторинг', status: 'paused', formula: 'LATS', skills: 'alerting,escalation,notification', description: 'Monitors for anomalies and triggers alerts using tree search reasoning', avatar: 'bell' },
-  { name: 'Diagnost', role: 'Diagnostics Agent', roleGroup: 'Мониторинг', status: 'active', formula: 'GoT', skills: 'diagnostics,root-cause,analysis', description: 'Diagnoses issues by modeling failure graphs and tracing root causes', avatar: 'gauge' },
+  { name: 'Diagnostician', role: 'Diagnostics Agent', roleGroup: 'Мониторинг', status: 'active', formula: 'GoT', skills: 'diagnostics,root-cause,analysis', description: 'Diagnoses issues by modeling failure graphs and tracing root causes', avatar: 'gauge' },
 
   // === Коммуникация (Communication) ===
-  { name: 'Shlyuz', role: 'Gateway Agent', roleGroup: 'Коммуникация', status: 'active', formula: 'PromptChaining', skills: 'gateway,routing,protocol-translation', description: 'API gateway agent that routes requests and translates protocols between agent groups', avatar: 'network' },
-  { name: 'Protokolista', role: 'Protocol Agent', roleGroup: 'Коммуникация', status: 'active', formula: 'StepBack', skills: 'formatting,serialization,messaging', description: 'Handles message formatting, inter-agent protocol, and data serialization by abstracting before solving', avatar: 'workflow' },
-  { name: 'Dispeter', role: 'Dispatcher Agent', roleGroup: 'Коммуникация', status: 'active', formula: 'PlanAndSolve', skills: 'dispatching,load-balancing,queue', description: 'Dispatches tasks, balances load, and manages queues using plan-then-execute reasoning', avatar: 'git-branch' },
+  { name: 'Gateway', role: 'Gateway Agent', roleGroup: 'Коммуникация', status: 'active', formula: 'PromptChaining', skills: 'gateway,routing,protocol-translation', description: 'API gateway agent that routes requests and translates protocols between agent groups', avatar: 'network' },
+  { name: 'Protocolist', role: 'Protocol Agent', roleGroup: 'Коммуникация', status: 'active', formula: 'StepBack', skills: 'formatting,serialization,messaging', description: 'Handles message formatting, inter-agent protocol, and data serialization by abstracting before solving', avatar: 'workflow' },
+  { name: 'Dispatcher', role: 'Dispatcher Agent', roleGroup: 'Коммуникация', status: 'active', formula: 'PlanAndSolve', skills: 'dispatching,load-balancing,queue', description: 'Dispatches tasks, balances load, and manages queues using plan-then-execute reasoning', avatar: 'git-branch' },
 
   // === Обучение (Learning/Training) ===
-  { name: 'Trener', role: 'Trainer Agent', roleGroup: 'Обучение', status: 'active', formula: 'DSPy', skills: 'fine-tuning,feedback,skill-improvement', description: 'Fine-tunes agent behavior, integrates feedback loops, and improves skills via declarative self-improving optimization', avatar: 'refresh-ccw' },
+  { name: 'Trainer', role: 'Trainer Agent', roleGroup: 'Обучение', status: 'active', formula: 'DSPy', skills: 'fine-tuning,feedback,skill-improvement', description: 'Fine-tunes agent behavior, integrates feedback loops, and improves skills via declarative self-improving optimization', avatar: 'refresh-ccw' },
   { name: 'Adapter', role: 'Adapter Agent', roleGroup: 'Обучение', status: 'active', formula: 'MetaCoT', skills: 'adaptation,transfer,knowledge-acquisition', description: 'Acquires new skills and transfers knowledge across domains using meta-reasoning over chain of thought', avatar: 'sparkles' },
-  { name: 'Otsenochnik', role: 'Evaluator Agent', roleGroup: 'Обучение', status: 'idle', formula: 'LeastToMost', skills: 'scoring,reward-modeling,benchmarking', description: 'Evaluates performance, models rewards, and tracks benchmarks using progressive complexity reasoning', avatar: 'bar-chart-3' },
+  { name: 'Scorer', role: 'Evaluator Agent', roleGroup: 'Обучение', status: 'idle', formula: 'LeastToMost', skills: 'scoring,reward-modeling,benchmarking', description: 'Evaluates performance, models rewards, and tracks benchmarks using progressive complexity reasoning', avatar: 'bar-chart-3' },
 ]
 
 const sampleTasks = [
@@ -88,62 +88,62 @@ export async function POST() {
     }
 
     // Set up hierarchy relationships
-    // Стратегия: Arkhitektor -> Analitik, Vizioner
+    // Стратегия: Architect -> Analyst, Visionary
     if (created[0] && created[1]) {
       await db.agent.update({ where: { id: created[1].id }, data: { parentId: created[0].id } })
     }
     if (created[0] && created[2]) {
       await db.agent.update({ where: { id: created[2].id }, data: { parentId: created[0].id } })
     }
-    // Тактика: Koordinator -> Planirovshchik, Kommunikator
+    // Тактика: Coordinator -> Planner, Communicator
     if (created[3] && created[4]) {
       await db.agent.update({ where: { id: created[4].id }, data: { parentId: created[3].id } })
     }
     if (created[3] && created[5]) {
       await db.agent.update({ where: { id: created[5].id }, data: { parentId: created[3].id } })
     }
-    // Контроль: Revizor -> Ocenshchik, Strazh
+    // Контроль: Inspector -> Evaluator, Guard
     if (created[6] && created[7]) {
       await db.agent.update({ where: { id: created[7].id }, data: { parentId: created[6].id } })
     }
     if (created[6] && created[8]) {
       await db.agent.update({ where: { id: created[8].id }, data: { parentId: created[6].id } })
     }
-    // Исполнение: Ispolnitel-A twin Ispolnitel-B
+    // Исполнение: Executor-A twin Executor-B
     if (created[9] && created[10]) {
       await db.agent.update({ where: { id: created[9].id }, data: { twinId: created[10].id } })
       await db.agent.update({ where: { id: created[10].id }, data: { twinId: created[9].id } })
     }
-    // Исполнение: Testirovshchik parent = Ispolnitel-A (tests results)
+    // Исполнение: Tester parent = Executor-A (tests results)
     if (created[12] && created[9]) {
       await db.agent.update({ where: { id: created[12].id }, data: { parentId: created[9].id } })
     }
-    // Исполнение: Koder parent = Ispolnitel-A
+    // Исполнение: Coder parent = Executor-A
     if (created[13] && created[9]) {
       await db.agent.update({ where: { id: created[13].id }, data: { parentId: created[9].id } })
     }
-    // Память: Arkhivarius -> RAG-Specialist, Kontekst-Manager
+    // Память: Archivist -> RAG-Specialist, Context-Manager
     if (created[14] && created[15]) {
       await db.agent.update({ where: { id: created[15].id }, data: { parentId: created[14].id } })
     }
     if (created[14] && created[16]) {
       await db.agent.update({ where: { id: created[16].id }, data: { parentId: created[14].id } })
     }
-    // Мониторинг: Nablyudatel -> Alert-Operator, Diagnost
+    // Мониторинг: Observer -> Alert-Operator, Diagnostician
     if (created[17] && created[18]) {
       await db.agent.update({ where: { id: created[18].id }, data: { parentId: created[17].id } })
     }
     if (created[17] && created[19]) {
       await db.agent.update({ where: { id: created[19].id }, data: { parentId: created[17].id } })
     }
-    // Коммуникация: Shlyuz -> Protokolista, Dispeter
+    // Коммуникация: Gateway -> Protocolist, Dispatcher
     if (created[20] && created[21]) {
       await db.agent.update({ where: { id: created[21].id }, data: { parentId: created[20].id } })
     }
     if (created[20] && created[22]) {
       await db.agent.update({ where: { id: created[22].id }, data: { parentId: created[20].id } })
     }
-    // Обучение: Trener -> Adapter, Otsenochnik
+    // Обучение: Trainer -> Adapter, Scorer
     if (created[23] && created[24]) {
       await db.agent.update({ where: { id: created[24].id }, data: { parentId: created[23].id } })
     }

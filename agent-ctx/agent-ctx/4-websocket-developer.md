@@ -22,7 +22,7 @@ Implemented WebSocket-based real-time updates for the P-MAS multi-agent system, 
 
 ## Verification
 - ws-service starts and connects to DB (26 agents found)
-- Status simulation fires (observed `[status] Vizioner: active -> paused`, etc.)
+- Status simulation fires (observed `[status] Visionary: active -> paused`, etc.)
 - Client connects successfully (observed `[connect] client ...`)
 - Lint: 0 errors in modified files
 - Dev server: GET / 200 OK

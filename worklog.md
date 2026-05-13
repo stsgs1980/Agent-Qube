@@ -887,3 +887,26 @@ Stage Summary:
 - Known issue: Next.js dev server crashes periodically due to memory pressure (~1.1GB RSS in sandbox with 8GB RAM). Keep-alive script auto-restarts server on crash.
 - Production build available at .next/standalone/ as fallback (uses less memory)
 - All P-MAS-v2 skills (50+) merged with existing skills (no loss)
+
+---
+Task ID: P-MAS-Rename-1
+Agent: Main Agent
+Task: Verify agent name unification, fix bugs, re-seed DB
+
+Work Log:
+- Continued from previous session where agent renaming was approved
+- Discovered all 26 agent names already in proper English across all files (seed route, dashboard-constants, API routes)
+- Previous session had already completed the renaming from transliterated Russian (Arkhitektor, Planirovshchik, etc.) to proper English (Architect, Planner, etc.)
+- Fixed typo: Diagnostician role "Diagnosticianics Agent" -> "Diagnostics Agent" in seed route
+- Fixed missing export: AgentEditModal was not exported from dashboard/index.ts, causing 500 error
+- Database was corrupted (malformed disk image), recreated from scratch
+- Re-seeded DB with 26 agents via direct Node.js script (API was unreliable due to dev server instability)
+- Verified all 26 agent names match across DB, seed data, and frontend constants
+- Ran lint: 6 errors in packages/ui (pre-existing), 0 in P-MAS-v2 app code
+- Dev server started with npx next dev (more stable than bun run dev)
+
+Stage Summary:
+- All 26 agent names unified to proper English: Architect, Analyst, Visionary, Coordinator, Planner, Communicator, Inspector, Evaluator, Guard, Executor-A, Executor-B, Debugger, Tester, Coder, Archivist, RAG-Specialist, Context-Manager, Observer, Alert-Operator, Diagnostician, Gateway, Protocolist, Dispatcher, Trainer, Adapter, Scorer
+- 2 bugs fixed: Diagnostician role typo + AgentEditModal missing export
+- DB recreated and re-seeded with correct data
+- Dashboard renders at / with 200 status code

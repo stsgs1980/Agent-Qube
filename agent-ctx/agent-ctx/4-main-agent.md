@@ -6,22 +6,22 @@
 
 ### 1. `/home/z/my-project/src/app/api/seed/route.ts`
 - Added 6 new agents to `sampleAgents` array (indices 20-25):
-  - Shlyuz (Коммуникация, PromptChaining, network)
-  - Protokolista (Коммуникация, StepBack, workflow)
-  - Dispeter (Коммуникация, PlanAndSolve, git-branch)
-  - Trener (Обучение, DSPy, refresh-ccw)
+  - Gateway (Коммуникация, PromptChaining, network)
+  - Protocolist (Коммуникация, StepBack, workflow)
+  - Dispatcher (Коммуникация, PlanAndSolve, git-branch)
+  - Trainer (Обучение, DSPy, refresh-ccw)
   - Adapter (Обучение, MetaCoT, sparkles)
-  - Otsenochnik (Обучение, LeastToMost, bar-chart-3)
+  - Scorer (Обучение, LeastToMost, bar-chart-3)
 - Added 6 new tasks (indices 20-25) for the new agents
 - Added hierarchy relationships:
-  - Shlyuz -> Protokolista, Dispeter (Коммуникация)
-  - Trener -> Adapter, Otsenochnik (Обучение)
+  - Gateway -> Protocolist, Dispatcher (Коммуникация)
+  - Trainer -> Adapter, Scorer (Обучение)
 - Total: 26 agents, 26 tasks
 
 ### 2. `/home/z/my-project/src/app/api/hierarchy/route.ts`
 - Complete rewrite with all 8 role groups in `groups` object
 - EdgeType expanded to: `'command' | 'sync' | 'twin' | 'delegate' | 'supervise' | 'broadcast'`
-- Added delegate edge generation: Koordinator -> all Исполнение agents
+- Added delegate edge generation: Coordinator -> all Исполнение agents
 - Added supervise edge generation: all Контроль agents -> all Исполнение agents
 - Added broadcast edge generation: Стратегия root agents -> group leads in all other groups
 - Added paused/standby to stats
