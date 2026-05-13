@@ -1,7 +1,6 @@
-# Worklog — @stsgs/ui
+# Worklog — P-MAS-v2
 
-> Agent work journal for the UI-Kit project.
-> Based on: agent-toolkit v1.5.0 templates.
+> Agent work journal for the Prompt-based Multi-Agent System Dashboard project.
 
 ---
 
@@ -1242,3 +1241,70 @@ Stage Summary:
 - Key optimization: lazy-loaded prompting library in /api/agents POST to reduce memory
 - Key optimization: dynamic import for DashboardPanel to reduce initial compile
 - DB verified: 26 agents, 26 tasks, all English names
+
+---
+Task ID: 2
+Agent: CHANGELOG-writer
+Task: Completely rewrite CHANGELOG.md for P-MAS-v2 project
+
+Work Log:
+- Read /home/z/my-project/worklog.md to understand previous agent work
+- Read existing CHANGELOG.md: found it was entirely about @stsgs/ui (wrong project)
+- Read ROADMAP.md: confirmed P-MAS-v2 project with 6 phases, 26 agents, 8 role groups
+- Read prisma/schema.prisma: verified Agent, Task, Workflow, PipelineStep, WorkflowExecution, StepExecution, AgentMessage models
+- Completely rewrote CHANGELOG.md with 3 proper versions:
+  - [0.3.0] 2025-06-15: Agent renaming (Russian to English), roleGroup translation, ChunkLoadError fix, status count fix, server crash fix
+  - [0.2.0] 2025-06-14: Workflow Pipeline, Agent Hierarchy v2 (React Flow + Dagre), 5-layer DAG, sidebar, detail panel, search, keyboard shortcuts, context menu, KPI strip, anti-monolith splits
+  - [0.1.0] 2025-06-12: Initial P-MAS Dashboard, dark theme, quick stats, status distribution, agent sidebar, Prisma schema, SQLite seed, API endpoints, anti-monolith rules, No-Unicode policy, AI rules
+- Followed Keep a Changelog format with Added/Changed/Fixed sections
+- Removed all @stsgs/ui references
+
+Stage Summary:
+- CHANGELOG.md rewritten from scratch for P-MAS-v2 (was incorrectly about @stsgs/ui)
+- 3 versions documented: 0.1.0, 0.2.0, 0.3.0
+- Keep a Changelog format with proper sections (Added, Changed, Fixed)
+- All entries verified against ROADMAP.md phases and prisma schema
+
+---
+Task ID: 1
+Agent: README-writer
+Task: Completely rewrite README.md for P-MAS-v2 project (remove all @stsgs/ui Interface Studio content)
+
+Work Log:
+- Read /home/z/my-project/worklog.md to understand previous agent history (old @stsgs/ui project work)
+- Read current README.md -- confirmed it was entirely about @stsgs/ui Interface Studio (wrong project)
+- Read ROADMAP.md -- extracted P-MAS-v2 architecture, phases, known issues, design principles
+- Read prisma/schema.prisma -- confirmed 7 models (Agent, Task, Workflow, PipelineStep, WorkflowExecution, StepExecution, AgentMessage)
+- Read package.json -- confirmed tech stack (Next.js 16, React 19, TypeScript 5, Tailwind 4, React Flow, Dagre, Framer Motion, Zustand, Prisma, Socket.IO)
+- Explored full project structure: src/components/hierarchy/ (24 files), src/components/dashboard/ (19 files), src/components/workflows/ (18 files), src/app/api/ (12 route files), src/hooks/ (14 hooks), src/lib/ (10 files)
+- Wrote complete README.md covering: Overview, 26 Agents / 8 Role Groups, 6 Connection Types, 5 Hierarchy Layers, Features (Dashboard + Hierarchy + Workflows + Design System), Tech Stack, API Endpoints, Database Schema, Getting Started, Project Structure, Architecture, Design Principles, Development Phases, Known Issues
+- Verified zero references to @stsgs/ui, Interface Studio, Layout Engine, Theme Engine, Component Engine, npx stsgs, UI-Kit
+- Stack signature at bottom as specified
+
+Stage Summary:
+- README.md completely rewritten from 240 lines of @stsgs/ui content to P-MAS-v2 documentation
+- All project details verified against actual source code and ROADMAP.md
+- Zero residual @stsgs/ui / Interface Studio references
+---
+Task ID: 3
+Agent: AI-configs-writer
+Task: Rewrite AI config files for P-MAS-v2 (remove all @stsgs/ui references)
+
+Work Log:
+- Read worklog.md and agent-ctx/ to understand project history
+- Read all 5 existing config files: CLAUDE.md, .cursorrules, .windsurfrules, .zcode/rules.md, .github/copilot-instructions.md
+- All 5 files contained stale @stsgs/ui / Interface Studio content: 6-layer architecture, Dual Theme System, Layout/Theme/Component Engines, npx stsgs CLI, eslint-plugin-stsgs
+- Rewrote CLAUDE.md: P-MAS-v2 product, 26 agents, 8 role groups, architecture dirs, dark theme (black #000000 + Cyan #06B6D4), anti-monolith rules, import patterns, API endpoints, full stack
+- Rewrote .cursorrules: concise P-MAS-v2 version with architecture, design, anti-monolith rules, imports, API, stack
+- Rewrote .windsurfrules: P-MAS-v2 with 8 role groups listed, architecture, design, anti-monolith rules, imports, API, stack
+- Rewrote .zcode/rules.md: P-MAS-v2 with full architecture dirs, design system, anti-monolith rules (static imports for Turbopack), import patterns, API endpoints, stack
+- Rewrote .github/copilot-instructions.md: P-MAS-v2 with all 26 agents listed, 8 role groups, architecture, design, anti-monolith rules, import patterns, API endpoints, stack
+- Updated worklog.md header: @stsgs/ui -> P-MAS-v2, UI-Kit -> Prompt-based Multi-Agent System Dashboard
+- Verified: zero references to @stsgs/ui, Interface Studio, Layout/Theme/Component Engine, npx stsgs, create-stsgs-app, 6-layer architecture, Dual Theme System, Studio/Project theme, eslint-plugin-stsgs in all 5 files
+
+Stage Summary:
+- 5 AI config files fully rewritten for P-MAS-v2
+- All @stsgs/ui references removed
+- Anti-monolith rules preserved and adapted (static imports for Turbopack, no eslint-plugin-stsgs)
+- P-MAS-v2 specifics added: 26 agents, 8 role groups, React Flow hierarchy, Workflow Pipeline, Cyan #06B6D4 accent, API endpoints
+- Worklog header updated from @stsgs/ui to P-MAS-v2

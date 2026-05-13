@@ -4,7 +4,7 @@
 
 Текущий `agent-hierarchy.tsx` (3511 строк) реализует:
 
-- **Radial layout** — агенты расставлены по концентрическим кольцам (8 колец = 8 групп: Стратегия→Тактика→Контроль→Исполнение→Память→Мониторинг→Коммуникация→Обучение)
+- **Radial layout** — agents arranged in concentric rings (8 rings = 8 groups: Strategy→Tactics→Control→Execution→Memory→Monitoring→Communication→Learning)
 - **Grid layout** — простая сетка 4×N
 - **SVG-рендеринг** с canvas-анимациями (частицы, контурные линии фона)
 - **6 типов связей**: command, sync, twin, delegate, supervise, broadcast
@@ -26,7 +26,7 @@
 |---------|----------|-------------|
 | **Порт ввода/вывода** | Нода имеет входы (слева) и выходы (справа) | Агент = нода: принимает задачи (in) → выдаёт результат (out) |
 | **Цветовая кодировка портов** | Тип данных = цвет порта | Тип связи: command=cyan, sync=gray, twin=diamond |
-| **Фиксированный направленный граф** | Сверху-вниз или слева-направо | Иерархия Стратегия→Исполнение идеально ложится в DAG |
+| **Fixed directed graph** | Top-down or left-to-right | Strategy→Execution hierarchy maps perfectly to DAG |
 | **Миникарта** | Обзор в углу для навигации | Уже есть, но нужно улучшить |
 | **Zoom + Pan + Select** | Стандартная навигация | Есть, но нужно добавить drag нод |
 
@@ -54,8 +54,8 @@
 ### 3.1 Layout: Dagre (иерархический направленный граф)
 
 Заменить radial на **Dagre/Sugiyama** — стандартную алгоритмическую укладку для DAG:
-- Корневые агенты (Стратегия) наверху
-- Исполнение внизу
+- Root agents (Strategy) at the top
+- Execution at the bottom
 - Связи parentId = вертикальные рёбра
 - Sync/twin = горизонтальные/диагональные
 

@@ -101,16 +101,16 @@ Fallback: `Brain` is used if the avatar key is not found.
 
 The 5-layer DAG structure is defined in ROLE_CONFIG (types.ts):
 
-| Level | Role Group (RU) | Label (EN) | Color    |
-|-------|-----------------|------------|----------|
-| L0    | Стратегия       | Strategy   | #67E8F9  |
-| L1    | Тактика         | Tactics    | #22D3EE  |
-| L2    | Контроль        | Control    | #06B6D4  |
-| L3    | Исполнение      | Execution  | #0891B2  |
-| L4    | Память          | Memory     | #0E7490  |
-| L4    | Мониторинг      | Monitoring | #155E75  |
-| L4    | Коммуникация    | Comms      | #164E63  |
-| L4    | Обучение        | Learning   | #0C4A6E  |
+| Level | Role Group     | Label (EN)  | Color    |
+|-------|----------------|-------------|----------|
+| L0    | Strategy       | Strategy    | #67E8F9  |
+| L1    | Tactics        | Tactics     | #22D3EE  |
+| L2    | Control        | Control     | #06B6D4  |
+| L3    | Execution      | Execution   | #0891B2  |
+| L4    | Memory         | Memory      | #0E7490  |
+| L4    | Monitoring     | Monitoring  | #155E75  |
+| L4    | Communication  | Comms       | #164E63  |
+| L4    | Learning       | Learning    | #0C4A6E  |
 
 ### 4. Edge Types
 

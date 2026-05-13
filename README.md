@@ -1,234 +1,368 @@
-# @stsgs/ui — Interface Studio
+# P-MAS-v2 -- Prompt-based Multi-Agent System Dashboard
 
-> Context-aware interface builder: layout + theme + components from a single prompt.
+> Multi-Agent System Dashboard with 26 AI agents across 8 role groups, featuring hierarchy visualization and workflow pipeline.
 >
-> Repository: [github.com/stsgs1980/UI-Kit](https://github.com/stsgs1980/UI-Kit)
+> Repository: [github.com/stsgs1980/P-MAS-v2](https://github.com/stsgs1980/P-MAS-v2)
 
-## What It Does
+## Overview
 
-@stsgs/ui is an **Interface Studio** -- not just a component library. It takes a context (goal, audience, style) and produces a ready-to-use interface: layout + theme + components + code.
+P-MAS-v2 is a real-time dashboard for managing and visualizing a Prompt-based Multi-Agent System. It renders 26 specialized AI agents organized into 8 role groups across 5 hierarchy layers (L0--L4), with interactive DAG visualization, workflow pipeline management, and live status simulation.
+
+The system provides three core views:
+
+1. **Dashboard** -- Agent stats, status distribution, KPIs, activity timeline, system health monitoring
+2. **Agent Hierarchy** -- Interactive React Flow + Dagre DAG layout with node search, context menus, layer bands, and connection strength visualization
+3. **Workflow Pipeline** -- Full CRUD for multi-step agent workflows with execution tracking, step-level status, and agent message logs
+
+## 26 Agents / 8 Role Groups
+
+| Role Group | Agents | Layer |
+|------------|--------|-------|
+| **Strategy** | Architect, Analyst, Visionary | L0--L1 |
+| **Tactics** | Coordinator, Planner, Communicator | L1--L2 |
+| **Control** | Inspector, Evaluator, Guard | L1--L2 |
+| **Execution** | Executor-A, Executor-B, Debugger, Tester | L2--L3 |
+| **Memory** | Archivist, Observer, Diagnostician | L2--L3 |
+| **Monitoring** | Gateway, Protocolist, Dispatcher | L2--L3 |
+| **Communication** | Trainer, Scorer, Coder | L3--L4 |
+| **Learning** | Context-Manager, RAG-Specialist, Alert-Operator, Adapter | L3--L4 |
+
+## 6 Connection Types
+
+| Type | Description |
+|------|-------------|
+| **command** | Direct instruction from superior to subordinate |
+| **sync** | Bidirectional data synchronization between peers |
+| **twin** | Mirrored agent pair for redundancy |
+| **delegate** | Task delegation across role groups |
+| **supervise** | Oversight connection from controller to executor |
+| **broadcast** | One-to-many notification channel |
+
+## 5 Hierarchy Layers
 
 ```
-INPUT:  "SaaS landing for fintech, premium style"
-  |
-  +-- Layout Engine  --> Holy Grail (score: 94/100)
-  +-- Theme Engine   --> Champagne (gold, Playfair, sharp corners)
-  +-- Component Engine -> Hero, PricingCards, CTA, Footer
-  |
-OUTPUT: Live preview + exportable code + tokens
+L0  System Controller    (Architect)
+L1  Strategic Layer      (Analyst, Visionary, Inspector, Evaluator, Guard, Coordinator)
+L2  Operational Layer    (Planner, Communicator, Executor-A, Executor-B, Debugger, ...)
+L3  Specialist Layer     (Tester, Archivist, Observer, Diagnostician, Gateway, ...)
+L4  Interface Layer      (Trainer, Scorer, Coder, Context-Manager, RAG-Specialist, ...)
 ```
-
-## Three Engines
-
-| Engine | Input | Output | Status |
-|--------|-------|--------|--------|
-| **Layout Engine** | goal, content type, item count | grid-template + regions + score | Done -- `useLayoutAdvice` (51 recipes) |
-| **Theme Engine** | context, audience, mood | tokens + effects + typography | In progress -- registry + `recommendTheme()` |
-| **Component Engine** | goal, layout slots | component composition | Planned -- after Theme Engine |
 
 ## Features
 
-- 51 layout recipes (6 categories) with auto-responsive tablet+mobile
-- Layout Advisor: context-aware `useLayoutAdvice()` hook with scoring
-- 5 theme presets (3 dark + 2 light) with paired dark/light switching
-- Dual theme system: studio theme (stable) + project theme (dynamic)
-- Theme recommendation: `recommendTheme()` maps context to preset
-- 6-layer architecture with strict dependency direction
-- AI rules for 6 platforms (Cursor, Claude, Z.ai, Zcode, Copilot, Windsurf)
-- Anti-monolith enforcement via ESLint plugin
-- No-Unicode Policy (SVG icons only, no emoji in code or docs)
-- WCAG 2.1 AA compliance
-- Reproducible: clone + install + dev = works
+### Dashboard
+
+- Quick Stats row (total agents, active tasks, success rate, avg response time)
+- Status distribution chart (Active, Idle, Paused, Standby, Error, Offline)
+- Agent performance metrics with sparklines
+- Activity timeline with real-time events
+- Connection heatmap between role groups
+- System health monitor
+- Architecture diagram
+- Add/Edit agent modals with form validation
+
+### Agent Hierarchy
+
+- Interactive DAG visualization via React Flow + Dagre layout
+- 5 hierarchy layer bands (L0--L4) with visual separation
+- 6 edge/connection types with distinct styling and strength indicators
+- Node search with glow highlighting and match count
+- Right-click context menu on nodes
+- Fit/Focus/Layout/Layers toolbar
+- Agent detail panel (status, formula, skills, connections)
+- Group sidebar filtering by role group
+- Connection flow animation (particle dots along edges)
+
+### Workflow Pipeline
+
+- Create workflows with multi-step pipelines
+- Assign agents or role groups to steps
+- Step actions: process, review, transform, delegate, broadcast, decision
+- Workflow execution with step-level status tracking
+- Agent message log per step execution
+- Workflow timeline and history views
+- Expanded view with detailed step configuration
+- Delete dialog with confirmation
+
+### Design System
+
+- Dark theme: black (#000000) background, monochrome + Cyan (#06B6D4) accent
+- Status colors: Active=Cyan, Idle=Slate, Paused=Amber, Standby=Indigo, Error=Rose, Offline=Zinc
+- Glow effects on active nodes ("breathing" animation)
+- Semi-transparent edges with strength-based stroke width
+- Real-time status simulation (15-second intervals)
 
 ## Tech Stack
 
-- **Framework** -- Next.js 16, React 19
-- **Language** -- TypeScript 5.7+ (strict mode)
-- **Styling** -- Tailwind CSS 4, shadcn/ui, Radix UI primitives
-- **Build** -- pnpm 9.15+, Turborepo monorepo, tsup
+| Layer | Technology |
+|-------|-----------|
+| Framework | Next.js 16 (App Router) + React 19 |
+| Language | TypeScript 5 (strict mode) |
+| Styling | Tailwind CSS 4 + shadcn/ui |
+| Database | SQLite via Prisma ORM |
+| Visualization | React Flow (@xyflow/react) + Dagre (DAG layout) |
+| Animation | Framer Motion |
+| State | Zustand + TanStack Query |
+| Real-time | Socket.IO (WebSocket mini-service, port 3003) |
+| Icons | Lucide React |
+
+## API Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/agents` | GET, POST | List all agents / Create agent |
+| `/api/agents/[id]` | GET, PUT, DELETE | Get / Update / Delete agent |
+| `/api/agents/prompt` | POST | Prompt an agent (AI integration) |
+| `/api/tasks` | GET, POST | List all tasks / Create task |
+| `/api/tasks/[id]` | GET, PUT, DELETE | Get / Update / Delete task |
+| `/api/hierarchy` | GET | Full hierarchy tree with connections |
+| `/api/stats` | GET | Aggregated dashboard statistics |
+| `/api/health` | GET | System health check |
+| `/api/seed` | POST | Seed database (26 agents + tasks + groups) |
+| `/api/workflows` | GET, POST | List / Create workflows |
+| `/api/workflows/[id]` | GET, PUT, DELETE | Get / Update / Delete workflow |
+| `/api/workflows/execute` | POST | Execute a workflow |
+| `/api/workflows/seed` | POST | Seed sample workflows |
+
+## Database Schema
+
+```
+Agent
+  - id, name, role, roleGroup, status, formula
+  - parentId (hierarchy relation)
+  - twinId (twin agent relation)
+  - skills, description, avatar
+  - tasks[]
+
+Task
+  - id, title, description, status, priority
+  - agentId (assigned agent)
+  - createdAt, updatedAt
+
+Workflow
+  - id, name, description, status
+  - triggerType, triggerConfig, version, tags
+  - steps[], executions[]
+
+PipelineStep
+  - id, workflowId, order, name
+  - agentId, roleGroup, action
+  - inputSchema, outputSchema, condition
+  - fallbackStepId, timeout, retryPolicy, config
+
+WorkflowExecution
+  - id, workflowId, status
+  - taskContext, input, output, error
+  - steps[]
+
+StepExecution
+  - id, executionId, stepId, agentId, status
+  - inputData, outputData, error
+  - messages[]
+
+AgentMessage
+  - id, stepExecutionId, fromAgentId, toAgentId
+  - type, content, metadata, timestamp
+```
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 20+
-- pnpm 9.15+
+- Node.js 20+ or Bun
+- Git
 
 ### Installation
 
 ```bash
-# Clone the repository
-git clone https://github.com/stsgs1980/UI-Kit.git
-cd UI-Kit
-
-# Install dependencies
-pnpm install
-
-# Build all packages
-pnpm build
-
-# Run development mode
-pnpm dev
+git clone https://github.com/stsgs1980/P-MAS-v2.git
+cd P-MAS-v2
+bun install
+bun run db:push
+bun run seed
+bun run dev
 ```
 
-### Quick Start (CLI)
+The application will be available at `http://localhost:3000`.
+
+### Seeding the Database
+
+The seed endpoint populates the database with 26 agents, their associated tasks, and 8 role groups. Either use the API:
 
 ```bash
-# Create a new project
-npx create-stsgs-app my-project
-
-# Add components to existing project
-npx stsgs add Button
-npx stsgs add @dashboard-kit
-
-# Scan for violations
-npx stsgs scan
-
-# Sync AI rules
-npx stsgs ai sync
+curl -X POST http://localhost:3000/api/seed
 ```
 
-## Architecture: 6-Layer Dependency Direction
+Or the seed script:
 
+```bash
+bun run seed
 ```
-tokens/ -> ui/ -> sections/ -> features/ -> hooks/ -> providers/
-```
-
-Dependencies flow **strictly downward**. If `ui/Button.tsx` imports from `features/`, the architecture is broken.
-
-| Layer | Purpose | Count | Has State? |
-|-------|---------|-------|------------|
-| `tokens/` | Design tokens, layout registry, cn() | 51 recipes + types | No |
-| `ui/` | Base components (shadcn/ui + Layout) | ~50 | No |
-| `sections/` | Page section compositions | ~100 | No |
-| `features/` | Interactive widgets | ~50 | Yes |
-| `hooks/` | useBreakpoint, useLayoutAdvice | ~8 | Yes |
-| `providers/` | ThemeProvider, app wrappers | ~4 | Yes |
-
-## Dual Theme System
-
-The Studio has two independent color systems:
-
-| System | Purpose | Changes | Provider |
-|--------|---------|---------|----------|
-| **Studio theme** | Navigation, controls, chrome | Rarely (user preference) | `StudioThemeProvider` |
-| **Project theme** | Preview, generated code, export | Frequently (context-dependent) | `ProjectThemeProvider` |
-
-Example: User builds a fintech landing in Champagne (gold). Studio stays in Zinc (neutral). Two worlds, one screen.
-
-## 5 Theme Presets
-
-| Preset | Mode | Accent | Font Display | Radius | Best For |
-|--------|------|--------|-------------|--------|----------|
-| Champagne | dark | #C8A97E (gold) | Playfair Display | 2px | Premium, luxury, fintech |
-| Cyan Night | dark | #00E5FF (cyan) | Inter | 2px | Tech, dev tools, dashboards |
-| Zinc | dark | #10B981 (emerald) | Inter | 12px | Neutral, admin, enterprise |
-| Champagne Light | light | #856930 (dark gold) | Playfair Display | 2px | Premium light, editorial |
-| Cyan Morning | light | #0E7490 (dark cyan) | Inter | 2px | Tech light, documentation |
-
-## Import Patterns
-
-```typescript
-import { Button, Card, Dialog } from '@stsgs/ui'
-import { HeroSection, NavbarSection } from '@stsgs/ui/sections'
-import { SearchPanel, ThemeToggle } from '@stsgs/ui/features'
-import { useTheme, useMediaQuery, useLayoutAdvice } from '@stsgs/ui/hooks'
-import { ThemeProvider } from '@stsgs/ui/providers'
-import { cn } from '@stsgs/ui/tokens'
-```
-
-## Anti-Monolith Rules (7 Rules)
-
-1. **Line Limits** -- Component <= 150, File <= 200, Page <= 40
-2. **Max useState** -- 3 per component, then extract to hook
-3. **No data fetching** in components, use props only
-4. **Barrel exports** for every module
-5. **Layer separation** enforced by ESLint
-6. **Dynamic imports** for heavy dependencies
-7. **Tooling enforcement** via `eslint-plugin-stsgs`
-
-## Collections
-
-Pre-packaged feature sets for common use cases:
-
-| Collection | Install | Components |
-|------------|---------|------------|
-| Dashboard Kit | `npx stsgs add @dashboard-kit` | ~18 |
-| Auth Pages | `npx stsgs add @auth-pages` | ~8 |
-| Landing Page | `npx stsgs add @landing-page` | ~14 |
-| Chat UI | `npx stsgs add @chat-ui` | ~6 |
 
 ## Project Structure
 
-```text
-UI-Kit/
-  packages/
-    ui/                  @stsgs/ui -- Component library
-    cli/                 @stsgs/cli -- CLI tool
-    browser/             @stsgs/browser -- Component Browser
-    eslint-plugin/       eslint-plugin-stsgs -- Enforcement
-    create-app/          create-stsgs-app -- Project scaffolding
-  src/                   Studio application (Next.js)
-    app/                 Pages and globals
-    lib/layout/          Theme engine, tokens, scoring
-    components/layout/   Studio UI components
-    data/                Layout recipes (51)
-  docs/
-    ai-rules/            Single source of truth for AI rules
-      core.md            Main rules document
-      library.md         Component quality checklist
-      project.md         Project-specific template
-      enforcement.md     ESLint rules docs
-    standards/           Group B: Governance documents
-    instructions/        Detailed behavioral instructions
-    architecture/        System architecture
-    planning/            Phase plan + Studio vision
-    templates/           Group A: Operational templates
-  AGENT_RULES.md         Behavioral rules for AI agents
-  worklog.md             Agent work journal
+```
+P-MAS-v2/
+  src/
+    app/
+      page.tsx                    # Main entry (Dashboard + Hierarchy + Workflows)
+      dashboard-panel.tsx         # Dashboard panel component
+      layout.tsx                  # Root layout
+      globals.css                 # Global styles (dark theme)
+      api/
+        agents/                   # Agent CRUD + prompt endpoint
+        tasks/                    # Task CRUD
+        hierarchy/                # Hierarchy tree data
+        stats/                    # Aggregated dashboard stats
+        health/                   # System health check
+        seed/                     # Database seeding
+        workflows/                # Workflow CRUD + execute + seed
+        prompting/                # Prompting library endpoint
+    components/
+      hierarchy/                  # Agent Hierarchy (React Flow + Dagre)
+        agent-hierarchy-v2.tsx    # Main hierarchy component
+        agent-node.tsx            # Custom React Flow node
+        agent-edge.tsx            # Custom edge with strength styling
+        agent-detail-header.tsx   # Agent detail panel header
+        agent-detail-info.tsx     # Agent detail panel info
+        agent-edit-form.tsx       # Agent edit form
+        agent-icons.ts            # Agent icon mappings
+        build-connections.ts      # Connection builder (6 types)
+        edge-particles.tsx        # Flow animation particles
+        group-sidebar.tsx         # Role group filter sidebar
+        hierarchy-canvas.tsx      # React Flow canvas wrapper
+        hierarchy-controls.tsx    # Fit/Focus/Layout toolbar
+        hierarchy-header.tsx      # Hierarchy view header
+        kpi-strip.tsx             # KPI metrics strip
+        layer-labels.tsx          # L0-L4 layer band labels
+        layout-algorithms.ts      # Dagre layout configuration
+        panels.tsx                # Detail panel components
+        add-agent-modal.tsx       # Add agent dialog
+        stat-card.tsx             # Stat card component
+        types.ts                  # Hierarchy type definitions
+      workflows/                  # Workflow Pipeline
+        workflow-pipeline.tsx     # Pipeline visualization (React Flow)
+        workflow-card.tsx         # Workflow list card
+        workflow-node.tsx         # Custom pipeline node
+        workflow-edge.tsx         # Custom pipeline edge
+        workflow-create-dialog.tsx # Create workflow dialog
+        workflow-delete-dialog.tsx # Delete confirmation dialog
+        workflow-execution-modal.tsx # Execution status modal
+        workflow-expanded-view.tsx # Expanded step detail view
+        workflow-timeline.tsx     # Execution timeline
+        workflow-history.tsx      # Workflow run history
+        workflow-sidebar.tsx      # Workflow list sidebar
+        workflow-types.ts         # Type definitions
+        workflow-contracts.tsx    # Step contract schemas
+      dashboard/                  # Dashboard components
+        dashboard-header.tsx      # Dashboard header
+        dashboard-sidebar.tsx     # Navigation sidebar
+        kpi-strip.tsx             # KPI metrics row
+        status-distribution-card.tsx # Status pie/bar chart
+        agent-performance.tsx     # Agent performance table
+        activity-timeline.tsx     # Real-time activity feed
+        system-health-monitor.tsx # System health gauge
+        connection-heatmap.tsx    # Role group connection matrix
+        architecture-diagram.tsx  # System architecture visual
+        agent-edit-modal.tsx      # Agent edit dialog
+        animated-counter.tsx      # Animated number counter
+        mini-sparkline.tsx        # Mini sparkline chart
+        collapsible-section.tsx   # Collapsible section wrapper
+      ui/                         # shadcn/ui base components
+    hooks/                        # Custom React hooks
+      use-dashboard-data.ts       # Dashboard data fetching
+      use-dashboard-ws.ts         # WebSocket connection
+      use-hierarchy-data.ts       # Hierarchy data fetching
+      use-hierarchy-state.ts      # Hierarchy UI state
+      use-agent-edit.ts           # Agent edit logic
+      use-agent-edit-form.ts      # Agent edit form state
+      use-agent-mutations.ts      # Agent CRUD mutations
+      use-workflow-data.ts        # Workflow data fetching
+      use-workflow-state.ts       # Workflow UI state
+      use-workflow-create.ts      # Workflow creation logic
+      use-execution-animation.ts  # Step execution animation
+    lib/
+      db.ts                       # Prisma client singleton
+      utils.ts                    # Utility functions (cn, etc.)
+      client-fetch.ts             # Client-side fetch wrapper
+      api-retry.ts                # API retry with backoff
+      resilience.ts               # Circuit breaker pattern
+      health-check.ts             # Health check utilities
+      circuit-breaker.ts          # Circuit breaker implementation
+      fallback-manager.ts         # Fallback provider strategy
+      prompting/                  # @stsgs/prompting library
+    data/
+      dashboard-constants.ts      # Dashboard configuration constants
+  prisma/
+    schema.prisma                 # Database schema (7 models)
+  mini-services/
+    ws-service/                   # WebSocket service (port 3003)
+    watchdog/                     # Dev server keepalive
+  docs/                           # Project documentation
+  docs-pmas/                      # P-MAS specific documentation
+  standards/                      # Code standards (No-Unicode, Markdown, etc.)
+  instructions/                   # Agent behavioral instructions
+  assets/                         # Static assets (logo, favicon)
 ```
 
-## Development Rules
+## Architecture
 
-### Required Technologies
+```
+Frontend (Next.js 16 + React 19)
+  |
+  +-- / (Dashboard) -- page.tsx
+  |     +-- Dashboard Panel (stats, KPIs, health, timeline)
+  |     +-- Agent Hierarchy (React Flow + Dagre DAG)
+  |     +-- Workflow Pipeline (CRUD, execution, tracking)
+  |
+  +-- API Routes (Next.js App Router)
+  |     +-- /api/agents      -- Agent CRUD + prompt
+  |     +-- /api/tasks       -- Task CRUD
+  |     +-- /api/hierarchy   -- Tree data with connections
+  |     +-- /api/stats       -- Aggregated dashboard data
+  |     +-- /api/health      -- System health check
+  |     +-- /api/seed        -- Database seeding
+  |     +-- /api/workflows   -- Workflow CRUD + execute
+  |
+  +-- Mini Services
+  |     +-- ws-service (port 3003) -- WebSocket real-time updates
+  |     +-- watchdog              -- Dev server keepalive
+  |
+  +-- Database (SQLite + Prisma)
+        +-- Agent (26 records)
+        +-- Task (26 records)
+        +-- Workflow + PipelineStep + WorkflowExecution
+        +-- StepExecution + AgentMessage
+```
 
-- Next.js 16 + React 19
-- TypeScript 5.7+ strict mode
-- Tailwind CSS 4 + shadcn/ui + Radix UI
-- pnpm + Turborepo
+## Design Principles
 
-### Code Style
-
-- No Unicode/emoji in source code, UI text, or documentation [Critical]
-- SVG icons only (Lucide library)
-- Components <= 150 lines, files <= 200 lines
-- Barrel exports for every module
-- Dark theme via CSS variables
-
-## Agent Rules (Mandatory)
-
-Any AI agent working on this project MUST read and follow `AGENT_RULES.md` before performing any operations.
-
-See `AGENT_RULES.md` for full details.
-See `docs/instructions/` for complete rule descriptions.
-See `docs/standards/` for governance documents (No-Unicode Policy, MARKDOWN_STANDARD, REPRODUCIBILITY, WCAG 2.1 AA, GITHUB_STANDARD).
-See `docs/planning/studio-vision.md` for the Interface Studio vision and all architectural decisions.
+- **Dark background** (#000000) -- graphs and nodes "glow" on black
+- **Monochrome + one accent** (Cyan #06B6D4) -- no rainbow, data-first
+- **Radial/hierarchical layout** -- structure over chaos
+- **Glow effects** -- active nodes "breathe" with subtle animation
+- **Thin, semi-transparent edges** -- connections don't dominate the view
+- **High contrast** -- everything reads instantly against the dark canvas
+- **Minimalism** -- no decoration, data-first design
 
 ## Development Phases
 
-### Engine Roadmap (Current)
+| Phase | Focus | Status |
+|-------|-------|--------|
+| 1 | UI/UX Core (sidebar, W1280 layout, compact header) | Done |
+| 2 | Visual & Design System (Cyan accent, status colors, layer bands, search glow) | Done |
+| 3 | Data Layer (API endpoints, Prisma schema, DB seeding, 100% API-driven) | Done |
+| 4 | Animation & Interaction (edge flow, 3D shadows, cluster backgrounds) | In Progress |
+| 5 | Real-Time & CRUD (WebSocket, edit/delete agents, task management) | In Progress |
+| 6 | Quality & Production (name fixes, PDF export, mobile, performance, auth) | Planned |
 
-| Phase | Engine | Focus | Status |
-|-------|--------|-------|--------|
-| 1 | Layout Engine | 51 recipes, scoring, recommendations | Done |
-| 2 | Theme Engine | Registry, CSS variables, recommendTheme(), dual theme | In progress |
-| 3 | Component Engine | Context-aware compositions, per-slot selection | Planned |
-| 4 | Unified Studio | One flow: context -> preview + code | Planned |
-| 5 | Distribution | npm package, CLI, Component Browser | Planned |
+See [ROADMAP.md](ROADMAP.md) for the full task-level roadmap with status.
 
-### Component Library Waves
+## Known Issues
 
-See `docs/planning/phase-plan.md` for the full Wave Plan (Wave 1-4) and component inventory.
+- Agent names: 12 of 26 agent names in the sidebar AGENT_LIST don't match DB entries
+- Dev server stability: Process killed periodically in sandbox environment
+- Simulated status transitions: Status changes every 15s via client timer, not real events
 
 ## License
 
@@ -236,4 +370,4 @@ MIT
 
 ---
 
-Built with: Next.js 16 + React 19 + TypeScript + Tailwind CSS 4 + shadcn/ui + Radix UI
+Built with: Next.js 16 + TypeScript + Tailwind CSS 4 + Prisma + shadcn/ui + React Flow + Framer Motion + Zustand

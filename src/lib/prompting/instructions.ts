@@ -373,57 +373,63 @@ For 10+ step tasks: present plan to user, wait for confirmation before executing
 const AI_RULES: InstructionEntry[] = [
   {
     id: 'ai-rules-core',
-    title: '@stsgs/ui AI Rules (Core)',
+    title: 'P-MAS-v2 AI Rules (Core)',
     category: 'ai-rules',
-    description: 'Single source of truth: Interface Studio product definition, 6-layer architecture (tokens->ui->sections->features->hooks->providers), 7 anti-monolith rules, import patterns, file naming conventions, tech stack.',
-    version: '1.0.0',
-    keywords: ['architecture', 'layers', 'anti-monolith', 'interface-studio', 'import-patterns'],
-    lineCount: 136,
-    content: `# @stsgs/ui -- AI Rules (Core)
+    description: 'P-MAS-v2 core rules: 26 agents, 8 role groups, 6 connection types, 5 hierarchy layers, anti-monolith rules, import patterns, tech stack.',
+    version: '2.0.0',
+    keywords: ['architecture', 'agents', 'hierarchy', 'anti-monolith', 'p-mas', 'import-patterns'],
+    lineCount: 140,
+    content: `# P-MAS-v2 -- AI Rules (Core)
 
-## Product: Interface Studio
-@stsgs/ui is an Interface Studio -- takes a context (goal, audience, style) and produces a ready-to-use interface.
+## Product: P-MAS-v2 (Prompt-based Multi-Agent System)
+Multi-Agent System Dashboard with 26 AI agents across 8 role groups.
+Three views: Dashboard, Agent Hierarchy (React Flow + Dagre), Workflow Pipeline.
 
-Three engines:
-1. Layout Engine (done) -- useLayoutAdvice(), 51 recipes, scoring
-2. Theme Engine (in progress) -- recommendTheme(), registry, dual theme
-3. Component Engine (planned) -- context-aware compositions
+## 26 Agents / 8 Role Groups
+- Strategy: Architect, Analyst, Visionary
+- Tactics: Coordinator, Planner, Communicator
+- Control: Inspector, Evaluator, Guard
+- Execution: Executor-A, Executor-B, Debugger, Tester
+- Memory: Archivist, Observer, Diagnostician
+- Monitoring: Gateway, Protocolist, Dispatcher
+- Communication: Trainer, Scorer, Coder
+- Learning: Context-Manager, RAG-Specialist, Alert-Operator, Adapter
 
-## Architecture: 6-Layer Dependency Direction
-tokens/ -> ui/ -> sections/ -> features/ -> hooks/ -> providers/
-Dependencies flow strictly downward. NEVER import from an upper layer.
+## 6 Connection Types
+command, sync, twin, delegate, supervise, broadcast
+
+## 5 Hierarchy Layers (DAG)
+L0: Strategy | L1: Tactics | L2: Control | L3: Execution | L4: Memory/Monitoring/Communication/Learning
 
 ## Anti-Monolith Rules (7 Rules)
 1. Line Limits: component <= 150 lines, any file <= 200, page.tsx <= 40
 2. Max useState: 3 per component, extract to custom hook if more
-3. Component Doesn't Fetch Data: data via props only
+3. Component Doesn't Fetch Data: data via hooks or props only
 4. Barrel Exports: import from barrel, not individual files
-5. Layer Separation Enforced: separate export paths per layer
-6. Dynamic Imports: next/dynamic for heavy dependencies
-7. Enforce with Tooling: eslint-plugin-stsgs
+5. Layer Separation: components/, hooks/, lib/ separation
+6. Static Imports: use ES module imports (NOT next/dynamic with Turbopack)
+7. Enforce with Tooling: ESLint + anti-monolith rules
 
 ## Import Patterns
-import { Button } from '@stsgs/ui'
-import { HeroSection } from '@stsgs/ui/sections'
-import { useTheme } from '@stsgs/ui/hooks'
+import { AgentNode } from '@/components/hierarchy/agent-node'
+import { WorkflowCard } from '@/components/workflows/workflow-card'
+import { db } from '@/lib/db'
+import { fetchWithRetry } from '@/lib/client-fetch'
 
 ## Tech Stack
-Next.js 16, React 19, Tailwind CSS 4, shadcn/ui + Radix UI, TypeScript 5.7+, pnpm + Turborepo`,
+Next.js 16, React 19, TypeScript 5, Tailwind CSS 4, shadcn/ui, Prisma SQLite, React Flow, Framer Motion, Zustand`,
   },
   {
     id: 'ai-rules-enforcement',
-    title: 'ESLint Enforcement Rules',
+    title: 'Code Enforcement Rules',
     category: 'ai-rules',
-    description: 'eslint-plugin-stsgs rules: no-cross-layer-imports (error), max-lines (warn), max-use-state (warn). Configuration example.',
-    version: '1.0.0',
-    keywords: ['eslint', 'enforcement', 'linting', 'cross-layer', 'max-lines'],
+    description: 'Anti-monolith enforcement: max-lines (200), max-use-state (3), no-inline-styles. ESLint configuration for P-MAS-v2.',
+    version: '2.0.0',
+    keywords: ['eslint', 'enforcement', 'linting', 'anti-monolith', 'max-lines'],
     lineCount: 37,
-    content: `# ESLint Enforcement Rules
+    content: `# Code Enforcement Rules
 
-## Plugin: eslint-plugin-stsgs
-
-### no-cross-layer-imports
-Severity: error. Detects and blocks upward layer imports.
+## Anti-Monolith Rules
 
 ### max-lines
 Severity: warning. Max 200 lines per file (configurable). Exclude: *.test.tsx, *.stories.tsx
@@ -431,77 +437,78 @@ Severity: warning. Max 200 lines per file (configurable). Exclude: *.test.tsx, *
 ### max-use-state
 Severity: warning. Max 3 useState per component. Suggests custom hooks.
 
+### no-inline-styles
+Prefer Tailwind CSS classes over inline styles where possible.
+
 ## Configuration
 \`\`\`javascript
-import stsgs from 'eslint-plugin-stsgs'
 export default [{
-  plugins: { stsgs },
   rules: {
-    'stsgs/no-cross-layer-imports': 'error',
-    'stsgs/max-lines': ['warn', { max: 200 }],
-    'stsgs/max-use-state': ['warn', { max: 3 }],
+    'max-lines': ['warn', { max: 200 }],
+    'max-use-state': ['warn', { max: 3 }],
   },
 }]
 \`\`\``,
   },
   {
     id: 'ai-rules-library',
-    title: '@stsgs/ui Library Rules',
+    title: 'P-MAS-v2 Component Rules',
     category: 'ai-rules',
-    description: 'Component quality checklist (10 items), adding new components workflow (7 steps), collections table (Dashboard Kit, Auth, Landing, Chat).',
-    version: '1.0.0',
-    keywords: ['components', 'quality', 'checklist', 'collections', 'library'],
+    description: 'Component quality checklist (10 items), adding new components workflow (7 steps), P-MAS component categories.',
+    version: '2.0.0',
+    keywords: ['components', 'quality', 'checklist', 'p-mas', 'library'],
     lineCount: 40,
-    content: `# @stsgs/ui Library Rules
+    content: `# P-MAS-v2 Component Rules
 
 ## Component Quality Checklist
 - TypeScript interface for all props (no any)
 - JSDoc comment describing the component
 - Uses cn() for className merging
-- Follows correct layer (ui=no state, sections=no state, features=has state)
+- Correct directory: hierarchy/, workflows/, or ui/
 - Has barrel export in index.ts
 - File <= 200 lines (components <= 150)
-- No inline styles (Tailwind CSS only)
+- No inline styles (Tailwind CSS preferred)
 - Supports className prop for customization
 - Uses forwardRef where DOM access needed
 - Accessible: proper ARIA, keyboard navigation
 
 ## Adding New Components
-1. Check npx stsgs list <layer>
-2. Create file in correct layer directory
-3. Add TypeScript props interface + JSDoc
-4. Add barrel export
-5. Run npx stsgs scan
-6. Test with eslint-plugin-stsgs
+1. Identify correct directory (hierarchy/, workflows/, ui/)
+2. Create file with TypeScript props interface + JSDoc
+3. Add barrel export in index.ts
+4. Run bun run lint to verify
+5. Test in dev server
 
-## Collections
-| Collection | Components |
-|-----------|------------|
-| Dashboard Kit | ~18 |
-| Auth Pages | ~8 |
-| Landing Page | ~14 |
-| Chat UI | ~6 |`,
+## Component Categories
+| Category | Directory | Has State? |
+|----------|-----------|------------|
+| Agent Hierarchy | components/hierarchy/ | Yes |
+| Workflow Pipeline | components/workflows/ | Yes |
+| UI Primitives | components/ui/ | No |
+| Custom Hooks | hooks/ | Yes |
+| Utilities | lib/ | No |`,
   },
   {
     id: 'ai-rules-project',
     title: 'Project-Specific AI Rules Template',
     category: 'ai-rules',
-    description: 'Template for project-specific AI rules: stack definition (Next.js 16, @stsgs/ui, Tailwind CSS 4, TypeScript), custom rules, structure, API endpoints, environment variables.',
-    version: '1.0.0',
+    description: 'Template for project-specific AI rules: stack definition (Next.js 16, P-MAS-v2, Tailwind CSS 4, TypeScript), custom rules, structure, API endpoints, environment variables.',
+    version: '2.0.0',
     keywords: ['project-template', 'stack', 'configuration', 'api-endpoints', 'env-vars'],
     lineCount: 24,
     content: `# Project-Specific AI Rules Template
 
 ## Stack
-- Framework: Next.js 16
-- UI Library: @stsgs/ui
-- Styling: Tailwind CSS 4
+- Framework: Next.js 16 (App Router)
+- UI Library: shadcn/ui + Tailwind CSS 4
+- Database: Prisma + SQLite
+- Visualization: React Flow + Dagre
 - Language: TypeScript (strict)
 
 ## Sections
 - Custom Rules: project-specific behavioral rules
 - Project Structure: directory layout
-- API Endpoints: project-specific endpoints
+- API Endpoints: /api/agents, /api/tasks, /api/hierarchy, /api/stats, /api/health
 - Environment Variables: required env vars (names only, never values)`,
   },
 ]

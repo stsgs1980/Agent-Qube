@@ -16,12 +16,7 @@
     "sourceMap": true,
     "outDir": "dist",
     "baseUrl": ".",
-    "paths": {
-      "@stsgs/ui": ["packages/ui/src"],
-      "@stsgs/ui/tokens": ["packages/ui/src/tokens"],
-      "@stsgs/ui/hooks": ["packages/ui/src/hooks"],
-      "@stsgs/ui/providers": ["packages/ui/src/providers"]
-    }
+    "paths": {}
   },
   "exclude": ["node_modules", "dist"]
 }

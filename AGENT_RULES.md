@@ -154,7 +154,7 @@ See the full document for 11 rules across 4 levels (Environment, Code, Delivery,
 ### 4.4 Implementation Order
 
 Standards must be applied in a specific order.
-See `standards/ПОРЯДОК_внедрения_стандартов.md` for the full 6-step sequence.
+See `standards/STANDARDS_IMPLEMENTATION_ORDER.md` for the full 6-step sequence.
 
 ## 5. Diagnostic Disclosure
 
@@ -209,11 +209,10 @@ Apply FIRST. Define rules that all other documents must follow.
 
 | File | Version | Level | Purpose |
 |------|---------|-------|---------|
-| `MARKDOWN_STANDARD_RU_v2.1.md` | v2.1.4 | [W] | Markdown formatting rules (Russian) |
 | `MARKDOWN_STANDARD_EN_v2.1.md` | v2.1.4 | [W] | Markdown formatting rules (English) |
 | `No-Unicode_Policy_v2.1.md` | v2.1.3 | [C]+[W]+[I] | Unicode/emoji prohibition |
 | `README_TEMPLATE.md` | v2.1 | -- | Mandatory README structure + stack default |
-| `ПОРЯДОК_внедрения_стандартов.md` | v2.0 | -- | Implementation sequence (6 steps) |
+| `STANDARDS_IMPLEMENTATION_ORDER.md` | v2.0 | -- | Implementation sequence (6 steps) |
 | `REPRODUCIBILITY-STANDARD.md` | v1.0 | [C] | Clone+install+dev = works |
 
 ### Group A -- Operational (templates)

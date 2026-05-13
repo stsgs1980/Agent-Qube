@@ -67,7 +67,7 @@
 
 | # | Task | Priority | Status |
 |---|------|----------|--------|
-| 6.1 | Agent name DB discrepancy fix (12/26 names don't match) | HIGH | 🟡 |
+| 6.1 | Agent name unification (all 26 agents renamed to English) | HIGH | ✅ |
 | 6.2 | Export dashboard as PDF/image | LOW | ⚪ |
 | 6.3 | Mobile-responsive improvements | MEDIUM | 🟡 |
 | 6.4 | Performance optimization (large agent counts) | LOW | ⚪ |
@@ -75,7 +75,7 @@
 
 ## Known Issues
 
-- **Agent names**: 12 of 26 agent names in the sidebar AGENT_LIST don't match DB entries
+- **Agent names**: All 26 agents unified to English names (previously 12/26 mismatched)
 - **Dev server stability**: Process killed periodically in sandbox environment
 - **Simulated status transitions**: Status changes every 15s via client timer, not real events
 
@@ -84,7 +84,7 @@
 ```
 Frontend (Next.js 16 + React 19)
 ├── / (Dashboard) — page.tsx
-├── /hierarchy (Agent Hierarchy) — agent-hierarchy-v2.tsx (via dynamic import)
+├── /hierarchy (Agent Hierarchy) — agent-hierarchy-v2.tsx (static import)
 ├── API Routes
 │   ├── /api/agents — CRUD
 │   ├── /api/tasks — CRUD
