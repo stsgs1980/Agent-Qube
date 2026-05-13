@@ -106,3 +106,45 @@ export type {
 export { ChartArea } from './scifi-canvas-chart'
 export { ChartBar } from './scifi-canvas-chart'
 export { ChartMultiLine } from './scifi-canvas-chart'
+
+// ─── ScifiTimeline ───────────────────────────────────────────
+export { ScifiTimeline } from './scifi-timeline'
+export type { ScifiTimelineProps, TimelineEvent, EventImportance } from './scifi-timeline'
+
+// ─── ScifiCorrelationGrid ───────────────────────────────────
+export { ScifiCorrelationGrid } from './scifi-correlation-grid'
+export type { ScifiCorrelationGridProps } from './scifi-correlation-grid'
+export { CorrelationMatrix } from './scifi-correlation-grid'
+export type { CorrelationMatrixProps } from './scifi-correlation-grid'
+export { PerformanceBars } from './scifi-correlation-grid'
+export type { PerformanceBarsProps } from './scifi-correlation-grid'
+export type { MatrixAsset, CorrelationData, PerformanceBar } from './scifi-correlation-grid'
+
+// ─── ScifiScenarioCards ──────────────────────────────────────
+export { ScifiScenarioCards } from './scifi-scenario-cards'
+export type { ScifiScenarioCardsProps, Scenario, ScenarioSeverity } from './scifi-scenario-cards'
+
+// ─── ScifiTickerBar ─────────────────────────────────────────
+export { ScifiTickerBar } from './scifi-ticker-bar'
+export type { ScifiTickerBarProps, TickerItem } from './scifi-ticker-bar'
+
+// ─── ScifiLiveFeed ───────────────────────────────────────────
+export { ScifiLiveFeed } from './scifi-live-feed'
+export type { ScifiLiveFeedProps, FeedItem } from './scifi-live-feed'
+
+// ─── ScifiRouteTable ──────────────────────────────────────
+export { ScifiRouteTable } from './scifi-route-table'
+export type { ScifiRouteTableProps, RouteItem, RouteRisk } from './scifi-route-table'
+
+// ─── ScifiComparisonGrid ──────────────────────────────────
+export { ScifiComparisonGrid, ComparisonCard } from './scifi-comparison-grid'
+export type { ScifiComparisonGridProps, ComparisonCardProps, ComparisonCardData, MetricRow, SpreadItem } from './scifi-comparison-grid'
+
+// ─── ScifiActorGrid ───────────────────────────────────────
+export { ScifiActorGrid } from './scifi-actor-grid'
+export type { ScifiActorGridProps } from './scifi-actor-grid'
+
+export { ScifiTimelinePanel } from './scifi-actor-grid'
+export type { ScifiTimelinePanelProps } from './scifi-actor-grid'
+
+export type { Actor, StanceType, TimelineEventEntry, EventSeverity } from './scifi-actor-grid'
