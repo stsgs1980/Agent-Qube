@@ -42,7 +42,7 @@ export async function POST(request: Request) {
     } else {
       formula = body.formula || 'CoT'
       role = body.role || 'Agent'
-      roleGroup = body.roleGroup || '\u0418\u0441\u043f\u043e\u043b\u043d\u0435\u043d\u0438\u0435'
+      roleGroup = body.roleGroup || 'Execution'
       description = body.description || ''
       name = body.name || 'Agent'
     }

@@ -47,8 +47,8 @@ export function buildConnections(agents: AgentData[]): ConnectionData[] {
   }
 
   // Delegate: coordinators -> agents without parent
-  const taktikaAgents = agents.filter(a => a.roleGroup === 'Тактика')
-  const ispolnenieAgents = agents.filter(a => a.roleGroup === 'Исполнение')
+  const taktikaAgents = agents.filter(a => a.roleGroup === 'Tactics')
+  const ispolnenieAgents = agents.filter(a => a.roleGroup === 'Execution')
   for (const t of taktikaAgents) {
     if (t.role.toLowerCase().includes('coordinator')) {
       for (const e of ispolnenieAgents) {
@@ -58,7 +58,7 @@ export function buildConnections(agents: AgentData[]): ConnectionData[] {
   }
 
   // Supervise: Kontrol -> Ispolnenie
-  const kontrolAgents = agents.filter(a => a.roleGroup === 'Контроль')
+  const kontrolAgents = agents.filter(a => a.roleGroup === 'Control')
   for (const c of kontrolAgents) {
     for (const e of ispolnenieAgents) {
       const superviseCount = conns.filter(cn => cn.type === 'supervise' && cn.to === e.id).length
@@ -70,9 +70,9 @@ export function buildConnections(agents: AgentData[]): ConnectionData[] {
   }
 
   // Broadcast: root Strategy -> all group leads
-  const rootStrategy = agents.filter(a => a.roleGroup === 'Стратегия' && !a.parentId)
+  const rootStrategy = agents.filter(a => a.roleGroup === 'Strategy' && !a.parentId)
   for (const s of rootStrategy) {
-    const groupLeads = agents.filter(a => !a.parentId && a.roleGroup !== 'Стратегия')
+    const groupLeads = agents.filter(a => !a.parentId && a.roleGroup !== 'Strategy')
     for (const lead of groupLeads) {
       addConn(`broadcast-${s.id}-${lead.id}`, s.id, lead.id, 'broadcast', 0.5)
     }

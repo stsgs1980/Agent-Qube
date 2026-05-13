@@ -34,7 +34,7 @@ export function DetailPanelEdit({
   saving, deleting, showDeleteConfirm,
   onToggle, onCancel, onSave, onDelete, onShowDeleteConfirm,
 }: DetailPanelEditProps) {
-  const config = ROLE_CONFIG[agent.roleGroup] || ROLE_CONFIG['Исполнение']
+  const config = ROLE_CONFIG[agent.roleGroup] || ROLE_CONFIG['Execution']
 
   return (
     <div

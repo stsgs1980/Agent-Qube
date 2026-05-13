@@ -11,7 +11,7 @@ model Agent {
   id          String   @id @default(cuid())
   name        String
   role        String
-  roleGroup   String   // Стратегия, Тактика, Контроль, Исполнение
+  roleGroup   String   // Strategy, Tactics, Control, Execution
   status      String   @default("active") // active, idle, error, offline
   formula     String   // ToT, CoVe, ReWOO, Reflexion, ReAct, MoA
   parentId    String?

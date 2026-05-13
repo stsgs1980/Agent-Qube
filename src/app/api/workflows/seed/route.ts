@@ -28,7 +28,7 @@ export async function POST() {
             {
               order: 0,
               name: 'Receive Request',
-              roleGroup: 'Стратегия',
+              roleGroup: 'Strategy',
               action: 'process',
               inputSchema: JSON.stringify({ type: 'object', properties: { taskDescription: { type: 'string' }, priority: { type: 'string' } } }),
               outputSchema: JSON.stringify({ type: 'object', properties: { taskPlan: { type: 'string' }, requirements: { type: 'array' } } }),
@@ -38,7 +38,7 @@ export async function POST() {
             {
               order: 1,
               name: 'Plan & Decompose',
-              roleGroup: 'Тактика',
+              roleGroup: 'Tactics',
               action: 'transform',
               inputSchema: JSON.stringify({ type: 'object', properties: { taskPlan: { type: 'string' } } }),
               outputSchema: JSON.stringify({ type: 'object', properties: { subtasks: { type: 'array' }, assignments: { type: 'object' } } }),
@@ -48,7 +48,7 @@ export async function POST() {
             {
               order: 2,
               name: 'Implement Code',
-              roleGroup: 'Исполнение',
+              roleGroup: 'Execution',
               action: 'process',
               inputSchema: JSON.stringify({ type: 'object', properties: { subtasks: { type: 'array' } } }),
               outputSchema: JSON.stringify({ type: 'object', properties: { code: { type: 'string' }, files: { type: 'array' } } }),
@@ -58,7 +58,7 @@ export async function POST() {
             {
               order: 3,
               name: 'Test & Debug',
-              roleGroup: 'Исполнение',
+              roleGroup: 'Execution',
               action: 'review',
               inputSchema: JSON.stringify({ type: 'object', properties: { code: { type: 'string' } } }),
               outputSchema: JSON.stringify({ type: 'object', properties: { testResults: { type: 'object' }, bugs: { type: 'array' } } }),
@@ -68,7 +68,7 @@ export async function POST() {
             {
               order: 4,
               name: 'Quality Review',
-              roleGroup: 'Контроль',
+              roleGroup: 'Control',
               action: 'review',
               inputSchema: JSON.stringify({ type: 'object', properties: { code: { type: 'string' }, testResults: { type: 'object' } } }),
               outputSchema: JSON.stringify({ type: 'object', properties: { approved: { type: 'boolean' }, reviewNotes: { type: 'string' } } }),
@@ -78,7 +78,7 @@ export async function POST() {
             {
               order: 5,
               name: 'Store & Index',
-              roleGroup: 'Память',
+              roleGroup: 'Memory',
               action: 'transform',
               inputSchema: JSON.stringify({ type: 'object', properties: { code: { type: 'string' }, reviewNotes: { type: 'string' } } }),
               outputSchema: JSON.stringify({ type: 'object', properties: { archived: { type: 'boolean' }, indexId: { type: 'string' } } }),
@@ -88,7 +88,7 @@ export async function POST() {
             {
               order: 6,
               name: 'Notify Completion',
-              roleGroup: 'Коммуникация',
+              roleGroup: 'Communication',
               action: 'broadcast',
               inputSchema: JSON.stringify({ type: 'object', properties: { archived: { type: 'boolean' } } }),
               outputSchema: JSON.stringify({ type: 'object', properties: { notified: { type: 'boolean' } } }),
@@ -115,7 +115,7 @@ export async function POST() {
             {
               order: 0,
               name: 'Gather Data',
-              roleGroup: 'Память',
+              roleGroup: 'Memory',
               action: 'process',
               inputSchema: JSON.stringify({ type: 'object', properties: { query: { type: 'string' }, sources: { type: 'array' } } }),
               outputSchema: JSON.stringify({ type: 'object', properties: { rawData: { type: 'array' }, sourceCount: { type: 'number' } } }),
@@ -125,7 +125,7 @@ export async function POST() {
             {
               order: 1,
               name: 'Analyze',
-              roleGroup: 'Стратегия',
+              roleGroup: 'Strategy',
               action: 'transform',
               inputSchema: JSON.stringify({ type: 'object', properties: { rawData: { type: 'array' } } }),
               outputSchema: JSON.stringify({ type: 'object', properties: { analysis: { type: 'object' }, insights: { type: 'array' } } }),
@@ -135,7 +135,7 @@ export async function POST() {
             {
               order: 2,
               name: 'Evaluate Quality',
-              roleGroup: 'Контроль',
+              roleGroup: 'Control',
               action: 'review',
               inputSchema: JSON.stringify({ type: 'object', properties: { analysis: { type: 'object' } } }),
               outputSchema: JSON.stringify({ type: 'object', properties: { qualityScore: { type: 'number' }, issues: { type: 'array' } } }),
@@ -145,7 +145,7 @@ export async function POST() {
             {
               order: 3,
               name: 'Generate Report',
-              roleGroup: 'Исполнение',
+              roleGroup: 'Execution',
               action: 'transform',
               inputSchema: JSON.stringify({ type: 'object', properties: { analysis: { type: 'object' }, qualityScore: { type: 'number' } } }),
               outputSchema: JSON.stringify({ type: 'object', properties: { report: { type: 'string' }, format: { type: 'string' } } }),
@@ -155,7 +155,7 @@ export async function POST() {
             {
               order: 4,
               name: 'Distribute Report',
-              roleGroup: 'Коммуникация',
+              roleGroup: 'Communication',
               action: 'broadcast',
               config: JSON.stringify({ channels: ['stakeholders', 'dashboard', 'archive'] }),
               timeout: 60,
@@ -181,7 +181,7 @@ export async function POST() {
             {
               order: 0,
               name: 'Detect Incident',
-              roleGroup: 'Мониторинг',
+              roleGroup: 'Monitoring',
               action: 'process',
               inputSchema: JSON.stringify({ type: 'object', properties: { alertType: { type: 'string' }, severity: { type: 'string' } } }),
               outputSchema: JSON.stringify({ type: 'object', properties: { incidentId: { type: 'string' }, classification: { type: 'string' } } }),
@@ -191,7 +191,7 @@ export async function POST() {
             {
               order: 1,
               name: 'Diagnose',
-              roleGroup: 'Мониторинг',
+              roleGroup: 'Monitoring',
               action: 'transform',
               inputSchema: JSON.stringify({ type: 'object', properties: { incidentId: { type: 'string' }, classification: { type: 'string' } } }),
               outputSchema: JSON.stringify({ type: 'object', properties: { rootCause: { type: 'string' }, affectedComponents: { type: 'array' } } }),
@@ -201,7 +201,7 @@ export async function POST() {
             {
               order: 2,
               name: 'Decide Action',
-              roleGroup: 'Стратегия',
+              roleGroup: 'Strategy',
               action: 'decision',
               inputSchema: JSON.stringify({ type: 'object', properties: { rootCause: { type: 'string' } } }),
               outputSchema: JSON.stringify({ type: 'object', properties: { action: { type: 'string' }, priority: { type: 'string' } } }),
@@ -212,7 +212,7 @@ export async function POST() {
             {
               order: 3,
               name: 'Execute Fix',
-              roleGroup: 'Исполнение',
+              roleGroup: 'Execution',
               action: 'process',
               inputSchema: JSON.stringify({ type: 'object', properties: { action: { type: 'string' }, rootCause: { type: 'string' } } }),
               outputSchema: JSON.stringify({ type: 'object', properties: { fixApplied: { type: 'boolean' }, changes: { type: 'array' } } }),
@@ -222,7 +222,7 @@ export async function POST() {
             {
               order: 4,
               name: 'Verify Fix',
-              roleGroup: 'Контроль',
+              roleGroup: 'Control',
               action: 'review',
               config: JSON.stringify({ reviewCriteria: 'fix_verified,no_regression,performance_ok' }),
               timeout: 180,
@@ -230,7 +230,7 @@ export async function POST() {
             {
               order: 5,
               name: 'Learn & Adapt',
-              roleGroup: 'Обучение',
+              roleGroup: 'Learning',
               action: 'transform',
               config: JSON.stringify({ transformType: 'learn', promptTemplate: 'Extract lessons from incident' }),
               timeout: 120,
@@ -255,7 +255,7 @@ export async function POST() {
             {
               order: 0,
               name: 'Retrieve Knowledge',
-              roleGroup: 'Память',
+              roleGroup: 'Memory',
               action: 'process',
               config: JSON.stringify({ promptTemplate: 'Search and retrieve relevant knowledge' }),
               timeout: 300,
@@ -263,7 +263,7 @@ export async function POST() {
             {
               order: 1,
               name: 'Verify Accuracy',
-              roleGroup: 'Контроль',
+              roleGroup: 'Control',
               action: 'review',
               config: JSON.stringify({ reviewCriteria: 'factual_accuracy,source_reliability,recency' }),
               timeout: 180,
@@ -271,7 +271,7 @@ export async function POST() {
             {
               order: 2,
               name: 'Index & Store',
-              roleGroup: 'Память',
+              roleGroup: 'Memory',
               action: 'transform',
               config: JSON.stringify({ transformType: 'index_embed' }),
               timeout: 120,
@@ -279,7 +279,7 @@ export async function POST() {
             {
               order: 3,
               name: 'Propagate Updates',
-              roleGroup: 'Коммуникация',
+              roleGroup: 'Communication',
               action: 'broadcast',
               config: JSON.stringify({ channels: ['agents', 'dashboard', 'knowledge_graph'] }),
               timeout: 60,
@@ -304,7 +304,7 @@ export async function POST() {
             {
               order: 0,
               name: 'Classify Request',
-              roleGroup: 'Стратегия',
+              roleGroup: 'Strategy',
               action: 'decision',
               config: JSON.stringify({ condition: 'task_type', branches: ['coding', 'analysis', 'quality', 'general'] }),
               timeout: 60,
@@ -312,15 +312,15 @@ export async function POST() {
             {
               order: 1,
               name: 'Route to Team',
-              roleGroup: 'Тактика',
+              roleGroup: 'Tactics',
               action: 'delegate',
-              config: JSON.stringify({ routingRules: { coding: 'Исполнение', analysis: 'Стратегия', quality: 'Контроль', general: 'Исполнение' } }),
+              config: JSON.stringify({ routingRules: { coding: 'Execution', analysis: 'Strategy', quality: 'Control', general: 'Execution' } }),
               timeout: 60,
             },
             {
               order: 2,
               name: 'Execute Task',
-              roleGroup: 'Исполнение',
+              roleGroup: 'Execution',
               action: 'process',
               config: JSON.stringify({ promptTemplate: 'Execute assigned task' }),
               timeout: 600,
@@ -328,7 +328,7 @@ export async function POST() {
             {
               order: 3,
               name: 'Aggregate Results',
-              roleGroup: 'Тактика',
+              roleGroup: 'Tactics',
               action: 'transform',
               config: JSON.stringify({ transformType: 'aggregate' }),
               timeout: 120,

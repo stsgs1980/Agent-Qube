@@ -1,5 +1,6 @@
-import { db } from '@/lib/db'
-import { NextResponse } from 'next/server'
+import { PrismaClient } from '@prisma/client'
+
+const prisma = new PrismaClient()
 
 const sampleAgents = [
   // === Strategy ===
@@ -74,110 +75,74 @@ const sampleTasks = [
   { title: 'Benchmark Agent Performance', description: 'Score agents on standardized benchmarks and track improvements', status: 'pending', priority: 'medium', agentIndex: 25 },
 ]
 
-export async function POST() {
-  try {
-    // Delete existing data to allow re-seed with updated values
-    await db.task.deleteMany()
-    await db.agent.deleteMany()
+async function main() {
+  console.log('Seeding database...')
 
-    // Create agents
-    const created = []
-    for (const agent of sampleAgents) {
-      const record = await db.agent.create({ data: agent })
-      created.push(record)
-    }
+  // Delete existing data
+  await prisma.task.deleteMany()
+  await prisma.agent.deleteMany()
 
-    // Set up hierarchy relationships
-    // Strategy: Architect -> Analyst, Visionary
-    if (created[0] && created[1]) {
-      await db.agent.update({ where: { id: created[1].id }, data: { parentId: created[0].id } })
-    }
-    if (created[0] && created[2]) {
-      await db.agent.update({ where: { id: created[2].id }, data: { parentId: created[0].id } })
-    }
-    // Tactics: Coordinator -> Planner, Communicator
-    if (created[3] && created[4]) {
-      await db.agent.update({ where: { id: created[4].id }, data: { parentId: created[3].id } })
-    }
-    if (created[3] && created[5]) {
-      await db.agent.update({ where: { id: created[5].id }, data: { parentId: created[3].id } })
-    }
-    // Control: Inspector -> Evaluator, Guard
-    if (created[6] && created[7]) {
-      await db.agent.update({ where: { id: created[7].id }, data: { parentId: created[6].id } })
-    }
-    if (created[6] && created[8]) {
-      await db.agent.update({ where: { id: created[8].id }, data: { parentId: created[6].id } })
-    }
-    // Execution: Executor-A twin Executor-B
-    if (created[9] && created[10]) {
-      await db.agent.update({ where: { id: created[9].id }, data: { twinId: created[10].id } })
-      await db.agent.update({ where: { id: created[10].id }, data: { twinId: created[9].id } })
-    }
-    // Execution: Tester parent = Executor-A (tests results)
-    if (created[12] && created[9]) {
-      await db.agent.update({ where: { id: created[12].id }, data: { parentId: created[9].id } })
-    }
-    // Execution: Coder parent = Executor-A
-    if (created[13] && created[9]) {
-      await db.agent.update({ where: { id: created[13].id }, data: { parentId: created[9].id } })
-    }
-    // Memory: Archivist -> RAG-Specialist, Context-Manager
-    if (created[14] && created[15]) {
-      await db.agent.update({ where: { id: created[15].id }, data: { parentId: created[14].id } })
-    }
-    if (created[14] && created[16]) {
-      await db.agent.update({ where: { id: created[16].id }, data: { parentId: created[14].id } })
-    }
-    // Monitoring: Observer -> Alert-Operator, Diagnostician
-    if (created[17] && created[18]) {
-      await db.agent.update({ where: { id: created[18].id }, data: { parentId: created[17].id } })
-    }
-    if (created[17] && created[19]) {
-      await db.agent.update({ where: { id: created[19].id }, data: { parentId: created[17].id } })
-    }
-    // Communication: Gateway -> Protocolist, Dispatcher
-    if (created[20] && created[21]) {
-      await db.agent.update({ where: { id: created[21].id }, data: { parentId: created[20].id } })
-    }
-    if (created[20] && created[22]) {
-      await db.agent.update({ where: { id: created[22].id }, data: { parentId: created[20].id } })
-    }
-    // Learning: Trainer -> Adapter, Scorer
-    if (created[23] && created[24]) {
-      await db.agent.update({ where: { id: created[24].id }, data: { parentId: created[23].id } })
-    }
-    if (created[23] && created[25]) {
-      await db.agent.update({ where: { id: created[25].id }, data: { parentId: created[23].id } })
-    }
-
-    // Create sample tasks
-    let taskCount = 0
-    for (const task of sampleTasks) {
-      const agentRecord = created[task.agentIndex]
-      if (agentRecord) {
-        await db.task.create({
-          data: {
-            title: task.title,
-            description: task.description,
-            status: task.status,
-            priority: task.priority,
-            agentId: agentRecord.id,
-          },
-        })
-        taskCount++
-      }
-    }
-
-    return NextResponse.json({
-      message: 'Agents and tasks seeded successfully',
-      agentCount: created.length,
-      taskCount,
-      roleGroups: [...new Set(sampleAgents.map(a => a.roleGroup))],
-      formulas: [...new Set(sampleAgents.map(a => a.formula))],
-    })
-  } catch (error) {
-    console.error('Failed to seed agents:', error)
-    return NextResponse.json({ error: 'Failed to seed agents' }, { status: 500 })
+  // Create agents
+  const created = []
+  for (const agent of sampleAgents) {
+    const record = await prisma.agent.create({ data: agent })
+    created.push(record)
   }
+  console.log(`Created ${created.length} agents`)
+
+  // Set up hierarchy relationships
+  // Strategy: Architect -> Analyst, Visionary
+  if (created[0] && created[1]) await prisma.agent.update({ where: { id: created[1].id }, data: { parentId: created[0].id } })
+  if (created[0] && created[2]) await prisma.agent.update({ where: { id: created[2].id }, data: { parentId: created[0].id } })
+  // Tactics: Coordinator -> Planner, Communicator
+  if (created[3] && created[4]) await prisma.agent.update({ where: { id: created[4].id }, data: { parentId: created[3].id } })
+  if (created[3] && created[5]) await prisma.agent.update({ where: { id: created[5].id }, data: { parentId: created[3].id } })
+  // Control: Inspector -> Evaluator, Guard
+  if (created[6] && created[7]) await prisma.agent.update({ where: { id: created[7].id }, data: { parentId: created[6].id } })
+  if (created[6] && created[8]) await prisma.agent.update({ where: { id: created[8].id }, data: { parentId: created[6].id } })
+  // Execution: Executor-A twin Executor-B
+  if (created[9] && created[10]) {
+    await prisma.agent.update({ where: { id: created[9].id }, data: { twinId: created[10].id } })
+    await prisma.agent.update({ where: { id: created[10].id }, data: { twinId: created[9].id } })
+  }
+  // Execution: Tester parent = Executor-A
+  if (created[12] && created[9]) await prisma.agent.update({ where: { id: created[12].id }, data: { parentId: created[9].id } })
+  // Execution: Coder parent = Executor-A
+  if (created[13] && created[9]) await prisma.agent.update({ where: { id: created[13].id }, data: { parentId: created[9].id } })
+  // Memory: Archivist -> RAG-Specialist, Context-Manager
+  if (created[14] && created[15]) await prisma.agent.update({ where: { id: created[15].id }, data: { parentId: created[14].id } })
+  if (created[14] && created[16]) await prisma.agent.update({ where: { id: created[16].id }, data: { parentId: created[14].id } })
+  // Monitoring: Observer -> Alert-Operator, Diagnostician
+  if (created[17] && created[18]) await prisma.agent.update({ where: { id: created[18].id }, data: { parentId: created[17].id } })
+  if (created[17] && created[19]) await prisma.agent.update({ where: { id: created[19].id }, data: { parentId: created[17].id } })
+  // Communication: Gateway -> Protocolist, Dispatcher
+  if (created[20] && created[21]) await prisma.agent.update({ where: { id: created[21].id }, data: { parentId: created[20].id } })
+  if (created[20] && created[22]) await prisma.agent.update({ where: { id: created[22].id }, data: { parentId: created[20].id } })
+  // Learning: Trainer -> Adapter, Scorer
+  if (created[23] && created[24]) await prisma.agent.update({ where: { id: created[24].id }, data: { parentId: created[23].id } })
+  if (created[23] && created[25]) await prisma.agent.update({ where: { id: created[25].id }, data: { parentId: created[23].id } })
+
+  // Create tasks
+  let taskCount = 0
+  for (const task of sampleTasks) {
+    const agentRecord = created[task.agentIndex]
+    if (agentRecord) {
+      await prisma.task.create({
+        data: {
+          title: task.title,
+          description: task.description,
+          status: task.status,
+          priority: task.priority,
+          agentId: agentRecord.id,
+        },
+      })
+      taskCount++
+    }
+  }
+  console.log(`Created ${taskCount} tasks`)
+  console.log('Done!')
 }
+
+main()
+  .catch(console.error)
+  .finally(() => prisma.$disconnect())

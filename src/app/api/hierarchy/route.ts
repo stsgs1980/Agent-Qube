@@ -14,7 +14,12 @@ interface TypedConnection {
 export async function GET() {
   try {
     const agents = await db.agent.findMany({
-      include: { children: true, twin: true, twinOf: true, tasks: true },
+      include: {
+        children: { select: { id: true, name: true, roleGroup: true, status: true, parentId: true, twinId: true } },
+        twin: { select: { id: true, name: true, roleGroup: true } },
+        twinOf: { select: { id: true, name: true, roleGroup: true } },
+        tasks: { select: { id: true, title: true, status: true } },
+      },
       orderBy: { createdAt: 'asc' }
     })
 
@@ -32,14 +37,14 @@ export async function GET() {
 
     // Group by roleGroup
     const groups = {
-      'Стратегия': agents.filter(a => a.roleGroup === 'Стратегия'),
-      'Тактика': agents.filter(a => a.roleGroup === 'Тактика'),
-      'Контроль': agents.filter(a => a.roleGroup === 'Контроль'),
-      'Исполнение': agents.filter(a => a.roleGroup === 'Исполнение'),
-      'Память': agents.filter(a => a.roleGroup === 'Память'),
-      'Мониторинг': agents.filter(a => a.roleGroup === 'Мониторинг'),
-      'Коммуникация': agents.filter(a => a.roleGroup === 'Коммуникация'),
-      'Обучение': agents.filter(a => a.roleGroup === 'Обучение'),
+      'Strategy': agents.filter(a => a.roleGroup === 'Strategy'),
+      'Tactics': agents.filter(a => a.roleGroup === 'Tactics'),
+      'Control': agents.filter(a => a.roleGroup === 'Control'),
+      'Execution': agents.filter(a => a.roleGroup === 'Execution'),
+      'Memory': agents.filter(a => a.roleGroup === 'Memory'),
+      'Monitoring': agents.filter(a => a.roleGroup === 'Monitoring'),
+      'Communication': agents.filter(a => a.roleGroup === 'Communication'),
+      'Learning': agents.filter(a => a.roleGroup === 'Learning'),
     }
 
     // Stats
@@ -112,12 +117,12 @@ export async function GET() {
       }
     }
 
-    // 4. Delegate edges: Тактика coordinator delegates to Исполнение agents
-    const taktikaGroup = groups['Тактика'] || []
-    const ispolnenieGroup = groups['Исполнение'] || []
-    const coordinator = taktikaGroup.find(a => a.role === 'Tactical Coordinator')
+    // 4. Delegate edges: Tactics coordinator delegates to Execution agents
+    const tacticsGroup = groups['Tactics'] || []
+    const executionGroup = groups['Execution'] || []
+    const coordinator = tacticsGroup.find(a => a.role === 'Tactical Coordinator')
     if (coordinator) {
-      for (const execAgent of ispolnenieGroup) {
+      for (const execAgent of executionGroup) {
         connections.push({
           id: `delegate-${coordinator.id}-${execAgent.id}`,
           from: coordinator.id,
@@ -128,10 +133,10 @@ export async function GET() {
       }
     }
 
-    // 5. Supervise edges: Контроль agents supervise Исполнение agents
-    const kontrolGroup = groups['Контроль'] || []
-    for (const controlAgent of kontrolGroup) {
-      for (const execAgent of ispolnenieGroup) {
+    // 5. Supervise edges: Control agents supervise Execution agents
+    const controlGroup = groups['Control'] || []
+    for (const controlAgent of controlGroup) {
+      for (const execAgent of executionGroup) {
         connections.push({
           id: `supervise-${controlAgent.id}-${execAgent.id}`,
           from: controlAgent.id,
@@ -142,17 +147,17 @@ export async function GET() {
       }
     }
 
-    // 6. Broadcast edges: Стратегия root agents broadcast to group leads in all other groups
-    const strategiyaGroup = groups['Стратегия'] || []
-    const strategiyaRoots = strategiyaGroup.filter(a => !a.parentId)
+    // 6. Broadcast edges: Strategy root agents broadcast to group leads in all other groups
+    const strategyGroup = groups['Strategy'] || []
+    const strategyRoots = strategyGroup.filter(a => !a.parentId)
     const otherGroupLeadIds: string[] = []
     for (const [groupName, groupAgents] of Object.entries(groups)) {
-      if (groupName === 'Стратегия') continue
+      if (groupName === 'Strategy') continue
       // Group lead = agent with no parent in that group, or first agent
       const lead = groupAgents.find(a => !a.parentId) || groupAgents[0]
       if (lead) otherGroupLeadIds.push(lead.id)
     }
-    for (const rootAgent of strategiyaRoots) {
+    for (const rootAgent of strategyRoots) {
       for (const leadId of otherGroupLeadIds) {
         connections.push({
           id: `broadcast-${rootAgent.id}-${leadId}`,

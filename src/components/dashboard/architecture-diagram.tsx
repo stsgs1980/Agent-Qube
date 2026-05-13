@@ -4,14 +4,14 @@ import { Network } from 'lucide-react'
 
 export function ArchitectureDiagram() {
   const groups = [
-    { name: 'Стратегия', x: 200, y: 30, color: '#67E8F9' },
-    { name: 'Тактика', x: 400, y: 30, color: '#22D3EE' },
-    { name: 'Исполнение', x: 600, y: 30, color: '#06B6D4' },
-    { name: 'Контроль', x: 200, y: 110, color: '#06B6D4' },
-    { name: 'Мониторинг', x: 600, y: 110, color: '#0E7490' },
-    { name: 'Память', x: 200, y: 190, color: '#0891B2' },
-    { name: 'Коммуникация', x: 400, y: 190, color: '#155E75' },
-    { name: 'Обучение', x: 600, y: 190, color: '#164E63' },
+    { name: 'Strategy', x: 200, y: 30, color: '#67E8F9' },
+    { name: 'Tactics', x: 400, y: 30, color: '#22D3EE' },
+    { name: 'Execution', x: 600, y: 30, color: '#06B6D4' },
+    { name: 'Control', x: 200, y: 110, color: '#06B6D4' },
+    { name: 'Monitoring', x: 600, y: 110, color: '#0E7490' },
+    { name: 'Memory', x: 200, y: 190, color: '#0891B2' },
+    { name: 'Communication', x: 400, y: 190, color: '#155E75' },
+    { name: 'Learning', x: 600, y: 190, color: '#164E63' },
   ]
 
   const connections = [

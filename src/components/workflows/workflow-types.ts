@@ -42,7 +42,7 @@ export interface ExecutionData {
 
 export interface WorkflowPipelineProps { fullPage?: boolean; onBack?: () => void; onOpenHierarchy?: () => void }
 
-export const ROLE_GROUP_OPTIONS = ['Стратегия', 'Тактика', 'Контроль', 'Исполнение', 'Память', 'Мониторинг', 'Коммуникация', 'Обучение']
+export const ROLE_GROUP_OPTIONS = ['Strategy', 'Tactics', 'Control', 'Execution', 'Memory', 'Monitoring', 'Communication', 'Learning']
 export const ACTION_OPTIONS: WorkflowStep['action'][] = ['process', 'review', 'transform', 'delegate', 'broadcast', 'decision']
 
 export const ACTION_COLORS: Record<string, string> = {

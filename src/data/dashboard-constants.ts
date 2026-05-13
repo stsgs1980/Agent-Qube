@@ -7,14 +7,14 @@ import {
 // ─── Role Groups ──────────────────────────────────────────────────────────────
 
 export const ROLE_GROUPS = [
-  { name: 'Стратегия', label: 'Strategy', color: '#67E8F9', colorRgb: '103,232,249', icon: Brain, agents: 3, activeAgents: 3, formulas: 'ToT, CoVe, GoT', desc: 'Strategic planning, analysis, vision', statusSummary: [{ color: '#22D3EE', label: '3 active' }] },
-  { name: 'Тактика', label: 'Tactics', color: '#22D3EE', colorRgb: '34,211,238', icon: Target, agents: 3, activeAgents: 2, formulas: 'ReWOO, ReAct, SelfConsistency', desc: 'Coordination, planning, communication', statusSummary: [{ color: '#22D3EE', label: '2 active' }, { color: '#64748B', label: '1 idle' }] },
-  { name: 'Контроль', label: 'Control', color: '#06B6D4', colorRgb: '6,182,212', icon: Shield, agents: 3, activeAgents: 3, formulas: 'Reflexion, CoVe, ReAct', desc: 'Quality, evaluation, safety', statusSummary: [{ color: '#22D3EE', label: '3 active' }] },
-  { name: 'Исполнение', label: 'Execution', color: '#06B6D4', colorRgb: '6,182,212', icon: Zap, agents: 5, activeAgents: 4, formulas: 'ReAct, MoA, SelfRefine, PoT', desc: 'Task execution, coding, testing', statusSummary: [{ color: '#22D3EE', label: '4 active' }, { color: '#64748B', label: '1 idle' }] },
-  { name: 'Память', label: 'Memory / Knowledge', color: '#0891B2', colorRgb: '8,145,178', icon: Database, agents: 3, activeAgents: 2, formulas: 'CoT, AoT, SoT', desc: 'Knowledge base, RAG, context management', statusSummary: [{ color: '#22D3EE', label: '2 active' }, { color: '#818CF8', label: '1 standby' }] },
-  { name: 'Мониторинг', label: 'Monitoring', color: '#0E7490', colorRgb: '14,116,144', icon: Activity, agents: 3, activeAgents: 2, formulas: 'CoT, LATS, GoT', desc: 'Observation, alerting, diagnostics', statusSummary: [{ color: '#22D3EE', label: '2 active' }, { color: '#EAB308', label: '1 paused' }] },
-  { name: 'Коммуникация', label: 'Communication', color: '#155E75', colorRgb: '21,94,117', icon: Network, agents: 3, activeAgents: 3, formulas: 'PromptChaining, StepBack, PlanAndSolve', desc: 'Inter-agent messaging, routing, protocol translation', statusSummary: [{ color: '#22D3EE', label: '3 active' }] },
-  { name: 'Обучение', label: 'Learning / Training', color: '#164E63', colorRgb: '22,78,99', icon: Sparkles, agents: 3, activeAgents: 2, formulas: 'DSPy, MetaCoT, LeastToMost', desc: 'Fine-tuning, feedback loops, skill acquisition', statusSummary: [{ color: '#22D3EE', label: '2 active' }, { color: '#64748B', label: '1 idle' }] },
+  { name: 'Strategy', label: 'Strategy', color: '#67E8F9', colorRgb: '103,232,249', icon: Brain, agents: 3, activeAgents: 3, formulas: 'ToT, CoVe, GoT', desc: 'Strategic planning, analysis, vision', statusSummary: [{ color: '#22D3EE', label: '3 active' }] },
+  { name: 'Tactics', label: 'Tactics', color: '#22D3EE', colorRgb: '34,211,238', icon: Target, agents: 3, activeAgents: 2, formulas: 'ReWOO, ReAct, SelfConsistency', desc: 'Coordination, planning, communication', statusSummary: [{ color: '#22D3EE', label: '2 active' }, { color: '#64748B', label: '1 idle' }] },
+  { name: 'Control', label: 'Control', color: '#06B6D4', colorRgb: '6,182,212', icon: Shield, agents: 3, activeAgents: 3, formulas: 'Reflexion, CoVe, ReAct', desc: 'Quality, evaluation, safety', statusSummary: [{ color: '#22D3EE', label: '3 active' }] },
+  { name: 'Execution', label: 'Execution', color: '#06B6D4', colorRgb: '6,182,212', icon: Zap, agents: 5, activeAgents: 4, formulas: 'ReAct, MoA, SelfRefine, PoT', desc: 'Task execution, coding, testing', statusSummary: [{ color: '#22D3EE', label: '4 active' }, { color: '#64748B', label: '1 idle' }] },
+  { name: 'Memory', label: 'Memory / Knowledge', color: '#0891B2', colorRgb: '8,145,178', icon: Database, agents: 3, activeAgents: 2, formulas: 'CoT, AoT, SoT', desc: 'Knowledge base, RAG, context management', statusSummary: [{ color: '#22D3EE', label: '2 active' }, { color: '#818CF8', label: '1 standby' }] },
+  { name: 'Monitoring', label: 'Monitoring', color: '#0E7490', colorRgb: '14,116,144', icon: Activity, agents: 3, activeAgents: 2, formulas: 'CoT, LATS, GoT', desc: 'Observation, alerting, diagnostics', statusSummary: [{ color: '#22D3EE', label: '2 active' }, { color: '#EAB308', label: '1 paused' }] },
+  { name: 'Communication', label: 'Communication', color: '#155E75', colorRgb: '21,94,117', icon: Network, agents: 3, activeAgents: 3, formulas: 'PromptChaining, StepBack, PlanAndSolve', desc: 'Inter-agent messaging, routing, protocol translation', statusSummary: [{ color: '#22D3EE', label: '3 active' }] },
+  { name: 'Learning', label: 'Learning / Training', color: '#164E63', colorRgb: '22,78,99', icon: Sparkles, agents: 3, activeAgents: 2, formulas: 'DSPy, MetaCoT, LeastToMost', desc: 'Fine-tuning, feedback loops, skill acquisition', statusSummary: [{ color: '#22D3EE', label: '2 active' }, { color: '#64748B', label: '1 idle' }] },
 ]
 
 // ─── Formula Taxonomy ─────────────────────────────────────────────────────────
@@ -89,21 +89,21 @@ export const QUICK_STATS = [
 // ─── Activity Events ──────────────────────────────────────────────────────────
 
 export const ACTIVITY_EVENTS = [
-  { time: '2s ago', agent: 'Gateway', group: 'Коммуникация', desc: 'routed task to Executor-A' },
-  { time: '5s ago', agent: 'Inspector', group: 'Контроль', desc: 'completed quality check on Module X' },
-  { time: '12s ago', agent: 'Architect', group: 'Стратегия', desc: 'broadcast strategy update' },
-  { time: '18s ago', agent: 'Trainer', group: 'Обучение', desc: 'updated DSPy parameters' },
-  { time: '25s ago', agent: 'Observer', group: 'Мониторинг', desc: 'detected memory threshold warning' },
-  { time: '31s ago', agent: 'Coordinator', group: 'Тактика', desc: 'delegated 3 tasks to execution group' },
-  { time: '45s ago', agent: 'RAG-Specialist', group: 'Память', desc: 'retrieved context for prompt #847' },
-  { time: '52s ago', agent: 'Debugger', group: 'Исполнение', desc: 'fixed 2 issues via SelfRefine' },
-  { time: '1m ago', agent: 'Diagnostician', group: 'Мониторинг', desc: 'traced latency root cause' },
-  { time: '1m ago', agent: 'Alert-Operator', group: 'Мониторинг', desc: 'triggered escalation protocol' },
+  { time: '2s ago', agent: 'Gateway', group: 'Communication', desc: 'routed task to Executor-A' },
+  { time: '5s ago', agent: 'Inspector', group: 'Control', desc: 'completed quality check on Module X' },
+  { time: '12s ago', agent: 'Architect', group: 'Strategy', desc: 'broadcast strategy update' },
+  { time: '18s ago', agent: 'Trainer', group: 'Learning', desc: 'updated DSPy parameters' },
+  { time: '25s ago', agent: 'Observer', group: 'Monitoring', desc: 'detected memory threshold warning' },
+  { time: '31s ago', agent: 'Coordinator', group: 'Tactics', desc: 'delegated 3 tasks to execution group' },
+  { time: '45s ago', agent: 'RAG-Specialist', group: 'Memory', desc: 'retrieved context for prompt #847' },
+  { time: '52s ago', agent: 'Debugger', group: 'Execution', desc: 'fixed 2 issues via SelfRefine' },
+  { time: '1m ago', agent: 'Diagnostician', group: 'Monitoring', desc: 'traced latency root cause' },
+  { time: '1m ago', agent: 'Alert-Operator', group: 'Monitoring', desc: 'triggered escalation protocol' },
 ]
 
 // ─── Formula-Agent Mapping ────────────────────────────────────────────────────
 
-export const GROUP_ABBREVIATIONS = ['Стр', 'Ткт', 'Кнт', 'Исп', 'Пмт', 'Мнц', 'Кмн', 'Обч']
+export const GROUP_ABBREVIATIONS = ['Str', 'Tct', 'Ctl', 'Exc', 'Mem', 'Mon', 'Com', 'Lrn']
 export const GROUP_COLORS = ['#67E8F9', '#22D3EE', '#06B6D4', '#06B6D4', '#0891B2', '#0E7490', '#155E75', '#164E63']
 
 export const FORMULA_AGENT_MAP: { formula: string; groups: number[] }[] = [
@@ -145,14 +145,14 @@ export const CONNECTION_HEATMAP_DATA: number[][] = [
 // ─── Agent Performance ────────────────────────────────────────────────────────
 
 export const TOP_PERFORMERS = [
-  { name: 'Architect', group: 'Стратегия', score: 96 },
-  { name: 'Coordinator', group: 'Тактика', score: 94 },
-  { name: 'Inspector', group: 'Контроль', score: 91 },
-  { name: 'Coder', group: 'Исполнение', score: 89 },
-  { name: 'RAG-Specialist', group: 'Память', score: 87 },
-  { name: 'Observer', group: 'Мониторинг', score: 85 },
-  { name: 'Gateway', group: 'Коммуникация', score: 83 },
-  { name: 'Trainer', group: 'Обучение', score: 81 },
+  { name: 'Architect', group: 'Strategy', score: 96 },
+  { name: 'Coordinator', group: 'Tactics', score: 94 },
+  { name: 'Inspector', group: 'Control', score: 91 },
+  { name: 'Coder', group: 'Execution', score: 89 },
+  { name: 'RAG-Specialist', group: 'Memory', score: 87 },
+  { name: 'Observer', group: 'Monitoring', score: 85 },
+  { name: 'Gateway', group: 'Communication', score: 83 },
+  { name: 'Trainer', group: 'Learning', score: 81 },
 ]
 
 export const SPARKLINE_DATA: Record<string, number[]> = {
@@ -189,32 +189,32 @@ export const NETWORK_ACTIVITY_DATA = [12, 18, 15, 22, 28, 35, 42, 38, 45, 52, 48
 // ─── Agent List ───────────────────────────────────────────────────────────────
 
 export const AGENT_LIST = [
-  { name: 'Architect', group: 'Стратегия', status: 'active' as const, role: 'lead' as const },
-  { name: 'Analyst', group: 'Стратегия', status: 'active' as const, role: 'active' as const },
-  { name: 'Visionary', group: 'Стратегия', status: 'active' as const, role: 'active' as const },
-  { name: 'Coordinator', group: 'Тактика', status: 'active' as const, role: 'lead' as const },
-  { name: 'Planner', group: 'Тактика', status: 'active' as const, role: 'active' as const },
-  { name: 'Communicator', group: 'Тактика', status: 'idle' as const, role: 'idle' as const },
-  { name: 'Inspector', group: 'Контроль', status: 'active' as const, role: 'lead' as const },
-  { name: 'Evaluator', group: 'Контроль', status: 'active' as const, role: 'active' as const },
-  { name: 'Guard', group: 'Контроль', status: 'active' as const, role: 'active' as const },
-  { name: 'Executor-A', group: 'Исполнение', status: 'active' as const, role: 'lead' as const },
-  { name: 'Executor-B', group: 'Исполнение', status: 'active' as const, role: 'active' as const },
-  { name: 'Debugger', group: 'Исполнение', status: 'idle' as const, role: 'idle' as const },
-  { name: 'Tester', group: 'Исполнение', status: 'active' as const, role: 'active' as const },
-  { name: 'Coder', group: 'Исполнение', status: 'active' as const, role: 'active' as const },
-  { name: 'Archivist', group: 'Память', status: 'active' as const, role: 'lead' as const },
-  { name: 'RAG-Specialist', group: 'Память', status: 'active' as const, role: 'active' as const },
-  { name: 'Context-Manager', group: 'Память', status: 'standby' as const, role: 'standby' as const },
-  { name: 'Observer', group: 'Мониторинг', status: 'active' as const, role: 'lead' as const },
-  { name: 'Alert-Operator', group: 'Мониторинг', status: 'paused' as const, role: 'paused' as const },
-  { name: 'Diagnostician', group: 'Мониторинг', status: 'active' as const, role: 'active' as const },
-  { name: 'Gateway', group: 'Коммуникация', status: 'active' as const, role: 'lead' as const },
-  { name: 'Protocolist', group: 'Коммуникация', status: 'active' as const, role: 'active' as const },
-  { name: 'Dispatcher', group: 'Коммуникация', status: 'active' as const, role: 'active' as const },
-  { name: 'Trainer', group: 'Обучение', status: 'active' as const, role: 'lead' as const },
-  { name: 'Adapter', group: 'Обучение', status: 'active' as const, role: 'active' as const },
-  { name: 'Scorer', group: 'Обучение', status: 'idle' as const, role: 'idle' as const },
+  { name: 'Architect', group: 'Strategy', status: 'active' as const, role: 'lead' as const },
+  { name: 'Analyst', group: 'Strategy', status: 'active' as const, role: 'active' as const },
+  { name: 'Visionary', group: 'Strategy', status: 'active' as const, role: 'active' as const },
+  { name: 'Coordinator', group: 'Tactics', status: 'active' as const, role: 'lead' as const },
+  { name: 'Planner', group: 'Tactics', status: 'active' as const, role: 'active' as const },
+  { name: 'Communicator', group: 'Tactics', status: 'idle' as const, role: 'idle' as const },
+  { name: 'Inspector', group: 'Control', status: 'active' as const, role: 'lead' as const },
+  { name: 'Evaluator', group: 'Control', status: 'active' as const, role: 'active' as const },
+  { name: 'Guard', group: 'Control', status: 'active' as const, role: 'active' as const },
+  { name: 'Executor-A', group: 'Execution', status: 'active' as const, role: 'lead' as const },
+  { name: 'Executor-B', group: 'Execution', status: 'active' as const, role: 'active' as const },
+  { name: 'Debugger', group: 'Execution', status: 'idle' as const, role: 'idle' as const },
+  { name: 'Tester', group: 'Execution', status: 'active' as const, role: 'active' as const },
+  { name: 'Coder', group: 'Execution', status: 'active' as const, role: 'active' as const },
+  { name: 'Archivist', group: 'Memory', status: 'active' as const, role: 'lead' as const },
+  { name: 'RAG-Specialist', group: 'Memory', status: 'active' as const, role: 'active' as const },
+  { name: 'Context-Manager', group: 'Memory', status: 'standby' as const, role: 'standby' as const },
+  { name: 'Observer', group: 'Monitoring', status: 'active' as const, role: 'lead' as const },
+  { name: 'Alert-Operator', group: 'Monitoring', status: 'paused' as const, role: 'paused' as const },
+  { name: 'Diagnostician', group: 'Monitoring', status: 'active' as const, role: 'active' as const },
+  { name: 'Gateway', group: 'Communication', status: 'active' as const, role: 'lead' as const },
+  { name: 'Protocolist', group: 'Communication', status: 'active' as const, role: 'active' as const },
+  { name: 'Dispatcher', group: 'Communication', status: 'active' as const, role: 'active' as const },
+  { name: 'Trainer', group: 'Learning', status: 'active' as const, role: 'lead' as const },
+  { name: 'Adapter', group: 'Learning', status: 'active' as const, role: 'active' as const },
+  { name: 'Scorer', group: 'Learning', status: 'idle' as const, role: 'idle' as const },
 ]
 
 export const STATUS_DOT_COLORS: Record<string, string> = {
@@ -226,14 +226,14 @@ export const STATUS_DOT_COLORS: Record<string, string> = {
 }
 
 export const ROLE_GROUP_ICONS: Record<string, any> = {
-  'Стратегия': Brain,
-  'Тактика': Target,
-  'Контроль': Shield,
-  'Исполнение': Zap,
-  'Память': Database,
-  'Мониторинг': Activity,
-  'Коммуникация': Network,
-  'Обучение': Sparkles,
+  'Strategy': Brain,
+  'Tactics': Target,
+  'Control': Shield,
+  'Execution': Zap,
+  'Memory': Database,
+  'Monitoring': Activity,
+  'Communication': Network,
+  'Learning': Sparkles,
 }
 
 // ─── Helper ───────────────────────────────────────────────────────────────────

@@ -53,7 +53,7 @@ export function HierarchyCanvas({
         <MiniMap
           nodeColor={node => {
             const data = node.data as AgentData
-            const cfg = ROLE_CONFIG[data?.roleGroup] || ROLE_CONFIG['Исполнение']
+            const cfg = ROLE_CONFIG[data?.roleGroup] || ROLE_CONFIG['Execution']
             return cfg.color
           }}
           maskColor="rgba(0,0,0,0.7)"

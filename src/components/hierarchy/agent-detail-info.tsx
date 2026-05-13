@@ -20,7 +20,7 @@ function ConnItem({ label, name, color }: { label: string; name: string; color: 
 // ─── Agent Detail Info (view-mode body) ───────────────────────────────────
 
 export function AgentDetailInfo({ agent, allAgents }: { agent: AgentData; allAgents: AgentData[] }) {
-  const config = ROLE_CONFIG[agent.roleGroup] || ROLE_CONFIG['Исполнение']
+  const config = ROLE_CONFIG[agent.roleGroup] || ROLE_CONFIG['Execution']
   const skills = agent.skills ? agent.skills.split(',').filter(Boolean) : []
   const formulaDesc = FORMULA_DESC[agent.formula] || ''
   const parent = agent.parentId ? allAgents.find(a => a.id === agent.parentId) : null

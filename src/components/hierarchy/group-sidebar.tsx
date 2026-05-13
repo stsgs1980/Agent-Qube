@@ -80,7 +80,7 @@ export function GroupSidebar({
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           {filteredAgents.map(agent => {
-            const cfg = ROLE_CONFIG[agent.roleGroup] || ROLE_CONFIG['Исполнение']
+            const cfg = ROLE_CONFIG[agent.roleGroup] || ROLE_CONFIG['Execution']
             const statusColor = STATUS_COLORS[agent.status] || STATUS_COLORS.offline
             const isSelected = agent.id === selectedAgentId
             return (

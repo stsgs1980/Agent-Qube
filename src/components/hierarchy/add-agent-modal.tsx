@@ -5,7 +5,7 @@ import { X, Plus } from 'lucide-react'
 import { ROLE_ORDER, FORMULA_DESC } from './types'
 import { fetchWithRetry } from '@/lib/client-fetch'
 
-const DEFAULT_FORM = { name: '', role: '', group: 'Исполнение', formula: 'ReAct', status: 'active', skills: '' }
+const DEFAULT_FORM = { name: '', role: '', group: 'Execution', formula: 'ReAct', status: 'active', skills: '' }
 
 // ─── Add Agent modal — self-contained form with its own state ───────────────────
 

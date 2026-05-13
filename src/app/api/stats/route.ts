@@ -9,49 +9,49 @@ const ROLE_GROUP_CONFIG: Record<string, {
   colorRgb: string
   description: string
 }> = {
-  'Стратегия': {
+  'Strategy': {
     label: 'Strategy',
     color: '#67E8F9',
     colorRgb: '103,232,249',
     description: 'Strategic planning, analysis, vision',
   },
-  'Тактика': {
+  'Tactics': {
     label: 'Tactics',
     color: '#22D3EE',
     colorRgb: '34,211,238',
     description: 'Coordination, planning, communication',
   },
-  'Контроль': {
+  'Control': {
     label: 'Control',
     color: '#06B6D4',
     colorRgb: '6,182,212',
     description: 'Quality, evaluation, safety',
   },
-  'Исполнение': {
+  'Execution': {
     label: 'Execution',
     color: '#0891B2',
     colorRgb: '8,145,178',
     description: 'Task execution, coding, testing',
   },
-  'Память': {
+  'Memory': {
     label: 'Memory',
     color: '#0E7490',
     colorRgb: '14,116,144',
     description: 'Knowledge base, RAG, context management',
   },
-  'Мониторинг': {
+  'Monitoring': {
     label: 'Monitoring',
     color: '#155E75',
     colorRgb: '21,94,117',
     description: 'Observation, alerting, diagnostics',
   },
-  'Коммуникация': {
+  'Communication': {
     label: 'Comms',
     color: '#164E63',
     colorRgb: '22,78,99',
     description: 'Inter-agent messaging, routing, protocol translation',
   },
-  'Обучение': {
+  'Learning': {
     label: 'Learning',
     color: '#0C4A6E',
     colorRgb: '12,74,110',
@@ -60,14 +60,14 @@ const ROLE_GROUP_CONFIG: Record<string, {
 }
 
 const ROLE_GROUP_ORDER = [
-  'Стратегия',
-  'Тактика',
-  'Контроль',
-  'Исполнение',
-  'Память',
-  'Мониторинг',
-  'Коммуникация',
-  'Обучение',
+  'Strategy',
+  'Tactics',
+  'Control',
+  'Execution',
+  'Memory',
+  'Monitoring',
+  'Communication',
+  'Learning',
 ]
 
 // Status colors matching the dashboard design

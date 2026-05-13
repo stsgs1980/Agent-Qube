@@ -1119,3 +1119,126 @@ Stage Summary:
 - 26 useState distributed: main component 0, hooks 16, sub-components 10
 - All files under 150-line limit (max: 133 lines for workflow-execution-modal.tsx)
 - Barrel exports created at src/components/workflows/index.ts
+Task ID: 2
+Agent: Sub Agent
+Task: Update hierarchy components -- replace Russian roleGroup names with English equivalents
+
+Work Log:
+- Read all 10 hierarchy component files
+- Applied 8 Russian-to-English roleGroup mappings with replace_all=true:
+  - Стратегия -> Strategy
+  - Тактика -> Tactics
+  - Контроль -> Control
+  - Исполнение -> Execution
+  - Память -> Memory
+  - Мониторинг -> Monitoring
+  - Коммуникация -> Communication
+  - Обучение -> Learning
+- Files updated:
+  1. types.ts -- ROLE_CONFIG keys (8) + ROLE_ORDER array (8) = 16 replacements
+  2. build-connections.ts -- 4 replacements (Тактика, Исполнение, Контроль, Стратегия)
+  3. agent-node.tsx -- 1 replacement (Исполнение fallback)
+  4. group-sidebar.tsx -- 1 replacement (Исполнение fallback)
+  5. add-agent-modal.tsx -- 1 replacement (Исполнение default group)
+  6. agent-detail-info.tsx -- 1 replacement (Исполнение fallback)
+  7. agent-detail-header.tsx -- 1 replacement (Исполнение fallback)
+  8. hierarchy-canvas.tsx -- 1 replacement (Исполнение fallback)
+  9. detail-panel-edit.tsx -- 1 replacement (Исполнение fallback)
+  10. layer-labels.tsx -- no Russian names (already English)
+- Verified: grep for all 8 Russian names across hierarchy/ returned 0 matches
+- No logic changes -- only string replacements of roleGroup identifiers
+
+Stage Summary:
+- 24 total replacements across 9 files (layer-labels.tsx had no Russian names)
+- All roleGroup keys now English: Strategy, Tactics, Control, Execution, Memory, Monitoring, Communication, Learning
+- ROLE_CONFIG keys and ROLE_ORDER array fully aligned with English names
+- All fallback references (ROLE_CONFIG['Исполнение']) updated to ROLE_CONFIG['Execution']
+
+---
+Task ID: 3
+Agent: Sub Agent (Task 3)
+Task: Replace ALL Russian roleGroup names with English equivalents in dashboard/workflow components
+
+Work Log:
+- Read all 18 listed files + 2 dependency files (hierarchy/types.ts, dashboard-constants.ts)
+- Identified 3 files with direct Russian roleGroup text:
+  1. architecture-diagram.tsx -- 8 Russian group names in `groups` array
+  2. workflow-types.ts -- 8 Russian names in ROLE_GROUP_OPTIONS array
+  3. route.ts -- Unicode escape \u0418\u0441\u043f\u043e\u043b\u043d\u0435\u043d\u0438\u0435 (Исполнение) as default roleGroup value
+- Checked 15 "also check" files (4-18): none contain direct Russian roleGroup text (they reference constants from dashboard-constants.ts and hierarchy/types.ts)
+- Verified hierarchy/types.ts and dashboard-constants.ts already had English names (replaced in prior task)
+- Applied replacements using MultiEdit with replace_all=true for all 8 mappings:
+  - Стратегия -> Strategy, Тактика -> Tactics, Контроль -> Control
+  - Исполнение -> Execution, Память -> Memory, Мониторинг -> Monitoring
+  - Коммуникация -> Communication, Обучение -> Learning
+- Verified all 20 files are Cyrillic-free using byte-level scan
+
+Stage Summary:
+- 3 files edited with 17 total replacements (8 + 8 + 1)
+- 15 checked files had no Russian text (skip per instructions)
+- 2 dependency files already clean from prior task
+- All roleGroup names now consistently English across the P-MAS dashboard and workflow components
+- Byte-level verification: 0 Cyrillic characters remain in all 20 files
+
+---
+Task ID: 1
+Agent: Sub Agent
+Task: Update seed + constants to English - replace all Russian roleGroup names
+
+Work Log:
+- Read all 6 target files to identify all Russian roleGroup occurrences
+- Updated src/app/api/seed/route.ts:
+  - Replaced 8 roleGroup values: Стратегия→Strategy, Тактика→Tactics, Контроль→Control, Исполнение→Execution, Память→Memory, Мониторинг→Monitoring, Коммуникация→Communication, Обучение→Learning
+  - Replaced all Russian comments: "// === Стратегия (Strategy) ===" → "// === Strategy ===", and all hierarchy comments
+- Updated src/data/dashboard-constants.ts:
+  - Replaced all name fields in ROLE_GROUPS array (8 entries)
+  - Replaced all group fields in ACTIVITY_EVENTS (10 entries)
+  - Replaced all group fields in TOP_PERFORMERS (8 entries)
+  - Replaced all group fields in AGENT_LIST (26 entries)
+  - Replaced all keys in ROLE_GROUP_ICONS (8 entries)
+  - Replaced GROUP_ABBREVIATIONS: ['Стр','Ткт','Кнт','Исп','Пмт','Мнц','Кмн','Обч'] → ['Str','Tct','Ctl','Exc','Mem','Mon','Com','Lrn']
+- Updated src/app/api/stats/route.ts:
+  - Replaced all keys in ROLE_GROUP_CONFIG (8 entries)
+  - Replaced all entries in ROLE_GROUP_ORDER array (8 entries)
+- Updated src/app/api/hierarchy/route.ts:
+  - Replaced all keys in groups object (8 entries + filter conditions)
+  - Replaced all Russian variable names: taktikaGroup→tacticsGroup, ispolnenieGroup→executionGroup, kontrolGroup→controlGroup, strategiyaGroup→strategyGroup, strategiyaRoots→strategyRoots
+  - Replaced all Russian comments: "Тактика coordinator delegates" → "Tactics coordinator delegates", etc.
+- Updated src/app/api/workflows/seed/route.ts:
+  - Replaced all roleGroup values in 5 workflows (15+ step entries)
+  - Replaced routing rules: coding:'Исполнение'→'Execution', analysis:'Стратегия'→'Strategy', quality:'Контроль'→'Control'
+- Updated prisma/schema.prisma:
+  - Line 14 comment: "// Стратегия, Тактика, Контроль, Исполнение" → "// Strategy, Tactics, Control, Execution"
+- Verified: grep for all 8 Russian names across src/ and prisma/ returned zero matches
+
+Stage Summary:
+- 6 files updated with zero remaining Russian roleGroup references
+- 8 Russian→English name mappings applied consistently across all files
+- 8 Russian abbreviation→English abbreviation mappings applied in GROUP_ABBREVIATIONS
+- 5 Russian variable names replaced with English equivalents in hierarchy/route.ts
+- All comments translated from Russian to English
+- prisma/schema.prisma comment updated
+
+---
+Task ID: 4
+Agent: Main Agent
+Task: Fix server stability and complete English renaming
+
+Work Log:
+- Fixed /api/agents GET to use lightweight query (no include children+tasks by default)
+- Fixed /api/hierarchy to use select instead of full include for relations
+- Converted /api/agents POST prompting imports from static to dynamic (lazy load)
+- Made DashboardPanel a dynamic import (ssr: false) to reduce initial compile payload
+- Created /home/z/my-project/src/app/dashboard-panel.tsx (extracted from page.tsx)
+- Created /home/z/my-project/scripts/seed-db.ts for direct DB seeding
+- Seeded database with 26 agents using English roleGroup names
+- Verified zero Russian roleGroup names remain in src/ and prisma/ directories
+- Started keep-alive watchdog for server stability
+
+Stage Summary:
+- All 26 agent names are proper English (Architect, Analyst, Coordinator, etc.)
+- All 8 roleGroup names are English (Strategy, Tactics, Control, Execution, Memory, Monitoring, Communication, Learning)
+- Server stability: page loads OK, API endpoints work, watchdog auto-restarts on crash
+- Key optimization: lazy-loaded prompting library in /api/agents POST to reduce memory
+- Key optimization: dynamic import for DashboardPanel to reduce initial compile
+- DB verified: 26 agents, 26 tasks, all English names

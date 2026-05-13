@@ -12,7 +12,7 @@ interface AgentDetailHeaderProps {
 }
 
 export function AgentDetailHeader({ agent, onToggle, onEdit, onClose }: AgentDetailHeaderProps) {
-  const config = ROLE_CONFIG[agent.roleGroup] || ROLE_CONFIG['Исполнение']
+  const config = ROLE_CONFIG[agent.roleGroup] || ROLE_CONFIG['Execution']
   const statusColor = STATUS_COLORS[agent.status] || STATUS_COLORS.offline
 
   return (

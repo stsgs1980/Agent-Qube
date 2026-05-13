@@ -41,17 +41,17 @@ export interface NodePosition {
 // ─── Role configuration ──────────────────────────────────────────────────────────
 
 export const ROLE_CONFIG: Record<string, { color: string; colorRgb: string; label: string; level: number }> = {
-  'Стратегия':      { color: '#67E8F9', colorRgb: '103,232,249', label: 'Strategy',   level: 0 },
-  'Тактика':        { color: '#22D3EE', colorRgb: '34,211,238',  label: 'Tactics',    level: 1 },
-  'Контроль':       { color: '#06B6D4', colorRgb: '6,182,212',   label: 'Control',    level: 2 },
-  'Исполнение':     { color: '#0891B2', colorRgb: '8,145,178',   label: 'Execution',  level: 3 },
-  'Память':         { color: '#0E7490', colorRgb: '14,116,144',  label: 'Memory',     level: 4 },
-  'Мониторинг':     { color: '#155E75', colorRgb: '21,94,117',   label: 'Monitoring', level: 4 },
-  'Коммуникация':   { color: '#164E63', colorRgb: '22,78,99',    label: 'Comms',      level: 4 },
-  'Обучение':       { color: '#0C4A6E', colorRgb: '12,74,110',   label: 'Learning',   level: 4 },
+  'Strategy':      { color: '#67E8F9', colorRgb: '103,232,249', label: 'Strategy',   level: 0 },
+  'Tactics':        { color: '#22D3EE', colorRgb: '34,211,238',  label: 'Tactics',    level: 1 },
+  'Control':       { color: '#06B6D4', colorRgb: '6,182,212',   label: 'Control',    level: 2 },
+  'Execution':     { color: '#0891B2', colorRgb: '8,145,178',   label: 'Execution',  level: 3 },
+  'Memory':         { color: '#0E7490', colorRgb: '14,116,144',  label: 'Memory',     level: 4 },
+  'Monitoring':     { color: '#155E75', colorRgb: '21,94,117',   label: 'Monitoring', level: 4 },
+  'Communication':   { color: '#164E63', colorRgb: '22,78,99',    label: 'Comms',      level: 4 },
+  'Learning':       { color: '#0C4A6E', colorRgb: '12,74,110',   label: 'Learning',   level: 4 },
 }
 
-export const ROLE_ORDER = ['Стратегия', 'Тактика', 'Контроль', 'Исполнение', 'Память', 'Мониторинг', 'Коммуникация', 'Обучение']
+export const ROLE_ORDER = ['Strategy', 'Tactics', 'Control', 'Execution', 'Memory', 'Monitoring', 'Communication', 'Learning']
 
 export const STATUS_COLORS: Record<string, string> = {
   active: '#22D3EE',

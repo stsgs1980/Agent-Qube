@@ -9,7 +9,7 @@ import type { AgentNodeData } from './types'
 
 function AgentNodeComponent({ data, selected }: NodeProps) {
   const agent = data as unknown as AgentNodeData
-  const config = ROLE_CONFIG[agent.roleGroup] || ROLE_CONFIG['Исполнение']
+  const config = ROLE_CONFIG[agent.roleGroup] || ROLE_CONFIG['Execution']
   const statusColor = STATUS_COLORS[agent.status] || STATUS_COLORS.offline
 
   const IconComponent = AVATAR_ICONS[agent.avatar] || Brain
