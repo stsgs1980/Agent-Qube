@@ -248,14 +248,14 @@ def list_vba_modules(filepath):
     """List all VBA modules in an .xlsm file."""
     if not filepath.endswith(('.xlsm', '.xlsb')):
         return {"has_vba": False, "modules": []}
-
+    
     modules = []
     try:
         with zipfile.ZipFile(filepath, 'r') as zf:
             vba_files = [f for f in zf.namelist() if f.startswith('xl/vbaProject')]
             if not vba_files:
                 return {"has_vba": False, "modules": []}
-
+            
             # Read with keep_vba to access vba_archive
             wb = load_workbook(filepath, keep_vba=True)
             if wb.vba_archive:
@@ -264,7 +264,7 @@ def list_vba_modules(filepath):
             wb.close()
     except Exception as e:
         return {"has_vba": False, "error": str(e)}
-
+    
     return {"has_vba": True, "modules": modules}
 ```
 

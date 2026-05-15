@@ -254,7 +254,7 @@ def _fix_fld_char_structure(xml_content: str) -> str:
         r'<w:r(?:\s[^>]*)?>('
         r'<w:fldChar[^>]*w:fldCharType="begin"[^>]*/>'  # begin
         r')('
-        r'<w:instrText[^>]*>.*?</w:instrText>'           # instrText
+        r'<w:instrText[^>]*>.*?</w:instrText>'           # instrText  
         r')('
         r'<w:fldChar[^>]*w:fldCharType="separate"[^>]*/>'  # separate
         r')</w:r>'

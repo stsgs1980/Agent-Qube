@@ -9,7 +9,7 @@
 
 ## 1. Geoff Smart's Perspective: Only "Autopsy," No "Definition"
 *   **Comment**: "The starting point of this design is good (Forensic investigation), which aligns well with Topgrading's spirit—digging for truth. **However, you made a fatal error: the sequence is reversed.**"
-*   **Critique**:
+*   **Critique**: 
     *   The current flow is `Resume Scan` → `Scorecard`. This is **reactive**. You're setting standards based on the candidate's resume, which is the trap of "creating positions around people."
     *   **The A Method's** first step is always **Scorecard**—before looking at any resume, you must define the role's mission (Mission), outcomes (Outcomes), and competencies (Competencies).
     *   **Risk**: Without an independent Scorecard first, your "investigation" becomes "nitpicking," not "validation of fit." You might prove they lied, but not that they can deliver.
@@ -34,7 +34,7 @@
 
 ## 4. Comprehensive Optimization Recommendations (Action Plan)
 
-1.  **Architecture Adjustment (Re-order)**:
+1.  **Architecture Adjustment (Re-order)**: 
     *   `Step 1: Define Scorecard` (based on JD/business pain points, independent of resume)
     *   `Step 2: Resume Forensic` (scan resume gaps based on Scorecard)
 2.  **Content Enhancement (Add Future Focus)**:

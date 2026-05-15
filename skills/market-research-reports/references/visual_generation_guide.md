@@ -190,7 +190,7 @@ The following visuals can be generated when writing specific chapters that requi
 
 **Prompt:**
 ```
-Professional executive summary infographic for [MARKET NAME] market research report.
+Professional executive summary infographic for [MARKET NAME] market research report. 
 Modern data visualization style showing key metrics: market size, growth rate, key players.
 Blue and green color scheme matching corporate design.
 Clean minimalist design with icons.
@@ -316,7 +316,7 @@ python skills/scientific-schematics/scripts/generate_schematic.py \
 ```
 TAM SAM SOM concentric circles diagram:
 - Outer circle: TAM (Total Addressable Market) - $XXX billion
-- Middle circle: SAM (Serviceable Addressable Market) - $XX billion
+- Middle circle: SAM (Serviceable Addressable Market) - $XX billion  
 - Inner circle: SOM (Serviceable Obtainable Market) - $X billion
 
 Each circle labeled with:
@@ -426,7 +426,7 @@ python skills/scientific-schematics/scripts/generate_schematic.py \
 **Prompt:**
 ```
 PESTLE analysis hexagonal diagram:
-- Center hexagon: "[MARKET NAME]"
+- Center hexagon: "[MARKET NAME]" 
 - Six surrounding hexagons connected to center:
   - Political (red/orange)
   - Economic (blue)

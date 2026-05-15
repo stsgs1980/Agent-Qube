@@ -236,7 +236,7 @@ async function analyzeLocalImage(imagePath, prompt) {
   // Read image file and convert to base64
   const imageBuffer = fs.readFileSync(imagePath);
   const base64Image = imageBuffer.toString('base64');
-
+  
   // Determine MIME type based on file extension
   const ext = path.extname(imagePath).toLowerCase();
   const mimeTypes = {
@@ -290,7 +290,7 @@ import ZAI from 'z-ai-web-dev-sdk';
 async function extractText(imageUrl, options = {}) {
   const zai = await ZAI.create();
 
-  const prompt = options.preserveLayout
+  const prompt = options.preserveLayout 
     ? 'Extract all text from this image. Preserve the exact layout, formatting, and structure.'
     : 'Extract all visible text from this image.';
 
@@ -329,7 +329,7 @@ import ZAI from 'z-ai-web-dev-sdk';
 async function detectObjects(imageUrl, objectType) {
   const zai = await ZAI.create();
 
-  const prompt = objectType
+  const prompt = objectType 
     ? `Count and locate all ${objectType} in this image. Provide their positions and describe each one.`
     : 'Detect and list all objects in this image with their approximate locations.';
 
@@ -391,7 +391,7 @@ Format your response as structured JSON.`;
   });
 
   const content = response.choices[0]?.message?.content;
-
+  
   try {
     return JSON.parse(content);
   } catch (e) {
@@ -546,16 +546,16 @@ class ImageBatchProcessor {
 
   async processBatch(imageUrls, prompt) {
     const results = [];
-
+    
     for (const imageUrl of imageUrls) {
       try {
         const result = await this.processImage(imageUrl, prompt);
         results.push({ imageUrl, success: true, result });
       } catch (error) {
-        results.push({
-          imageUrl,
-          success: false,
-          error: error.message
+        results.push({ 
+          imageUrl, 
+          success: false, 
+          error: error.message 
         });
       }
     }
@@ -602,7 +602,7 @@ const results = await processor.processBatch(
 async function safeImageAnalysis(imageUrl, prompt) {
   try {
     const zai = await ZAI.create();
-
+    
     const response = await zai.chat.completions.createVision({
       messages: [
         {
@@ -681,8 +681,8 @@ app.post('/api/analyze-image', express.json(), async (req, res) => {
     const { imageUrl, prompt } = req.body;
 
     if (!imageUrl || !prompt) {
-      return res.status(400).json({
-        error: 'imageUrl and prompt are required'
+      return res.status(400).json({ 
+        error: 'imageUrl and prompt are required' 
       });
     }
 
@@ -718,8 +718,8 @@ app.post('/api/analyze-upload', upload.single('image'), async (req, res) => {
     const imageFile = req.file;
 
     if (!imageFile || !prompt) {
-      return res.status(400).json({
-        error: 'image file and prompt are required'
+      return res.status(400).json({ 
+        error: 'image file and prompt are required' 
       });
     }
 
@@ -733,11 +733,11 @@ app.post('/api/analyze-upload', upload.single('image'), async (req, res) => {
           role: 'user',
           content: [
             { type: 'text', text: prompt },
-            {
-              type: 'image_url',
-              image_url: {
-                url: `data:${mimeType};base64,${base64Image}`
-              }
+            { 
+              type: 'image_url', 
+              image_url: { 
+                url: `data:${mimeType};base64,${base64Image}` 
+              } 
             }
           ]
         }
@@ -788,8 +788,8 @@ export default async function handler(req, res) {
     const { imageUrl, prompt } = req.body;
 
     if (!imageUrl || !prompt) {
-      return res.status(400).json({
-        error: 'imageUrl and prompt are required'
+      return res.status(400).json({ 
+        error: 'imageUrl and prompt are required' 
       });
     }
 

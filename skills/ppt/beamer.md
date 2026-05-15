@@ -766,7 +766,7 @@ When the user provides a reference paper, thesis, or any source document:
    % ✅ Correct: English title + Chinese subtitle
    \title{Root Cortical Senescence Enhances Drought Tolerance in Cotton}
    \subtitle{根系皮层衰老增强棉花耐旱性}
-
+   
    % ❌ Wrong: two languages jammed into \title
    \title{Root Cortical Senescence Enhances Drought Tolerance in Cotton 根系皮层衰老增强棉花耐旱性}
    ```

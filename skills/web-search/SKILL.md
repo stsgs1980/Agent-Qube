@@ -256,13 +256,13 @@ class SearchProcessor {
     let filtered = results;
 
     if (filterDomain) {
-      filtered = filtered.filter(item =>
+      filtered = filtered.filter(item => 
         item.host_name.includes(filterDomain)
       );
     }
 
     if (minSnippetLength > 0) {
-      filtered = filtered.filter(item =>
+      filtered = filtered.filter(item => 
         item.snippet.length >= minSnippetLength
       );
     }
@@ -276,7 +276,7 @@ class SearchProcessor {
 
   groupByDomain(results) {
     const grouped = {};
-
+    
     results.forEach(item => {
       if (!grouped[item.host_name]) {
         grouped[item.host_name] = [];
@@ -497,7 +497,7 @@ async function validateSearchResults(query) {
     }
 
     // Check domain quality (not perfect, but basic check)
-    if (!item.host_name.includes('spam') &&
+    if (!item.host_name.includes('spam') && 
         !item.host_name.includes('ads')) {
       score += 20;
     } else {
@@ -525,7 +525,7 @@ async function validateSearchResults(query) {
 
 // Usage
 const validated = await validateSearchResults('best programming practices');
-console.log('High quality results:',
+console.log('High quality results:', 
   validated.filter(r => r.isHighQuality).length
 );
 ```
@@ -697,10 +697,10 @@ class RateLimitedSearch {
     if (this.requests.length >= this.requestsPerMinute) {
       const oldestRequest = this.requests[0];
       const waitTime = 60000 - (now - oldestRequest);
-
+      
       console.log(`Rate limit reached. Waiting ${waitTime}ms`);
       await new Promise(resolve => setTimeout(resolve, waitTime));
-
+      
       // Recheck after waiting
       return this.checkRateLimit();
     }

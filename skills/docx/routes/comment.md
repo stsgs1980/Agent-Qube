@@ -12,7 +12,7 @@ def add_comment(paragraph, comment_text, author="GLM", initials="G"):
     """Add a comment to an entire paragraph."""
     # Create comment reference
     comment_id = str(hash(comment_text) % 10000)
-
+    
     # Add to comments.xml (need to create if not exists)
     # ... complex XML manipulation required
     pass

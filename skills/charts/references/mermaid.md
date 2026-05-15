@@ -74,8 +74,8 @@ The following constraints are enforced **when generating Mermaid flowchart code*
     themeVariables: {
       // See "Theme configuration" below
     },
-    flowchart: {
-      curve: 'basis',
+    flowchart: { 
+      curve: 'basis', 
       padding: 32,           // Node padding (CJK chars 50% wider than Latin, need more space)
       nodeSpacing: 80,       // Horizontal spacing (prevents CJK node overlap)
       rankSpacing: 80,       // Vertical spacing between ranks (prevents overlap between levels)
@@ -104,11 +104,11 @@ async def mermaid_to_png(html_path, png_path, width=1400, scale=2):
             device_scale_factor=scale
         )
         await page.goto(f'file://{html_path}', wait_until='load', timeout=30000)
-
+        
         # Wait for Mermaid SVG to render
         await page.wait_for_selector('#diagram svg', timeout=15000)
         await page.wait_for_timeout(1000)
-
+        
         # ⚠️ Read SVG's ACTUAL rendered size (not CSS box model!)
         # Mermaid SVGs often overflow their CSS container — getBBox/clientRect
         # returns the true size, while CSS bounding_box() returns the clipped box.
@@ -118,25 +118,25 @@ async def mermaid_to_png(html_path, png_path, width=1400, scale=2):
             const r = svg.getBoundingClientRect();
             return { width: r.width, height: r.height };
         }''')
-
+        
         el = page.locator('#diagram')
         css_bbox = await el.bounding_box()
-
+        
         svg_w = svg_size['width'] if svg_size else width
         svg_h = svg_size['height'] if svg_size else 800
         css_w = css_bbox['width'] if css_bbox else width
         css_h = css_bbox['height'] if css_bbox else 800
-
+        
         # Use the LARGER of CSS box and SVG actual size
         fit_w = max(width, int(max(svg_w, css_w) + 200))
         fit_h = int(max(svg_h, css_h) + 200)
-
+        
         await page.set_viewport_size({'width': fit_w, 'height': fit_h})
         await page.wait_for_timeout(500)
-
+        
         await el.screenshot(path=png_path)
         await browser.close()
-
+        
         import os
         print(f'✅ {png_path} ({os.path.getsize(png_path)/1024:.0f}KB)')
 
@@ -305,7 +305,7 @@ sequenceDiagram
     前端->>API: POST /auth/login
     API->>DB: 查询用户
     DB-->>API: 用户信息
-
+    
     alt 验证成功
         API-->>前端: 200 + JWT Token
         前端-->>用户: 跳转首页
@@ -313,7 +313,7 @@ sequenceDiagram
         API-->>前端: 401 未授权
         前端-->>用户: 显示错误提示
     end
-
+    
     Note over 前端,API: Token 有效期 24 小时
 ```
 
@@ -487,7 +487,7 @@ Mermaid mindmap doesn't support `style`/`classDef`, but you can greatly improve 
   #diagram { min-width: 900px; }
 
   /* ─── CSS injection to optimize Mermaid mindmap rendering ─── */
-  /*
+  /* 
    * Actual SVG class names in Mermaid v11 mindmap:
    * - .section-root = root node
    * - .section-0 ~ .section-N = first-level branches (in order)

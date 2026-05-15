@@ -1,9 +1,9 @@
 [ws-service] Installing dependencies...
-bun install v1.3.13 (bf2e2cec)
+bun install v1.3.14 (0d9b296a)
 
 + socket.io@4.8.3
 
-22 packages installed [102.00ms]
+22 packages installed [89.00ms]
 [ws-service] Running bun run dev...
 $ bun --hot index.ts
 [ws-service] P-MAS WebSocket service running on port 3003

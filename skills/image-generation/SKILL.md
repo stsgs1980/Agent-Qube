@@ -43,11 +43,11 @@ async function generateImage(prompt, outputPath) {
   });
 
   const imageBase64 = response.data[0].base64;
-
+  
   // Save image
   const buffer = Buffer.from(imageBase64, 'base64');
   fs.writeFileSync(outputPath, buffer);
-
+  
   console.log(`Image saved to ${outputPath}`);
   return outputPath;
 }
@@ -239,7 +239,7 @@ class ImageGenerationService {
 
   async initialize() {
     this.zai = await ZAI.create();
-
+    
     if (!fs.existsSync(this.outputDir)) {
       fs.mkdirSync(this.outputDir, { recursive: true });
     }
@@ -261,7 +261,7 @@ class ImageGenerationService {
 
     // Check cache
     const cacheKey = this.generateCacheKey(prompt, size);
-
+    
     if (useCache && this.cache.has(cacheKey)) {
       const cachedPath = this.cache.get(cacheKey);
       if (fs.existsSync(cachedPath)) {
@@ -483,7 +483,7 @@ app.post('/api/generate-image', async (req, res) => {
 
     const imageBase64 = response.data[0].base64;
     const buffer = Buffer.from(imageBase64, 'base64');
-
+    
     const filename = `img_${Date.now()}.png`;
     const filepath = path.join(outputDir, filename);
     fs.writeFileSync(filepath, buffer);

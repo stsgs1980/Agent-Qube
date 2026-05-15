@@ -82,7 +82,7 @@ import subprocess, os
 def render_cover(html_path, pdf_path):
     """
     Render HTML cover to PDF via html2poster.js.
-
+    
     ⚠️ ALWAYS use html2poster.js for covers (NOT html2pdf-next.js).
     Cover HTML uses position:absolute for layout. html2pdf-next.js pre-render
     hooks convert absolute→static to prevent multi-page overlap, which

@@ -383,10 +383,10 @@ async function generateVideoWithKeyframes(startImagePath, endImagePath, prompt) 
   // Automatically detect MIME type for each image
   const startBuffer = fs.readFileSync(startImagePath);
   const endBuffer = fs.readFileSync(endImagePath);
-
+  
   const startMimeType = getMimeType(startImagePath);
   const endMimeType = getMimeType(endImagePath);
-
+  
   const startBase64 = `data:${startMimeType};base64,${startBuffer.toString('base64')}`;
   const endBase64 = `data:${endMimeType};base64,${endBuffer.toString('base64')}`;
 
@@ -480,7 +480,7 @@ import ZAI from 'z-ai-web-dev-sdk';
 
 async function pollWithBackoff(taskId) {
   const zai = await ZAI.create();
-
+  
   let pollInterval = 5000; // Start with 5 seconds
   const maxInterval = 30000; // Max 30 seconds
   const maxPolls = 40;
@@ -530,7 +530,7 @@ class VideoGenerationQueue {
 
   async createVideo(params) {
     const task = await this.zai.video.generations.create(params);
-
+    
     this.tasks.set(task.id, {
       taskId: task.id,
       status: task.task_status,
@@ -543,12 +543,12 @@ class VideoGenerationQueue {
 
   async checkTask(taskId) {
     const result = await this.zai.async.result.query(taskId);
-
+    
     const taskInfo = this.tasks.get(taskId);
     if (taskInfo) {
       taskInfo.status = result.task_status;
       taskInfo.lastChecked = new Date();
-
+      
       if (result.task_status === 'SUCCESS') {
         taskInfo.videoUrl = result.video_result?.[0]?.url ||
                           result.video_url ||
@@ -563,12 +563,12 @@ class VideoGenerationQueue {
   async pollTask(taskId, options = {}) {
     const maxPolls = options.maxPolls || 60;
     const pollInterval = options.pollInterval || 5000;
-
+    
     let pollCount = 0;
 
     while (pollCount < maxPolls) {
       const result = await this.checkTask(taskId);
-
+      
       if (result.task_status === 'SUCCESS' || result.task_status === 'FAIL') {
         return result;
       }
@@ -644,7 +644,7 @@ async function pollTaskUntilComplete(zai, taskId) {
 
   while (pollCount < maxPolls) {
     const result = await zai.async.result.query(taskId);
-
+    
     if (result.task_status === 'SUCCESS') {
       return {
         success: true,
@@ -761,7 +761,7 @@ image_url: [
 async function smartPoll(zai, taskId) {
   // Check immediately (some tasks complete fast)
   let result = await zai.async.result.query(taskId);
-
+  
   if (result.task_status !== 'PROCESSING') {
     return result;
   }
@@ -769,16 +769,16 @@ async function smartPoll(zai, taskId) {
   // Start polling with reasonable intervals
   let interval = 5000; // 5 seconds
   let maxPolls = 60; // 5 minutes total
-
+  
   for (let i = 0; i < maxPolls; i++) {
     await new Promise(resolve => setTimeout(resolve, interval));
     result = await zai.async.result.query(taskId);
-
+    
     if (result.task_status !== 'PROCESSING') {
       return result;
     }
   }
-
+  
   throw new Error('Task timeout');
 }
 ```
@@ -789,25 +789,25 @@ async function smartPoll(zai, taskId) {
 async function safeVideoGeneration(params) {
   try {
     const zai = await ZAI.create();
-
+    
     // Validate parameters
     if (!params.prompt && !params.image_url) {
       throw new Error('Either prompt or image_url is required');
     }
-
+    
     const task = await zai.video.generations.create(params);
     const result = await smartPoll(zai, task.id);
-
+    
     if (result.task_status === 'SUCCESS') {
       const videoUrl = result.video_result?.[0]?.url ||
                       result.video_url ||
                       result.url ||
                       result.video;
-
+      
       if (!videoUrl) {
         throw new Error('Video URL not found in response');
       }
-
+      
       return {
         success: true,
         url: videoUrl,
@@ -899,8 +899,8 @@ app.post('/api/video/create', async (req, res) => {
     const { prompt, image_url, quality, duration } = req.body;
 
     if (!prompt && !image_url) {
-      return res.status(400).json({
-        error: 'Either prompt or image_url is required'
+      return res.status(400).json({ 
+        error: 'Either prompt or image_url is required' 
       });
     }
 
@@ -983,7 +983,7 @@ wss.on('connection', (ws) => {
       if (data.action === 'generate') {
         // Create task
         const task = await zaiInstance.video.generations.create(data.params);
-
+        
         ws.send(JSON.stringify({
           type: 'task_created',
           taskId: task.id
@@ -1007,7 +1007,7 @@ async function pollAndNotify(ws, taskId) {
 
   while (pollCount < maxPolls) {
     const result = await zaiInstance.async.result.query(taskId);
-
+    
     ws.send(JSON.stringify({
       type: 'status_update',
       taskId: taskId,

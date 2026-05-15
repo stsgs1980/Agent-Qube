@@ -37,16 +37,12 @@ Only THEN proceed with the git operation.
 
 ### When `git push` is rejected (diverged branches):
 
-**Preferred path:** Use `git push --force-with-lease` if local commits are authoritative.
+**Preferred path:** Use `git push --force` if local commits are authoritative.
 
 ```
 1. Backup (see above)
-2. git push --force-with-lease origin main
+2. git push --force origin main
 ```
-
-`--force-with-lease` is safer than `--force` because it refuses to push if the
-remote has new commits you haven't seen. Use `--force` ONLY if `--force-with-lease`
-fails and you are certain the remote state should be overwritten.
 
 **DO NOT** run `git pull --rebase` or `git pull` to "fix" divergence.
 Rebase is risky in sandboxed environments because conflicts lock ALL tools.
@@ -68,7 +64,7 @@ Rebase is risky in sandboxed environments because conflicts lock ALL tools.
 ```
 1. git remote set-url origin <new-url>
 2. git remote -v  (verify)
-3. git push --force-with-lease origin main  (do NOT pull first)
+3. git push --force origin main  (do NOT pull first)
 ```
 
 NEVER pull after changing remote URL. You already have the local state you need.
@@ -131,7 +127,7 @@ git log --oneline -5
 Before ANY git operation involving remote:
 - [ ] Backup created (stash + file copy + log)
 - [ ] Remote URL verified
-- [ ] Operation chosen (`--force-with-lease` preferred; `--force` only as last resort)
+- [ ] Operation chosen (force push preferred for diverged branches)
 - [ ] After operation: git status verified
 - [ ] After operation: source files verified (ls src/app/)
 - [ ] Worklog.md updated with operation details

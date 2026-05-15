@@ -165,11 +165,11 @@ body {
 <div id="root">
   <div class="diagram-title">平衡计分卡四维评价体系</div>
   <div class="diagram-subtitle">基于战略目标的绩效管理框架</div>
-
+  
   <div class="cross-layout" id="crossLayout">
     <!-- SVG connectors drawn by script -->
     <svg class="cross-connectors" id="connSvg"></svg>
-
+    
     <!-- Row 1: top dimension -->
     <div class="dim-card dim-blue" data-pos="top">
       <div class="dim-title"><div class="dim-icon">F</div> 财务维度</div>
@@ -179,7 +179,7 @@ body {
         <li>ROI</li>
       </ul>
     </div>
-
+    
     <!-- Row 2: left + center + right -->
     <div class="middle-row">
       <div class="dim-card dim-green" data-pos="left">
@@ -190,9 +190,9 @@ body {
           <li>创新能力</li>
         </ul>
       </div>
-
+      
       <div class="center-node">战略目标</div>
-
+      
       <div class="dim-card dim-amber" data-pos="right">
         <div class="dim-title"><div class="dim-icon">C</div> 客户维度</div>
         <ul class="dim-items">
@@ -202,7 +202,7 @@ body {
         </ul>
       </div>
     </div>
-
+    
     <!-- Row 3: bottom dimension -->
     <div class="dim-card dim-purple" data-pos="bottom">
       <div class="dim-title"><div class="dim-icon">L</div> 学习与成长</div>
@@ -220,12 +220,12 @@ function drawCrossConnectors() {
   const layout = document.getElementById('crossLayout');
   const svg = document.getElementById('connSvg');
   const gRect = layout.getBoundingClientRect();
-
+  
   svg.setAttribute('width', gRect.width);
   svg.setAttribute('height', gRect.height);
   svg.setAttribute('viewBox', `0 0 ${gRect.width} ${gRect.height}`);
   svg.innerHTML = '';
-
+  
   // Bidirectional arrow markers — eliminates direction ambiguity
   const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
   defs.innerHTML = `
@@ -237,12 +237,12 @@ function drawCrossConnectors() {
     </marker>
   `;
   svg.appendChild(defs);
-
+  
   const center = layout.querySelector('.center-node');
   const cR = center.getBoundingClientRect();
   const cx = cR.left - gRect.left + cR.width / 2;
   const cy = cR.top - gRect.top + cR.height / 2;
-
+  
   // Draw connector from center edge to each card edge
   const cards = layout.querySelectorAll('.dim-card');
   cards.forEach(card => {
@@ -250,7 +250,7 @@ function drawCrossConnectors() {
     const r = card.getBoundingClientRect();
     const cardCx = r.left - gRect.left + r.width / 2;
     const cardCy = r.top - gRect.top + r.height / 2;
-
+    
     let x1, y1, x2, y2;
     switch (pos) {
       case 'top':
@@ -279,10 +279,10 @@ function drawCrossConnectors() {
         x2 = cardCx; y2 = r.top - gRect.top;        // card TOP MIDPOINT
         break;
     }
-
+    
     // 🚫 FORBIDDEN: drawing lines from center CORNERS (e.g. cR.left + cR.bottom)
     // All lines MUST originate from center EDGE MIDPOINTS (cx or cy)
-
+    
     const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
     line.setAttribute('x1', x1); line.setAttribute('y1', y1);
     line.setAttribute('x2', x2); line.setAttribute('y2', y2);
@@ -456,7 +456,7 @@ body {
 <div id="root">
   <div class="diagram-title">SWOT 分析</div>
   <div class="diagram-subtitle">企业战略定位评估</div>
-
+  
   <div class="quadrant-grid">
     <div class="quadrant q-strengths">
       <div class="q-title"><div class="q-icon">S</div> 优势 Strengths</div>
@@ -466,7 +466,7 @@ body {
         <li>供应链成熟</li>
       </ul>
     </div>
-
+    
     <div class="quadrant q-weaknesses">
       <div class="q-title"><div class="q-icon">W</div> 劣势 Weaknesses</div>
       <ul class="q-items">
@@ -475,7 +475,7 @@ body {
         <li>人才储备有限</li>
       </ul>
     </div>
-
+    
     <div class="quadrant q-opportunities">
       <div class="q-title"><div class="q-icon">O</div> 机会 Opportunities</div>
       <ul class="q-items">
@@ -484,7 +484,7 @@ body {
         <li>技术融合趋势</li>
       </ul>
     </div>
-
+    
     <div class="quadrant q-threats">
       <div class="q-title"><div class="q-icon">T</div> 威胁 Threats</div>
       <ul class="q-items">

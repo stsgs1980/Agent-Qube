@@ -102,7 +102,7 @@ def calc_canvas(branch_count, max_depth, total_nodes, max_text_len, layout):
     # Lower bounds
     width = max(width, 1200)
     height = max(height, 600)
-
+    
     return width, height
 ```
 
@@ -158,7 +158,7 @@ async def mindmap_to_png(html_path, png_path, width=1600):
         page = await browser.new_page(viewport={'width': width, 'height': 1200}, device_scale_factor=2)
         await page.goto(f'file://{html_path}', wait_until='networkidle')
         await page.wait_for_timeout(500)
-
+        
         el = page.locator('#mindmap')
         bbox = await el.bounding_box()
         # First expansion: ensure content is not clipped
@@ -166,11 +166,11 @@ async def mindmap_to_png(html_path, png_path, width=1600):
         expand_h = int(bbox['height'] + 100)
         await page.set_viewport_size({'width': expand_w, 'height': expand_h})
         await page.wait_for_timeout(200)
-
+        
         # Call connector script
         await page.evaluate('if(typeof drawAllLines==="function") drawAllLines()')
         await page.wait_for_timeout(200)
-
+        
         # Second contraction: measure actual content right edge, trim right-side blank space
         trim = await page.evaluate('''() => {
             const map = document.getElementById('mindmap');
@@ -189,10 +189,10 @@ async def mindmap_to_png(html_path, png_path, width=1600):
         # Redraw connectors (viewport changed so coordinates change)
         await page.evaluate('if(typeof drawAllLines==="function") drawAllLines()')
         await page.wait_for_timeout(200)
-
+        
         await el.screenshot(path=png_path)
         await browser.close()
-
+        
         import os
         print(f'✅ {png_path} ({os.path.getsize(png_path)/1024:.0f}KB)')
 ```

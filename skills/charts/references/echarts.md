@@ -378,10 +378,10 @@ const option = {
     data: [treeData],      // Tree-structured JSON data
     layout: 'orthogonal',  // Orthogonal layout (right-angle connectors)
     orient: 'LR',          // Direction: LR(left→right) / RL / TB(top→bottom) / BT
-
+    
     // Node spacing control (key params to prevent crowding)
     initialTreeDepth: -1,  // -1=expand all, positive=initial expand depth
-
+    
     // Label style
     label: {
       position: 'left',         // Leaf node label position
@@ -392,19 +392,19 @@ const option = {
     leaves: {
       label: { position: 'right' }  // Leaf labels on right
     },
-
+    
     // Connector style
     lineStyle: {
       color: '#94A3B8',
       width: 1.5,
       curveness: 0.5,    // Curvature, 0=straight, 0.5=natural curve
     },
-
+    
     // Node style
     itemStyle: {
       borderWidth: 1.5,
     },
-
+    
     // Animation
     animationDuration: 550,
     animationDurationUpdate: 750,
@@ -465,10 +465,10 @@ function styleTreeData(node, depth) {
       label: { fontSize: 12, color: '#475569', padding: [3, 8] }
     }
   ];
-
+  
   const style = styles[Math.min(depth, styles.length - 1)];
   Object.assign(node, style);
-
+  
   if (node.children) {
     node.children.forEach(child => styleTreeData(child, depth + 1));
   }
@@ -538,7 +538,7 @@ const option = {
   series: [{
     type: 'graph',
     layout: 'force',     // Force-directed auto layout
-
+    
     // Force model params (controls repulsion and attraction)
     force: {
       repulsion: 300,    // Repulsion force (higher = more spread out, recommended 200-500)
@@ -546,17 +546,17 @@ const option = {
       edgeLength: [100, 200],  // Edge length range
       layoutAnimation: true,
     },
-
+    
     roam: true,          // Allow drag and zoom
     draggable: true,     // Allow dragging nodes
-
+    
     // Nodes
     data: nodes,
     // Edges
     links: links,
     // Categories (for coloring)
     categories: categories,
-
+    
     // Labels
     label: {
       show: true,
@@ -564,14 +564,14 @@ const option = {
       fontSize: 12,
       fontFamily: 'PingFang SC, SimHei, sans-serif',
     },
-
+    
     // Connector style
     lineStyle: {
       color: 'source',   // Edge color follows source node
       curveness: 0.3,    // Curvature
       width: 1.5,
     },
-
+    
     // Highlight effect
     emphasis: {
       focus: 'adjacency',   // Highlight adjacent nodes on hover
@@ -616,7 +616,7 @@ const option = {
     type: 'graph',
     layout: 'none',  // Fixed layout, positions determined by x/y
     data: [
-      { name: '开始', x: 300, y: 50, symbolSize: 40,
+      { name: '开始', x: 300, y: 50, symbolSize: 40, 
         itemStyle: { color: '#EFF6FF', borderColor: '#3B82F6', borderWidth: 2 } },
       { name: '处理', x: 300, y: 200, symbolSize: 35 },
       { name: '判断', x: 300, y: 350, symbolSize: 35,

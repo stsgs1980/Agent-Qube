@@ -256,7 +256,7 @@ class ContextualChat {
   async startConversation(role, context) {
     // Set up system prompt with context
     const systemPrompt = `You are ${role}. Context: ${context}`;
-
+    
     this.messages = [
       {
         role: 'assistant',
@@ -536,7 +536,7 @@ const bad = await askQuestion('Tell me about AI');
 // Good: Specific and structured prompt
 async function askWithContext(topic, format, audience) {
   const zai = await ZAI.create();
-
+  
   const completion = await zai.chat.completions.create({
     messages: [
       {

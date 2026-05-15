@@ -339,7 +339,7 @@ class VisionChatSession {
     });
 
     const assistantMessage = response.choices[0]?.message?.content;
-
+    
     this.messages.push({
       role: 'assistant',
       content: assistantMessage
@@ -399,7 +399,7 @@ Format your response as JSON.`;
   });
 
   const content = response.choices[0]?.message?.content;
-
+  
   try {
     return JSON.parse(content);
   } catch (e) {
@@ -456,7 +456,7 @@ async function extractText(imageUrl) {
 async function safeVisionChat(imageUrl, question) {
   try {
     const zai = await ZAI.create();
-
+    
     const response = await zai.chat.completions.createVision({
       messages: [
         {
@@ -528,8 +528,8 @@ app.post('/api/analyze-image', async (req, res) => {
     const { imageUrl, question } = req.body;
 
     if (!imageUrl || !question) {
-      return res.status(400).json({
-        error: 'imageUrl and question are required'
+      return res.status(400).json({ 
+        error: 'imageUrl and question are required' 
       });
     }
 

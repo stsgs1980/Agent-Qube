@@ -62,7 +62,7 @@ Default dimensions can be overridden via the `canvas` field in the Blueprint. `d
 ✅ Correct: Components cover all rows 1→13
 Page: [Hero 1→4] [Stats 4→7] [Glass 7→10] [Meta 10→13]
 
-❌ Wrong: Components only reach row 10, rows 11-13 empty
+❌ Wrong: Components only reach row 10, rows 11-13 empty  
 Page: [Hero 1→3] [Stats 3→5] [Glass 5→8] [Meta 8→10] [??? 10→13 void]
 ```
 
@@ -79,7 +79,7 @@ Available rows: 8 rows (5→13)
 ❌ Even split: Attractions 5→9, Food 9→13 → 4 rows each
    → Attractions content far exceeds 4-row capacity, overflows into Food area, text overlaps!
 
-✅ Proportional split:
+✅ Proportional split: 
    Attractions: 8 × 450/700 ≈ 5 rows → 5→10
    Food:        8 × 250/700 ≈ 3 rows → 10→13
 ```
@@ -503,7 +503,7 @@ It will automatically:
 /* ✅ CORRECT CSS for poster HTML (html2poster.js handles the rest): */
 html, body { margin: 0; padding: 0; background: var(--c-bg); }
 .poster { width: 720px; position: relative; background: var(--c-bg); }
-/* Note: overflow:hidden on .poster is auto-injected by html2poster.js,
+/* Note: overflow:hidden on .poster is auto-injected by html2poster.js, 
    but including it in CSS is fine too */
 ```
 
@@ -637,7 +637,7 @@ html, body {
 **Poster content must be centered in the PDF, no left or right drift allowed.**
 
 Common drift causes and fixes:
-| Cause | Fix |
+| Cause | Fix | 
 |------|------|
 | `@page { margin }` not 0 | Must be `@page { size: <w> <h>; margin: 0; }` |
 | `.safe-zone` `inset` left-right asymmetric | Ensure `inset: Y% X%` uses same X% for left and right |

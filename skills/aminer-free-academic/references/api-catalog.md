@@ -1,7 +1,7 @@
 # AMiner Free Search API Catalog
 
-**Base URL**: `https://datacenter.aminer.cn/gateway/open_platform`
-**Authentication**: All endpoints should default to `Authorization: ${AMINER_API_KEY}`. In workflow execution, also include `X-Platform: openclaw` when required by the gateway.
+**Base URL**: `https://datacenter.aminer.cn/gateway/open_platform`  
+**Authentication**: All endpoints should default to `Authorization: ${AMINER_API_KEY}`. In workflow execution, also include `X-Platform: openclaw` when required by the gateway.  
 **Scope**: This catalog only documents the free APIs used by `aminer-free-academic`.
 
 ---

@@ -173,11 +173,11 @@ def fit_image(img_path, max_w, max_h):
     """Scale image to fit within max_w × max_h, preserving aspect ratio."""
     img = Image(img_path)
     orig_w, orig_h = img.drawWidth, img.drawHeight
-
+    
     ratio_w = max_w / orig_w if orig_w > max_w else 1.0
     ratio_h = max_h / orig_h if orig_h > max_h else 1.0
     ratio = min(ratio_w, ratio_h)
-
+    
     img.drawWidth = orig_w * ratio
     img.drawHeight = orig_h * ratio
     return img
@@ -297,12 +297,12 @@ from reportlab.lib.styles import ParagraphStyle
 
 def calculate_col_widths(data, font_name, font_size, available_width, min_col=30):
     """Calculate column widths based on content weight.
-
+    
     Each column's width is proportional to its widest content,
     with a minimum width and total constrained to available_width.
     """
     n_cols = len(data[0])
-
+    
     # Measure max content width per column
     max_widths = [0] * n_cols
     for row in data:
@@ -310,9 +310,9 @@ def calculate_col_widths(data, font_name, font_size, available_width, min_col=30
             text = str(cell) if not isinstance(cell, Paragraph) else cell.text
             w = stringWidth(text, font_name, font_size) + 8  # +8pt padding
             max_widths[i] = max(max_widths[i], w)
-
+    
     total_natural = sum(max_widths)
-
+    
     if total_natural <= available_width:
         # Everything fits — distribute remaining space proportionally
         extra = available_width - total_natural
@@ -323,7 +323,7 @@ def calculate_col_widths(data, font_name, font_size, available_width, min_col=30
         for w in max_widths:
             allocated = max(min_col, available_width * (w / total_natural))
             col_widths.append(allocated)
-
+        
         # Normalize to exactly fit available_width
         scale = available_width / sum(col_widths)
         return [w * scale for w in col_widths]
@@ -331,7 +331,7 @@ def calculate_col_widths(data, font_name, font_size, available_width, min_col=30
 
 def build_safe_table(data, available_width, font_name='Microsoft YaHei', font_size=9):
     """Build a table guaranteed not to overflow horizontally.
-
+    
     All text cells are wrapped in Paragraph() for automatic line-breaking.
     """
     wrap_style = ParagraphStyle(
@@ -341,19 +341,19 @@ def build_safe_table(data, available_width, font_name='Microsoft YaHei', font_si
         leading=font_size + 3,
         wordWrap='CJK',
     )
-
+    
     # Wrap all cells in Paragraph
     wrapped_data = []
     for row in data:
         wrapped_row = [Paragraph(str(cell), wrap_style) for cell in row]
         wrapped_data.append(wrapped_row)
-
+    
     col_widths = calculate_col_widths(data, font_name, font_size, available_width)
-
+    
     # Verify total width
     assert sum(col_widths) <= available_width + 0.5, \
         f"Table width {sum(col_widths):.1f} exceeds available {available_width:.1f}"
-
+    
     table = Table(wrapped_data, colWidths=col_widths, repeatRows=1)
     return table
 ```
@@ -406,7 +406,7 @@ Equations are the **#2 overflow source** after tables in two-column papers (ACM 
 
 % ✅ For contrastive losses: use multline
 \begin{multline}
-  \mathcal{L}_{\text{SSL}}^u =
+  \mathcal{L}_{\text{SSL}}^u = 
     -\log \frac{\exp(\text{sim}(z_u', z_u'')/\tau)}
     {\sum_{v \neq u} \exp(\text{sim}(z_u', z_v'')/\tau)}.
 \end{multline}
@@ -463,7 +463,7 @@ When content doesn't fit even after wrapping and scaling, apply these strategies
 ```python
 def fit_text_with_degradation(text, font_name, base_size, max_width, min_size=14):
     """Try progressively smaller font sizes until text fits.
-
+    
     NOTE: min_size enforced by fill-engine.md Safety Net 1.
     Single-column: min_size=14. Dual-column: min_size=12.
     If text still doesn't fit at min_size → trigger page break, do NOT shrink further.
@@ -482,7 +482,7 @@ def degrade_table_if_needed(data, available_width, font_name, base_font_size=10)
         col_widths = calculate_col_widths(data, font_name, font_size, available_width)
         if all(w >= 25 for w in col_widths):  # Minimum 25pt per column
             return font_size, col_widths
-
+    
     # Still doesn't fit — consider splitting table or landscape
     return base_font_size - 2, col_widths
 ```
@@ -491,7 +491,7 @@ def degrade_table_if_needed(data, available_width, font_name, base_font_size=10)
 
 ## 6. Vertical Overflow: Y-Cursor & Smart Pagination
 
-Horizontal overflow → wrap/scale/shrink.
+Horizontal overflow → wrap/scale/shrink.  
 Vertical overflow → paginate.
 
 ### Y-Cursor Architecture (ReportLab Platypus handles this, but understand it)

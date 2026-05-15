@@ -46,7 +46,7 @@
 
 ```python
 # overflow.md §5's min_size parameter must be >= Fill Engine red line
-def fit_text_with_degradation(text, font_name, base_size, max_width,
+def fit_text_with_degradation(text, font_name, base_size, max_width, 
                                min_size=14):  # ← Single-column floor 14pt, not 7pt
     """When overflow needs to shrink font size, it cannot go below the readability red line."""
     for size in range(base_size, min_size - 1, -1):
@@ -75,7 +75,7 @@ def calculate_fill_ratio(content_blocks, available_height, default_styles):
     for block in content_blocks:
         block_height = measure_block_height(block, default_styles)
         total_height += block_height
-
+    
     fill_ratio = total_height / available_height
     return fill_ratio
 ```
@@ -102,11 +102,11 @@ def inflate_line_height(base_line_height, fill_ratio):
     """
     if fill_ratio >= 0.65:
         return base_line_height  # No inflation
-
+    
     # Linear interpolation: as fill_ratio goes from 0.65→0.30, line-height goes from base→2.2
     inflation = (0.65 - fill_ratio) / (0.65 - 0.30)  # 0.0 ~ 1.0
     inflation = min(inflation, 1.0)
-
+    
     target = base_line_height + (2.2 - base_line_height) * inflation
     return round(target, 2)
 ```
@@ -129,13 +129,13 @@ def inject_paragraph_spacing(remaining_height, paragraph_count, heading_count):
     """
     if remaining_height <= 0:
         return 0
-
+    
     injection_pool = remaining_height * 0.4  # Take 40%
     gap_count = paragraph_count + heading_count - 1  # Number of gaps
-
+    
     if gap_count <= 0:
         return 0
-
+    
     per_gap = injection_pool / gap_count
     return round(per_gap, 1)
 ```
@@ -178,7 +178,7 @@ def inflate_table_padding(base_padding, fill_ratio):
     """
     if fill_ratio >= 0.65:
         return base_padding
-
+    
     # Add 10-20pt
     extra = int((0.65 - fill_ratio) / 0.25 * 20)
     extra = max(10, min(extra, 20))
@@ -239,20 +239,20 @@ def inflate_list_spacing(base_spacing, fill_ratio):
 def anchor_content_vertically(content_bbox_height, available_height, fill_ratio):
     """
     Pack all current page content as a BBox, re-align vertically within available height.
-
+    
     Returns content_top_y: Y coordinate offset for content top.
     """
     if fill_ratio >= 0.40:
         return 0  # No anchoring needed, normal flow from page top
-
+    
     remaining = available_height - content_bbox_height
-
+    
     # Option A: Golden ratio offset-up (recommended)
     golden_offset = remaining * 0.382  # Top 38.2%, bottom 61.8%
-
+    
     # Option B: Absolute vertical center (alternative)
     # center_offset = remaining / 2
-
+    
     return golden_offset
 ```
 
@@ -298,42 +298,42 @@ def build_page_with_fill_engine(story_blocks, page_width, page_height, margins):
     """
     available_h = page_height - margins['top'] - margins['bottom']
     available_w = page_width - margins['left'] - margins['right']
-
+    
     # --- Safety Net 1: Check font size floor ---
     enforce_font_floor(story_blocks, min_body=14, min_h1=32, min_h2=24, min_h3=18)
-
+    
     # --- Safety Net 2: Virtual render + inflation ---
     fill_ratio = calculate_fill_ratio(story_blocks, available_h, default_styles)
-
+    
     if fill_ratio < 0.65:
         # 2a. Line-height inflation
         new_line_height = inflate_line_height(1.4, fill_ratio)
         apply_line_height(story_blocks, new_line_height)
-
+        
         # 2b. Paragraph spacing injection
         remaining = available_h - measure_total_height(story_blocks)
-        extra_gap = inject_paragraph_spacing(remaining, count_paragraphs(story_blocks),
+        extra_gap = inject_paragraph_spacing(remaining, count_paragraphs(story_blocks), 
                                               count_headings(story_blocks))
         inject_spacers(story_blocks, extra_gap)
-
+        
         # 2c. Font scaling
         font_bump = scale_font_size(15, fill_ratio) - 15
         if font_bump > 0:
             bump_font_sizes(story_blocks, font_bump)
-
+    
     # --- Safety Net 3: Component inflation ---
     if fill_ratio < 0.65:
         inflate_tables(story_blocks, fill_ratio)
         inflate_blockquotes(story_blocks, fill_ratio)
         inflate_lists(story_blocks, fill_ratio)
-
+    
     # --- Safety Net 4: Y-axis anchoring ---
     recalc_ratio = calculate_fill_ratio(story_blocks, available_h, inflated_styles)
     if recalc_ratio < 0.40:
         content_height = measure_total_height(story_blocks)
         top_offset = anchor_content_vertically(content_height, available_h, recalc_ratio)
         story_blocks.insert(0, Spacer(1, top_offset))
-
+    
     return story_blocks
 ```
 
@@ -388,11 +388,11 @@ function runFillEngine(pageElement) {
   const pageH = pageElement.clientHeight;
   const contentH = pageElement.scrollHeight;
   const fillRatio = contentH / pageH;
-
+  
   if (fillRatio >= 0.65) return; // No inflation needed
-
+  
   const root = pageElement.style;
-
+  
   // 2a. Line-height inflation
   const inflation = Math.min((0.65 - fillRatio) / 0.35, 1.0);
   const newLH = 1.4 + (2.2 - 1.4) * inflation;
@@ -400,7 +400,7 @@ function runFillEngine(pageElement) {
   pageElement.querySelectorAll('p, li').forEach(el => {
     el.style.lineHeight = newLH.toFixed(2);
   });
-
+  
   // 2c. Font scaling
   if (fillRatio < 0.50) {
     pageElement.querySelectorAll('p, li').forEach(el => {
@@ -413,14 +413,14 @@ function runFillEngine(pageElement) {
       el.style.fontSize = (size + 1) + 'px'; // +1pt
     });
   }
-
+  
   // 3a. Table height expansion
   pageElement.querySelectorAll('td, th').forEach(cell => {
     const extra = Math.min(20, Math.round((0.65 - fillRatio) / 0.25 * 20));
     cell.style.paddingTop = (6 + extra) + 'px';
     cell.style.paddingBottom = (6 + extra) + 'px';
   });
-
+  
   // 3b. Blockquote exaggeration
   pageElement.querySelectorAll('blockquote').forEach(bq => {
     const size = parseFloat(getComputedStyle(bq).fontSize);
@@ -429,7 +429,7 @@ function runFillEngine(pageElement) {
     bq.style.marginTop = '40px';
     bq.style.marginBottom = '40px';
   });
-
+  
   // Safety Net 4: Y-axis anchoring
   const newContentH = pageElement.scrollHeight;
   const newRatio = newContentH / pageH;
