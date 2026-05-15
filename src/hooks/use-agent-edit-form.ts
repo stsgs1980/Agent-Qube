@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import type { AgentData } from '@/components/hierarchy/types'
 
 export interface AgentEditForm {
@@ -28,10 +28,10 @@ export function useAgentEditForm(agent: AgentData | null) {
   const [editSkills, setEditSkills] = useState('')
   const [editDescription, setEditDescription] = useState('')
 
-  // Track previous agent ID to reset form on agent change (React 19 pattern)
-  const [prevAgentId, setPrevAgentId] = useState<string | null>(null)
-  if (agent?.id !== prevAgentId) {
-    setPrevAgentId(agent?.id ?? null)
+  // Reset form when agent ID changes.
+  // MUST use useEffect here (not render-time setters) because calling setState
+  // during render when agent is null triggers: undefined !== null -> infinite re-render.
+  useEffect(() => {
     if (agent) {
       setEditName(agent.name)
       setEditRole(agent.role)
@@ -41,7 +41,7 @@ export function useAgentEditForm(agent: AgentData | null) {
       setEditSkills(agent.skills || '')
       setEditDescription(agent.description || '')
     }
-  }
+  }, [agent?.id])
 
   /** Populate all fields from the current agent (for entering edit mode). */
   const populateFromAgent = (a: AgentData | null) => {

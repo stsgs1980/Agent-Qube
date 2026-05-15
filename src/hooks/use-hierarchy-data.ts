@@ -14,12 +14,14 @@ export function useHierarchyData(reactFlowInstanceRef: MutableRefObject<any>) {
   const [apiConnections, setApiConnections] = useState<ConnectionData[]>([])
   const [wsConnected, setWsConnected] = useState(false)
   const socketRef = useRef<Socket | null>(null)
+  const agentsLengthRef = useRef(0)
 
   const fetchAgents = useCallback(async () => {
     try {
       const res = await fetchWithRetry('/api/hierarchy')
       const data = await res.json()
       setAgents(data.agents || [])
+      agentsLengthRef.current = (data.agents || []).length
       if (Array.isArray(data.connections)) setApiConnections(data.connections)
       if (reactFlowInstanceRef.current) {
         setTimeout(() => reactFlowInstanceRef.current?.fitView({ padding: 0.15, duration: 600 }), 300)
@@ -48,8 +50,8 @@ export function useHierarchyData(reactFlowInstanceRef: MutableRefObject<any>) {
     socket.on('agent:status', (data: { agentId: string; newStatus: string }) => {
       setAgents(prev => prev.map(a => a.id === data.agentId ? { ...a, status: data.newStatus } : a))
     })
-    socket.on('agent:created', (data: { agent: AgentData }) => {
-      setAgents(prev => prev.some(a => a.id === data.agent.id) ? prev : [...prev, data.agent])
+    socket.on('agent:created', () => {
+      // Re-fetch from API instead of double-updating state
       fetchAgents()
     })
     socket.on('agent:updated', (data: { agent: AgentData }) => {
@@ -63,13 +65,15 @@ export function useHierarchyData(reactFlowInstanceRef: MutableRefObject<any>) {
   }, [])
 
   // Fallback: simulate status transitions when WebSocket is disconnected
+  // Use ref for agents.length to avoid re-running the effect on every status change
   useEffect(() => {
-    if (wsConnected || agents.length === 0) return
+    if (wsConnected) return
     const statusCycle = ['active', 'idle', 'paused', 'standby'] as const
     const interval = setInterval(() => {
-      const count = 1 + Math.floor(Math.random() * 2)
       setAgents(prev => {
+        if (prev.length === 0) return prev
         const next = [...prev]
+        const count = 1 + Math.floor(Math.random() * 2)
         for (let i = 0; i < count; i++) {
           const idx = Math.floor(Math.random() * next.length)
           const agent = next[idx]
@@ -81,7 +85,7 @@ export function useHierarchyData(reactFlowInstanceRef: MutableRefObject<any>) {
       })
     }, 15000)
     return () => clearInterval(interval)
-  }, [wsConnected, agents.length])
+  }, [wsConnected])
 
   useEffect(() => { fetchAgents() }, [fetchAgents])
 
