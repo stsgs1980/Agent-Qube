@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import type { AgentData } from './types'
 import { useAgentEditForm } from '@/hooks/use-agent-edit-form'
 import { useAgentMutations } from '@/hooks/use-agent-mutations'
@@ -41,13 +41,11 @@ export function DetailPanel({
     onSuccess: () => { setEditMode(false); mutations.setShowDeleteConfirm(false) },
   })
 
-  // Reset edit mode when agent changes (React 19 pattern: adjust state during render)
-  const [prevAgentId, setPrevAgentId] = useState<string | null>(null)
-  if (agent?.id !== prevAgentId) {
-    setPrevAgentId(agent?.id ?? null)
+  // Reset edit mode when agent changes — useEffect to avoid render-loop
+  useEffect(() => {
     setEditMode(false)
     mutations.setShowDeleteConfirm(false)
-  }
+  }, [agent?.id, mutations.setShowDeleteConfirm])
 
   if (!open) return <DetailPanelCollapsed agent={agent} onToggle={onToggle} />
   if (!agent) return <DetailPanelEmpty onToggle={onToggle} />

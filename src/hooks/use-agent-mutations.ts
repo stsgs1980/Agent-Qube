@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useRef } from 'react'
 import { toast } from 'sonner'
 import { fetchWithRetry } from '@/lib/client-fetch'
 import { emitAgentDeleted, emitAgentUpdated } from '@/lib/ws-client'
@@ -18,6 +18,10 @@ export function useAgentMutations(opts: UseAgentMutationsOpts = {}) {
   const [deleting, setDeleting] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
+  // Use refs for callbacks to avoid recreating functions on every render
+  const optsRef = useRef(opts)
+  optsRef.current = opts
+
   const saveAgent = useCallback(async (agentId: string, form: AgentEditForm) => {
     setSaving(true)
     try {
@@ -29,8 +33,8 @@ export function useAgentMutations(opts: UseAgentMutationsOpts = {}) {
       if (res.ok) {
         const updated = await res.json()
         emitAgentUpdated(updated)
-        opts.onAgentUpdated?.(updated)
-        opts.onSuccess?.()
+        optsRef.current.onAgentUpdated?.(updated)
+        optsRef.current.onSuccess?.()
         toast.success('Agent updated', { description: `${form.name} saved successfully` })
         return true
       }
@@ -42,7 +46,7 @@ export function useAgentMutations(opts: UseAgentMutationsOpts = {}) {
       setSaving(false)
     }
     return false
-  }, [opts])
+  }, [])
 
   const deleteAgent = useCallback(async (agentId: string) => {
     setDeleting(true)
@@ -52,8 +56,8 @@ export function useAgentMutations(opts: UseAgentMutationsOpts = {}) {
       })
       if (res.ok) {
         emitAgentDeleted(agentId)
-        opts.onAgentDeleted?.(agentId)
-        opts.onSuccess?.()
+        optsRef.current.onAgentDeleted?.(agentId)
+        optsRef.current.onSuccess?.()
         toast.success('Agent deleted', { description: 'The agent has been removed' })
         return true
       }
@@ -65,7 +69,7 @@ export function useAgentMutations(opts: UseAgentMutationsOpts = {}) {
       setDeleting(false)
     }
     return false
-  }, [opts])
+  }, [])
 
   return {
     saving,
