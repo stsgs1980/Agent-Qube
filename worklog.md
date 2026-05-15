@@ -1418,3 +1418,23 @@ Stage Summary:
 - execute-llm now properly integrated: architectural instructions injected + prompt quality gates + existing resilience
 - All 5 prompting modules now actively used in API routes: core (buildSystemPrompt), templates (matchIntent), evaluation (scorePrompt), agents (applyFormula, orchestration patterns), instructions (getInstructionContent)
 - Key improvement: scorePrompt() evaluates prompts BEFORE sending to LLM, blocking low-quality prompts
+---
+Task ID: 3
+Agent: main
+Task: Anti-monolith analysis and cleanup
+
+Work Log:
+- Analyzed all source files for anti-monolith violations
+- Found agent-hierarchy.tsx (3455 lines, 41 useState, 17 functions) as critical monolith
+- Discovered it's DEAD CODE — not imported anywhere; project uses hierarchy/agent-hierarchy-v2.tsx
+- v2 was already modularized in a previous session (95 lines + 24 separate files)
+- Deleted the dead monolith (3455 lines removed)
+- Initially created modular extraction in features/agent-hierarchy/ (27 files), then realized it was unnecessary
+- Deleted the unused features/agent-hierarchy/ directory
+- Verified: 0 lint errors in src/, dev server working, all pre-existing errors in packages/ui/
+
+Stage Summary:
+- Deleted dead monolith agent-hierarchy.tsx (-3455 lines)
+- Active hierarchy code (hierarchy/ directory) is already properly modularized
+- Remaining large files are all in prompting/ library or UI components (acceptable)
+- Git pushed: 2c7f18b
