@@ -1458,3 +1458,22 @@ Stage Summary:
 - Заглушка (fallback) на клиенте работает: если WS падает, статусы симулируются локально
 - Caddy корректно роутит `?XTransformPort=3003` на порт 3003
 - Ограничение sandbox: фоновые процессы убиваются между вызовами Bash, но при перезапуске контейнера start.sh стартует ws-service автоматически
+
+---
+Task ID: 4.1 + 5.2
+Agent: main
+Task: Connection flow animation (4.1) + Edit agents from UI (5.2)
+
+Work Log:
+- 4.1: Discovered edge-particles.tsx already exists with full SVG particle animation (3 particles/edge, glow+trail, animateMotion). flowAnimation=true by default. Marked as ✅ in ROADMAP.
+- 5.2: Fixed 3 issues in agent editing:
+  1. use-agent-mutations.ts: PUT → PATCH (supports partial updates including parentId, twinId, avatar)
+  2. use-agent-mutations.ts: Added sonner toast notifications for save/delete (success + error)
+  3. add-agent-modal.tsx: Added description textarea (was auto-generated, now user-editable)
+  4. add-agent-modal.tsx: Added submitting state + toast notifications
+
+Stage Summary:
+- 4.1 was already implemented — SVG particle animation with glow/trail on every edge
+- 5.2 fixed: PATCH for partial updates, toast feedback, description in Add Agent
+- ROADMAP updated: 4.1, 5.1, 5.2 all ✅
+- Pushed: 6badb40
