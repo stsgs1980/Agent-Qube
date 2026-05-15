@@ -2,6 +2,8 @@ import ZAI from 'z-ai-web-dev-sdk'
 import {
   buildSystemPrompt,
   applyFormula,
+  scorePrompt,
+  getInstructionContent,
   withRetry,
   withTimeout,
   CircuitBreaker,
@@ -36,7 +38,7 @@ const FORMULA_MAP: Record<string, string> = {
 
 const llmCircuit = new CircuitBreaker({ failureThreshold: 5, recoveryTimeout: 30000 })
 
-// ─── Build agent system prompt with cognitive formula ─────────
+// ─── Build agent system prompt with cognitive formula + instructions ─
 
 export function buildAgentSystemPrompt(agent: {
   name: string; role: string; roleGroup: string; description: string; formula: string
@@ -61,12 +63,56 @@ export function buildAgentSystemPrompt(agent: {
     decision: agent.description || agent.role, system: agent.name,
     deliverable: 'structured output',
   })
-  return applied ? `${base}\n\n## Cognitive Framework\n${applied}` : base
+
+  // Inject architectural instructions for better LLM behavior
+  const coreRules = getInstructionContent('ai-rules-core')
+  const enforcementRules = getInstructionContent('ai-rules-enforcement')
+  let instructionsBlock = ''
+  if (coreRules) {
+    instructionsBlock += '\n\n## Architecture Rules\n' + coreRules
+  }
+  if (enforcementRules) {
+    instructionsBlock += '\n\n## Code Enforcement\n' + enforcementRules
+  }
+
+  return applied
+    ? `${base}${instructionsBlock}\n\n## Cognitive Framework\n${applied}`
+    : `${base}${instructionsBlock}`
+}
+
+// ─── Score prompt before sending to LLM ───────────────────────
+
+export function evaluatePromptBeforeCall(systemPrompt: string, userPrompt: string): {
+  score: number
+  grade: string
+  shouldProceed: boolean
+  suggestions: string[]
+} {
+  const sysResult = scorePrompt(systemPrompt)
+  const userResult = scorePrompt(userPrompt)
+  const combined = Math.round((sysResult.numeric * 0.6) + (userResult.numeric * 0.4))
+  const grade = sysResult.overall
+
+  // Don't send prompts below D grade
+  const shouldProceed = combined >= 25
+
+  return {
+    score: combined,
+    grade,
+    shouldProceed,
+    suggestions: [...sysResult.suggestions, ...userResult.suggestions].slice(0, 5),
+  }
 }
 
 // ─── Call LLM with resilience ─────────────────────────────────
 
 export async function callLLM(systemPrompt: string, userPrompt: string): Promise<string> {
+  // Evaluate prompt quality before calling
+  const eval_ = evaluatePromptBeforeCall(systemPrompt, userPrompt)
+  if (!eval_.shouldProceed) {
+    throw new Error(`Prompt quality too low (score: ${eval_.score}, grade: ${eval_.grade}). Suggestions: ${eval_.suggestions.join('; ')}`)
+  }
+
   const zai = await getZAI()
   const result = await llmCircuit.execute(() =>
     withRetry(() =>

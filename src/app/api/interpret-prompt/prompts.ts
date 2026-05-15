@@ -2,7 +2,7 @@
  * System prompts and response validator for interpret-prompt API.
  * Extracted from route.ts per STD-FE-001 (200-line limit).
  */
-import { matchIntent } from '@/lib/prompting'
+import { matchIntent, getInstructionContent, scorePrompt } from '@/lib/prompting'
 
 export const BASE_SYSTEM_PROMPT = `You are a layout advisor AI for @stsgs/ui component library. Parse the user's natural language description and extract structured layout context.
 
@@ -58,19 +58,49 @@ const VALID_GOALS = [
 ]
 const VALID_CONTENT_TYPES = ['cards', 'text', 'data', 'media', 'forms', 'mixed']
 
-/** Build enhanced system prompt with intent context from @stsgs/prompting */
+/** Build enhanced system prompt with intent context + instructions from @stsgs/prompting */
 export function buildEnhancedSystemPrompt(userPrompt: string): string {
   const intent = matchIntent(userPrompt)
   let systemPrompt = BASE_SYSTEM_PROMPT
 
-  if (intent) {
-    systemPrompt += `\n\nDETECTED INTENT: "${intent.name}" (id: ${intent.id})` +
-      `\nDefault expectations: ${intent.defaultItemCount} items, contentType: ${intent.contentType}` +
-      `\nsidebar: ${intent.needsSidebar}, header: ${intent.needsHeader}, footer: ${intent.needsFooter}` +
-      `\nDomain-specific rules: ${intent.promptSuffix}`
+  // Inject detected intent context (using actual IntentMatch fields)
+  if (intent && intent.confidence > 0) {
+    systemPrompt += `\n\nDETECTED INTENT: "${intent.intent}" (confidence: ${intent.confidence}%)`
+    if (intent.keywords.length > 0) {
+      systemPrompt += `\nMatched keywords: ${intent.keywords.join(', ')}`
+    }
+    if (intent.metadata && Object.keys(intent.metadata).length > 0) {
+      systemPrompt += `\nExtracted parameters: ${JSON.stringify(intent.metadata)}`
+    }
+    systemPrompt += `\nIntent template: ${intent.template}`
+  }
+
+  // Inject behavioral instructions for better LLM behavior
+  const diagnosticRule = getInstructionContent('diagnostic-disclosure')
+  if (diagnosticRule) {
+    systemPrompt += '\n\n## Behavioral Rule\n' +
+      diagnosticRule
+        .split('\n')
+        .filter(line => line.trim() && !line.startsWith('#'))
+        .slice(0, 5) // Take first 5 substantive lines
+        .join('\n')
   }
 
   return systemPrompt
+}
+
+/** Score the user prompt quality (for feedback) */
+export function evaluatePromptQuality(prompt: string): {
+  score: number
+  grade: string
+  suggestions: string[]
+} {
+  const result = scorePrompt(prompt)
+  return {
+    score: result.numeric,
+    grade: result.overall,
+    suggestions: result.suggestions.slice(0, 5),
+  }
 }
 
 /** Parse and validate LLM response into structured layout context */

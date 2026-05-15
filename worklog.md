@@ -1376,3 +1376,45 @@ Stage Summary:
 - CLI updated: ai command removed from packages/cli/src/index.ts
 - Prompting updated: comment fixed (inline, no filesystem dependency)
 - Root PROJECT_CONFIG.md preserved (P-MAS-v2 specific, correct)
+
+---
+Task ID: A
+Agent: Main Agent
+Task: Update README.md with current project state
+
+Work Log:
+- Analyzed current README vs actual project state
+- Added missing features: LLM-powered execution, 7 theme presets, WebSocket real-time
+- Added missing API endpoints: /api/workflows/execute-llm, /api/recipes
+- Added missing tech stack items: Recharts, React Hook Form, Zod
+- Updated file counts (21 files in prompting, 24 in hierarchy, etc.)
+- Added src/data/, src/app/themes/ to project structure
+- Fixed file count: 14 -> 21 for prompting library
+- Removed broken `bun run seed` reference (only API endpoint exists)
+- Added "(inline, no filesystem dependency)" note for instructions.ts
+
+Stage Summary:
+- README updated with all missing features, API endpoints, and accurate file counts
+- All references verified against actual project state
+
+---
+Task ID: B
+Agent: Main Agent
+Task: Connect @stsgs/prompting to real API endpoints
+
+Work Log:
+- Analyzed integration gaps: scoring not used in LLM pipeline, instructions not injected, interpret-prompt had broken IntentMatch fields
+- Fixed interpret-prompt/prompts.ts: buildEnhancedSystemPrompt() now uses actual IntentMatch fields (intent, confidence, keywords, metadata, template) instead of non-existent fields
+- Added instruction injection to buildEnhancedSystemPrompt(): getInstructionContent('diagnostic-disclosure') injected into system prompt
+- Added evaluatePromptQuality() function using scorePrompt() from @stsgs/prompting
+- Rewrote interpret-prompt/route.ts: now uses buildEnhancedSystemPrompt + evaluatePromptQuality + resilience (CircuitBreaker + withRetry + withTimeout) via z-ai-web-dev-sdk
+- Added instructions injection to execute-llm/helpers.ts: ai-rules-core + ai-rules-enforcement injected into system prompts
+- Added evaluatePromptBeforeCall() to execute-llm/helpers.ts: scores prompts before sending to LLM, blocks prompts below D grade
+- TypeScript: 0 errors in modified files
+- Lint: 0 new errors
+
+Stage Summary:
+- interpret-prompt now properly integrated: intent matching + instructions injection + prompt quality scoring + resilience
+- execute-llm now properly integrated: architectural instructions injected + prompt quality gates + existing resilience
+- All 5 prompting modules now actively used in API routes: core (buildSystemPrompt), templates (matchIntent), evaluation (scorePrompt), agents (applyFormula, orchestration patterns), instructions (getInstructionContent)
+- Key improvement: scorePrompt() evaluates prompts BEFORE sending to LLM, blocking low-quality prompts

@@ -1,45 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server'
 import ZAI from 'z-ai-web-dev-sdk'
+import { withRetry, withTimeout, CircuitBreaker } from '@/lib/prompting'
+import { buildEnhancedSystemPrompt, evaluatePromptQuality, parseAndValidate } from './prompts'
 
-const SYSTEM_PROMPT = `You are a layout advisor AI for @stsgs/ui component library. Your job is to parse a user's natural language description of what they want to build and extract structured layout context parameters.
-
-You MUST respond with ONLY valid JSON (no markdown, no explanation). The JSON must have this exact shape:
-
-{
-  "goal": "<one of: landing | dashboard-app | blog | ecommerce | documentation | portfolio | social | media | saas | crm | analytics | admin-panel>",
-  "contentType": "<one of: cards | text | data | media | forms | mixed>",
-  "itemCount": <number 1-50>,
-  "needsSidebar": <boolean>,
-  "needsHeader": <boolean>,
-  "needsFooter": <boolean>,
-  "confidence": <number 0-100>,
-  "detected": ["<list of what you detected from the prompt>"],
-  "explanation": "<brief explanation of your choices>"
-}
-
-Rules:
-- goal: What KIND of project is this? Landing pages, dashboards, blogs, etc.
-- contentType: What type of CONTENT will dominate? Cards/grids, text/articles, data/charts, media/images, forms/inputs, or mixed.
-- itemCount: How many content items? If user says "catalog" or "many", guess 24-50. If "a few", guess 3-6. If single page, 1.
-- needsSidebar: True for dashboards, docs, admin, CRM. False for landing, portfolio, media.
-- needsHeader: True for most pages. False for login/auth pages.
-- needsFooter: True for blogs, e-commerce, docs, landing. False for dashboards, admin.
-- confidence: How confident are you in your parsing? 0-100.
-- detected: List of keywords/concepts you found.
-- explanation: One sentence explaining your reasoning.
-
-If the prompt is vague (like "create something"), make reasonable defaults and set low confidence.
-If the prompt is specific, set high confidence.
-Support both English and Russian prompts.`
+// ─── ZAI singleton (server-side only) ─────────────────────────
 
 let zaiInstance: Awaited<ReturnType<typeof ZAI.create>> | null = null
 
 async function getZAI() {
-  if (!zaiInstance) {
-    zaiInstance = await ZAI.create()
-  }
+  if (!zaiInstance) zaiInstance = await ZAI.create()
   return zaiInstance
 }
+
+// ─── Circuit breaker for LLM calls ────────────────────────────
+
+const interpretCircuit = new CircuitBreaker({ failureThreshold: 5, recoveryTimeout: 30000 })
+
+// ─── POST /api/interpret-prompt ───────────────────────────────
 
 export async function POST(request: NextRequest) {
   try {
@@ -53,57 +30,55 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // ── 1. Build enhanced system prompt with intent + instructions ──
+    const systemPrompt = buildEnhancedSystemPrompt(prompt.trim())
+
+    // ── 2. Evaluate prompt quality (feedback for the user) ──
+    const quality = evaluatePromptQuality(prompt.trim())
+
+    // ── 3. Call LLM with resilience (retry + timeout + circuit breaker) ──
     const zai = await getZAI()
+    const result = await interpretCircuit.execute(() =>
+      withRetry(() =>
+        withTimeout(async () => {
+          const completion = await zai.chat.completions.create({
+            messages: [
+              { role: 'assistant', content: systemPrompt },
+              { role: 'user', content: prompt.trim() },
+            ],
+            thinking: { type: 'disabled' },
+          })
+          const content = completion.choices[0]?.message?.content
+          if (!content) throw new Error('Empty LLM response')
+          return content
+        }, 30000),
+        { maxAttempts: 2, baseDelay: 1000 }
+      )
+    )
 
-    const completion = await zai.chat.completions.create({
-      messages: [
-        { role: 'assistant', content: SYSTEM_PROMPT },
-        { role: 'user', content: prompt.trim() },
-      ],
-      thinking: { type: 'disabled' },
-    })
-
-    const content = completion.choices[0]?.message?.content
-
-    if (!content) {
+    if (!result.success) {
       return NextResponse.json(
-        { error: 'No response from AI' },
-        { status: 500 }
+        { error: 'LLM call failed', details: result.errors.join('; ') },
+        { status: 502 }
       )
     }
 
-    // Parse the JSON response
+    // ── 4. Parse and validate response ──
     try {
-      let jsonStr = content
-      const jsonMatch = content.match(/```(?:json)?\s*([\s\S]*?)```/)
-      if (jsonMatch) {
-        jsonStr = jsonMatch[1].trim()
-      }
-
-      const parsed = JSON.parse(jsonStr)
-
-      // Validate the required fields
-      const validGoals = ['landing', 'dashboard-app', 'blog', 'ecommerce', 'documentation', 'portfolio', 'social', 'media', 'saas', 'crm', 'analytics', 'admin-panel']
-      const validContentTypes = ['cards', 'text', 'data', 'media', 'forms', 'mixed']
-
-      if (!validGoals.includes(parsed.goal)) parsed.goal = 'landing'
-      if (!validContentTypes.includes(parsed.contentType)) parsed.contentType = 'cards'
-      parsed.itemCount = Math.max(1, Math.min(50, Number(parsed.itemCount) || 6))
-      parsed.needsSidebar = Boolean(parsed.needsSidebar)
-      parsed.needsHeader = Boolean(parsed.needsHeader)
-      parsed.needsFooter = Boolean(parsed.needsFooter)
-      parsed.confidence = Math.max(0, Math.min(100, Number(parsed.confidence) || 50))
+      const parsed = parseAndValidate(result.data)
 
       return NextResponse.json({
         success: true,
         source: 'llm',
         result: parsed,
+        promptQuality: quality,
       })
     } catch {
       return NextResponse.json({
         success: false,
         error: 'Failed to parse AI response as JSON',
-        raw: content,
+        raw: result.data,
+        promptQuality: quality,
       })
     }
   } catch (error) {

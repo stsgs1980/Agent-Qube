@@ -13,13 +13,16 @@ Repository: [github.com/stsgs1980/P-MAS-v2](https://github.com/stsgs1980/P-MAS-v
 
 - **Dashboard** - Agent stats, status distribution, KPIs, activity timeline, system health monitoring
 - **Agent Hierarchy** - Interactive React Flow + Dagre DAG layout with node search, context menus, layer bands, and connection strength visualization
-- **Workflow Pipeline** - Full CRUD for multi-step agent workflows with execution tracking, step-level status, feedback loops, and agent message logs
+- **Workflow Pipeline** - Full CRUD for multi-step agent workflows with simulated and LLM-powered execution, step-level status, feedback loops, and agent message logs
 - **26 AI Agents** across 8 role groups and 5 hierarchy layers (L0--L4)
 - **6 Connection Types** - command, sync, twin, delegate, supervise, broadcast
 - **@stsgs/prompting Library** - 5 modules (core, templates, evaluation, agents, instructions) with 20 cognitive formulas, 12 orchestration patterns, 6-dimension scoring, and behavioral/architectural instructions
 - **20 Cognitive Formulas** - ToT, CoVe, GoT, CoT, ReAct, Reflexion, ReWOO, MoA, and more, mapped to agents
-- **AI-Powered Prompt Interpretation** - z-ai-web-dev-sdk integration at /api/interpret-prompt
+- **LLM-Powered Workflow Execution** - Real AI execution via z-ai-web-dev-sdk with resilience (retry, circuit breaker, timeout) at `/api/workflows/execute-llm`
+- **AI Prompt Interpretation** - z-ai-web-dev-sdk integration at `/api/interpret-prompt` with intent matching
+- **7 Theme Presets** - Champagne, Cyan Night, Zinc (dark) + Champagne Light, Cyan Morning, Sand Light, Ember (light) via CSS custom properties
 - **Dark Design System** - Black (#000000) background, monochrome + Cyan (#06B6D4) accent, glow effects on active nodes
+- **WebSocket Real-time** - Socket.IO service (port 3003) for live agent status updates
 
 ## 26 Agents / 8 Role Groups
 
@@ -59,13 +62,14 @@ Repository: [github.com/stsgs1980/P-MAS-v2](https://github.com/stsgs1980/P-MAS-v
 - **Language** - TypeScript 5 (strict mode)
 - **Styling** - Tailwind CSS 4 + shadcn/ui
 - **Database** - SQLite via Prisma ORM
-- **Visualization** - React Flow (@xyflow/react) + Dagre (DAG layout)
+- **Visualization** - React Flow (@xyflow/react) + Dagre (DAG layout) + Recharts
 - **Animation** - Framer Motion
 - **State** - Zustand (client) + TanStack Query (server)
+- **Forms** - React Hook Form + Zod validation
 - **Real-time** - Socket.IO (WebSocket mini-service, port 3003)
 - **Icons** - Lucide React
-- **Prompting** - @stsgs/prompting library (5 modules, 14 files)
-- **AI Integration** - z-ai-web-dev-sdk for prompt interpretation
+- **Prompting** - @stsgs/prompting library (5 modules, 21 files)
+- **AI Integration** - z-ai-web-dev-sdk for chat completions with resilience
 
 ## Getting Started
 
@@ -89,16 +93,10 @@ The application will be available at `http://localhost:3000`.
 
 ### Seeding the Database
 
-The seed endpoint populates the database with 26 agents, their associated tasks, and 8 role groups. Either use the API:
+The seed endpoint populates the database with 26 agents, their associated tasks, and 8 role groups:
 
 ```bash
 curl -X POST http://localhost:3000/api/seed
-```
-
-Or the seed script:
-
-```bash
-bun run seed
 ```
 
 ## Configuration
@@ -113,22 +111,24 @@ DATABASE_URL="file:./db/dev.db"
 
 ## Project Structure
 
-- `src/app/` - Next.js App Router pages and API routes
-- `src/components/hierarchy/` - Agent Hierarchy (React Flow + Dagre DAG)
-- `src/components/workflows/` - Workflow Pipeline (CRUD, execution, tracking)
-- `src/components/dashboard/` - Dashboard components (stats, KPIs, health)
-- `src/components/ui/` - shadcn/ui base components
-- `src/hooks/` - Custom React hooks
+- `src/app/` - Next.js App Router pages and API routes (18 API endpoints)
+- `src/app/themes/` - 7 CSS theme presets (Champagne, Cyan Night, Zinc, etc.)
+- `src/components/hierarchy/` - Agent Hierarchy (React Flow + Dagre DAG, 24 files)
+- `src/components/workflows/` - Workflow Pipeline (CRUD, execution, tracking, 18 files)
+- `src/components/dashboard/` - Dashboard components (stats, KPIs, health, 19 files)
+- `src/components/ui/` - shadcn/ui base components (37 files)
+- `src/hooks/` - Custom React hooks (14 hooks)
 - `src/lib/` - Utilities, Prisma client, API helpers
-- `src/lib/prompting/` - @stsgs/prompting library (5 modules, 14 files)
+- `src/lib/prompting/` - @stsgs/prompting library (5 modules, 21 files)
   - `core/` - Types, 20 techniques, 11 frameworks, 5-layer system-prompt architect
   - `templates/` - 12 intents, 12 agent roles, 8 flow templates
   - `evaluation/` - 6-dim scoring (S/A/B/C/D/F), blind compare, CORE-EEAT 40 checks
   - `agents/` - 20 cognitive formulas, 12 orchestration patterns, resilience (retry/circuit-breaker/timeout)
-  - `instructions.ts` - 6 behavioral + 4 architectural instructions
+  - `instructions.ts` - 6 behavioral + 4 architectural instructions (inline)
+- `src/data/` - Dashboard constants and layout recipes
 - `prisma/` - Database schema (7 models: Agent, Task, Workflow, PipelineStep, WorkflowExecution, StepExecution, AgentMessage)
-- `mini-services/ws-service/` - WebSocket service (port 3003)
-- `mini-services/watchdog/` - Dev server keepalive
+- `mini-services/ws-service/` - WebSocket service (port 3003, Socket.IO)
+- `mini-services/watchdog/` - Dev server keepalive (port 3031)
 - `standards/` - 14 governance documents
 - `instructions/` - 7 behavioral instructions
 - `skills/` - 63 agent skills (10 toolkit + 53 project)
@@ -158,6 +158,7 @@ DATABASE_URL="file:./db/dev.db"
 | `/api/workflows` | GET, POST | List / Create workflows |
 | `/api/workflows/[id]` | GET, PUT, DELETE | Get / Update / Delete workflow |
 | `/api/workflows/execute` | POST | Execute workflow with step-by-step simulation, feedback loops, agent messages |
+| `/api/workflows/execute-llm` | POST | Execute workflow with real LLM calls via z-ai-web-dev-sdk + resilience |
 | `/api/workflows/seed` | POST | Seed sample workflows |
 
 ### System
@@ -173,8 +174,9 @@ DATABASE_URL="file:./db/dev.db"
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
-| `/api/prompting` | GET | Prompting library API (sections: formulas, patterns, techniques, frameworks, roles, intent, score, quick-score, benchmark, flows, instructions, apply-formula) |
-| `/api/interpret-prompt` | POST | AI-powered prompt interpretation via z-ai-web-dev-sdk |
+| `/api/prompting` | GET | Prompting library API (12 sections: formulas, patterns, techniques, frameworks, roles, intent, score, quick-score, benchmark, flows, instructions, apply-formula) |
+| `/api/interpret-prompt` | POST | AI-powered prompt interpretation via z-ai-web-dev-sdk + intent matching |
+| `/api/recipes` | GET | Layout recipes for the Layout Explorer |
 
 ## Scripts
 
@@ -217,13 +219,13 @@ DATABASE_URL="file:./db/dev.db"
 
 ### @stsgs/prompting Library
 
-The prompting library is located at `src/lib/prompting/` and consists of 5 modules across 14 files:
+The prompting library is located at `src/lib/prompting/` and consists of 5 modules across 21 files:
 
 - **core** - Type definitions, 20 prompting techniques, 11 frameworks, 5-layer system-prompt architect
 - **templates** - 12 intent templates, 12 agent role templates, 8 flow templates
 - **evaluation** - 6-dimension scoring (S/A/B/C/D/F grades), blind comparison, CORE-EEAT 40-point checklist
 - **agents** - 20 cognitive formulas (ToT, CoVe, GoT, CoT, ReAct, Reflexion, ReWOO, MoA, etc.), 12 orchestration patterns, resilience patterns (retry, circuit-breaker, timeout)
-- **instructions** - 6 behavioral instructions + 4 architectural instructions
+- **instructions** - 6 behavioral instructions + 4 architectural instructions (inline, no filesystem dependency)
 
 ### Database Models
 
