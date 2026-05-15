@@ -59,7 +59,7 @@
 |---|------|----------|--------|
 | 5.1 | WebSocket real-time agent status updates | HIGH | ✅ |
 | 5.2 | Edit agents from UI (PATCH /api/agents/[id] + edit form + toast) | HIGH | ✅ |
-| 5.3 | Delete agents from UI | MEDIUM | 🟡 |
+| 5.3 | Delete agents from UI | MEDIUM | ✅ |
 | 5.4 | Task management from UI | LOW | ⚪ |
 | 5.5 | Interactive formula dependency explorer | LOW | ⚪ |
 

@@ -5,6 +5,7 @@ import { X, Plus } from 'lucide-react'
 import { toast } from 'sonner'
 import { ROLE_ORDER, FORMULA_DESC } from './types'
 import { fetchWithRetry } from '@/lib/client-fetch'
+import { emitAgentCreated } from '@/lib/ws-client'
 
 const DEFAULT_FORM = { name: '', role: '', group: 'Execution', formula: 'ReAct', status: 'active', skills: '', description: '' }
 
@@ -33,6 +34,8 @@ export function AddAgentModal({ open, onClose, onCreated }: { open: boolean; onC
         }),
       })
       if (res.ok) {
+        const created = await res.json()
+        emitAgentCreated(created)
         toast.success('Agent created', { description: `${form.name} added to ${form.group}` })
         setForm(DEFAULT_FORM)
         onClose()

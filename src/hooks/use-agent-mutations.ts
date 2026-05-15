@@ -3,6 +3,7 @@
 import { useState, useCallback } from 'react'
 import { toast } from 'sonner'
 import { fetchWithRetry } from '@/lib/client-fetch'
+import { emitAgentDeleted, emitAgentUpdated } from '@/lib/ws-client'
 import type { AgentEditForm } from './use-agent-edit-form'
 
 interface UseAgentMutationsOpts {
@@ -27,6 +28,7 @@ export function useAgentMutations(opts: UseAgentMutationsOpts = {}) {
       })
       if (res.ok) {
         const updated = await res.json()
+        emitAgentUpdated(updated)
         opts.onAgentUpdated?.(updated)
         opts.onSuccess?.()
         toast.success('Agent updated', { description: `${form.name} saved successfully` })
@@ -34,7 +36,7 @@ export function useAgentMutations(opts: UseAgentMutationsOpts = {}) {
       }
       const err = await res.json().catch(() => ({}))
       toast.error('Update failed', { description: (err as Record<string, string>).error || `HTTP ${res.status}` })
-    } catch (e) {
+    } catch {
       toast.error('Update failed', { description: 'Network error — please try again' })
     } finally {
       setSaving(false)
@@ -49,6 +51,7 @@ export function useAgentMutations(opts: UseAgentMutationsOpts = {}) {
         method: 'DELETE',
       })
       if (res.ok) {
+        emitAgentDeleted(agentId)
         opts.onAgentDeleted?.(agentId)
         opts.onSuccess?.()
         toast.success('Agent deleted', { description: 'The agent has been removed' })
