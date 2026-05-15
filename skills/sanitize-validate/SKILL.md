@@ -7,111 +7,59 @@ description: >
   external sources. Also activate when the user mentions XSS, SQL injection, CSRF,
   input cleaning, data validation, form security, or OWASP-related topics. Even if
   the user just says "secure this endpoint" or "check my form handler" or "sanitize
-  this field" — trigger this skill. The core principle: never trust external data.
+  this field" -- trigger this skill. The core principle: never trust external data.
 ---
 
-# Sanitize & Validate — Input Security Skill
+# Sanitize & Validate -- Input Security
 
 ## Core Principle
 
-**Never trust external data.** Every piece of data that enters your system from outside
-(user input, API payloads, URL parameters, file uploads, cookies, headers) must pass
-through a three-stage pipeline before it touches your database, renders on a page, or
-gets passed to another system.
+**Never trust external data.** Any data entering the system from outside (user input,
+API requests, URL parameters, file uploads, cookies, headers) must pass a three-stage
+pipeline before reaching the database, being rendered on a page, or transmitted
+to another system.
 
-The pipeline order matters:
+Stage order matters:
 
 ```
-1. SANITIZE  — Clean the data (remove dangerous content, normalize format)
-2. VALIDATE  — Check the data (does it meet business rules?)
-3. ESCAPE    — Contextual encoding for output (HTML, SQL, URL, CLI)
+1. VALIDATE  (Check)       -- on ORIGINAL user input
+2. SANITIZE  (Clean)       -- normalize validated data
+3. ESCAPE    (Encode)      -- context-specific encoding for output
 ```
 
-Each stage serves a different purpose. Skipping any of them creates a vulnerability.
+Each stage solves its own problem. Skipping any creates a vulnerability.
 
 ---
 
-## Stage 1: Sanitize (Clean)
+## Fundamental: Allow-list over Deny-list
 
-Sanitization transforms dirty input into safe, normalized data. It does NOT reject input —
-it fixes it. Think of it as a shower for data before letting it into your house.
+In all aspects of sanitization and validation: **always use allow-list** (whitelist),
+not deny-list (blacklist).
 
-### What Sanitization Does
+- **Allow-list**: "allow ONLY letters, digits, underscore" -> new dangerous characters
+  are automatically rejected
+- **Deny-list**: "block `<script>` and `onerror`" -> attacker finds a vector not in
+  your list (e.g., `onmouseover`, `javascript:`, SVG injection)
 
-| Operation | Example Input | Example Output |
-|-----------|--------------|----------------|
-| Trim whitespace | `"  ivan@mail.com "` | `"ivan@mail.com"` |
-| Strip HTML tags | `"<b>Hi</b>"` | `"Hi"` |
-| Normalize case | `"Ivan@Mail.COM"` | `"ivan@mail.com"` |
-| Remove control chars | `"text\x00null"` | `"textnull"` |
-| Normalize unicode | `"caf\u00e9"` | `"cafe"` (NFC) |
-| Encode special chars | `<script>alert(1)</script>` | `&lt;script&gt;alert(1)&lt;/script&gt;` |
-
-### Critical Rule: Sanitize Per Output Context
-
-The SAME data needs different sanitization depending on WHERE it will be used:
-
-- **HTML output** → escape `<`, `>`, `&`, `"`, `'` → use DOMPurify or html-escape
-- **SQL queries** → use parameterized queries (prepared statements), NOT string escaping
-- **URL parameters** → use `encodeURIComponent()` / `urllib.parse.quote()`
-- **CLI arguments** → NEVER pass raw user input to shell commands
-- **JavaScript context** → use `JSON.stringify()` for embedding in `<script>` tags
-- **CSS context** → escape non-alphanumeric chars, validate color values
-
-### Common Mistakes in Sanitization
-
-**MISTAKE 1: Using regex to strip HTML**
-
-```javascript
-// BROKEN — regex can't parse HTML reliably
-value.replace(/<[^>]*>?/gm, '')
-// Fails on: "a < b && b > c" → removes "b && b >"
-// Fails on: "<script>alert(1)" → doesn't match (no closing >)
-```
-
-Instead, use a proper HTML sanitizer library (see Recommended Libraries below).
-
-**MISTAKE 2: Only sanitizing on the client side**
-
-Client-side sanitization is UX only. An attacker can bypass it with curl, Postman, or
-a modified browser. Sanitization and validation MUST happen on the server.
-
-**MISTAKE 3: Sanitizing before validation**
-
-Always validate first if you want to give meaningful error messages. If you sanitize first,
-you might mask the fact that the user entered something invalid. However, if the sanitization
-removes content the user intentionally provided, validate on the ORIGINAL input first.
-
-### Recommended Libraries
-
-| Language | Library | Use Case |
-|----------|---------|----------|
-| JavaScript (browser) | **DOMPurify** | HTML sanitization (removes XSS while keeping safe HTML) |
-| JavaScript (Node.js) | **sanitize-html** | Server-side HTML sanitization |
-| JavaScript/TypeScript | **Zod** | Schema validation + type coercion (not sanitization) |
-| JavaScript/TypeScript | **Valibot** | Lightweight alternative to Zod |
-| JavaScript/TypeScript | **escape-html** | Minimal HTML entity escaping |
-| Python | **nh3** | Fast HTML sanitization (Python port of Ammonia) |
-| Python | **bleach** | HTML sanitization (legacy, maintained by Mozilla) |
-| Python | **marshmallow** | Schema validation + serialization |
-| Python | **pydantic** | Data validation + type coercion |
-| PHP | `htmlspecialchars()` | Built-in HTML escaping |
-| PHP | `filter_var()` | Built-in input filtering and validation |
+This applies to everything: allowed HTML tags, file types, URL protocols, characters
+in username, SQL operators (parameterized queries are inherently an allow-list).
 
 ---
 
-## Stage 2: Validate (Check)
+## Stage 1: Validate
 
-Validation checks whether data meets your business rules. Unlike sanitization, validation
-REJECTS invalid data — it returns errors, not cleaned data.
+Validation works with **original** user input and REJECTS invalid data, returning
+detailed errors. This is the only stage where users get feedback.
 
-### Validation Returns Detailed Errors, Not Just true/false
+Why validation BEFORE sanitization? If user entered `" user@mail.com "`, validation
+should report: "Email must not contain spaces". If you `.trim()` first, the user
+never learns about the problem and is confused why their input was "fixed" silently.
 
-Modern validation libraries return structured error objects that tell you exactly what is
-wrong, so you can show helpful messages to users:
+### Validation returns detailed errors, not true/false
+
+Modern libraries return structured error objects for user-friendly messages:
 
 ```typescript
-// Zod example
 const emailSchema = z.string().email("Invalid email format");
 const result = emailSchema.safeParse("not-an-email");
 if (!result.success) {
@@ -121,191 +69,307 @@ if (!result.success) {
 
 ### Validation Checklist by Field Type
 
-| Field Type | Rules to Check |
-|-----------|---------------|
-| Email | Valid format (RFC 5322 simplified), length ≤ 254 chars |
-| Password | Min 8 chars, mixed case + digit + special char (policy varies) |
-| Phone | Valid pattern for region, digits only after stripping formatting |
-| Name | Letters and spaces only (policy varies for unicode names) |
-| Age/Number | Integer, min/max range for the context |
-| URL | Valid URL format, allowed protocols (http/https only) |
-| Date | Valid date, not in the future for birth dates, etc. |
-| Text/Comment | Max length, no empty after trim |
-| File upload | Allowed MIME types, max size, filename sanitization |
-| ID/UUID | Valid format, exists in database (if applicable) |
+| Field Type | Validation Rules |
+|------------|-----------------|
+| Email | Valid format, length <= 254 chars |
+| Password | Min 8 chars, mixed case + digit + special |
+| Phone | Valid regional pattern, digits only after formatting removal |
+| Name | Letters and spaces (consider unicode names) |
+| Age/Number | Integer, min/max range |
+| URL | Valid format, http/https only (allow-list!) |
+| Date | Valid date, not in future for birthdate |
+| Text/Comment | Max length, not empty after trim |
+| File upload | Allow-list MIME types, max size, safe filename |
+| ID/UUID | Valid format, exists in DB |
 
 ### Common Validation Mistakes
 
-**MISTAKE 1: Confusing R-squared with accuracy**
-
-```python
-# WRONG label for regression metrics
-print(f"Accuracy: {model.score(X_test, y_test):.2f}")
-# model.score() for LinearRegression returns R-squared, NOT accuracy
-
-# CORRECT
-print(f"R-squared: {model.score(X_test, y_test):.2f}")
-```
-
-**MISTAKE 2: Accepting any string from the client without length checks**
-
-An attacker can send a 10MB string in a "username" field. Always set max length.
-
-**MISTAKE 3: Using `typeof` for runtime type checking in TypeScript**
+**MISTAKE 1: Using `typeof` for type checking in TypeScript**
 
 ```typescript
-// BROKEN — TypeScript types are erased at runtime
-function handle(input: string) { /* input can be anything at runtime */ }
+// BROKEN -- types erased at compile time
+function handle(input: string) { /* input could be anything */ }
 
-// CORRECT — use runtime validation
-const inputSchema = z.string();
-const result = inputSchema.safeParse(rawInput);
+// CORRECT -- runtime validation
+const result = z.string().safeParse(rawInput);
+```
+
+**MISTAKE 2: No length check** -- attacker sends 10 MB string in "username" field.
+Always set `maxLength`.
+
+**MISTAKE 3: Unicode homoglyphs** -- Cyrillic "a" (U+0430) looks like Latin "a"
+(U+0061), bypassing username filters. **NFKC normalization does NOT convert**
+Cyrillic to Latin -- they are different code points. What NFKC does: expands
+ligatures (`fi` -> `f`+`i`), normalizes diacritic sequences, removes invisible
+characters (zero-width space).
+
+**Solution**: NFKC + allow-list of permitted characters:
+
+```python
+import unicodedata
+import re
+
+def safe_username(username: str) -> str:
+    # Expand ligatures, remove invisible chars
+    normalized = unicodedata.normalize('NFKC', username)
+    # Allow-list: only letters, digits, dot, underscore, hyphen
+    return re.sub(r'[^a-zA-Z0-9_.-]', '', normalized)
 ```
 
 ---
 
-## Stage 3: Escape (Contextual Encoding)
+## Stage 2: Sanitize
 
-Even after sanitization and validation, you must encode data for its OUTPUT context.
+Sanitization transforms validated data into safe, normalized form. It does NOT
+reject input -- it fixes it. This happens AFTER successful validation.
+
+### What Sanitization Does
+
+| Operation | Input | Output |
+|-----------|-------|--------|
+| Trim whitespace | `"  ivan@mail.com "` | `"ivan@mail.com"` |
+| Case normalization | `"Ivan@Mail.COM"` | `"ivan@mail.com"` |
+| Remove HTML tags | `"<b>Hello</b>"` | `"Hello"` |
+| Remove control chars | `"text\x00null"` | `"textnull"` |
+| NFKC unicode normalization | `fi` ligature -> `f`+`i`, zero-width removed | Normalized form |
+
+### Common Sanitization Mistakes
+
+**MISTAKE 1: Regex for HTML**
+
+```javascript
+// BROKEN -- regex does not parse HTML
+value.replace(/<[^>]*>?/gm, '')
+// Breaks on: "a < b && b > c" -- removes part of text
+```
+
+Use a library: DOMPurify (JS), nh3 (Python).
+
+**MISTAKE 2: Client-side only** -- attacker bypasses via curl/Postman.
+Sanitization and validation MUST be on the server.
+
+**MISTAKE 3: Buffer and binary data** -- DOMPurify does not work with Buffer,
+and regex `[^\x00-\x7F]` kills UTF-8. For files: check magic bytes (file signature),
+not Content-Type from header. Re-encode via sharp (images) or equivalents.
+
+### Recommended Libraries
+
+| Language | Library | Purpose |
+|----------|---------|---------|
+| JS (browser) | **DOMPurify** | HTML sanitization, allow-list tags/attrs |
+| JS (Node.js) | **sanitize-html** | Server-side HTML sanitization |
+| JS/TS | **Zod** | Schema validation + type coercion |
+| JS/TS | **Valibot** | Lightweight Zod alternative |
+| JS/TS | **escape-html** | HTML entity escaping |
+| Python | **nh3** | Fast HTML sanitization |
+| Python | **pydantic** | Validation + type coercion |
+| Python | **marshmallow** | Validation + serialization |
+
+---
+
+## Stage 3: Escape (Context-specific Encoding)
+
+Even after sanitization and validation, data must be encoded for the output context.
 This is the last line of defense.
 
-### Escape for HTML
+### HTML: body and attributes are different contexts
+
+Escaping for **HTML body** (`<`, `>`, `&`) is insufficient for **attributes**.
+
+```html
+<!-- VULNERABLE -- even after html.escape() -->
+<input value="{{ user_input }}">
+<!-- Attack: " onclick="alert(1)" -- closes quote and injects handler -->
+```
+
+**Solution**: escape `&`, `<`, `>`, `"`, `'` (all five), plus space and tab in
+attributes. Or use `.textContent` in DOM instead of concatenating with innerHTML.
 
 ```javascript
-// Use a library — never write your own
-import escapeHtml from 'escape-html';
-const safe = escapeHtml(userInput);
+// CORRECT -- .textContent is safe by default
+document.getElementById('msg').textContent = userInput;
+
+// If innerHTML is unavoidable -- sanitize via DOMPurify with allow-list
+const clean = DOMPurify.sanitize(html, { ALLOWED_TAGS: ['b', 'i', 'a'] });
 ```
 
-```python
-import html
-safe = html.escape(user_input)
-```
-
-### Escape for SQL — Always Use Parameterized Queries
+### SQL -- Always Parameterized Queries
 
 ```javascript
-// CORRECT — parameterized query
-const result = await db.query('SELECT * FROM users WHERE email = $1', [userEmail]);
-
-// WRONG — string interpolation (SQL injection)
-const result = await db.query(`SELECT * FROM users WHERE email = '${userEmail}'`);
+// CORRECT
+db.query('SELECT * FROM users WHERE email = $1', [email]);
+// WRONG -- SQL injection
+db.query(`SELECT * FROM users WHERE email = '${email}'`);
 ```
 
-```python
-# CORRECT — parameterized query
-cursor.execute("SELECT * FROM users WHERE email = %s", (user_email,))
-
-# WRONG — f-string (SQL injection)
-cursor.execute(f"SELECT * FROM users WHERE email = '{user_email}'")
-```
-
-### Escape for URLs
+### URL -- encodeURIComponent / quote
 
 ```javascript
-const safeParam = encodeURIComponent(userInput);
-// Use in URL: `/search?q=${safeParam}`
+const safe = encodeURIComponent(userInput);
 ```
 
 ```python
 from urllib.parse import quote
-safe_param = quote(user_input)
+safe = quote(user_input)
 ```
 
 ---
 
-## Complete Example: User Registration Endpoint
+## Additional Attack Vectors
 
-This example shows all three stages working together in a Node.js/Express API:
+These threats relate to input handling but go beyond classic sanitize-validate.
+Check for them during code review.
 
-```typescript
-import { z } from 'zod';
-import DOMPurify from 'isomorphic-dompurify';
-import escapeHtml from 'escape-html';
+### Path Traversal (arbitrary file read)
 
-// Stage 1: Define validation schema
-const registerSchema = z.object({
-  username: z.string()
-    .trim()
-    .min(3, "Username must be at least 3 characters")
-    .max(30, "Username must be at most 30 characters")
-    .regex(/^[a-zA-Z0-9_]+$/, "Only letters, numbers, and underscores"),
-  email: z.string().email("Invalid email format").max(254),
-  bio: z.string().max(500).optional(),
-});
+User injects `../../etc/passwd` into file path:
 
-// Stage 2: Validate + Sanitize
-app.post('/api/register', async (req, res) => {
-  // Step 2a: Validate raw input
-  const result = registerSchema.safeParse(req.body);
-  if (!result.success) {
-    return res.status(400).json({ errors: result.error.issues });
-  }
+```javascript
+// VULNERABLE
+const path = `/uploads/${req.body.filename}`;
+fs.readFile(path);
 
-  // Step 2b: Sanitize validated data
-  const clean = {
-    username: result.data.username.toLowerCase(),
-    email: result.data.email.toLowerCase(),
-    bio: result.data.bio
-      ? DOMPurify.sanitize(result.data.bio, { ALLOWED_TAGS: [] }) // strip all HTML
-      : null,
-  };
+// SAFE -- generate filename on server (uuid)
+const safeName = `${uuid.v4()}.jpg`;
+const path = `/uploads/${safeName}`;
+```
 
-  // Step 2c: Store in database (parameterized query — no manual escaping)
-  await db.query(
-    'INSERT INTO users (username, email, bio) VALUES ($1, $2, $3)',
-    [clean.username, clean.email, clean.bio]
-  );
+Never use the original filename from user in filesystem paths.
 
-  res.status(201).json({ message: 'Registration successful' });
-});
+### SSRF (Server-Side Request Forgery)
+
+User passes URL, and server requests internal resources:
+
+```javascript
+// VULNERABLE -- attacker passes http://169.254.169.254/metadata (AWS metadata)
+const data = await fetch(req.body.url);
+
+// SAFE -- allow-list domains + block private IPs
+const ALLOWED_DOMAINS = ['api.example.com', 'cdn.example.com'];
+const parsed = new URL(req.body.url);
+if (!ALLOWED_DOMAINS.includes(parsed.hostname)) throw new Error('Blocked');
+```
+
+### Open Redirect
+
+User substitutes redirect URL: `?redirect=https://evil.com`
+
+```javascript
+// VULNERABLE
+res.redirect(req.query.redirect);
+
+// SAFE -- allow-list or relative paths only
+if (req.query.redirect.startsWith('/')) {
+  res.redirect(req.query.redirect);
+}
+```
+
+### Mass Assignment
+
+User sends extra fields that should not be editable:
+
+```json
+// Request: { "username": "ivan", "role": "admin" }
+// If controller does: Object.assign(user, req.body) -- user becomes admin
+```
+
+**Solution**: explicit field allow-list -- Zod schema, Pydantic model, NestJS DTO
+with `whitelist: true`, or `_.pick(req.body, ['username', 'email'])`.
+
+---
+
+## Code Review Checklist
+
+When reviewing any request handler, ask these questions:
+
+### Validation
+- [ ] Is there a schema (Zod/Pydantic/class-validator) that rejects invalid input
+  BEFORE business logic?
+- [ ] Do I apply `trim()` / `toLowerCase()` AFTER format validation?
+
+### SQL
+- [ ] Do ALL DB queries use parameterization (`$1`, `%s`, `?`)?
+  No string templates with user input?
+
+### HTML
+- [ ] Do I use `.textContent` instead of `.innerHTML`?
+- [ ] If `.innerHTML` is unavoidable -- do I run through DOMPurify/nh3 with
+  an allow-list of tags?
+- [ ] Do I escape HTML attributes (`"`, `'`, spaces) -- not just body?
+
+### Files
+- [ ] Do I check file **content** (magic bytes), not just Content-Type?
+- [ ] Do I re-encode images (sharp/pillow) instead of direct save?
+- [ ] Do I generate filename on server (uuid), not use original?
+
+### Shell / CLI
+- [ ] Is there `exec()`, `spawn()`, `os.system()` with user input?
+  If yes -- this is almost always an **RCE vulnerability**. Use spawn with
+  argument array without shell: `execFile(cmd, [arg1, arg2])`.
+
+### Logging
+- [ ] **Am I logging sensitive data?** Passwords, tokens, credit card numbers
+  must not appear in logs -- even after sanitization. Mask: `***REDACTED***`.
+- [ ] **Do I mask tokens in URLs?** Tokens and API keys often passed in query:
+
+```javascript
+// BAD -- token in logs
+console.log(`Request to ${req.url}`); // /api/user?token=secret123
+
+// GOOD -- mask before logging
+function maskUrl(url) {
+  const parsed = new URL(url);
+  ['token', 'api_key', 'secret', 'password'].forEach(p => {
+    if (parsed.searchParams.has(p)) parsed.searchParams.set(p, '***REDACTED***');
+  });
+  return parsed.toString();
+}
 ```
 
 ---
 
-## Framework-Specific Guidance
+## Framework Quick Reference
 
-When working within specific frameworks, follow their built-in security patterns.
-Read the appropriate reference file for detailed patterns:
-
-- **references/javascript.md** — React, Next.js, Express, NestJS, Vue patterns
-- **references/python.md** — FastAPI, Django, Flask patterns
-
-### Quick Reference by Framework
-
-| Framework | Sanitize HTML | Validate Input | Escape Output |
-|-----------|--------------|----------------|---------------|
-| React | Auto-escapes JSX expressions | Zod/Valibot + useForm | Auto-escaped in JSX (unless `dangerouslySetInnerHTML`) |
-| Next.js | Same as React + `next/image` | Server actions: Zod validation | `next/image` for images, auto-escape for text |
-| Vue | `v-html` is UNSAFE by default | VeeValidate + Zod | Auto-escaped in `{{ }}`, use `v-html` only with sanitized content |
-| Express | Middleware: `helmet`, `express-rate-limit` | Zod in route handler | Template engine auto-escape (EJS, Pug) |
-| NestJS | Pipes + DTOs | `class-validator` + `class-transformer` | Template engine |
-| FastAPI | Pydantic models (auto-validate) | Pydantic `Field()` constraints | Jinja2 auto-escape (ON by default) |
-| Django | Auto-escape in templates | Forms + Model validation | Auto-escaped in templates (unless `\|safe`) |
+| Framework | HTML Sanitization | Validation | Escaping |
+|-----------|-------------------|------------|----------|
+| React | Auto in JSX | Zod + useForm | Auto (except `dangerouslySetInnerHTML`) |
+| Next.js | Same as React | Zod in server actions | `next/image`, auto for text |
+| Vue | `v-html` UNSAFE | VeeValidate + Zod | Auto in `{{ }}` |
+| Express | `helmet` middleware | Zod in handler | Template engine |
+| NestJS | Pipes + DTO | `class-validator` | Template engine |
+| FastAPI | Pydantic (auto) | Pydantic `Field()` | Jinja2 auto |
+| Django | Auto in templates | Forms + Model | Auto (except `|safe`) |
 
 ---
 
-## Security Checklist
+## Quick Summary (for reference)
 
-Before deploying any endpoint that handles user input, verify:
+```
+SECURITY HARDENING CHECKLIST -- Input Processing
 
-- [ ] All user input is validated with a schema (Zod, Pydantic, class-validator, etc.)
-- [ ] HTML content is sanitized with DOMPurify / sanitize-html / nh3 (not regex)
-- [ ] SQL queries use parameterized statements (never string interpolation)
-- [ ] Output is auto-escaped or manually escaped for its context
-- [ ] File uploads validate MIME type, file size, and sanitize filename
-- [ ] Rate limiting is applied to auth endpoints (login, registration, password reset)
-- [ ] No user input is passed to `eval()`, `exec()`, `child_process`, or `os.system()`
-- [ ] Cookies use `httpOnly`, `secure`, and `sameSite` flags
-- [ ] CSRF tokens are used for state-changing requests (POST/PUT/DELETE)
-- [ ] Error messages don't leak internal implementation details
+VALIDATION:  schema (Zod/Pydantic) with allow-list fields
+VALIDATION:  maxLength check for strings
+SANITIZE:    after validation, not before
+SANITIZE:    HTML via DOMPurify/nh3 (allow-list tags)
+SQL:         parameterized queries (no interpolation)
+HTML:        .textContent over .innerHTML where possible
+HTML:        for attributes escape " and ' (not just < >)
+FILE:        check magic bytes (not Content-Type)
+FILE:        re-encode images (sharp/pillow)
+FILE:        generate name on server (uuid)
+PATH:        never use user input for fs.readFile
+URL:         allow-list domains for fetch() from user
+REDIRECT:    relative paths only / allow-list domains
+SHELL:       no exec/spawn with user input
+LOGS:        mask tokens and passwords (including URL params)
+```
 
 ---
 
 ## What This Skill Does NOT Cover
 
-This skill focuses on input sanitization and validation. It does NOT replace:
-- Authentication/authorization frameworks (OAuth, JWT, Passport, etc.)
-- Full OWASP Top 10 coverage (use a dedicated security audit for that)
-- Infrastructure security (HTTPS, CORS headers — use `helmet` / `cors` middleware)
+- Authentication/authorization frameworks (OAuth, JWT, Passport)
+- Full OWASP Top 10 coverage (needs separate security audit)
+- Infrastructure security (HTTPS, CORS -- use `helmet` / `cors`)
 - Penetration testing
+- Mobile API and GraphQL-specific vulnerabilities (depth limiting, alias brute force)

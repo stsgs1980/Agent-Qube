@@ -27,7 +27,8 @@ pkill -f 'next dev' 2>/dev/null
 sleep 1
 
 # Start server (npx, not bun - bun has shown instability)
-cd /home/z/my-project && npx next dev -p 3000 </dev/null >/tmp/zdev.log 2>&1 &
+# disown to survive parent shell death (sandbox kills processes when chat ends)
+cd /home/z/my-project && npx next dev -p 3000 </dev/null >/tmp/zdev.log 2>&1 & disown
 
 # Wait for compilation
 sleep 6
@@ -40,6 +41,7 @@ curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:3000/
 ### Important Notes
 
 - Always use `127.0.0.1` not `localhost` for curl (IPv6 resolution issues in sandbox)
+- Always use `disown` after backgrounding the process (prevents SIGHUP when parent shell dies)
 - Always redirect stdout/stderr to `/tmp/zdev.log` (prevents process death from output buffer)
 - Always use `</dev/null` to close stdin (prevents process hanging on input)
 - Use `npx next dev` directly, NOT `bun run dev` (bun wrapper adds instability)

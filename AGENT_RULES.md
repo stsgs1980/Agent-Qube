@@ -1,13 +1,27 @@
 # Agent Rules
 
-> Toolkit version: **v1.8.3**
+> Toolkit version: **v1.9.1**
 >
 > Mandatory rules for AI agents working with this toolkit.
 > Read before starting work on any project.
 
 ---
 
-## 0. Onboarding Protocol
+## 0. Read-Only Usage
+
+> **CRITICAL**: Agent Toolkit is a reference, not part of your project code.
+
+When cloned into a project, agent-toolkit must be treated as read-only:
+
+1. **NEVER commit changes to agent-toolkit/**
+2. **NEVER modify files inside agent-toolkit/**
+3. **Add to .gitignore**: `agent-toolkit/`
+
+If the toolkit needs updates, clone a fresh copy from the repository.
+
+---
+
+## 1. Onboarding Protocol
 
 When entering a project (new chat, session restart, context loss),
 you MUST complete the onboarding protocol before starting any work:
@@ -138,6 +152,13 @@ Ensures `clone + install + dev = works` on any machine. Key rules:
 
 See the full document for 11 rules across 4 levels (Environment, Code, Delivery, Process).
 
+### 4.3.1 Z.ai Integration Standard
+
+> File: `standards/ZAI_INTEGRATION_STANDARD.md`
+> Level: **[C] Critical**
+
+Defines rules for operating in the Z.ai sandbox environment, including git safety, dev server management, session continuity, and API communication.
+
 ### 4.4 Implementation Order
 
 Standards must be applied in a specific order.
@@ -225,6 +246,7 @@ See `instructions/writing-plans.md` for full details.
 | `health-check` | Checking availability of chat.z.ai, monitoring API response times |
 | `fallback` | chat.z.ai is unavailable, need alternative providers |
 | `dev-watchdog` | Starting, restarting, or checking dev server |
+| `z-ai-web-dev-sdk` | Chat, image gen, web search via z-ai-web-dev-sdk |
 
 ## 8. Instructions to Follow
 
@@ -237,6 +259,15 @@ See `instructions/writing-plans.md` for full details.
 | Writing Plans | `instructions/writing-plans.md` |
 | Sandbox Rules | `instructions/sandbox-rules.md` |
 
+## Z.ai SDK Integration
+
+When building features that use AI capabilities:
+1. Use `z-ai-web-dev-sdk` skill for all AI model interactions
+2. SDK calls MUST be in API routes only (never client-side)
+3. Follow `api-retry` skill for error handling
+4. Follow `health-check` skill for availability monitoring
+5. Follow `fallback` skill for provider failover
+
 ## 9. Document Classification
 
 This toolkit organizes files into two groups:
@@ -247,11 +278,12 @@ Apply FIRST. Define rules that all other documents must follow.
 
 | ID | File | Level | Purpose |
 |----|------|-------|---------|
-| STD-DOC-001 | `MARKDOWN_STANDARD.md` | [W] | Markdown formatting rules |
+| STD-DOC-002 | `MARKDOWN_STANDARD.md` | [W] | Markdown formatting rules |
 | STD-DOC-003 | `UNICODE_POLICY.md` | [C]+[W]+[I] | Unicode/emoji prohibition |
 | STD-DOC-004 | `README_TEMPLATE.md` | [W] | Mandatory README structure |
 | STD-DOC-005 | `CODE_EXAMPLES_GUIDE.md` | [W] | Code examples formatting |
 | STD-ENV-001 | `REPRODUCIBILITY-STANDARD.md` | [C] | Clone+install+dev = works |
+| STD-ENV-002 | `ZAI_INTEGRATION_STANDARD.md` | [C] | Z.ai sandbox integration |
 | STD-ARCH-001 | `IMPLEMENTATION_ORDER.md` | [W] | Implementation sequence (6 steps) |
 | STD-META-001 | `STANDARD_ID_SYSTEM.md` | [W] | Standard ID registry and rules |
 | STD-FE-001 | `FRONTEND_STANDARD.md` | [C] | Frontend development (React/Next.js) |
