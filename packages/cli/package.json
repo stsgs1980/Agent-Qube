@@ -1,0 +1,30 @@
+{
+  "name": "@stsgs/cli",
+  "version": "0.1.0",
+  "description": "CLI tool for @stsgs/ui — add components, scan projects, manage AI rules",
+  "bin": {
+    "stsgs": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "commander": "^12.1.0",
+    "chalk": "^5.3.0",
+    "ora": "^8.1.0",
+    "inquirer": "^9.2.0",
+    "glob": "^11.0.0",
+    "fs-extra": "^11.2.0"
+  },
+  "devDependencies": {
+    "tsup": "^8.3.0",
+    "typescript": "^5.7.0",
+    "@types/node": "^22.0.0",
+    "@types/inquirer": "^9.0.0",
+    "@types/fs-extra": "^11.0.0"
+  },
+  "keywords": ["cli", "stsgs", "components", "scaffold"],
+  "license": "MIT"
+}

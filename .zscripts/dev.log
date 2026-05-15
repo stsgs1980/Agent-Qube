@@ -535,3 +535,32 @@ Import trace:
  GET / 500 in 32ms (compile: 24ms, render: 8ms)
 error: script "dev" was terminated by signal SIGTERM (Polite quit request)
 [?25h
+==========================================
+[2026-05-15 00:48:25] Starting: bun install
+==========================================
+[BUN] Installing dependencies...
+[0.10ms] ".env"
+bun install v1.3.13 (bf2e2cec)
+
+Checked 868 installs across 938 packages (no changes) [49.00ms]
+==========================================
+[2026-05-15 00:48:25] Completed: bun install
+[LOG] Step: bun install | Duration: 0s
+==========================================
+
+==========================================
+[2026-05-15 00:48:25] Starting: bun run db:push
+==========================================
+[BUN] Setting up database...
+$ prisma db push
+Environment variables loaded from .env
+Prisma schema loaded from prisma/schema.prisma
+Datasource "db": SQLite database "custom.db" at "file:/home/z/my-project/db/custom.db"
+Error: Error describing the database.
+Error querying the database: Error code 11: The database disk image is malformed
+   0: schema_commands::commands::schema_push::Calculate from database
+             at schema-engine/commands/src/commands/schema_push.rs:40
+   1: schema_core::state::SchemaPush
+             at schema-engine/core/src/state.rs:545
+
+error: script "db:push" exited with code 1

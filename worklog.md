@@ -1308,3 +1308,41 @@ Stage Summary:
 - Anti-monolith rules preserved and adapted (static imports for Turbopack, no eslint-plugin-stsgs)
 - P-MAS-v2 specifics added: 26 agents, 8 role groups, React Flow hierarchy, Workflow Pipeline, Cyan #06B6D4 accent, API endpoints
 - Worklog header updated from @stsgs/ui to P-MAS-v2
+
+---
+Task ID: 10
+Agent: Main Agent
+Task: Sync project with agent-toolkit v1.9.1 (from v1.8.3)
+
+Work Log:
+- Cloned agent-toolkit from https://github.com/stsgs1980/agent-toolkit.git to /tmp/
+- Read toolkit README v1.9.1: identified new files and changes since v1.8.3
+- Ran comprehensive diff comparison across 39 shared files (13 standards + 6 instructions + 12 templates + 8 skills)
+- Results: 12/13 standards IDENTICAL, only GITHUB_STANDARD.md differs (v1.2 -> v1.5); all 6 instructions IDENTICAL; all 12 templates IDENTICAL; all 8 overlapping skills IDENTICAL
+- Copied 4 new files from toolkit:
+  1. AGENT_RULES.md v1.8.3 -> v1.9.1 (adds Section 0: Read-Only Usage, Section 4.3.1: Z.ai Integration Standard, z-ai-web-dev-sdk skill, Z.ai SDK Integration section)
+  2. standards/ZAI_INTEGRATION_STANDARD.md (NEW, STD-ENV-002)
+  3. instructions/zai-sdk-guidelines.md (NEW)
+  4. skills/z-ai-web-dev-sdk/ (NEW skill)
+  5. skills/git-safety/ (NEW skill)
+- Updated standards/GITHUB_STANDARD.md v1.2 -> v1.5 (adds Network Failure Recovery, Sandbox Git Safety Rules, Post-Deadlock Clone Recovery)
+- Updated PROJECT_CONFIG.md: toolkit version reference v1.8.3 -> v1.9.1 (preserved all project-specific content)
+- Deleted 8 obsolete/duplicate files from standards/:
+  - ПОРЯДОК_внедрения_стандартов.md (Russian impl order, superseded)
+  - README_WORKLOG.md (duplicate of templates/)
+  - STANDARDS_IMPLEMENTATION_ORDER.md (duplicate of IMPLEMENTATION_ORDER.md)
+  - WORKLOG.md (duplicate of templates/)
+  - No-Unicode_Policy_v2.1.md (older copy of UNICODE_POLICY.md)
+  - MARKDOWN_STANDARD_EN_v2.1.md (older copy)
+  - MARKDOWN_STANDARD_RU_v2.1.md (Russian variant, not in toolkit)
+  - TASK_TEMPLATE.md (duplicate of templates/)
+- Committed: 832aa77 "chore: sync toolkit v1.9.1"
+- Pushed to GitHub: stsgs1980/P-MAS-v2
+
+Stage Summary:
+- Toolkit version: v1.8.3 -> v1.9.1
+- 5 new files added (1 standard, 1 instruction, 2 skills, plus AGENT_RULES.md update)
+- 1 standard updated (GITHUB_STANDARD v1.2 -> v1.5)
+- 8 obsolete files cleaned from standards/
+- Skills total: 8 toolkit + 53 project = 61 (was 8 + 53 = 61, now 10 + 53 = 63... wait: 10 toolkit + 53 project - 8 overlap = 55 unique skill dirs)
+- All changes pushed to P-MAS-v2 remote

@@ -1,0 +1,48 @@
+[data-theme="ember"] {
+  --stsgs-bg-deep: #0F0908;
+  --stsgs-bg-base: #16100E;
+  --stsgs-bg-surface: #1E1714;
+  --stsgs-bg-elevated: #2A1E19;
+  --stsgs-text-primary: #F5EDE8;
+  --stsgs-text-secondary: #D4C4B8;
+  --stsgs-text-muted: #8C7568;
+  --stsgs-text-dim: #6B5849;
+  --stsgs-border-subtle: rgba(255,107,53,0.08);
+  --stsgs-border-default: rgba(255,107,53,0.12);
+  --stsgs-border-bright: rgba(255,107,53,0.3);
+  --stsgs-accent: #FF6B35;
+  --stsgs-accent-ai: #FFB347;
+  --stsgs-accent-glow: #FF6B3514;
+  --stsgs-accent-ai-glow: #FFB34714;
+  --stsgs-sidebar-bg: #120D0B;
+  --stsgs-sidebar-text: #F5EDE8;
+  --stsgs-sidebar-muted: #8C7568;
+  --stsgs-sidebar-hover: #1E1714;
+  --stsgs-code-bg: #120D0B;
+  --stsgs-code-text: #D4C4B8;
+  --stsgs-code-muted: #8C7568;
+  --stsgs-code-accent: #FF6B35;
+  --stsgs-card-border: rgba(255,107,53,0.1);
+  --stsgs-card-selected: #FF6B35;
+  --stsgs-cell-bg: #1E171480;
+  --stsgs-cell-featured-bg: #FF6B3510;
+  --stsgs-cell-text: #6B5849;
+  --stsgs-cell-featured-text: #FF6B35;
+  --stsgs-font-body: 'Inter', -apple-system, sans-serif;
+  --stsgs-font-display: 'Inter', -apple-system, sans-serif;
+  --stsgs-font-mono: 'JetBrains Mono','SF Mono',monospace;
+  --stsgs-font-weight: 400;
+  --stsgs-radius: 8;
+  /* shadcn bridge */
+  --background: #16100E;
+  --foreground: #F5EDE8;
+  --primary: #FF6B35;
+  --primary-foreground: #0F0908;
+  --card: #1E1714;
+  --card-foreground: #F5EDE8;
+  --muted: #2A1E19;
+  --muted-foreground: #8C7568;
+  --border: rgba(255,107,53,0.1);
+  --input: rgba(255,107,53,0.12);
+  --ring: #FF6B35;
+}
