@@ -5,7 +5,6 @@ import {
   scorePrompt,
   getInstructionContent,
   withRetry,
-  withTimeout,
   CircuitBreaker,
   type PromptContext,
 } from '@/lib/prompting'
@@ -104,7 +103,23 @@ export function evaluatePromptBeforeCall(systemPrompt: string, userPrompt: strin
   }
 }
 
+// ─── Timeout helper (throws on timeout, compatible with retry) ──
+
+function withTimeoutThrow<T>(fn: () => Promise<T>, ms: number): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error(`Timeout after ${ms}ms`)), ms)
+    fn()
+      .then(result => { clearTimeout(timer); resolve(result) })
+      .catch(err => { clearTimeout(timer); reject(err) })
+  })
+}
+
 // ─── Call LLM with resilience ─────────────────────────────────
+//
+// Properly composes: timeout (throws) → retry (catches throws) →
+// circuit breaker (tracks successes/failures).
+// Previous version nested ResilienceResult objects, causing retries
+// and circuit breaker to never trigger.
 
 export async function callLLM(systemPrompt: string, userPrompt: string): Promise<string> {
   // Evaluate prompt quality before calling
@@ -114,9 +129,13 @@ export async function callLLM(systemPrompt: string, userPrompt: string): Promise
   }
 
   const zai = await getZAI()
-  const result = await llmCircuit.execute(() =>
-    withRetry(() =>
-      withTimeout(async () => {
+
+  // Circuit breaker wraps the entire retry+timeout stack.
+  // On final failure, the retry result is unwrapped and thrown
+  // so the circuit breaker correctly tracks failures.
+  const circuitResult = await llmCircuit.execute(async () => {
+    const retryResult = await withRetry(
+      () => withTimeoutThrow(async () => {
         const completion = await zai.chat.completions.create({
           messages: [
             { role: 'assistant', content: systemPrompt },
@@ -130,9 +149,19 @@ export async function callLLM(systemPrompt: string, userPrompt: string): Promise
       }, 60000),
       { maxAttempts: 3, baseDelay: 1000 }
     )
-  )
-  if (!result.success) throw new Error(result.errors.join('; '))
-  return result.data
+
+    // Unwrap retry result — throw if failed so circuit breaker
+    // correctly registers the failure and can open the circuit.
+    if (!retryResult.success) {
+      throw new Error(retryResult.errors.join('; '))
+    }
+    return retryResult.data!
+  })
+
+  if (!circuitResult.success) {
+    throw new Error(circuitResult.errors.join('; '))
+  }
+  return circuitResult.data!
 }
 
 // ─── Parse LLM JSON response ──────────────────────────────────
