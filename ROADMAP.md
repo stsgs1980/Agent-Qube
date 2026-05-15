@@ -48,7 +48,7 @@
 
 | # | Task | Priority | Status |
 |---|------|----------|--------|
-| 4.1 | Connection flow animation (edges "flow" — particles/dots moving along paths) | HIGH | 🔴 |
+| 4.1 | Connection flow animation (edges "flow" — particles/dots moving along paths) | HIGH | ✅ |
 | 4.2 | Node depth/3D shadow effects | MEDIUM | 🟡 |
 | 4.3 | Pulsing concentric waves from central node | LOW | ⚪ |
 | 4.4 | Semi-transparent cluster backgrounds for role groups | LOW | ⚪ |
@@ -57,8 +57,8 @@
 
 | # | Task | Priority | Status |
 |---|------|----------|--------|
-| 5.1 | WebSocket real-time agent status updates | HIGH | 🔴 |
-| 5.2 | Edit agents from UI (PUT /api/agents/[id] + edit form) | HIGH | 🔴 |
+| 5.1 | WebSocket real-time agent status updates | HIGH | ✅ |
+| 5.2 | Edit agents from UI (PATCH /api/agents/[id] + edit form + toast) | HIGH | ✅ |
 | 5.3 | Delete agents from UI | MEDIUM | 🟡 |
 | 5.4 | Task management from UI | LOW | ⚪ |
 | 5.5 | Interactive formula dependency explorer | LOW | ⚪ |
@@ -77,7 +77,7 @@
 
 - **Agent names**: All 26 agents unified to English names (previously 12/26 mismatched)
 - **Dev server stability**: Process killed periodically in sandbox environment
-- **Simulated status transitions**: Status changes every 15s via client timer, not real events
+- **Real-time status transitions**: WebSocket pushes status changes from ws-service every 10-15s; client fallback when disconnected
 
 ## Architecture
 

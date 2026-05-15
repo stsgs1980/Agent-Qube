@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useCallback } from 'react'
+import { toast } from 'sonner'
 import { fetchWithRetry } from '@/lib/client-fetch'
 import type { AgentEditForm } from './use-agent-edit-form'
 
@@ -10,7 +11,7 @@ interface UseAgentMutationsOpts {
   onSuccess?: () => void
 }
 
-/** Encapsulates fetchWithRetry calls for save/delete. No direct fetch in components. */
+/** Encapsulates fetchWithRetry calls for save/delete. Uses PATCH for partial updates. */
 export function useAgentMutations(opts: UseAgentMutationsOpts = {}) {
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState(false)
@@ -20,7 +21,7 @@ export function useAgentMutations(opts: UseAgentMutationsOpts = {}) {
     setSaving(true)
     try {
       const res = await fetchWithRetry(`/api/agents/${agentId}`, {
-        method: 'PUT',
+        method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
       })
@@ -28,10 +29,13 @@ export function useAgentMutations(opts: UseAgentMutationsOpts = {}) {
         const updated = await res.json()
         opts.onAgentUpdated?.(updated)
         opts.onSuccess?.()
+        toast.success('Agent updated', { description: `${form.name} saved successfully` })
         return true
       }
-    } catch {
-      // Silently fail — could add toast later
+      const err = await res.json().catch(() => ({}))
+      toast.error('Update failed', { description: (err as Record<string, string>).error || `HTTP ${res.status}` })
+    } catch (e) {
+      toast.error('Update failed', { description: 'Network error — please try again' })
     } finally {
       setSaving(false)
     }
@@ -47,10 +51,13 @@ export function useAgentMutations(opts: UseAgentMutationsOpts = {}) {
       if (res.ok) {
         opts.onAgentDeleted?.(agentId)
         opts.onSuccess?.()
+        toast.success('Agent deleted', { description: 'The agent has been removed' })
         return true
       }
+      const err = await res.json().catch(() => ({}))
+      toast.error('Delete failed', { description: (err as Record<string, string>).error || `HTTP ${res.status}` })
     } catch {
-      // Silently fail
+      toast.error('Delete failed', { description: 'Network error — please try again' })
     } finally {
       setDeleting(false)
     }

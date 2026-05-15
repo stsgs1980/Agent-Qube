@@ -2,31 +2,50 @@
 
 import React, { useState, useCallback } from 'react'
 import { X, Plus } from 'lucide-react'
+import { toast } from 'sonner'
 import { ROLE_ORDER, FORMULA_DESC } from './types'
 import { fetchWithRetry } from '@/lib/client-fetch'
 
-const DEFAULT_FORM = { name: '', role: '', group: 'Execution', formula: 'ReAct', status: 'active', skills: '' }
+const DEFAULT_FORM = { name: '', role: '', group: 'Execution', formula: 'ReAct', status: 'active', skills: '', description: '' }
 
 // ─── Add Agent modal — self-contained form with its own state ───────────────────
 
 export function AddAgentModal({ open, onClose, onCreated }: { open: boolean; onClose: () => void; onCreated: () => void }) {
   const [form, setForm] = useState(DEFAULT_FORM)
+  const [submitting, setSubmitting] = useState(false)
   const update = (key: string, val: string) => setForm(prev => ({ ...prev, [key]: val }))
 
   const handleSubmit = useCallback(async () => {
     if (!form.name.trim()) return
+    setSubmitting(true)
     try {
       const res = await fetchWithRetry('/api/agents', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: form.name, role: form.role || 'Custom Agent', roleGroup: form.group,
-          formula: form.formula, status: form.status, skills: form.skills,
-          description: `${form.role || 'Custom Agent'} agent in ${form.group} group`,
+          name: form.name,
+          role: form.role || 'Custom Agent',
+          roleGroup: form.group,
+          formula: form.formula,
+          status: form.status,
+          skills: form.skills,
+          description: form.description || `${form.role || 'Custom Agent'} agent in ${form.group} group`,
         }),
       })
-      if (res.ok) { setForm(DEFAULT_FORM); onClose(); onCreated() }
-    } catch { /* silently fail */ }
+      if (res.ok) {
+        toast.success('Agent created', { description: `${form.name} added to ${form.group}` })
+        setForm(DEFAULT_FORM)
+        onClose()
+        onCreated()
+      } else {
+        const err = await res.json().catch(() => ({}))
+        toast.error('Create failed', { description: (err as Record<string, string>).error || `HTTP ${res.status}` })
+      }
+    } catch {
+      toast.error('Create failed', { description: 'Network error — please try again' })
+    } finally {
+      setSubmitting(false)
+    }
   }, [form, onClose, onCreated])
 
   if (!open) return null
@@ -48,10 +67,11 @@ export function AddAgentModal({ open, onClose, onCreated }: { open: boolean; onC
           <div><label style={labelStyle}>Cognitive Formula</label><select value={form.formula} onChange={e => update('formula', e.target.value)} style={inputStyle}>{Object.keys(FORMULA_DESC).map(f => <option key={f} value={f}>{f} — {FORMULA_DESC[f].split('—')[0].trim()}</option>)}</select></div>
           <div><label style={labelStyle}>Status</label><select value={form.status} onChange={e => update('status', e.target.value)} style={inputStyle}>{['active', 'idle', 'paused', 'standby'].map(s => <option key={s} value={s}>{s}</option>)}</select></div>
           <div><label style={labelStyle}>Skills (comma-separated)</label><input value={form.skills} onChange={e => update('skills', e.target.value)} placeholder="e.g. analysis,reporting,optimization" style={inputStyle} /></div>
+          <div><label style={labelStyle}>Description</label><textarea value={form.description} onChange={e => update('description', e.target.value)} placeholder="Describe this agent's purpose..." rows={3} style={{ ...inputStyle, resize: 'vertical' as const, minHeight: 60 }} /></div>
         </div>
         <div style={{ padding: '12px 20px', borderTop: '1px solid rgba(51,51,51,0.3)', display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
           <button onClick={onClose} style={{ padding: '6px 16px', borderRadius: 6, background: '#1A1A1A', border: '1px solid rgba(51,51,51,0.4)', color: '#B0B0B0', cursor: 'pointer', fontSize: 11 }}>Cancel</button>
-          <button onClick={handleSubmit} disabled={!form.name.trim()} style={{ padding: '6px 16px', borderRadius: 6, background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.3)', color: '#06B6D4', cursor: 'pointer', fontSize: 11, opacity: form.name.trim() ? 1 : 0.5, display: 'flex', alignItems: 'center', gap: 4 }}><Plus size={10} />Create Agent</button>
+          <button onClick={handleSubmit} disabled={!form.name.trim() || submitting} style={{ padding: '6px 16px', borderRadius: 6, background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.3)', color: '#06B6D4', cursor: submitting ? 'wait' : 'pointer', fontSize: 11, opacity: !form.name.trim() || submitting ? 0.5 : 1, display: 'flex', alignItems: 'center', gap: 4 }}><Plus size={10} />{submitting ? 'Creating...' : 'Create Agent'}</button>
         </div>
       </div>
     </div>
