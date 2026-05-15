@@ -1,17 +1,25 @@
-# P-MAS-v2 -- Prompt-based Multi-Agent System Dashboard
+# P-MAS-v2
 
-> Multi-Agent System Dashboard with 26 AI agents across 8 role groups, featuring hierarchy visualization and workflow pipeline.
->
-> Repository: [github.com/stsgs1980/P-MAS-v2](https://github.com/stsgs1980/P-MAS-v2)
+Prompt-based Multi-Agent System Dashboard. 26 AI agents across 8 role groups and 5 hierarchy layers, with interactive hierarchy visualization, workflow pipeline execution, and an integrated prompting library.
+
+Repository: [github.com/stsgs1980/P-MAS-v2](https://github.com/stsgs1980/P-MAS-v2)
+
+![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat-square)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?style=flat-square)
+![Prisma](https://img.shields.io/badge/Prisma-SQLite-2D3748?style=flat-square)
 
 ## Features
 
-- **Dashboard** -- Agent stats, status distribution, KPIs, activity timeline, system health monitoring
-- **Agent Hierarchy** -- Interactive React Flow + Dagre DAG layout with node search, context menus, layer bands, and connection strength visualization
-- **Workflow Pipeline** -- Full CRUD for multi-step agent workflows with execution tracking, step-level status, and agent message logs
+- **Dashboard** - Agent stats, status distribution, KPIs, activity timeline, system health monitoring
+- **Agent Hierarchy** - Interactive React Flow + Dagre DAG layout with node search, context menus, layer bands, and connection strength visualization
+- **Workflow Pipeline** - Full CRUD for multi-step agent workflows with execution tracking, step-level status, feedback loops, and agent message logs
 - **26 AI Agents** across 8 role groups and 5 hierarchy layers (L0--L4)
-- **6 Connection Types** -- command, sync, twin, delegate, supervise, broadcast
-- **Dark Design System** -- Black (#000000) background, monochrome + Cyan (#06B6D4) accent, glow effects on active nodes
+- **6 Connection Types** - command, sync, twin, delegate, supervise, broadcast
+- **@stsgs/prompting Library** - 5 modules (core, templates, evaluation, agents, instructions) with 20 cognitive formulas, 12 orchestration patterns, 6-dimension scoring, and behavioral/architectural instructions
+- **20 Cognitive Formulas** - ToT, CoVe, GoT, CoT, ReAct, Reflexion, ReWOO, MoA, and more, mapped to agents
+- **AI-Powered Prompt Interpretation** - z-ai-web-dev-sdk integration at /api/interpret-prompt
+- **Dark Design System** - Black (#000000) background, monochrome + Cyan (#06B6D4) accent, glow effects on active nodes
 
 ## 26 Agents / 8 Role Groups
 
@@ -39,23 +47,25 @@
 
 ## 5 Hierarchy Layers
 
-- **L0** System Controller -- Architect
-- **L1** Strategic Layer -- Analyst, Visionary, Inspector, Evaluator, Guard, Coordinator
-- **L2** Operational Layer -- Planner, Communicator, Executor-A, Executor-B, Debugger
-- **L3** Specialist Layer -- Tester, Archivist, Observer, Diagnostician, Gateway, Coder
-- **L4** Interface Layer -- Trainer, Scorer, Context-Manager, RAG-Specialist, Alert-Operator, Adapter
+- **L0** System Controller - Architect
+- **L1** Strategic Layer - Analyst, Visionary, Inspector, Evaluator, Guard, Coordinator
+- **L2** Operational Layer - Planner, Communicator, Executor-A, Executor-B, Debugger
+- **L3** Specialist Layer - Tester, Archivist, Observer, Diagnostician, Gateway, Coder
+- **L4** Interface Layer - Trainer, Scorer, Context-Manager, RAG-Specialist, Alert-Operator, Adapter
 
 ## Tech Stack
 
-- **Framework** -- Next.js 16 (App Router) + React 19
-- **Language** -- TypeScript 5 (strict mode)
-- **Styling** -- Tailwind CSS 4 + shadcn/ui
-- **Database** -- SQLite via Prisma ORM
-- **Visualization** -- React Flow (@xyflow/react) + Dagre (DAG layout)
-- **Animation** -- Framer Motion
-- **State** -- Zustand + TanStack Query
-- **Real-time** -- Socket.IO (WebSocket mini-service, port 3003)
-- **Icons** -- Lucide React
+- **Framework** - Next.js 16 (App Router) + React 19
+- **Language** - TypeScript 5 (strict mode)
+- **Styling** - Tailwind CSS 4 + shadcn/ui
+- **Database** - SQLite via Prisma ORM
+- **Visualization** - React Flow (@xyflow/react) + Dagre (DAG layout)
+- **Animation** - Framer Motion
+- **State** - Zustand (client) + TanStack Query (server)
+- **Real-time** - Socket.IO (WebSocket mini-service, port 3003)
+- **Icons** - Lucide React
+- **Prompting** - @stsgs/prompting library (5 modules, 14 files)
+- **AI Integration** - z-ai-web-dev-sdk for prompt interpretation
 
 ## Getting Started
 
@@ -91,6 +101,81 @@ Or the seed script:
 bun run seed
 ```
 
+## Configuration
+
+### Environment Variables
+
+See `.env.example`:
+
+```env
+DATABASE_URL="file:./db/dev.db"
+```
+
+## Project Structure
+
+- `src/app/` - Next.js App Router pages and API routes
+- `src/components/hierarchy/` - Agent Hierarchy (React Flow + Dagre DAG)
+- `src/components/workflows/` - Workflow Pipeline (CRUD, execution, tracking)
+- `src/components/dashboard/` - Dashboard components (stats, KPIs, health)
+- `src/components/ui/` - shadcn/ui base components
+- `src/hooks/` - Custom React hooks
+- `src/lib/` - Utilities, Prisma client, API helpers
+- `src/lib/prompting/` - @stsgs/prompting library (5 modules, 14 files)
+  - `core/` - Types, 20 techniques, 11 frameworks, 5-layer system-prompt architect
+  - `templates/` - 12 intents, 12 agent roles, 8 flow templates
+  - `evaluation/` - 6-dim scoring (S/A/B/C/D/F), blind compare, CORE-EEAT 40 checks
+  - `agents/` - 20 cognitive formulas, 12 orchestration patterns, resilience (retry/circuit-breaker/timeout)
+  - `instructions.ts` - 6 behavioral + 4 architectural instructions
+- `prisma/` - Database schema (7 models: Agent, Task, Workflow, PipelineStep, WorkflowExecution, StepExecution, AgentMessage)
+- `mini-services/ws-service/` - WebSocket service (port 3003)
+- `mini-services/watchdog/` - Dev server keepalive
+- `standards/` - 14 governance documents
+- `instructions/` - 7 behavioral instructions
+- `skills/` - 63 agent skills (10 toolkit + 53 project)
+- `templates/` - Operational templates (worklog, task template, e2e, workflows)
+
+## API Reference
+
+### Agents
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/agents` | GET, POST | List all agents / Create agent |
+| `/api/agents/[id]` | GET, PUT, DELETE | Get / Update / Delete agent |
+| `/api/agents/prompt` | POST | Generate system prompt for agent using @stsgs/prompting |
+
+### Tasks
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/tasks` | GET, POST | List all tasks / Create task |
+| `/api/tasks/[id]` | GET, PUT, DELETE | Get / Update / Delete task |
+
+### Workflows
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/workflows` | GET, POST | List / Create workflows |
+| `/api/workflows/[id]` | GET, PUT, DELETE | Get / Update / Delete workflow |
+| `/api/workflows/execute` | POST | Execute workflow with step-by-step simulation, feedback loops, agent messages |
+| `/api/workflows/seed` | POST | Seed sample workflows |
+
+### System
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/hierarchy` | GET | Full hierarchy tree with connections |
+| `/api/stats` | GET | Aggregated dashboard statistics |
+| `/api/health` | GET | System health check |
+| `/api/seed` | POST | Seed database (26 agents + 26 tasks) |
+
+### Prompting and AI
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/prompting` | GET | Prompting library API (sections: formulas, patterns, techniques, frameworks, roles, intent, score, quick-score, benchmark, flows, instructions, apply-formula) |
+| `/api/interpret-prompt` | POST | AI-powered prompt interpretation via z-ai-web-dev-sdk |
+
 ## Scripts
 
 | Script | Description |
@@ -102,52 +187,6 @@ bun run seed
 | `bun run db:generate` | Generate Prisma client |
 | `bun run db:migrate` | Run Prisma migrations |
 | `bun run db:reset` | Reset database |
-
-## Configuration
-
-### Environment Variables
-
-See `.env.example`:
-
-```env
-DATABASE_URL="file:./db/dev.db"
-```
-
-## API Reference
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/agents` | GET, POST | List all agents / Create agent |
-| `/api/agents/[id]` | GET, PUT, DELETE | Get / Update / Delete agent |
-| `/api/agents/prompt` | POST | Prompt an agent (AI integration) |
-| `/api/tasks` | GET, POST | List all tasks / Create task |
-| `/api/tasks/[id]` | GET, PUT, DELETE | Get / Update / Delete task |
-| `/api/hierarchy` | GET | Full hierarchy tree with connections |
-| `/api/stats` | GET | Aggregated dashboard statistics |
-| `/api/health` | GET | System health check |
-| `/api/seed` | POST | Seed database (26 agents + tasks + groups) |
-| `/api/workflows` | GET, POST | List / Create workflows |
-| `/api/workflows/[id]` | GET, PUT, DELETE | Get / Update / Delete workflow |
-| `/api/workflows/execute` | POST | Execute a workflow |
-| `/api/workflows/seed` | POST | Seed sample workflows |
-
-## Project Structure
-
-- `src/app/` -- Next.js App Router pages and API routes
-- `src/components/hierarchy/` -- Agent Hierarchy (React Flow + Dagre DAG)
-- `src/components/workflows/` -- Workflow Pipeline (CRUD, execution, tracking)
-- `src/components/dashboard/` -- Dashboard components (stats, KPIs, health)
-- `src/components/ui/` -- shadcn/ui base components
-- `src/hooks/` -- Custom React hooks
-- `src/lib/` -- Utilities, Prisma client, API helpers, prompting library
-- `src/data/` -- Dashboard configuration constants
-- `prisma/` -- Database schema and seed
-- `mini-services/ws-service/` -- WebSocket service (port 3003)
-- `mini-services/watchdog/` -- Dev server keepalive
-- `standards/` -- Code standards (Unicode Policy, Markdown, Frontend, GitHub, etc.)
-- `instructions/` -- Agent behavioral instructions
-- `skills/` -- Automated agent skills
-- `templates/` -- Operational templates (worklog, task template)
 
 ## Development Rules
 
@@ -162,19 +201,37 @@ DATABASE_URL="file:./db/dev.db"
 ### Anti-Monolith Rules
 
 - Component: max 150 lines, File: max 200 lines, Page: max 40 lines
-- Max 3 `useState` per component -- extract to custom hook
-- Components do not fetch data directly -- use hooks or props
+- Max 3 `useState` per component - extract to custom hook
+- Components do not fetch data directly - use hooks or props
 - Barrel exports for every module
 - Static imports only (no `next/dynamic` with Turbopack)
 - ESLint layer separation enforced
 
 ### Design System
 
-- Dark background (#000000) -- graphs and nodes "glow" on black
-- Monochrome + one accent (Cyan #06B6D4) -- no rainbow, data-first
+- Dark background (#000000) - graphs and nodes "glow" on black
+- Monochrome + one accent (Cyan #06B6D4) - no rainbow, data-first
 - Status colors: Active=Cyan, Idle=Slate, Paused=Amber, Standby=Indigo, Error=Rose, Offline=Zinc
-- Glow effects -- active nodes "breathe" with subtle animation
-- High contrast -- everything reads instantly against the dark canvas
+- Glow effects - active nodes "breathe" with subtle animation
+- High contrast - everything reads instantly against the dark canvas
+
+### @stsgs/prompting Library
+
+The prompting library is located at `src/lib/prompting/` and consists of 5 modules across 14 files:
+
+- **core** - Type definitions, 20 prompting techniques, 11 frameworks, 5-layer system-prompt architect
+- **templates** - 12 intent templates, 12 agent role templates, 8 flow templates
+- **evaluation** - 6-dimension scoring (S/A/B/C/D/F grades), blind comparison, CORE-EEAT 40-point checklist
+- **agents** - 20 cognitive formulas (ToT, CoVe, GoT, CoT, ReAct, Reflexion, ReWOO, MoA, etc.), 12 orchestration patterns, resilience patterns (retry, circuit-breaker, timeout)
+- **instructions** - 6 behavioral instructions + 4 architectural instructions
+
+### Database Models
+
+7 Prisma models: Agent, Task, Workflow, PipelineStep, WorkflowExecution, StepExecution, AgentMessage
+
+### Toolkit Version
+
+v1.9.1
 
 ## Agent Rules (Mandatory)
 
@@ -182,18 +239,9 @@ Any AI agent working on this project MUST read and follow `AGENT_RULES.md` befor
 
 - See `AGENT_RULES.md` for full behavioral rules
 - See `PROJECT_CONFIG.md` for project-specific settings (stack, server, paths)
-- See `instructions/` for complete rule descriptions
-- See `skills/` for automated tooling
-- See `standards/` for governance documents
-
-## Known Issues
-
-- Dev server stability: Process killed periodically in sandbox environment
-- Simulated status transitions: Status changes every 15s via client timer, not real events
-
-## License
-
-MIT
+- See `instructions/` for complete rule descriptions (7 instructions)
+- See `skills/` for automated tooling (63 skills)
+- See `standards/` for governance documents (14 standards)
 
 ---
 
