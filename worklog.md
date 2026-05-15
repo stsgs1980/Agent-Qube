@@ -1477,3 +1477,23 @@ Stage Summary:
 - 5.2 fixed: PATCH for partial updates, toast feedback, description in Add Agent
 - ROADMAP updated: 4.1, 5.1, 5.2 all ✅
 - Pushed: 6badb40
+
+---
+Task ID: 5.3
+Agent: main
+Task: Delete agents from UI + WS real-time sync for all CRUD operations
+
+Work Log:
+- Created ws-client.ts: singleton Socket.IO client for emitting mutation events
+- Fixed critical gap: nobody was emitting WS events after CRUD mutations
+- use-agent-mutations.ts: Added emitAgentDeleted + emitAgentUpdated after save/delete
+- use-agent-edit.ts: PUT→PATCH, added emitAgentDeleted + emitAgentUpdated
+- add-agent-modal.tsx: Added emitAgentCreated after agent creation
+- End-to-end tested: Create → Delete → Verify 404 — all working
+
+Stage Summary:
+- Cross-view real-time sync now works: hierarchy ↔ dashboard get notified about mutations
+- Events emitted: agent:created, agent:updated, agent:deleted via WS service
+- Dashboard uses PATCH (was PUT) — matches hierarchy pattern
+- ROADMAP: 5.3 ✅
+- Pushed: f051a14
