@@ -4,7 +4,7 @@
  *
  * Two categories:
  *   instructions/  -- 6 behavioral rules (language, git, sandbox, onboarding, planning, diagnostics)
- *   ai-rules/      -- 4 architectural rules (core, enforcement, library, project)
+ *   ai-rules/      -- 4 architectural rules (core, enforcement, library, project) [inline, no filesystem dependency]
  *
  * Use getInstruction() or getAIRule() to retrieve content as string
  * for injection into LLM system prompts.

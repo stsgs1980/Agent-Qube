@@ -1346,3 +1346,33 @@ Stage Summary:
 - 8 obsolete files cleaned from standards/
 - Skills total: 8 toolkit + 53 project = 61 (was 8 + 53 = 61, now 10 + 53 = 63... wait: 10 toolkit + 53 project - 8 overlap = 55 unique skill dirs)
 - All changes pushed to P-MAS-v2 remote
+
+---
+Task ID: cleanup-1
+Agent: Main Agent
+Task: Remove extraneous directories (ai-rules, docs/architecture, docs/planning) not related to P-MAS-v2 main project
+
+Work Log:
+- Analyzed ai-rules/, docs/architecture/, docs/planning/ for relevance to main P-MAS-v2 project
+- ai-rules/: content already inline in src/lib/prompting/instructions.ts, not read at runtime; only dev scripts reference it
+- docs/architecture/: 1 file (architecture.md), not used by any code, pure @stsgs/ui Interface Studio doc
+- docs/planning/: 3 files (studio-vision, phase-plan, code-realm-analysis), not used by any code, pure @stsgs/ui planning artifacts
+- Deleted 3 requested directories: ai-rules/, docs/architecture/, docs/planning/
+- Deleted duplicates: docs/ai-rules/, docs/architecture.md, docs/phase-plan.md
+- Deleted docs/PROJECT_CONFIG.md (@stsgs/ui specific, not P-MAS-v2)
+- Deleted generated AI rules: ZAI.md, CLAUDE.md, .cursorrules, .windsurfrules, .zcode/, .github/copilot-instructions.md
+- Deleted scripts/generate-ai-rules.ts (references deleted ai-rules/ dir)
+- Deleted packages/cli/src/commands/ai.ts (references deleted ai-rules/ dir)
+- Updated packages/cli/src/index.ts: removed ai command registration
+- Updated src/lib/prompting/instructions.ts: updated comment (no filesystem dependency)
+- Dev server verified: GET / 200, all APIs working
+- Lint: 0 new errors from changes
+
+Stage Summary:
+- 3 directories deleted: ai-rules/, docs/architecture/, docs/planning/
+- 6 duplicate docs deleted: docs/ai-rules/, docs/architecture.md, docs/phase-plan.md, docs/PROJECT_CONFIG.md
+- 6 generated AI rules deleted: ZAI.md, CLAUDE.md, .cursorrules, .windsurfrules, .zcode/, .github/copilot-instructions.md
+- 2 scripts deleted: scripts/generate-ai-rules.ts, packages/cli/src/commands/ai.ts
+- CLI updated: ai command removed from packages/cli/src/index.ts
+- Prompting updated: comment fixed (inline, no filesystem dependency)
+- Root PROJECT_CONFIG.md preserved (P-MAS-v2 specific, correct)
