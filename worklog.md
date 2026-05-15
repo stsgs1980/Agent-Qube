@@ -1438,3 +1438,23 @@ Stage Summary:
 - Active hierarchy code (hierarchy/ directory) is already properly modularized
 - Remaining large files are all in prompting/ library or UI components (acceptable)
 - Git pushed: 2c7f18b
+
+---
+Task ID: 5.1
+Agent: main
+Task: WebSocket — проверить и починить подключение ws-service к v2
+
+Work Log:
+- Установлены зависимости ws-service (socket.io) — ранее не были установлены
+- Обнаружен баг: сервер Socket.IO имел `path: '/'`, а клиент использовал дефолтный `/socket.io/` — рассинхрон путей
+- Исправлено: убран `path: '/'` из конфига сервера, теперь оба используют дефолтный `/socket.io/`
+- Обновлён keep-alive.sh: добавлен старт и мониторинг ws-service на порту 3003
+- Проверена цепочка: клиент → Caddy (XTransformPort=3003) → ws-service → SQLite DB
+- Результат: Socket.IO polling и websocket upgrade работают через прямой доступ и через Caddy
+
+Stage Summary:
+- WS-сервис полностью функционален: 26 агентов, симуляция статусов каждые 10-15 сек
+- Фронтенд v2 подключён через useHierarchyData hook (agents:snapshot, agent:status, etc.)
+- Заглушка (fallback) на клиенте работает: если WS падает, статусы симулируются локально
+- Caddy корректно роутит `?XTransformPort=3003` на порт 3003
+- Ограничение sandbox: фоновые процессы убиваются между вызовами Bash, но при перезапуске контейнера start.sh стартует ws-service автоматически

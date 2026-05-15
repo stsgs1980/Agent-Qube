@@ -1,10 +1,20 @@
 #!/bin/bash
 # P-MAS Dev Server Keepalive
-# Starts Next.js dev server, monitors health, auto-restarts on failure
+# Starts Next.js dev server + WS service, monitors health, auto-restarts on failure
 
 LOG=/tmp/zdev.log
 HEALTH_URL=http://localhost:3000/api/health
+WS_HEALTH_URL=http://localhost:3003/
 MAX_FAILS=3
+
+start_ws_service() {
+  echo "[$(date)] Starting WS service on port 3003..." >> $LOG
+  cd /home/z/my-project/mini-services/ws-service
+  bun index.ts >> $LOG 2>&1 &
+  WS_PID=$!
+  echo "[$(date)] WS PID: $WS_PID" >> $LOG
+  sleep 2
+}
 
 start_server() {
   echo "[$(date)] Starting Next.js dev server..." >> $LOG
@@ -18,9 +28,16 @@ start_server() {
 }
 
 # Start initially
+start_ws_service
 start_server
 
 while true; do
+  # Check WS service is alive
+  if ! kill -0 $WS_PID 2>/dev/null; then
+    echo "[$(date)] WS service dead. Restarting..." >> $LOG
+    start_ws_service
+  fi
+
   # Check if server process is alive
   if ! kill -0 $SERVER_PID 2>/dev/null; then
     echo "[$(date)] Server process dead. Restarting..." >> $LOG
