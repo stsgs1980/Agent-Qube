@@ -22,7 +22,7 @@ from openpyxl import Workbook
 from openpyxl.utils.dataframe import dataframe_to_rows
 
 # Read with encoding detection
-df = pd.read_csv('input.csv', encoding='utf-8')  
+df = pd.read_csv('input.csv', encoding='utf-8')
 # Common encodings: utf-8, gbk, gb2312, latin-1, shift_jis
 
 # Handle messy CSVs

@@ -288,7 +288,7 @@ async function transcribeDirectory(directoryPath, outputJsonPath) {
 
   // Get all audio files
   const files = fs.readdirSync(directoryPath);
-  const audioFiles = files.filter(file => 
+  const audioFiles = files.filter(file =>
     /\.(wav|mp3|m4a|flac|ogg)$/i.test(file)
   );
 
@@ -394,7 +394,7 @@ async function safeTranscribe(audioFilePath) {
     // Check file size (e.g., limit to 100MB)
     const stats = fs.statSync(audioFilePath);
     const fileSizeMB = stats.size / (1024 * 1024);
-    
+
     if (fileSizeMB > 100) {
       throw new Error(`File too large: ${fileSizeMB.toFixed(2)}MB (max 100MB)`);
     }
@@ -449,7 +449,7 @@ function cleanTranscription(text) {
 
 async function transcribeAndClean(audioFilePath) {
   const zai = await ZAI.create();
-  
+
   const audioFile = fs.readFileSync(audioFilePath);
   const base64Audio = audioFile.toString('base64');
 

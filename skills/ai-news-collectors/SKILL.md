@@ -77,7 +77,7 @@ description: AI 新闻聚合与热度排序工具。当用户询问 AI 领域最
 ```
 搜索词：
 - "AI regulation" OR "AI policy" [当前月份年份]
-- "AI law" OR "AI governance" 
+- "AI law" OR "AI governance"
 - "AI 监管" OR "人工智能法案"
 ```
 

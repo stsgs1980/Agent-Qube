@@ -214,33 +214,33 @@ Chart Defaults:
     left_spine: light_gray_or_hidden
     bottom_spine: light_gray_thin
     grid: dashed, 0.5pt, 20% opacity (or hidden if values labeled)
-  
+
   pie:
     type: donut
     hole_ratio: 0.65
     min_slice_for_internal_label: 5%
     small_slice_strategy: leader_lines  # or "others_merge" or "rich_legend"
     others_threshold: 3%
-  
+
   bar:
     top_radius: 3px
     bar_gap_ratio: 0.5  # gap = 50% of bar width
     auto_horizontal_threshold: 5_cjk_chars  # or 10 latin chars
     value_label_position: auto  # inside if tall, outside if short
-  
+
   line:
     smooth: true  # Bézier curve
     width: 2.5pt
     area_fill: gradient_20_to_0
     label_strategy: first_last_max_min
     point_markers: labeled_points_only
-  
+
   legend:
     border: none
     position: top_left_horizontal
     marker_shape: circle_small  # 4px radius
     marker_size: 4px
-  
+
   typography:
     chart_title: bold, 14-16pt, left-aligned
     chart_subtitle: regular, 11-12pt, left-aligned

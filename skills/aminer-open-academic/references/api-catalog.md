@@ -1,7 +1,7 @@
 # AMiner 开放平台 API 完整参考手册
 
-**基础域名**：`https://datacenter.aminer.cn/gateway/open_platform`  
-**认证方式**：所有接口在请求头中携带 `Authorization: <TOKEN>`  
+**基础域名**：`https://datacenter.aminer.cn/gateway/open_platform`
+**认证方式**：所有接口在请求头中携带 `Authorization: <TOKEN>`
 **Token 获取**：登录 [控制台](https://open.aminer.cn/open/board?tab=control) 生成，在下方所有 curl 示例中将 `<TOKEN>` 替换为你的实际 Token。
 
 ---

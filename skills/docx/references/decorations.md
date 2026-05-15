@@ -4,7 +4,7 @@
 
 Uses only docx-js native capabilities for visual decoration — no external tools (like Playwright screenshots). Suitable for covers, chapter separators, page background enhancement.
 
-**When to fall back to Playwright?**  
+**When to fall back to Playwright?**
 Only when gradients, complex illustrations, or brand visuals are needed that pure OOXML cannot express. Default: prefer native solutions below.
 
 ### Decoration Element Library

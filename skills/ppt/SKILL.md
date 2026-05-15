@@ -291,25 +291,25 @@ If the answer to any is "no", revise before proceeding.
    ```javascript
    const pptxgen = require('pptxgenjs');
    const html2pptx = require('./html2pptx');
-   
+
    const pptx = new pptxgen();
    pptx.layout = 'LAYOUT_16x9';
-   
+
    // Optional: custom font configuration
    const fontConfig = { cjk: 'Microsoft YaHei', latin: 'Corbel' };
-   
+
    // Process ALL slides with warnings collection
    const allWarnings = [];
    for (const htmlFile of slideFiles) {
      const { slide, placeholders, warnings } = await html2pptx(htmlFile, pptx, { fontConfig });
      allWarnings.push(...warnings);
    }
-   
+
    // Add charts to placeholder areas if any
    if (placeholders.length > 0) {
        slide.addChart(pptx.charts.LINE, chartData, placeholders[0]);
    }
-   
+
    await pptx.writeFile('output.pptx');
    ```
 

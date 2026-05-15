@@ -49,7 +49,7 @@ Before implementing TTS functionality, be aware of these important limitations:
 function splitTextIntoChunks(text, maxLength = 1000) {
   const chunks = [];
   const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
-  
+
   let currentChunk = '';
   for (const sentence of sentences) {
     if ((currentChunk + sentence).length <= maxLength) {
@@ -60,7 +60,7 @@ function splitTextIntoChunks(text, maxLength = 1000) {
     }
   }
   if (currentChunk) chunks.push(currentChunk.trim());
-  
+
   return chunks;
 }
 ```

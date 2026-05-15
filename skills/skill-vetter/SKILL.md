@@ -92,7 +92,7 @@ RED FLAGS: [None / List them]
 
 PERMISSIONS NEEDED:
 • Files: [list or "None"]
-• Network: [list or "None"]  
+• Network: [list or "None"]
 • Commands: [list or "None"]
 ───────────────────────────────────────
 RISK LEVEL: [🟢 LOW / 🟡 MEDIUM / 🔴 HIGH / ⛔ EXTREME]

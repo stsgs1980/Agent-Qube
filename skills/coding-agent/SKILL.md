@@ -114,7 +114,7 @@ This skill makes NO network requests.
 
 **This skill does NOT:**
 - Execute code automatically
-- Access network or external services  
+- Access network or external services
 - Access files outside `~/code/` and user's project
 - Take autonomous actions without user awareness
 - Delegate to sub-agents without user's explicit request

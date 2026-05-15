@@ -388,14 +388,14 @@ ReportLab pushes the **entire block** to the next page, leaving the current page
 **⚠️ Report route covers are ALWAYS generated via HTML/Playwright**, using the same 7-template system defined in `typesetting/cover.md`. This ensures visual consistency across all routes (Report, Creative, Academic) and avoids the limitations of ReportLab for complex cover layouts.
 
 **Pipeline (Report route):**
-1. Generate **body PDF** via ReportLab (start with TOC or content - **no cover in story[]**)  
-2. Generate **cover HTML** following `typesetting/cover.md` 7-template system  
-3. **Run `poster_validate.py check-html` on cover HTML** — fix any ERRORs before rendering (overflow:hidden, font fallback, etc.)  
+1. Generate **body PDF** via ReportLab (start with TOC or content - **no cover in story[]**)
+2. Generate **cover HTML** following `typesetting/cover.md` 7-template system
+3. **Run `poster_validate.py check-html` on cover HTML** — fix any ERRORs before rendering (overflow:hidden, font fallback, etc.)
 4. **Run `cover_validate.js` on cover HTML** — detects text-vs-decorative-line overlaps. Non-zero exit = must fix before proceeding.
    ```bash
    node "$PDF_SKILL_DIR/scripts/cover_validate.js" cover.html
    ```
-5. Render cover HTML → single-page PDF via Playwright (`html2poster.js`) — **NOT `html2pdf-next.js`** (which converts absolute→static and destroys cover layout)  
+5. Render cover HTML → single-page PDF via Playwright (`html2poster.js`) — **NOT `html2pdf-next.js`** (which converts absolute→static and destroys cover layout)
 6. **Merge: insert cover as page 0** of body PDF using pypdf → output single final PDF
 
 > **Why not ReportLab covers?** ReportLab is excellent for structured content (tables, paragraphs, flowables) but painful for visual design (geometric accents, precise absolute positioning, web fonts). HTML/CSS handles these natively. One cover system, one visual standard, zero inconsistency.
@@ -452,7 +452,7 @@ import subprocess, os
 
 def render_cover(html_path, pdf_path):
     """Render HTML cover to PDF via html2poster.js.
-    
+
     ⚠️ ALWAYS use html2poster.js for covers (NOT html2pdf-next.js).
     Cover HTML uses position:absolute for layout. html2pdf-next.js pre-render
     hooks convert absolute→static to prevent multi-page overlap, which
