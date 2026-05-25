@@ -5,36 +5,16 @@ No packages! Deleted empty lockfile
 [1.00ms] done
 [watchdog] Running bun run dev...
 $ bun --hot index.ts
-Watchdog health endpoint: http://127.0.0.1:3031/health
-[2026-05-18T17:59:14.332Z] Watchdog started. Checking every 30s
-[2026-05-18T17:59:14.492Z] Initial check: ALIVE
-[2026-05-18T18:00:14.557Z] Heartbeat: server alive
-[2026-05-18T18:05:14.867Z] Heartbeat: server alive
-[2026-05-18T18:10:15.127Z] Heartbeat: server alive
-[2026-05-18T18:15:15.418Z] Heartbeat: server alive
-[2026-05-18T18:20:15.696Z] Heartbeat: server alive
-[2026-05-18T18:25:15.998Z] Heartbeat: server alive
-[2026-05-18T18:30:16.273Z] Heartbeat: server alive
-[2026-05-18T18:35:16.552Z] Heartbeat: server alive
-[2026-05-18T18:40:16.823Z] Heartbeat: server alive
-[2026-05-18T18:45:17.122Z] Heartbeat: server alive
-[2026-05-18T18:50:17.430Z] Heartbeat: server alive
-[2026-05-18T18:55:17.706Z] Heartbeat: server alive
-[2026-05-18T19:00:17.988Z] Heartbeat: server alive
-[2026-05-18T19:05:18.258Z] Heartbeat: server alive
-[2026-05-18T19:10:18.560Z] Heartbeat: server alive
-[2026-05-18T19:15:18.830Z] Heartbeat: server alive
-[2026-05-18T19:20:19.121Z] Heartbeat: server alive
-[2026-05-18T19:25:19.390Z] Heartbeat: server alive
-[2026-05-18T19:30:19.657Z] Heartbeat: server alive
-[2026-05-18T19:35:19.939Z] Heartbeat: server alive
-[2026-05-18T19:40:20.235Z] Heartbeat: server alive
-[2026-05-18T19:45:20.523Z] Heartbeat: server alive
-[2026-05-18T19:50:20.799Z] Heartbeat: server alive
-[2026-05-18T19:55:21.079Z] Heartbeat: server alive
-[2026-05-18T20:00:21.339Z] Heartbeat: server alive
-[2026-05-18T20:05:21.620Z] Heartbeat: server alive
-[2026-05-18T20:10:21.922Z] Heartbeat: server alive
-[2026-05-18T20:15:22.195Z] Heartbeat: server alive
-[2026-05-18T20:20:22.470Z] Heartbeat: server alive
-[2026-05-18T20:25:22.749Z] Heartbeat: server alive
+70 |     }
+71 |   }
+72 | }
+73 | 
+74 | // Health check HTTP server on watchdog port
+75 | const server = Bun.serve({
+                        ^
+error: Failed to start server. Is port 3031 in use?
+ syscall: "listen",
+   errno: 0,
+    code: "EADDRINUSE"
+
+      at /home/z/my-project/mini-services/watchdog/index.ts:75:20

@@ -1,0 +1,43 @@
+# Cursor AI Rules — P-MAS-v2 Project
+
+## Product
+P-MAS-v2: Prompt-based Multi-Agent System Dashboard.
+26 AI agents, 8 role groups, Agent Hierarchy + Workflow Pipeline.
+
+## Architecture
+```
+src/app/              Pages (dashboard, hierarchy, workflows)
+src/components/
+  hierarchy/          Agent Hierarchy (React Flow + Dagre DAG)
+  workflows/          Workflow Pipeline
+  ui/                 shadcn/ui base components
+src/hooks/            Custom hooks
+src/lib/              Utils, Prisma, API helpers
+prisma/               Schema and seed
+```
+
+## Design
+- Black #000000 background, Cyan #06B6D4 accent, monochrome grays
+- React Flow for agent DAG, Framer Motion for transitions
+
+## Anti-Monolith Rules
+1. Component <= 150 lines, File <= 200 lines, Page <= 40 lines
+2. Max 3 useState -> extract to hook
+3. Components don't fetch -> hooks or props
+4. Barrel exports always
+5. Static imports only (Turbopack)
+6. ESLint layer separation active
+
+## Import Patterns
+- `import { AgentNode } from '@/components/hierarchy/agent-node'`
+- `import { WorkflowCard } from '@/components/workflows/workflow-card'`
+- `import { db } from '@/lib/db'`
+- `import { fetchWithRetry } from '@/lib/client-fetch'`
+
+## API
+/api/agents, /api/agents/prompt, /api/tasks, /api/hierarchy,
+/api/stats, /api/health, /api/seed
+
+## Stack
+Next.js 16, React 19, TypeScript 5, Tailwind CSS 4, shadcn/ui,
+Prisma SQLite, React Flow, Framer Motion, Zustand

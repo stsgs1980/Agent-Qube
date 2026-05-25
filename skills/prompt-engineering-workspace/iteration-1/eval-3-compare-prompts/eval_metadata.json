@@ -1,0 +1,13 @@
+{
+  "eval_id": 3,
+  "eval_name": "compare-prompts",
+  "prompt": "Compare these two prompts for code review: A) 'Review this code and find bugs' vs B) 'You are a senior security engineer. Review the following code for: 1) Security vulnerabilities (SQL injection, XSS, auth bypass), 2) Performance bottlenecks, 3) Error handling gaps. Output findings as a JSON array with severity, location, and fix suggestion fields.' Which is better and why?",
+  "assertions": [
+    {"name": "declares_winner", "description": "Clearly declares which prompt is better (should be B)"},
+    {"name": "scores_both_prompts", "description": "Provides numerical scores for both prompts across dimensions"},
+    {"name": "shows_dimension_deltas", "description": "Shows per-dimension differences between the two prompts"},
+    {"name": "explains_why_better", "description": "Explains specifically WHY the winner is better with concrete reasoning"},
+    {"name": "identifies_techniques_in_b", "description": "Identifies the prompting techniques used in Prompt B (Role Assignment, Structured Output, etc.)"},
+    {"name": "suggests_further_improvement", "description": "Suggests how the winning prompt could be further improved"}
+  ]
+}
