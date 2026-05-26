@@ -33,3 +33,9 @@ error: Failed to start server. Is port 3003 in use?
 [connect] client sZy7uSMMwi0dhisvAAAT
 [connect] client _FLAADNplS_OHevzAAAV
 [disconnect] client sZy7uSMMwi0dhisvAAAT: transport close
+[disconnect] client _FLAADNplS_OHevzAAAV: transport close
+[connect] client FOYMTiHHXkbRPCi5AAAX
+[connect] client Ub8qJ_ruqqjF7-_KAAAZ
+[disconnect] client FOYMTiHHXkbRPCi5AAAX: transport close
+[disconnect] client Ub8qJ_ruqqjF7-_KAAAZ: client namespace disconnect
+[connect] client aZXmJCw3pDYh_jVlAAAb
