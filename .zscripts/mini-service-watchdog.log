@@ -12,9 +12,8 @@ $ bun --hot index.ts
 74 | // Health check HTTP server on watchdog port
 75 | const server = Bun.serve({
                         ^
-error: Failed to start server. Is port 3031 in use?
- syscall: "listen",
-   errno: 0,
+error: Failed to start serv[2026-05-26T18:20:11.056Z] Heartbeat: server alive
+no: 0,
     code: "EADDRINUSE"
 
       at /home/z/my-project/mini-services/watchdog/index.ts:75:20

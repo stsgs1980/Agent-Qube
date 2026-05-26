@@ -19,3 +19,5 @@ error: Failed to start server. Is port 3003 in use?
 [disconnect] client r7Q3TxVxu75VNXMcAAAD: transport close
 [connect] client 683pdlHAyRmy1tYKAAAH
 [disconnect] client rubX7_kyjiakohAKAAAF: transport close
+[connect] client J2zu9ZXZ10fWqVqLAAAJ
+[disconnect] client 683pdlHAyRmy1tYKAAAH: transport close
