@@ -2,7 +2,7 @@
 bun install v1.3.14 (0d9b296a)
 No packages! Deleted empty lockfile
 
-[1.00ms] done
+[9.00ms] done
 [watchdog] Running bun run dev...
 $ bun --hot index.ts
 70 |     }

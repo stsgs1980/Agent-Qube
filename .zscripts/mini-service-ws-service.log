@@ -1,7 +1,7 @@
 [ws-service] Installing dependencies...
 bun install v1.3.14 (0d9b296a)
 
-Checked 22 installs across 23 packages (no changes) [1.00ms]
+Checked 22 installs across 23 packages (no changes) [9.00ms]
 [ws-service] Running bun run dev...
 $ bun --hot index.ts
 46 |     }
@@ -12,4 +12,6 @@ $ bun --hot index.ts
 51 |     throw er;
                  ^
 error: Failed to start server. Is port 3003 in use?
-      at emitError (node:events:51:13)
+     [connect] client p60O99nsukgc_nm6AAAB
+[connect] client r7Q3TxVxu75VNXMcAAAD
+[disconnect] client p60O99nsukgc_nm6AAAB: transport close
