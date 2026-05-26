@@ -1519,3 +1519,21 @@ Stage Summary:
 - Root cause: render-time setState pattern incompatible with null agent prop
 - Fix: useEffect(agent?.id) pattern for form state sync
 - Server compiles clean, no runtime errors
+---
+Task ID: repo-audit
+Agent: main
+Task: Fresh audit of all P-MAS GitHub repos (clone + inspect real files)
+
+Work Log:
+- Cloned P-MAS, P-MAS-architector, P-mas-studio from GitHub (P-MAS-v2 is private, access denied)
+- Examined file trees, prisma schemas, API routes, components, libs, skills, standards for each repo
+- P-MAS (sandbox): 23K TS lines, 7 models, 12 API routes, SQLite, Phase 1 complete
+- P-MAS-architector: 71K TS lines, 22 models, 57 API routes, PostgreSQL, all 4 phases complete
+- P-mas-studio: 14K TS lines, 2 models (User/Post template only), 1 API route, 12 wireframes + Flow Editor
+- P-MAS-v2: private repo, could not access
+
+Stage Summary:
+- Confirmed architector is the superset (3x code, 15 extra models, 45 extra APIs)
+- Studio has unique Flow Editor with undo/redo/template system not in architector
+- Studio has 12 wireframes (Skill Forge, Template Gallery, Knowledge Base, Standards Manager, etc.) as concepts
+- P-MAS-v2 remains unknown - user needs to grant access or make public
