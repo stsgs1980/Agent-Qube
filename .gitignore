@@ -26,3 +26,9 @@ dev.log
 
 # Mini-services nested node_modules
 mini-services/*/node_modules/
+
+# Sandbox / generated artifacts
+upload/
+download/*.docx
+download/*.xlsx
+.env.example

@@ -1,106 +1,116 @@
 #!/bin/bash
-# anti-hallucination-guard / validate.sh
-# Checks that the repository contains only module files.
-# Run: bash validate.sh
-# Can also be used as a pre-push hook.
+# Agent Qube / validate.sh
+# Pre-push purity gate: checks that no forbidden/temporary files are tracked.
+# Adapted from anti-hallucination-guard for the main Agent Qube project.
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(git -C "$SCRIPT_DIR" rev-parse --show-toplevel)"
 
-# Whitelist of allowed paths
-ALLOWED=(
-    "setup.sh"
-    "AGENT_RULES.md"
-    "README.md"
-    ".gitignore"
-    ".git-hooks/"
-    ".git-hooks/pre-commit"
-    ".git-hooks/pre-push"
-    "scripts/"
-    "scripts/check-agent.sh"
-    "scripts/audit.sh"
-    "scripts/validate.sh"
-    "skills/"
-    "skills/anti-hallucination-guard/"
-    "skills/anti-hallucination-guard/SKILL.md"
-    "tools/"
-    "tools/verify-docs/"
-    "tools/verify-docs/src/"
-    "tools/verify-docs/src/engine.ts"
-    "tools/verify-docs/src/cli.ts"
-    "tools/verify-docs/src/init.ts"
-    "tools/verify-docs/package.json"
-    "tools/verify-docs/templates/"
-    "tools/verify-docs/templates/pre-push"
-    "tools/verify-docs/templates/verify.yml"
-    "tools/verify-docs/templates/install-hooks.ts"
-    "tools/verify-docs/examples/"
-)
-
-# Forbidden patterns
+# Forbidden patterns -- should never be in the repository
 FORBIDDEN_PATTERNS=(
-    "*.env"
+    ".env"
+    ".env.local"
+    ".env.production"
     "*.log"
     "*.tmp"
     "node_modules/"
     ".next/"
     "upload/"
-    "download/"
-    "src/"
-    "app/"
-    "public/"
-    "package-lock.json"
-    "tsconfig.json"
+    "download/*.docx"
+    "download/*.xlsx"
     ".git/modules/"
+    "*.db"
+    "*.db-journal"
+)
+
+# Forbidden root-level files -- leak indicators from sandbox or submodule
+FORBIDDEN_ROOT_FILES=(
+    "categorize.ts"
+    "extract-components.ts"
+    "extract-recipes.mjs"
+    "generate-ai-rules.ts"
+    "repair-imports.ts"
+    "seed-db.ts"
 )
 
 ERRORS=0
+WARNINGS=0
 
-echo "=== validate.sh: repository purity check ==="
+echo "=== Agent Qube: pre-push validation ==="
 echo ""
 
-# Check that all tracked files are allowed
-TRACKED_FILES=$(git -C "$SCRIPT_DIR" ls-files)
-for FILE in $TRACKED_FILES; do
-    ALLOWED_FLAG=0
-    for PATTERN in "${ALLOWED[@]}"; do
-        case "$FILE" in
-            "$PATTERN"*) ALLOWED_FLAG=1 ;;
-        esac
-    done
-    if [ "$ALLOWED_FLAG" -eq 0 ]; then
-        echo "[-] FORBIDDEN FILE: $FILE"
-        echo "    This file should not be in the module repository."
-        echo "    Module contains only: setup.sh, AGENT_RULES.md, .git-hooks/, scripts/, tools/, skills/, README.md, .gitignore"
-        ERRORS=$((ERRORS + 1))
-    fi
-done
+# Check tracked files against forbidden patterns
+TRACKED_FILES=$(git -C "$PROJECT_ROOT" ls-files)
 
-# Check that no tracked files match forbidden patterns
 for FILE in $TRACKED_FILES; do
     for PATTERN in "${FORBIDDEN_PATTERNS[@]}"; do
         case "$FILE" in
             *"$PATTERN"*)
-                echo "[-] FORBIDDEN PATTERN: $FILE (match: $PATTERN)"
+                echo "[-] FORBIDDEN: $FILE (matches pattern: $PATTERN)"
                 ERRORS=$((ERRORS + 1))
                 ;;
         esac
     done
 done
 
-# Check that all allowed files exist
-for ITEM in "${ALLOWED[@]}"; do
-    if [ -e "$SCRIPT_DIR/$ITEM" ]; then
-        echo "[+] $ITEM -- OK"
-    elif [[ "$ITEM" == */ ]]; then
-        DIR_CONTENTS=$(find "$SCRIPT_DIR/$ITEM" -type f 2>/dev/null | head -1)
-        if [ -z "$DIR_CONTENTS" ]; then
-            echo "[-] $ITEM -- EMPTY DIRECTORY (or missing)"
-            ERRORS=$((ERRORS + 1))
-        else
-            echo "[+] $ITEM -- OK"
-        fi
+# Check for forbidden root-level files (submodule leak indicators)
+for FILE in "${FORBIDDEN_ROOT_FILES[@]}"; do
+    if git -C "$PROJECT_ROOT" ls-files --error-unmatch "$FILE" &>/dev/null; then
+        echo "[-] LEAKED FILE: $FILE (should only exist in anti-hallucination-guard submodule)"
+        ERRORS=$((ERRORS + 1))
+    fi
+done
+
+# Check that anti-hallucination-guard submodule is clean (if present)
+AHG_DIR="$PROJECT_ROOT/anti-hallucination-guard"
+if [ -d "$AHG_DIR" ]; then
+    AHG_ALLOWED=(
+        "setup.sh"
+        "AGENT_RULES.md"
+        "README.md"
+        ".gitignore"
+        ".git-hooks/"
+        "scripts/"
+        "skills/"
+        "tools/"
+    )
+
+    if [ -f "$AHG_DIR/.git" ]; then
+        # It's a proper submodule -- check its contents
+        AHG_TRACKED=$(git -C "$AHG_DIR" ls-files 2>/dev/null || true)
+        for FILE in $AHG_TRACKED; do
+            ALLOWED_FLAG=0
+            for PATTERN in "${AHG_ALLOWED[@]}"; do
+                case "$FILE" in
+                    "$PATTERN"*) ALLOWED_FLAG=1 ;;
+                esac
+            done
+            if [ "$ALLOWED_FLAG" -eq 0 ]; then
+                echo "[!] AHG WARNING: anti-hallucination-guard/$FILE not in submodule whitelist"
+                WARNINGS=$((WARNINGS + 1))
+            fi
+        done
+    fi
+    echo "[+] anti-hallucination-guard/ -- submodule present"
+fi
+
+# Check that critical project files exist
+CRITICAL_FILES=(
+    "package.json"
+    "README.md"
+    "src/app/page.tsx"
+    "src/app/layout.tsx"
+    "prisma/schema.prisma"
+)
+
+for FILE in "${CRITICAL_FILES[@]}"; do
+    if [ -f "$PROJECT_ROOT/$FILE" ]; then
+        echo "[+] $FILE -- OK"
+    else
+        echo "[-] MISSING: $FILE"
+        ERRORS=$((ERRORS + 1))
     fi
 done
 
@@ -108,19 +118,17 @@ echo ""
 echo "=== Result ==="
 
 if [ "$ERRORS" -eq 0 ]; then
-    echo "Repository is clean. All files match the module."
+    echo "Repository is clean. Push allowed."
+    if [ "$WARNINGS" -gt 0 ]; then
+        echo "Warnings: $WARNINGS (review recommended)"
+    fi
     exit 0
 else
-    echo "ERRORS FOUND: $ERRORS"
-    echo ""
-    echo "Possible causes:"
-    echo "  1. Pushing from sandbox -- submodule leaked into parent repo"
-    echo "  2. Accidentally added foreign files (git add -A)"
-    echo "  3. Module files deleted or renamed"
+    echo "ERRORS FOUND: $ERRORS -- PUSH BLOCKED"
     echo ""
     echo "Fix:"
-    echo "  git rm --cached <file>    -- remove from index"
-    echo "  git commit --amend         -- fix the commit"
+    echo "  git rm --cached <file>    -- untrack forbidden file"
+    echo "  git commit --amend         -- amend the commit"
     echo ""
     exit 1
 fi
