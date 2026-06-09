@@ -1,35 +1,10 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Zap, CheckCircle2, XCircle, SkipForward, Clock, TrendingUp, BarChart3 } from 'lucide-react'
 import { ROLE_CONFIG } from './types'
 import type { AgentData } from './types'
-
-// ─── Types ──────────────────────────────────────────────────────────────────
-
-interface ExecutionStats {
-  totalRuns: number
-  completedRuns: number
-  failedRuns: number
-  skippedRuns: number
-  successRate: number
-  avgScore: number
-  lastExecutedAt: string | null
-}
-
-interface RecentExecution {
-  id: string
-  stepName: string
-  stepAction: string
-  status: string
-  score: number
-  summary: string
-  verdict: string
-  issues: string[]
-  startedAt: string | null
-  completedAt: string | null
-  workflowId: string | null
-}
+import { useExecutionHistory } from '@/hooks/use-execution-history'
 
 // ─── Score color ────────────────────────────────────────────────────────────
 
@@ -62,32 +37,10 @@ function timeAgo(dateStr: string | null): string {
 // ─── Agent Execution History ────────────────────────────────────────────────
 
 export function AgentExecutionHistory({ agent }: { agent: AgentData }) {
-  const [stats, setStats] = useState<ExecutionStats | null>(null)
-  const [executions, setExecutions] = useState<RecentExecution[]>([])
-  const [loading, setLoading] = useState(true)
+  const { stats, executions, loading } = useExecutionHistory(agent.id)
   const [expanded, setExpanded] = useState<string | null>(null)
 
   const config = ROLE_CONFIG[agent.roleGroup] || ROLE_CONFIG['Execution']
-
-  useEffect(() => {
-    let cancelled = false
-    async function load() {
-      try {
-        const res = await fetch(`/api/agents/${agent.id}/executions`)
-        if (res.ok && !cancelled) {
-          const data = await res.json()
-          setStats(data.stats || null)
-          setExecutions(data.recentExecutions || [])
-        }
-      } catch (err) {
-        console.error('[AgentExecutionHistory] fetch failed:', err)
-      } finally {
-        if (!cancelled) setLoading(false)
-      }
-    }
-    load()
-    return () => { cancelled = true }
-  }, [agent.id])
 
   if (loading) {
     return (

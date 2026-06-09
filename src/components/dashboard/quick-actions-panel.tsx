@@ -1,42 +1,15 @@
 'use client'
 
-import { useState, useCallback } from 'react'
 import { Database, Download, ArrowUp, Activity } from 'lucide-react'
 import { toast } from 'sonner'
-import { fetchWithRetry } from '@/lib/client-fetch'
-
-function useQuickActions() {
-  const [reseeding, setReseeding] = useState(false)
-
-  const handleReseed = useCallback(async () => {
-    setReseeding(true)
-    try {
-      const res = await fetchWithRetry('/api/seed', { method: 'POST' })
-      if (res.ok) { toast.success('Database reseeded successfully') } else { toast.error('Failed to reseed database') }
-    } catch { toast.error('Failed to reseed database') } finally { setReseeding(false) }
-  }, [])
-
-  const handleExportConfig = useCallback(async () => {
-    try {
-      const res = await fetchWithRetry('/api/hierarchy')
-      const data = await res.json()
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a'); a.href = url; a.download = 'p-mas-hierarchy.json'
-      document.body.appendChild(a); a.click(); document.body.removeChild(a)
-      URL.revokeObjectURL(url); toast.success('Config exported successfully')
-    } catch { toast.error('Failed to export config') }
-  }, [])
-
-  return { reseeding, handleReseed, handleExportConfig }
-}
+import { useQuickActions } from '@/hooks/use-quick-actions'
 
 export function QuickActionsPanel() {
-  const { reseeding, handleReseed, handleExportConfig } = useQuickActions()
+  const { seedDatabase, refreshHierarchy, isSeeding, isRefreshing } = useQuickActions()
 
   const actions = [
-    { label: 'Reseed Data', icon: Database, onClick: handleReseed, loading: reseeding },
-    { label: 'Export Config', icon: Download, onClick: handleExportConfig },
+    { label: 'Reseed Data', icon: Database, onClick: seedDatabase, loading: isSeeding },
+    { label: 'Export Config', icon: Download, onClick: refreshHierarchy, loading: isRefreshing },
     { label: 'Reset View', icon: ArrowUp, onClick: () => window.scrollTo({ top: 0, behavior: 'smooth' }) },
     { label: 'Toggle Theme', icon: Activity, onClick: () => toast.info('Theme toggle coming soon') },
   ]

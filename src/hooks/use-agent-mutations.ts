@@ -3,10 +3,21 @@
 import { useState, useCallback, useRef } from 'react'
 import { toast } from 'sonner'
 import { fetchWithRetry } from '@/lib/client-fetch'
-import { emitAgentDeleted, emitAgentUpdated } from '@/lib/ws-client'
+import { emitAgentCreated, emitAgentDeleted, emitAgentUpdated } from '@/lib/ws-client'
 import type { AgentEditForm } from './use-agent-edit-form'
 
+export interface CreateAgentInput {
+  name: string
+  role: string
+  roleGroup: string
+  formula: string
+  status: string
+  skills: string
+  description: string
+}
+
 interface UseAgentMutationsOpts {
+  onAgentCreated?: (agent: Record<string, unknown>) => void
   onAgentUpdated?: (agent: Record<string, unknown>) => void
   onAgentDeleted?: (agentId: string) => void
   onSuccess?: () => void
@@ -14,6 +25,7 @@ interface UseAgentMutationsOpts {
 
 /** Encapsulates fetchWithRetry calls for save/delete. Uses PATCH for partial updates. */
 export function useAgentMutations(opts: UseAgentMutationsOpts = {}) {
+  const [creating, setCreating] = useState(false)
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
@@ -21,6 +33,32 @@ export function useAgentMutations(opts: UseAgentMutationsOpts = {}) {
   // Use refs for callbacks to avoid recreating functions on every render
   const optsRef = useRef(opts)
   optsRef.current = opts
+
+  const createAgent = useCallback(async (input: CreateAgentInput) => {
+    setCreating(true)
+    try {
+      const res = await fetchWithRetry('/api/agents', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(input),
+      })
+      if (res.ok) {
+        const created = await res.json()
+        emitAgentCreated(created)
+        optsRef.current.onAgentCreated?.(created)
+        optsRef.current.onSuccess?.()
+        toast.success('Agent created', { description: `${input.name} added to ${input.roleGroup}` })
+        return created
+      }
+      const err = await res.json().catch(() => ({}))
+      toast.error('Create failed', { description: (err as Record<string, string>).error || `HTTP ${res.status}` })
+    } catch {
+      toast.error('Create failed', { description: 'Network error — please try again' })
+    } finally {
+      setCreating(false)
+    }
+    return null
+  }, [])
 
   const saveAgent = useCallback(async (agentId: string, form: AgentEditForm) => {
     setSaving(true)
@@ -72,10 +110,12 @@ export function useAgentMutations(opts: UseAgentMutationsOpts = {}) {
   }, [])
 
   return {
+    creating,
     saving,
     deleting,
     showDeleteConfirm,
     setShowDeleteConfirm,
+    createAgent,
     saveAgent,
     deleteAgent,
   }

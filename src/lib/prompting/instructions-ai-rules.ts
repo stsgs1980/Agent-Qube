@@ -46,10 +46,12 @@ L0: Strategy | L1: Tactics | L2: Control | L3: Execution | L4: Memory/Monitoring
 7. Enforce with Tooling: ESLint + anti-monolith rules
 
 ## Import Patterns
+\`\`\`typescript
 import { AgentNode } from '@/components/hierarchy/agent-node'
 import { WorkflowCard } from '@/components/workflows/workflow-card'
 import { db } from '@/lib/db'
 import { fetchWithRetry } from '@/lib/client-fetch'
+\`\`\`
 
 ## Tech Stack
 Next.js 16, React 19, TypeScript 5, Tailwind CSS 4, shadcn/ui, Prisma SQLite, React Flow, Framer Motion, Zustand`,

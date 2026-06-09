@@ -1,21 +1,10 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect } from 'react'
 import { Clock, Trash2, ChevronRight, ChevronLeft, History, TrendingUp } from 'lucide-react'
 import { ScoreTrend } from './score-trend'
-
-interface HistoryEntry {
-  id: string
-  prompt: string
-  intent: string
-  confidence: number
-  formula: string
-  avgScore: number
-  verdict: string
-  stepCount: number
-  executionId: string | null
-  createdAt: string
-}
+import { usePromptHistory } from '@/hooks/use-prompt-history'
+import type { PromptHistoryEntry } from '@/hooks/use-prompt-history'
 
 interface PromptHistoryProps {
   onSelect: (prompt: string) => void
@@ -25,31 +14,11 @@ interface PromptHistoryProps {
 }
 
 export function PromptHistory({ onSelect, collapsed, onToggleCollapse, onDataChange }: PromptHistoryProps) {
-  const [history, setHistory] = useState<HistoryEntry[]>([])
-  const [loading, setLoading] = useState(true)
-
-  const fetchHistory = useCallback(async () => {
-    try {
-      const res = await fetch('/api/prompt-history')
-      const data = await res.json()
-      setHistory(data.history || [])
-    } catch { /* ignore */ } finally {
-      setLoading(false)
-    }
-  }, [])
-
-  useEffect(() => { fetchHistory() }, [fetchHistory])
+  const { history, loading, clearAll } = usePromptHistory()
 
   useEffect(() => {
     if (onDataChange && history.length > 0) onDataChange(history)
   }, [history, onDataChange])
-
-  const clearAll = useCallback(async () => {
-    for (const entry of history) {
-      await fetch(`/api/prompt-history?id=${entry.id}`, { method: 'DELETE' })
-    }
-    setHistory([])
-  }, [history])
 
   if (collapsed) {
     return (
@@ -110,7 +79,7 @@ export function PromptHistory({ onSelect, collapsed, onToggleCollapse, onDataCha
   )
 }
 
-function HistoryItem({ entry, onSelect }: { entry: HistoryEntry; onSelect: (prompt: string) => void }) {
+function HistoryItem({ entry, onSelect }: { entry: PromptHistoryEntry; onSelect: (prompt: string) => void }) {
   const scoreColor = entry.avgScore >= 80 ? '#22C55E' : entry.avgScore >= 50 ? '#EAB308' : entry.avgScore > 0 ? '#EF4444' : '#475569'
 
   return (

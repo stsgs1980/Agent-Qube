@@ -9,4 +9,20 @@ dist/
 coverage/
 *.db
 *.sqlite
-dev.log/
+
+# SQLite WAL-mode runtime artifacts
+*.db-shm
+*.db-wal
+
+# Python bytecode
+__pycache__/
+
+# Dev runtime artifacts
+dev.log
+*.pid
+.zscripts/dev.log
+.zscripts/dev.pid
+.zscripts/mini-service-*.log
+
+# Mini-services nested node_modules
+mini-services/*/node_modules/

@@ -3,17 +3,6 @@
 > This file is the single source of truth for AI coding assistant rules.
 > Platform-specific configs are auto-generated from this file via `npx stsgs ai sync`.
 
-## Product: Interface Studio
-
-@stsgs/ui is an **Interface Studio** -- not just a component library. It takes a context (goal, audience, style) and produces a ready-to-use interface: layout + theme + components + code.
-
-Three engines drive the Studio:
-1. **Layout Engine** (done) -- `useLayoutAdvice()`, 51 recipes, scoring
-2. **Theme Engine** (done) -- registry, dual theme, `useStudioTheme()`, `useProjectTheme()`
-3. **Component Engine** (planned) -- context-aware compositions
-
-For the full vision, decisions, and discussion history, see `docs/planning/studio-vision.md`.
-
 ## Architecture: 6-Layer Dependency Direction
 
 ```

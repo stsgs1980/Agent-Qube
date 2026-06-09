@@ -2,10 +2,8 @@
 
 import React, { useState, useCallback } from 'react'
 import { X, Plus } from 'lucide-react'
-import { toast } from 'sonner'
 import { ROLE_ORDER, FORMULA_DESC } from './types'
-import { fetchWithRetry } from '@/lib/client-fetch'
-import { emitAgentCreated } from '@/lib/ws-client'
+import { useAgentMutations } from '@/hooks/use-agent-mutations'
 
 const DEFAULT_FORM = { name: '', role: '', group: 'Execution', formula: 'ReAct', status: 'active', skills: '', description: '' }
 
@@ -13,43 +11,21 @@ const DEFAULT_FORM = { name: '', role: '', group: 'Execution', formula: 'ReAct',
 
 export function AddAgentModal({ open, onClose, onCreated }: { open: boolean; onClose: () => void; onCreated: () => void }) {
   const [form, setForm] = useState(DEFAULT_FORM)
-  const [submitting, setSubmitting] = useState(false)
   const update = (key: string, val: string) => setForm(prev => ({ ...prev, [key]: val }))
+  const { createAgent, creating } = useAgentMutations({ onSuccess: () => { setForm(DEFAULT_FORM); onClose(); onCreated() } })
 
   const handleSubmit = useCallback(async () => {
     if (!form.name.trim()) return
-    setSubmitting(true)
-    try {
-      const res = await fetchWithRetry('/api/agents', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: form.name,
-          role: form.role || 'Custom Agent',
-          roleGroup: form.group,
-          formula: form.formula,
-          status: form.status,
-          skills: form.skills,
-          description: form.description || `${form.role || 'Custom Agent'} agent in ${form.group} group`,
-        }),
-      })
-      if (res.ok) {
-        const created = await res.json()
-        emitAgentCreated(created)
-        toast.success('Agent created', { description: `${form.name} added to ${form.group}` })
-        setForm(DEFAULT_FORM)
-        onClose()
-        onCreated()
-      } else {
-        const err = await res.json().catch(() => ({}))
-        toast.error('Create failed', { description: (err as Record<string, string>).error || `HTTP ${res.status}` })
-      }
-    } catch {
-      toast.error('Create failed', { description: 'Network error — please try again' })
-    } finally {
-      setSubmitting(false)
-    }
-  }, [form, onClose, onCreated])
+    await createAgent({
+      name: form.name,
+      role: form.role || 'Custom Agent',
+      roleGroup: form.group,
+      formula: form.formula,
+      status: form.status,
+      skills: form.skills,
+      description: form.description || `${form.role || 'Custom Agent'} agent in ${form.group} group`,
+    })
+  }, [form, createAgent])
 
   if (!open) return null
 
@@ -74,7 +50,7 @@ export function AddAgentModal({ open, onClose, onCreated }: { open: boolean; onC
         </div>
         <div style={{ padding: '12px 20px', borderTop: '1px solid rgba(51,51,51,0.3)', display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
           <button onClick={onClose} style={{ padding: '6px 16px', borderRadius: 6, background: '#1A1A1A', border: '1px solid rgba(51,51,51,0.4)', color: '#B0B0B0', cursor: 'pointer', fontSize: 11 }}>Cancel</button>
-          <button onClick={handleSubmit} disabled={!form.name.trim() || submitting} style={{ padding: '6px 16px', borderRadius: 6, background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.3)', color: '#06B6D4', cursor: submitting ? 'wait' : 'pointer', fontSize: 11, opacity: !form.name.trim() || submitting ? 0.5 : 1, display: 'flex', alignItems: 'center', gap: 4 }}><Plus size={10} />{submitting ? 'Creating...' : 'Create Agent'}</button>
+          <button onClick={handleSubmit} disabled={!form.name.trim() || creating} style={{ padding: '6px 16px', borderRadius: 6, background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.3)', color: '#06B6D4', cursor: creating ? 'wait' : 'pointer', fontSize: 11, opacity: !form.name.trim() || creating ? 0.5 : 1, display: 'flex', alignItems: 'center', gap: 4 }}><Plus size={10} />{creating ? 'Creating...' : 'Create Agent'}</button>
         </div>
       </div>
     </div>
