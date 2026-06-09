@@ -1900,3 +1900,19 @@ Stage Summary:
 - Fix: use Tailwind hidden/lg:flex pattern instead of w-0 approach
 - All 5 panel variants fixed
 - Canvas now takes full width on mobile, sidebar+detail visible on lg+
+
+---
+Task ID: 5
+Agent: main
+Task: Fix Vercel deployment - remove output:standalone and socket.io rewrites
+
+Work Log:
+- Removed output: "standalone" from next.config.ts (breaks Vercel builds)
+- Removed socket.io rewrite to 127.0.0.1:3003 (doesn't work on Vercel)
+- Verified local build passes
+- Pushed to GitHub
+
+Stage Summary:
+- output: "standalone" is for Docker/self-hosted, NOT Vercel
+- socket.io rewrite to localhost doesn't work on serverless
+- These were likely causing Vercel builds to fail or serve stale content

@@ -1,34 +1,25 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: "standalone",
   /* config options here */
   typescript: {
     ignoreBuildErrors: true,
   },
   reactStrictMode: false,
-  async rewrites() {
-    return [
-      {
-        source: '/socket.io/:path*',
-        destination: 'http://127.0.0.1:3003/socket.io/:path*',
-      },
-    ]
-  },
-  allowedDevOrigins: [
+  allowedDevOrigns: [
     '.space-z.ai',
     'localhost',
-  '127.0.0.1',
-  '.z.ai',
-  '.a0.dev',
-  '.trycloudflare.com',
-  '.loca.lt',
-  '.local-credentialless.app',
-  '.gitpod.io',
+    '127.0.0.1',
+    '.z.ai',
+    '.a0.dev',
+    '.trycloudflare.com',
+    '.loca.lt',
+    '.local-credentialless.app',
+    '.gitpod.io',
     '.codesandbox.io',
-  '.stackblitz.io',
-  '.repl.co',
-  '.vercel.app',
+    '.stackblitz.io',
+    '.repl.co',
+    '.vercel.app',
     '.netlify.app',
   ],
 };
