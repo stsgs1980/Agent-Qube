@@ -149,6 +149,10 @@
   --sidebar-ring: #06B6D4;
 }
 
+html, body {
+  overflow-x: hidden;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

@@ -69,7 +69,7 @@ export function DetailPanel({
   }
 
   return (
-    <div style={{ width: 280, flexShrink: 0, background: '#0A0A0A', borderLeft: '1px solid rgba(51,51,51,0.25)', display: 'flex', flexDirection: 'column', overflowY: 'auto' }} className="terrain-scroll">
+    <div style={{ flexShrink: 0, background: '#0A0A0A', borderLeft: '1px solid rgba(51,51,51,0.25)', display: 'flex', flexDirection: 'column' }} className="terrain-scroll w-0 lg:w-[280px] overflow-hidden lg:overflow-y-auto">
       <AgentDetailHeader
         agent={agent}
         onToggle={onToggle}

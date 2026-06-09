@@ -48,7 +48,7 @@ export default function DashboardPanel({ onOpenHierarchy, onOpenWorkflows }: { o
 
       <div className="flex flex-1 overflow-hidden">
         <DashboardSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} agentListProp={data.agentList} roleGroupsProp={data.roleGroups} onAgentClick={edit.handleAgentClick} />
-        <main className="flex-1 overflow-y-auto p-5" style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(255,255,255,0.1) transparent' }}>
+        <main className="flex-1 overflow-y-auto p-3 sm:p-5" style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(255,255,255,0.1) transparent' }}>
           {data.statsData && (
             <div className="flex items-center gap-2 mb-3">
               <span className="relative flex h-1.5 w-1.5"><span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style={{ background: '#22D3EE' }} /><span className="relative inline-flex rounded-full h-1.5 w-1.5" style={{ background: '#22D3EE' }} /></span>

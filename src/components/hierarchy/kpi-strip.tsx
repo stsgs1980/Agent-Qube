@@ -19,7 +19,7 @@ export function KPIStrip({ agents }: { agents: AgentData[] }) {
   ]
 
   return (
-    <div style={{ background: '#0A0A0A', borderTop: '1px solid rgba(51,51,51,0.25)', height: 32, display: 'flex', alignItems: 'center', padding: '0 20px', gap: 24, flexShrink: 0 }}>
+    <div className="flex flex-wrap gap-3 lg:gap-6" style={{ background: '#0A0A0A', borderTop: '1px solid rgba(51,51,51,0.25)', minHeight: 32, display: 'flex', alignItems: 'center', padding: '0 20px', flexShrink: 0 }}>
       {items.map(item => (
         <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           <div style={{ width: 6, height: 6, borderRadius: '50%', background: item.color }} />

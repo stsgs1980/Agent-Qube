@@ -14,7 +14,6 @@ export function DetailPanelCollapsed({
   return (
     <div
       style={{
-        width: 36,
         flexShrink: 0,
         background: '#0A0A0A',
         borderLeft: '1px solid rgba(51,51,51,0.25)',
@@ -24,6 +23,7 @@ export function DetailPanelCollapsed({
         paddingTop: 12,
         gap: 12,
       }}
+      className="w-0 lg:w-9 overflow-hidden"
     >
       <button
         onClick={onToggle}

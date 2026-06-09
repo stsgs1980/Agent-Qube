@@ -1857,3 +1857,26 @@ Stage Summary:
 - Hierarchy page now has "← Dashboard" button in the breadcrumb area
 - Clicking it navigates back to the main dashboard view
 - Pushed to GitHub for Vercel auto-deploy
+
+---
+Task ID: 3
+Agent: main
+Task: Fix responsive layout on all 3 pages (Dashboard, Hierarchy, Workflows)
+
+Work Log:
+- Fixed Dashboard: AgentEditModal width 420 → maxWidth:420 + calc(100vw-32px), padding p-3 sm:p-5
+- Fixed Hierarchy: GroupSidebar/DetailPanel/DetailPanelEmpty/DetailPanelEdit all changed from fixed width to w-0 lg:w-[220px]/w-[280px] responsive
+- Fixed Hierarchy: DetailPanelCollapsed w-0 lg:w-9
+- Fixed Hierarchy: HierarchyControls added flexWrap, search flex width instead of fixed 180
+- Fixed Hierarchy: KPIStrip flex-wrap gap-3 lg:gap-6
+- Fixed Hierarchy: Added overflowX:hidden to main flex row
+- Fixed Workflows: Sidebar now fixed overlay on mobile with backdrop, relative on desktop
+- Fixed Workflows: CreateWorkflowDialog grid-cols-1 sm:grid-cols-2
+- Fixed Workflows: Header flex-wrap, search hidden sm:block
+- Added html,body overflow-x:hidden in globals.css
+
+Stage Summary:
+- All 3 pages now responsive — no horizontal overflow on mobile/tablet
+- Desktop (1440px) layout unchanged
+- Hierarchy: sidebar + detail panel hidden on mobile, visible on lg+
+- Workflows: sidebar becomes overlay on mobile with backdrop

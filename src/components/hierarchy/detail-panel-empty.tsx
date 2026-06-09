@@ -7,11 +7,12 @@ export function DetailPanelEmpty({ onToggle }: { onToggle: () => void }) {
   return (
     <div
       style={{
-        width: 280, flexShrink: 0,
+        flexShrink: 0,
         background: '#0A0A0A',
         borderLeft: '1px solid rgba(51,51,51,0.25)',
         display: 'flex', flexDirection: 'column', position: 'relative',
       }}
+      className="w-0 lg:w-[280px] overflow-hidden"
     >
       <div style={{ padding: '8px 12px', display: 'flex', justifyContent: 'flex-end' }}>
         <button

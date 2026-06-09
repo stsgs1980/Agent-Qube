@@ -49,7 +49,7 @@ export function CreateWorkflowDialog({
               className="w-full px-3 py-2 rounded-md text-[11px] text-white outline-none resize-none transition-all duration-200"
               style={inputStyle} onFocus={focusBorder} onBlur={focusBorder} />
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="text-[10px] font-bold uppercase tracking-wider mb-1.5 block" style={{ color: '#64748B' }}>Trigger Type</label>
               <select value={triggerType} onChange={(e) => setTriggerType(e.target.value as WorkflowData['triggerType'])}

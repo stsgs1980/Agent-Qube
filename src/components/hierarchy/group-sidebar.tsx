@@ -35,7 +35,7 @@ export function GroupSidebar({
     : agents
 
   return (
-    <div style={{ width: 220, flexShrink: 0, background: '#0A0A0A', borderRight: '1px solid rgba(51,51,51,0.25)', display: 'flex', flexDirection: 'column', overflowY: 'auto', fontSize: 11 }} className="terrain-scroll">
+    <div style={{ flexShrink: 0, background: '#0A0A0A', borderRight: '1px solid rgba(51,51,51,0.25)', display: 'flex', flexDirection: 'column', fontSize: 11 }} className="terrain-scroll w-0 lg:w-[220px] overflow-hidden lg:overflow-y-auto">
       {/* Groups */}
       <div style={{ padding: 12, borderBottom: '1px solid rgba(51,51,51,0.2)' }}>
         <div style={{ fontSize: 8, fontWeight: 700, color: '#555', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8, display: 'flex', alignItems: 'center', gap: 4 }}>

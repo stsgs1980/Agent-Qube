@@ -38,7 +38,7 @@ export function AgentEditModal({
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}
       onClick={(e) => { if (e.target === e.currentTarget) setEditingAgent(null) }}
     >
-      <div style={{ background: '#0A0A0A', border: '1px solid rgba(51,51,51,0.5)', borderRadius: 12, width: 420, maxHeight: '90vh', overflowY: 'auto' }}>
+      <div style={{ background: '#0A0A0A', border: '1px solid rgba(51,51,51,0.5)', borderRadius: 12, maxWidth: 420, width: 'calc(100vw - 32px)', maxHeight: '90vh', overflowY: 'auto' }}>
         {/* Header */}
         <div style={{ padding: '16px 20px', borderBottom: '1px solid rgba(51,51,51,0.3)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>

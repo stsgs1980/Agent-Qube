@@ -25,8 +25,9 @@ export function HierarchyControls({
   return (
     <div style={{
       background: '#0A0A0A', borderBottom: '1px solid rgba(51,51,51,0.25)',
-      padding: '0 20px', height: 36, display: 'flex', alignItems: 'center',
+      padding: '0 20px', minHeight: 36, display: 'flex', alignItems: 'center',
       justifyContent: 'space-between', flexShrink: 0,
+      flexWrap: 'wrap', overflowX: 'auto',
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
         {([
@@ -58,7 +59,7 @@ export function HierarchyControls({
           display: 'flex', alignItems: 'center', gap: 3,
         }} title="Re-layout (Dagre auto-arrange)"><ArrowUpDown size={9} />Layout</button>
         <div style={{ width: 1, height: 16, background: 'rgba(51,51,51,0.25)', margin: '0 4px' }} />
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#111', border: '1px solid rgba(51,51,51,0.25)', borderRadius: 6, padding: '3px 8px', width: 180 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#111', border: '1px solid rgba(51,51,51,0.25)', borderRadius: 6, padding: '3px 8px', flex: '1 1 120px', maxWidth: 180, minWidth: 120 }}>
           <Search size={10} color="#555" />
           <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="Search agents..." style={{ background: 'transparent', border: 'none', outline: 'none', color: '#fff', fontSize: 10, width: '100%' }} />
           <span style={{ fontSize: 8, color: '#555', background: 'rgba(51,51,51,0.4)', padding: '1px 4px', borderRadius: 3 }}>Cmd+K</span>

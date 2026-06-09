@@ -24,24 +24,41 @@ export function WorkflowSidebar({
   seeding: boolean; onSeed: () => void; onRefresh: () => void
 }) {
   return (
-    <div className="flex-shrink-0 flex flex-col overflow-hidden transition-all duration-300 relative"
-      style={{ width: sidebarOpen ? 280 : 48, background: '#0D0D0D', borderRight: '1px solid rgba(51,51,51,0.3)' }}>
-      <button onClick={() => setSidebarOpen(!sidebarOpen)}
-        className="absolute top-1/2 -translate-y-1/2 z-20 w-5 h-8 rounded-r-md flex items-center justify-center transition-all duration-200 hover:scale-110"
-        style={{ right: -20, background: '#0D0D0D', border: '1px solid rgba(51,51,51,0.4)', borderLeft: 'none' }}>
-        {sidebarOpen ? <ChevronLeft size={10} style={{ color: '#06B6D4' }} /> : <ChevronRight size={10} style={{ color: '#06B6D4' }} />}
-      </button>
-      <div className="flex-1 overflow-y-auto pt-2 pb-4" style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(255,255,255,0.1) transparent' }}>
-        {sidebarOpen ? <SidebarOpenContent pipelineStats={pipelineStats} workflows={workflows} filterStatus={filterStatus} setFilterStatus={setFilterStatus} filterTrigger={filterTrigger} setFilterTrigger={setFilterTrigger} seeding={seeding} onSeed={onSeed} /> : (
-          <div className="flex flex-col items-center gap-3 pt-2">
-            <button onClick={onRefresh} className="w-8 h-8 rounded-md flex items-center justify-center transition-all duration-200 hover:scale-110" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(51,51,51,0.3)' }} title="Refresh"><RefreshCw size={11} style={{ color: '#64748B' }} /></button>
-            <button onClick={onSeed} disabled={seeding} className="w-8 h-8 rounded-md flex items-center justify-center transition-all duration-200 hover:scale-110 disabled:opacity-50" style={{ background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.2)' }} title="Seed Demo Workflows">
-              {seeding ? <Loader2 size={11} className="animate-spin" style={{ color: '#06B6D4' }} /> : <Beaker size={11} style={{ color: '#06B6D4' }} />}
-            </button>
-          </div>
-        )}
+    <>
+      {/* Mobile backdrop - closes sidebar when clicked */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/50 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+      <div
+        className={`
+          flex-shrink-0 flex flex-col overflow-hidden transition-all duration-300
+          ${sidebarOpen
+            ? 'fixed z-50 inset-y-0 left-0 w-[280px] lg:relative lg:z-auto'
+            : 'w-12 lg:relative'
+          }
+        `}
+        style={{ background: '#0D0D0D', borderRight: '1px solid rgba(51,51,51,0.3)' }}
+      >
+        <button onClick={() => setSidebarOpen(!sidebarOpen)}
+          className="absolute top-1/2 -translate-y-1/2 z-20 w-5 h-8 rounded-r-md flex items-center justify-center transition-all duration-200 hover:scale-110"
+          style={{ right: -20, background: '#0D0D0D', border: '1px solid rgba(51,51,51,0.4)', borderLeft: 'none' }}>
+          {sidebarOpen ? <ChevronLeft size={10} style={{ color: '#06B6D4' }} /> : <ChevronRight size={10} style={{ color: '#06B6D4' }} />}
+        </button>
+        <div className="flex-1 overflow-y-auto pt-2 pb-4" style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(255,255,255,0.1) transparent' }}>
+          {sidebarOpen ? <SidebarOpenContent pipelineStats={pipelineStats} workflows={workflows} filterStatus={filterStatus} setFilterStatus={setFilterStatus} filterTrigger={filterTrigger} setFilterTrigger={setFilterTrigger} seeding={seeding} onSeed={onSeed} /> : (
+            <div className="flex flex-col items-center gap-3 pt-2">
+              <button onClick={onRefresh} className="w-8 h-8 rounded-md flex items-center justify-center transition-all duration-200 hover:scale-110" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(51,51,51,0.3)' }} title="Refresh"><RefreshCw size={11} style={{ color: '#64748B' }} /></button>
+              <button onClick={onSeed} disabled={seeding} className="w-8 h-8 rounded-md flex items-center justify-center transition-all duration-200 hover:scale-110 disabled:opacity-50" style={{ background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.2)' }} title="Seed Demo Workflows">
+                {seeding ? <Loader2 size={11} className="animate-spin" style={{ color: '#06B6D4' }} /> : <Beaker size={11} style={{ color: '#06B6D4' }} />}
+              </button>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 
