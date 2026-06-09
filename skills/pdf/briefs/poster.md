@@ -59,10 +59,10 @@ Default dimensions can be overridden via the `canvas` field in the Blueprint. `d
 ### 2.3 Grid Area Allocation Iron Rule
 
 ```
-✅ Correct: Components cover all rows 1→13
+[OK] Correct: Components cover all rows 1→13
 Page: [Hero 1→4] [Stats 4→7] [Glass 7→10] [Meta 10→13]
 
-❌ Wrong: Components only reach row 10, rows 11-13 empty  
+[X] Wrong: Components only reach row 10, rows 11-13 empty
 Page: [Hero 1→3] [Stats 3→5] [Glass 5→8] [Meta 8→10] [??? 10→13 void]
 ```
 
@@ -76,10 +76,10 @@ Attractions: 450 chars (3 attractions × 150 chars description)
 Food:        250 chars (2 foods × 125 chars description)
 Available rows: 8 rows (5→13)
 
-❌ Even split: Attractions 5→9, Food 9→13 → 4 rows each
+[X] Even split: Attractions 5→9, Food 9→13 → 4 rows each
    → Attractions content far exceeds 4-row capacity, overflows into Food area, text overlaps!
 
-✅ Proportional split: 
+[OK] Proportional split:
    Attractions: 8 × 450/700 ≈ 5 rows → 5→10
    Food:        8 × 250/700 ≈ 3 rows → 10→13
 ```
@@ -178,7 +178,7 @@ LLMs naturally tend to "classify information → put each category in a box → 
 
 ### Comparison
 
-| Report/UI Thinking ❌ | Poster Thinking ✅ |
+| Report/UI Thinking [X] | Poster Thinking [OK] |
 |---|---|
 | Each info block wrapped in `border + border-radius + background` as a card | Information placed directly on the canvas, no borders no background |
 | Clear visual boundaries between modules | Modules naturally separated by **whitespace and thin lines** |
@@ -200,17 +200,17 @@ LLMs naturally tend to "classify information → put each category in a box → 
 ### Correct Example (Direct HTML Flow)
 
 ```html
-<!-- ❌ Wrong: card wall -->
+<!-- [X] Wrong: card wall -->
 <div class="card" style="background:rgba(255,255,255,0.5); border-radius:12px; border:1px solid #ddd;">
-  <h3>📅 展期</h3>
+  <h3>[icon] 展期</h3>
   <p>7.15 — 8.30</p>
 </div>
 <div class="card" style="background:rgba(255,255,255,0.5); border-radius:12px; border:1px solid #ddd;">
-  <h3>📍 地点</h3>
+  <h3>[icon] 地点</h3>
   <p>城市艺术中心</p>
 </div>
 
-<!-- ✅ Correct: pure typography, no borders -->
+<!-- [OK] Correct: pure typography, no borders -->
 <div class="info-row" style="display:flex; gap:48px;">
   <div>
     <div style="font-size:10px; letter-spacing:3px; opacity:0.45;">展期</div>
@@ -322,7 +322,7 @@ When content is minimal, prioritize the following compact forms:
 - Icon color: Use the **theme color** (not random colors)
 - Icon size and position: Aligned with surrounding elements, never stretched
 - If positioned beside text: **center-aligned with the first line of text**
-- **Emoji can be used as icons** — 🌸 🍴 🏙️ etc. (but remember ReportLab can’t render emoji — only use in HTML/Playwright route)
+- **Emoji can be used as icons** — [icon] [icon] [icon]️ etc. (but remember ReportLab can’t render emoji — only use in HTML/Playwright route)
 - For logos/emblems: Use text "Your Logo" or icons, **never** search for logo images
 
 ---
@@ -362,10 +362,10 @@ When creating posters, actively use images to enrich visual effects. Good images
 - You can try adding **irregularly shaped masks** (CSS `clip-path`) to images for visual interest
 
 ### 8.2 Prohibited Behaviors
-- ❌ Placing images directly in corners
-- ❌ Images obscuring text or overlapping with other modules
-- ❌ Multiple images scattered randomly as decoration
-- ❌ Searching for images when logo/badge is needed — use text "Your Logo" or icons instead
+- [X] Placing images directly in corners
+- [X] Images obscuring text or overlapping with other modules
+- [X] Multiple images scattered randomly as decoration
+- [X] Searching for images when logo/badge is needed — use text "Your Logo" or icons instead
 
 ---
 
@@ -394,13 +394,13 @@ When creating posters, actively use images to enrich visual effects. Good images
 
 | Prohibited | Reason |
 |--------|------|
-| ❌ Timeline graphics | Complex connecting lines easily misalign in PDF rendering |
-| ❌ Complex SVG-drawn structure/flow diagrams | Unless user explicitly requests |
-| ❌ Code-drawn maps or flags | Poor quality |
-| ❌ Base64 images (when exceeding 10MB) | File too large. Small image base64 is acceptable (Playwright cannot load local paths) |
-| ❌ Content truncation | Must adjust container height to ensure all content fully displayed |
-| ❌ Pure white background (#FFFFFF) | Lacks design quality |
-| ❌ Transparent background | PDF output cannot be transparent |
+| [X] Timeline graphics | Complex connecting lines easily misalign in PDF rendering |
+| [X] Complex SVG-drawn structure/flow diagrams | Unless user explicitly requests |
+| [X] Code-drawn maps or flags | Poor quality |
+| [X] Base64 images (when exceeding 10MB) | File too large. Small image base64 is acceptable (Playwright cannot load local paths) |
+| [X] Content truncation | Must adjust container height to ensure all content fully displayed |
+| [X] Pure white background (#FFFFFF) | Lacks design quality |
+| [X] Transparent background | PDF output cannot be transparent |
 
 ---
 
@@ -495,15 +495,15 @@ It will automatically:
 4. Measure `.poster` scrollHeight (actual content height)
 5. Generate single-page vector PDF with exact dimensions
 
-**⚠️ Do NOT use `html2pdf-next.js` for posters.** It is designed for multi-page documents and will inject 20mm margins / A4 pagination.
+**[!] Do NOT use `html2pdf-next.js` for posters.** It is designed for multi-page documents and will inject 20mm margins / A4 pagination.
 
-**⚠️ Do NOT write hand-written Playwright scripts for posters.** `html2poster.js` handles everything.
+**[!] Do NOT write hand-written Playwright scripts for posters.** `html2poster.js` handles everything.
 
 ```css
-/* ✅ CORRECT CSS for poster HTML (html2poster.js handles the rest): */
+/* [OK] CORRECT CSS for poster HTML (html2poster.js handles the rest): */
 html, body { margin: 0; padding: 0; background: var(--c-bg); }
 .poster { width: 720px; position: relative; background: var(--c-bg); }
-/* Note: overflow:hidden on .poster is auto-injected by html2poster.js, 
+/* Note: overflow:hidden on .poster is auto-injected by html2poster.js,
    but including it in CSS is fine too */
 ```
 
@@ -585,15 +585,15 @@ node "$PDF_SKILL_DIR/scripts/html2poster.js" poster.html --output poster.pdf --w
 # Use Playwright screenshot with measured height
 ```
 
-> **⚠️ Do NOT write hand-written Playwright `page.pdf()` scripts.** Use `html2poster.js` which handles overflow:hidden, margin:0, background sync, and height measurement automatically.
+> **[!] Do NOT write hand-written Playwright `page.pdf()` scripts.** Use `html2poster.js` which handles overflow:hidden, margin:0, background sync, and height measurement automatically.
 
 ### 12.2 Blueprint Grid Approach (Only for Simple Posters)
 
 | Behavior | Status | Notes |
 |------|------|------|
-| Dynamic inset | ✅ Fixed | More content → smaller inset (`8% 10%`), less content → default (`10% 12%`) |
-| Glass Canvas overflow | ✅ Fixed | `min-height:100%` replaces `height:100%`, removed `overflow:hidden` |
-| Glass Canvas / Process List stretch | ✅ Fixed | Auto `align-items: stretch` |
+| Dynamic inset | [OK] Fixed | More content → smaller inset (`8% 10%`), less content → default (`10% 12%`) |
+| Glass Canvas overflow | [OK] Fixed | `min-height:100%` replaces `height:100%`, removed `overflow:hidden` |
+| Glass Canvas / Process List stretch | [OK] Fixed | Auto `align-items: stretch` |
 
 ### 12.3 Poster Marker in Blueprint
 
@@ -637,7 +637,7 @@ html, body {
 **Poster content must be centered in the PDF, no left or right drift allowed.**
 
 Common drift causes and fixes:
-| Cause | Fix | 
+| Cause | Fix |
 |------|------|
 | `@page { margin }` not 0 | Must be `@page { size: <w> <h>; margin: 0; }` |
 | `.safe-zone` `inset` left-right asymmetric | Ensure `inset: Y% X%` uses same X% for left and right |
@@ -653,10 +653,10 @@ Common drift causes and fixes:
 
 | Pattern | Status | Result |
 |---------|--------|--------|
-| `@page { size: 720px 3600px }` | ❌ FORBIDDEN | Creates 853px+ blank space at bottom if content is shorter |
-| `.poster { min-height: 3600px }` | ❌ FORBIDDEN | Same problem — blank bottom |
-| `.poster { width: 720px }` (no height) | ✅ CORRECT | Content defines height naturally |
-| `node html2poster.js poster.html --width 720px` | ✅ CORRECT | Auto-measures height, zero blank space |
+| `@page { size: 720px 3600px }` | [X] FORBIDDEN | Creates 853px+ blank space at bottom if content is shorter |
+| `.poster { min-height: 3600px }` | [X] FORBIDDEN | Same problem — blank bottom |
+| `.poster { width: 720px }` (no height) | [OK] CORRECT | Content defines height naturally |
+| `node html2poster.js poster.html --width 720px` | [OK] CORRECT | Auto-measures height, zero blank space |
 
 **The 720×960 dimension is for multi-page documents with `page-break-after: always` only — NOT for single-canvas posters.**
 

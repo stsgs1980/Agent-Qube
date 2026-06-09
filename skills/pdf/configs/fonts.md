@@ -37,7 +37,7 @@ pdfmetrics.registerFont(UnicodeCIDFont('STSong-Light'))  # Song-ti (serif-like)
 # Use 'STSong-Light' for body, headings
 ```
 
-> **⚠️ ReportLab CANNOT render emoji.** If content has emoji, route to Creative pipeline.
+> **[!] ReportLab CANNOT render emoji.** If content has emoji, route to Creative pipeline.
 
 ### Academic Pipeline (Tectonic / LaTeX)
 
@@ -52,7 +52,7 @@ For manual font selection:
 \setCJKsansfont{Noto Sans CJK SC}
 ```
 
-> **⚠️ LaTeX silently drops emoji characters.** If content has emoji, route to Creative pipeline.
+> **[!] LaTeX silently drops emoji characters.** If content has emoji, route to Creative pipeline.
 
 ## Emoji Font Fallback
 

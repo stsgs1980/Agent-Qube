@@ -6,12 +6,12 @@ description: 把题目数组生成一个**可独立运行的网页练习页**（
 # 网页题库生成器 (Quiz HTML Builder)
 
 把一组题目 JSON → 一个**单文件 HTML 练习网页**，包含：
-- 📂 分类筛选（学科 / 子模块）+ 学习状态筛选（已掌握 / 未做 / 错题）
-- 🎯 4 种题型支持：选择 / 判断 / 填空 / 简答
-- 🤖 答题自动标记，错题自动归入错题本（首次错误给一次重试机会）
+- [Folder] 分类筛选（学科 / 子模块）+ 学习状态筛选（已掌握 / 未做 / 错题）
+- [Target] 4 种题型支持：选择 / 判断 / 填空 / 简答
+- [Bot] 答题自动标记，错题自动归入错题本（首次错误给一次重试机会）
 - ⌨️ 完整键盘快捷键（A/B/C/D · Enter · 方向键 · Space）
-- 📝 模拟考模式（限时 + 一次性提交 + 成绩页）
-- 🌓 明暗主题切换 · localStorage 持久化 · 移动端适配
+- [Note] 模拟考模式（限时 + 一次性提交 + 成绩页）
+- [Theme] 明暗主题切换 · localStorage 持久化 · 移动端适配
 
 ## 核心触发场景
 
@@ -21,7 +21,7 @@ description: 把题目数组生成一个**可独立运行的网页练习页**（
 - 「从题目文件提取」：`import_quiz.py` → 解析出题目 JSON → 入库
 
 quiz-mastery 出题完成、向用户展示题目前，**主动问一句**：
-> "题目准备好啦～ 要不要我把它们生成一个网页练习页？你可以在浏览器里慢慢做，错题会自动记下来，还能切换主题、模拟考试 🎯"
+> "题目准备好啦～ 要不要我把它们生成一个网页练习页？你可以在浏览器里慢慢做，错题会自动记下来，还能切换主题、模拟考试 [Target]"
 
 用户说"要 / 好 / 生成网页 / 来一个 / 嗯"任一肯定意思 → 调用本 skill。
 用户说"不用 / 算了 / 直接在这里做" → 走原本的对话练习流程。
@@ -58,7 +58,7 @@ python3 scripts/build_quiz_html.py <题目JSON文件> [--title "..." --open]
    ```bash
    python3 ~/Desktop/studybuddy_4.0/skills/quiz-html/scripts/build_quiz_html.py \
        /tmp/xxx/questions.json \
-       --title "📚 物理 · 热学练习" \
+       --title "[Books] 物理 · 热学练习" \
        --output ~/Desktop/quiz_物理热学_20260518.html \
        --open
    ```
@@ -69,14 +69,14 @@ python3 scripts/build_quiz_html.py <题目JSON文件> [--title "..." --open]
      "success": true,
      "output_path": "/Users/.../quiz_xxx.html",
      "question_count": 8,
-     "title": "📚 物理 · 热学练习",
+     "title": "[Books] 物理 · 热学练习",
      "subtitle": "共 8 题 · 选择×5 · 判断×2 · 填空×1 · 物理",
      "id": "q_1779091201",
      "size_bytes": 63752
    }
    ```
 
-5. **告诉用户**：把 HTML 路径报给用户，提示「已经在浏览器打开了，可以开始练啦 ✨」
+5. **告诉用户**：把 HTML 路径报给用户，提示「已经在浏览器打开了，可以开始练啦 [*]」
 
 ## 题目 JSON 字段标准
 
@@ -84,10 +84,10 @@ python3 scripts/build_quiz_html.py <题目JSON文件> [--title "..." --open]
 
 | 字段 | 必填 | 说明 |
 |---|---|---|
-| `type` | ✅ | `single_choice` / `true_false` / `fill_blank` / `short_answer` |
-| `prompt` | ✅ | 题干。也兼容 `question` 字段（自动转换） |
+| `type` | [OK] | `single_choice` / `true_false` / `fill_blank` / `short_answer` |
+| `prompt` | [OK] | 题干。也兼容 `question` 字段（自动转换） |
 | `options` | 选择题必填 | `["A. xxx", "B. yyy", ...]` |
-| `answer` | ✅ | 选择题填字母；判断题填 `"True"`/`"False"`；填空/简答填文本 |
+| `answer` | [OK] | 选择题填字母；判断题填 `"True"`/`"False"`；填空/简答填文本 |
 | `explanation` | 推荐 | 解析（强烈建议填，K12 学生需要） |
 | `knowledge_point` | 推荐 | 知识点名（侧边栏二级分组用） |
 | `category` | 推荐 | 分类路径，**用"学科 / 子模块"格式**：`"物理 / 电学"`、`"数学 / 分数"` |
@@ -111,7 +111,7 @@ python3 scripts/build_quiz_html.py <题目JSON文件> [--title "..." --open]
     "knowledge_point": "并联电路电流规律",
     "category": "物理 / 电学",
     "level": 1,
-    "memory_tip": "🧠 并联看路口：进多少、出多少，电流不会消失"
+    "memory_tip": "[Brain] 并联看路口：进多少、出多少，电流不会消失"
   }
 ]
 ```
@@ -122,8 +122,8 @@ python3 scripts/build_quiz_html.py <题目JSON文件> [--title "..." --open]
 如果题目缺 `category` 字段，最好补上（哪怕基于学科推断）。否则所有题都堆到"通用"分类下，分类筛选就废了。
 
 ### 2. category 用"学科 / 子模块"
-- ✅ `"物理 / 电学"`、`"物理 / 热学"` → 顶部出 4 个细分类 chip
-- ❌ `"物理"` → 只出 1 个，子模块在侧栏体现，但筛选粒度变粗
+- [OK] `"物理 / 电学"`、`"物理 / 热学"` → 顶部出 4 个细分类 chip
+- [X] `"物理"` → 只出 1 个，子模块在侧栏体现，但筛选粒度变粗
 
 ### 3. 知识点和分类不是同一层
 - `category` = 横向分类（哪个学科/章节），用于**顶部 chips 筛选**
@@ -160,7 +160,7 @@ result = subprocess.run([
     "python3",
     str(Path.home() / "Desktop/studybuddy_4.0/skills/quiz-html/scripts/build_quiz_html.py"),
     str(qjson),
-    "--title", "📚 物理 · 电学练习",
+    "--title", "[Books] 物理 · 电学练习",
     "--output", str(output),
     "--open",
 ], capture_output=True, text=True)
@@ -170,9 +170,9 @@ info = json.loads(result.stdout)
 ```
 
 然后告诉用户：
-> 「已经做好啦～ 网页已自动打开 ✨
+> 「已经做好啦～ 网页已自动打开 [*]
 > 路径：`~/Desktop/quiz_物理电学.html`
-> 慢慢做，做完会自动记录错题，下次可以筛"错题"专门攻克 💪」
+> 慢慢做，做完会自动记录错题，下次可以筛"错题"专门攻克 [Strong]」
 
 ## 与其他 skill 的边界
 

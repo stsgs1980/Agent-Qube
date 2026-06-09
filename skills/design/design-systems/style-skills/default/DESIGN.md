@@ -44,12 +44,12 @@ Two levels only:
 No neumorphism, no glassmorphism.
 
 ## Do's and Don'ts
-- ✅ Let whitespace do the work.
-- ✅ One accent element per screen.
-- ✅ Sentence-case headings by default; title case only for brand names.
-- ❌ No gradients (except the accent → accent-at-80% on a hero, sparingly).
-- ❌ No drop shadows on inputs.
-- ❌ No more than three type sizes on one screen.
+- [OK] Let whitespace do the work.
+- [OK] One accent element per screen.
+- [OK] Sentence-case headings by default; title case only for brand names.
+- [X] No gradients (except the accent → accent-at-80% on a hero, sparingly).
+- [X] No drop shadows on inputs.
+- [X] No more than three type sizes on one screen.
 
 ## Responsive Behavior
 - **Desktop ≥ 1024px:** 12-col grid.

@@ -231,4 +231,4 @@ Located at `src/lib/prompting/` with 5 modules across 21 files:
 
 [MIT](LICENSE)
 
-Built with: Next.js 15 + TypeScript + Tailwind CSS + Prisma
+Built with: Next.js 16 + TypeScript + Tailwind CSS + Prisma

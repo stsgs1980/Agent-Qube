@@ -1,6 +1,6 @@
 # CSS Radial Grid Layout (Center-Outward Diagrams)
 
-> **⚠️ Before writing any code, read [`_rules.md`](references/_rules.md) — three non-negotiable rules on overlap, hierarchy, and color.**
+> **[!] Before writing any code, read [`_rules.md`](references/_rules.md) — three non-negotiable rules on overlap, hierarchy, and color.**
 
 **For: SWOT analysis, Balanced Scorecard (BSC), Porter's Five Forces, PEST analysis, and any "center + 4-6 surrounding dimensions" diagram.**
 
@@ -12,12 +12,12 @@
 
 | Diagram Type | Dimensions | Use This? |
 |-------------|-----------|-----------|
-| SWOT (Strengths/Weaknesses/Opportunities/Threats) | 4 quadrants | ✅ Layout B (2×2 Grid) |
-| Balanced Scorecard (Financial/Customer/Internal/Learning) | 4 dimensions | ✅ Layout A (Cross) |
-| Porter's Five Forces | 5 forces | ✅ Layout A (Cross + extra row) |
-| PEST (Political/Economic/Social/Technological) | 4 dimensions | ✅ Layout B (2×2 Grid) |
-| Competency wheel / capability map | 5-8 dimensions | ✅ Layout A with extra rows |
-| Anything with center + surrounding elements | 3-8 | ✅ |
+| SWOT (Strengths/Weaknesses/Opportunities/Threats) | 4 quadrants | [OK] Layout B (2×2 Grid) |
+| Balanced Scorecard (Financial/Customer/Internal/Learning) | 4 dimensions | [OK] Layout A (Cross) |
+| Porter's Five Forces | 5 forces | [OK] Layout A (Cross + extra row) |
+| PEST (Political/Economic/Social/Technological) | 4 dimensions | [OK] Layout B (2×2 Grid) |
+| Competency wheel / capability map | 5-8 dimensions | [OK] Layout A with extra rows |
+| Anything with center + surrounding elements | 3-8 | [OK] |
 
 ---
 
@@ -25,11 +25,11 @@
 
 Best for: BSC, Porter's Five Forces, any "center with surrounding dimensions" structure.
 
-### 🚫 FORBIDDEN: 3×3 CSS Grid Cross
+### [X] FORBIDDEN: 3×3 CSS Grid Cross
 
 **Do NOT use `grid-template-columns: Xpx Ypx Xpx` to place cards in a cross pattern.** The top/bottom cards in the center column will overflow into the side columns and overlap with left/right cards when content is longer than expected.
 
-### ✅ REQUIRED: Three-Row Flex Layout
+### [OK] REQUIRED: Three-Row Flex Layout
 
 **Each row is an independent flex container. Rows cannot overlap each other — physically impossible.**
 
@@ -165,11 +165,11 @@ body {
 <div id="root">
   <div class="diagram-title">平衡计分卡四维评价体系</div>
   <div class="diagram-subtitle">基于战略目标的绩效管理框架</div>
-  
+
   <div class="cross-layout" id="crossLayout">
     <!-- SVG connectors drawn by script -->
     <svg class="cross-connectors" id="connSvg"></svg>
-    
+
     <!-- Row 1: top dimension -->
     <div class="dim-card dim-blue" data-pos="top">
       <div class="dim-title"><div class="dim-icon">F</div> 财务维度</div>
@@ -179,7 +179,7 @@ body {
         <li>ROI</li>
       </ul>
     </div>
-    
+
     <!-- Row 2: left + center + right -->
     <div class="middle-row">
       <div class="dim-card dim-green" data-pos="left">
@@ -190,9 +190,9 @@ body {
           <li>创新能力</li>
         </ul>
       </div>
-      
+
       <div class="center-node">战略目标</div>
-      
+
       <div class="dim-card dim-amber" data-pos="right">
         <div class="dim-title"><div class="dim-icon">C</div> 客户维度</div>
         <ul class="dim-items">
@@ -202,7 +202,7 @@ body {
         </ul>
       </div>
     </div>
-    
+
     <!-- Row 3: bottom dimension -->
     <div class="dim-card dim-purple" data-pos="bottom">
       <div class="dim-title"><div class="dim-icon">L</div> 学习与成长</div>
@@ -220,12 +220,12 @@ function drawCrossConnectors() {
   const layout = document.getElementById('crossLayout');
   const svg = document.getElementById('connSvg');
   const gRect = layout.getBoundingClientRect();
-  
+
   svg.setAttribute('width', gRect.width);
   svg.setAttribute('height', gRect.height);
   svg.setAttribute('viewBox', `0 0 ${gRect.width} ${gRect.height}`);
   svg.innerHTML = '';
-  
+
   // Bidirectional arrow markers — eliminates direction ambiguity
   const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
   defs.innerHTML = `
@@ -237,12 +237,12 @@ function drawCrossConnectors() {
     </marker>
   `;
   svg.appendChild(defs);
-  
+
   const center = layout.querySelector('.center-node');
   const cR = center.getBoundingClientRect();
   const cx = cR.left - gRect.left + cR.width / 2;
   const cy = cR.top - gRect.top + cR.height / 2;
-  
+
   // Draw connector from center edge to each card edge
   const cards = layout.querySelectorAll('.dim-card');
   cards.forEach(card => {
@@ -250,7 +250,7 @@ function drawCrossConnectors() {
     const r = card.getBoundingClientRect();
     const cardCx = r.left - gRect.left + r.width / 2;
     const cardCy = r.top - gRect.top + r.height / 2;
-    
+
     let x1, y1, x2, y2;
     switch (pos) {
       case 'top':
@@ -279,10 +279,10 @@ function drawCrossConnectors() {
         x2 = cardCx; y2 = r.top - gRect.top;        // card TOP MIDPOINT
         break;
     }
-    
-    // 🚫 FORBIDDEN: drawing lines from center CORNERS (e.g. cR.left + cR.bottom)
+
+    // [X] FORBIDDEN: drawing lines from center CORNERS (e.g. cR.left + cR.bottom)
     // All lines MUST originate from center EDGE MIDPOINTS (cx or cy)
-    
+
     const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
     line.setAttribute('x1', x1); line.setAttribute('y1', y1);
     line.setAttribute('x2', x2); line.setAttribute('y2', y2);
@@ -331,8 +331,8 @@ For Porter's Five Forces (5 dimensions) or more:
 
 For the connector script, add cases for `bottom-left` and `bottom-right`:
 ```javascript
-// 🚫 FORBIDDEN: using cR.left/cR.right as x1 — that draws from center CORNER, angle is ugly
-// ✅ CORRECT: always use cx (center bottom midpoint) as x1
+// [X] FORBIDDEN: using cR.left/cR.right as x1 — that draws from center CORNER, angle is ugly
+// [OK] CORRECT: always use cx (center bottom midpoint) as x1
 case 'bottom-left':
   x1 = cx; y1 = cR.bottom - gRect.top;        // center BOTTOM MIDPOINT
   x2 = cardCx; y2 = r.top - gRect.top;         // card TOP MIDPOINT
@@ -456,7 +456,7 @@ body {
 <div id="root">
   <div class="diagram-title">SWOT 分析</div>
   <div class="diagram-subtitle">企业战略定位评估</div>
-  
+
   <div class="quadrant-grid">
     <div class="quadrant q-strengths">
       <div class="q-title"><div class="q-icon">S</div> 优势 Strengths</div>
@@ -466,7 +466,7 @@ body {
         <li>供应链成熟</li>
       </ul>
     </div>
-    
+
     <div class="quadrant q-weaknesses">
       <div class="q-title"><div class="q-icon">W</div> 劣势 Weaknesses</div>
       <ul class="q-items">
@@ -475,7 +475,7 @@ body {
         <li>人才储备有限</li>
       </ul>
     </div>
-    
+
     <div class="quadrant q-opportunities">
       <div class="q-title"><div class="q-icon">O</div> 机会 Opportunities</div>
       <ul class="q-items">
@@ -484,7 +484,7 @@ body {
         <li>技术融合趋势</li>
       </ul>
     </div>
-    
+
     <div class="quadrant q-threats">
       <div class="q-title"><div class="q-icon">T</div> 威胁 Threats</div>
       <ul class="q-items">
@@ -513,7 +513,7 @@ body {
    - **Outward** (`marker-end` only): center influences/drives dimensions (e.g. BSC: strategy → dimensions)
    - **Inward** (`marker-start` only): dimensions report/pressure center (e.g. Porter: forces → competition)
    - **Bidirectional** (`marker-start` + `marker-end`): mutual influence (e.g. feedback loops)
-6. **🚫 All lines MUST originate from center EDGE MIDPOINTS** (cx or cy) — never from center corners
+6. **[X] All lines MUST originate from center EDGE MIDPOINTS** (cx or cy) — never from center corners
 7. **Line color**: `#94A3B8` (gray-blue) — never use dimension-specific colors for connectors (visual chaos)
 
 ### SVG Arrow Markers (copy-paste into defs)

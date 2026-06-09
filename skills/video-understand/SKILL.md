@@ -310,7 +310,7 @@ Format your response as structured JSON.`;
   });
 
   const content = response.choices[0]?.message?.content;
-  
+
   try {
     return JSON.parse(content);
   } catch (e) {
@@ -365,7 +365,7 @@ class VideoConversation {
     });
 
     const assistantMessage = response.choices[0]?.message?.content;
-    
+
     this.messages.push({
       role: 'assistant',
       content: assistantMessage
@@ -611,20 +611,20 @@ class VideoBatchProcessor {
 
   async processBatch(videoUrls, prompt) {
     const results = [];
-    
+
     for (const videoUrl of videoUrls) {
       try {
         console.log(`Processing: ${videoUrl}`);
         const result = await this.processVideo(videoUrl, prompt);
         results.push({ videoUrl, success: true, result });
-        
+
         // Add delay to avoid rate limiting
         await new Promise(resolve => setTimeout(resolve, 1000));
       } catch (error) {
-        results.push({ 
-          videoUrl, 
-          success: false, 
-          error: error.message 
+        results.push({
+          videoUrl,
+          success: false,
+          error: error.message
         });
       }
     }
@@ -671,7 +671,7 @@ const results = await processor.processBatch(
 async function safeVideoAnalysis(videoUrl, prompt) {
   try {
     const zai = await ZAI.create();
-    
+
     const response = await zai.chat.completions.createVision({
       messages: [
         {
@@ -750,8 +750,8 @@ app.post('/api/analyze-video', async (req, res) => {
     const { videoUrl, prompt } = req.body;
 
     if (!videoUrl || !prompt) {
-      return res.status(400).json({ 
-        error: 'videoUrl and prompt are required' 
+      return res.status(400).json({
+        error: 'videoUrl and prompt are required'
       });
     }
 
@@ -847,8 +847,8 @@ export default async function handler(req, res) {
     const { videoUrl, prompt, enableThinking = false } = req.body;
 
     if (!videoUrl || !prompt) {
-      return res.status(400).json({ 
-        error: 'videoUrl and prompt are required' 
+      return res.status(400).json({
+        error: 'videoUrl and prompt are required'
       });
     }
 

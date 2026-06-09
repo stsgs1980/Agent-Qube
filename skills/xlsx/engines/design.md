@@ -117,10 +117,10 @@ Only when the scene is Finance, add the following text color encoding (IB indust
 
 ### 2.5 Color Prohibitions
 
-- ❌ Do not introduce any new hues outside of `ACCENT_*`
-- ❌ Do not use color for decoration (primary color is sufficient for colored headers)
-- ❌ No gradient fills
-- ❌ Do not mix two different PRIMARY colors in the same table
+- [X] Do not introduce any new hues outside of `ACCENT_*`
+- [X] Do not use color for decoration (primary color is sufficient for colored headers)
+- [X] No gradient fills
+- [X] Do not mix two different PRIMARY colors in the same table
 
 ---
 
@@ -228,7 +228,7 @@ HEADER_BOLD = FONT_NAME not in _HEAVY_FONTS
 | Dates | Center-aligned | |
 | Text | Left-aligned | |
 | Headers | Center-aligned | |
-| Titles | Left-aligned | ❌ Not centered |
+| Titles | Left-aligned | [X] Not centered |
 
 ---
 
@@ -307,10 +307,10 @@ auto_fit_columns(ws, min_width=8, max_width=28, header_row=4, data_start_row=5)
 
 ### 5.2 Prohibited Borders
 
-- ❌ Full grid (all-sides thin border)
-- ❌ Colored borders
-- ❌ Double-line borders
-- ❌ Thick borders (medium/thick) for decoration
+- [X] Full grid (all-sides thin border)
+- [X] Colored borders
+- [X] Double-line borders
+- [X] Thick borders (medium/thick) for decoration
 
 ### 5.3 Row Separation Alternative
 
@@ -383,7 +383,7 @@ for i, row in enumerate(ws.iter_rows(min_row=data_start, max_row=data_end)):
     for cell in row:
         cell.fill = PatternFill('solid', fgColor=fill_color)
         cell.font = Font(name=FONT_NAME, size=11, color=NEUTRAL_900)
-        # ❌ No borders
+        # [X] No borders
 ```
 
 ### 7.2 Empty Data Area
@@ -402,7 +402,7 @@ ws.sheet_view.showGridLines = False  # Disable Excel default grid lines
 
 ### 8.1 When to Use
 
-| ✅ Use | ❌ Don't Use |
+| [OK] Use | [X] Don't Use |
 |---------|----------|
 | Data has comparison/ranking semantics (scores, KPIs, growth rates) | Simple entry forms, reference tables |
 | Financial data with positive/negative values (profit/loss, increase/decrease) | Data rows ≤5 |

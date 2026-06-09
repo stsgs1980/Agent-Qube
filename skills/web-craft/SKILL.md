@@ -36,17 +36,17 @@ Ask all three questions. The answer determines the combination.
 
 | Scenario | Skills | Order |
 |----------|--------|-------|
-| 🏗 Full web app (new project) | fullstack-dev + frontend-design + styling-expert | Architecture → Design → Polish |
-| 🎨 Landing page / portfolio | frontend-design + styling-expert | Design → Polish |
-| 📊 CRUD admin panel | fullstack-dev + styling-expert | Architecture → Polish |
+| [icon] Full web app (new project) | fullstack-dev + frontend-design + styling-expert | Architecture → Design → Polish |
+| [Art] Landing page / portfolio | frontend-design + styling-expert | Design → Polish |
+| [Chart] CRUD admin panel | fullstack-dev + styling-expert | Architecture → Polish |
 | ⚙️ API + backend only | fullstack-dev | Solo |
-| 🎨 Design system / token library | frontend-design | Solo |
-| 🔧 CSS fix / responsive tweak | styling-expert | Solo |
+| [Art] Design system / token library | frontend-design | Solo |
+| [Tool] CSS fix / responsive tweak | styling-expert | Solo |
 | ♿ Accessibility audit / fix | styling-expert | Solo |
-| 🌙 Dark mode implementation | styling-expert | Solo (or + frontend-design if starting from scratch) |
-| 🔄 Rebrand / redesign existing app | frontend-design + styling-expert | Design → Polish |
-| 📱 Mobile-first responsive build | frontend-design + styling-expert | Design → Polish |
-| 🎮 Real-time app (chat, collab) | fullstack-dev + frontend-design + styling-expert | Architecture → Design → Polish |
+| [Moon] Dark mode implementation | styling-expert | Solo (or + frontend-design if starting from scratch) |
+| [Sync] Rebrand / redesign existing app | frontend-design + styling-expert | Design → Polish |
+| [Mobile] Mobile-first responsive build | frontend-design + styling-expert | Design → Polish |
+| [Game] Real-time app (chat, collab) | fullstack-dev + frontend-design + styling-expert | Architecture → Design → Polish |
 
 ---
 
@@ -154,11 +154,11 @@ When the user's request is unclear, use these heuristics:
 
 ## What This Skill Does NOT Do
 
-- ❌ Write code directly (delegate to specialist skills)
-- ❌ Replace any of the three specialist skills
-- ❌ Make design or architecture decisions (that's the specialists' job)
-- ❌ Store design tokens or component code
-- ❌ Duplicate content from companion skills
+- [X] Write code directly (delegate to specialist skills)
+- [X] Replace any of the three specialist skills
+- [X] Make design or architecture decisions (that's the specialists' job)
+- [X] Store design tokens or component code
+- [X] Duplicate content from companion skills
 
 This skill is a **router and coordinator only**. Its value is in knowing *which* skills to combine and *in what order*, not in doing the work itself.
 

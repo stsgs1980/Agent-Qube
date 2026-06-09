@@ -225,7 +225,7 @@ If the document repeatedly uses specialized terms ("deliverables", "service resu
 const palette = { primary:"#28201C", body:"#000000", secondary:"#6E6560", accent:"#7A5C3A", surface:"#FBF9F7" };
 ```
 
-⚠️ **ALL visible text in contracts must be pure black `"000000"`.** This includes:
+[!] **ALL visible text in contracts must be pure black `"000000"`.** This includes:
 - Contract title (SimHei, black, NOT accent color)
 - Contract number (black)
 - Clause headings (black)
@@ -236,7 +236,7 @@ const palette = { primary:"#28201C", body:"#000000", secondary:"#6E6560", accent
 **The only exception** is red-header official documents (红头文件), which follow their own GB/T 9704 color rules. For standard contracts, NO colored text is permitted — no red, no accent color, no dark-blue-grey.
 
 ```js
-// ✅ Contract title — always pure black
+// [OK] Contract title — always pure black
 new Paragraph({ alignment: AlignmentType.CENTER,
   spacing: { line: Math.ceil(22 * 23), lineRule: "atLeast" },  // ★ Rule 8: prevent clipping
   children: [new TextRun({ text: "Training Cooperation Framework Agreement",
@@ -244,7 +244,7 @@ new Paragraph({ alignment: AlignmentType.CENTER,
     font: { eastAsia: "SimHei", ascii: "Times New Roman" } })]
 })
 
-// ❌ FORBIDDEN — accent/palette color on contract text
+// [X] FORBIDDEN — accent/palette color on contract text
 new TextRun({ text: "Training Cooperation Framework Agreement", color: palette.accent }) // ← WRONG
 new TextRun({ text: "Contract No.:", color: palette.primary }) // ← WRONG (if primary ≠ "000000")
 ```
@@ -307,7 +307,7 @@ Article 2  Price and Payment
 Party A and Party B information MUST be laid out using a **borderless table** so that labels align vertically. Never use plain paragraphs with indentation — this causes misalignment between parties.
 
 ```js
-// ✅ Correct — borderless table ensures "统一社会信用代码：", "地址：", "法定代表人：" align
+// [OK] Correct — borderless table ensures "统一社会信用代码：", "地址：", "法定代表人：" align
 function partyInfoBlock(partyLabel, partyName, fields) {
   // fields: [["Unified Social Credit Code", value], ["Address", value], ["Legal Representative", value]]
   const NB = { style: BorderStyle.NONE, size: 0, color: "FFFFFF" };
@@ -378,7 +378,7 @@ Required fields for each party:
 Use a borderless 2-column table for symmetry. **Every field value must use `safeText()`** — never output `undefined` or empty string. If a field is not provided, use the appropriate `【Please fill in】` placeholder.
 
 ```js
-// ✅ Correct signature block — safeText for all values
+// [OK] Correct signature block — safeText for all values
 function buildSignatureBlock(partyA, partyB) {
   const fields = ["Party (Seal)", "Legal Rep / Authorized Rep (Signature)", "Contact Person", "Contact Info", "Signing Location", "Date"];
   const NB = { style: BorderStyle.NONE, size: 0, color: "FFFFFF" };
@@ -424,7 +424,7 @@ Contract amount: RMB One Million Two Hundred Thirty-Four Thousand Five Hundred S
 - **NO cover page** — title page is the first page (title + contract number at top)
 - **NO TOC** unless >20 clauses
 - **NO decorative elements** — contracts must be formal and clean
-- **Line spacing**: 1.5x (line: 360) — ⚠️ scene override (Profile A default is 1.3x/312; contracts use 1.5x for readability and annotation space)
+- **Line spacing**: 1.5x (line: 360) — [!] scene override (Profile A default is 1.3x/312; contracts use 1.5x for readability and annotation space)
 - **Body**: Justified, first-line indent 480 twips
 - **Color**: pure black "000000" throughout — no colored text
 

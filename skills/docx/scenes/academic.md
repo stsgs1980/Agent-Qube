@@ -14,7 +14,7 @@ const palette = {
 };
 ```
 
-⚠️ **Body text color must be pure black `"000000"`**. No decorative dark-blue-grey. Academic papers require print-friendly, black-and-white clarity.
+[!] **Body text color must be pure black `"000000"`**. No decorative dark-blue-grey. Academic papers require print-friendly, black-and-white clarity.
 
 → Placeholder convention & universal prohibitions — see `references/common-rules.md`
 → **Note:** This scene uses Profile A fonts with academic-specific overrides below.
@@ -109,7 +109,7 @@ styles: {
 5. **All body headings must use `heading: HeadingLevel.HEADING_X`** (TOC depends on this)
 
 ```js
-// ✅ Correct
+// [OK] Correct
 new Paragraph({
   heading: HeadingLevel.HEADING_1,
   children: [new TextRun({ text: "第一章 绪论", bold: true, size: 32, font: { eastAsia: "SimHei", ascii: "Times New Roman" } })]
@@ -270,15 +270,15 @@ The visual order on academic covers must follow this hierarchy from top to botto
 5. **Author information table** (college, major, author, student ID, advisor)
 6. Date (bottom)
 
-⚠️ **Title MUST appear ABOVE the author info table.** The screenshot issue of info table appearing above the title is caused by incorrect element ordering. The `buildAcademicCover()` and `buildProposalCover()` functions below enforce correct order.
+[!] **Title MUST appear ABOVE the author info table.** The screenshot issue of info table appearing above the title is caused by incorrect element ordering. The `buildAcademicCover()` and `buildProposalCover()` functions below enforce correct order.
 
-⚠️ **Layout must be vertically balanced** — use dynamic spacing to distribute whitespace evenly. Do not cram all elements into the top half or let large gaps appear between elements.
+[!] **Layout must be vertically balanced** — use dynamic spacing to distribute whitespace evenly. Do not cram all elements into the top half or let large gaps appear between elements.
 
 ```js
 function buildAcademicCover(info) {
   const { school, title, titleEN, college, major, author, studentId, advisor, date } = info;
 
-  // ⚠️ Use safeText() for all values — never output "undefined"
+  // [!] Use safeText() for all values — never output "undefined"
   const infoRows = [
     ["College", safeText(college, "【College】")],
     ["Major", safeText(major, "【Major】")],
@@ -315,7 +315,7 @@ function buildAcademicCover(info) {
     })),
   });
 
-  // ⚠️ Correct order: school → doc type → TITLE → info table → date
+  // [!] Correct order: school → doc type → TITLE → info table → date
   // ★ Rule 8: All large-font paragraphs must set explicit line spacing
   return [
     new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 1200, after: 400, line: Math.ceil(22 * 23), lineRule: "atLeast" },
@@ -338,11 +338,11 @@ function buildAcademicCover(info) {
 
 Thesis proposal reports use a similar cover layout but with different document type label. The key layout rule is the same: **title above author info, evenly spaced**.
 
-⚠️ **CRITICAL — Proposal cover MUST be an independent section:**
+[!] **CRITICAL — Proposal cover MUST be an independent section:**
 The proposal cover MUST be placed in its **own section** (with margin: 0 and a 16838 wrapper table), completely separate from the body content. The body content starts in the **next section** (with `SectionType.NEXT_PAGE` or as a separate section entry). **Never place the cover elements and body content in the same section** — this causes them to render on the same page without any page break, which is the #1 proposal report formatting failure.
 
 ```js
-// ✅ Correct — cover and body in separate sections
+// [OK] Correct — cover and body in separate sections
 sections: [
   {
     properties: { page: { margin: { top: 0, bottom: 0, left: 0, right: 0 } } },
@@ -354,7 +354,7 @@ sections: [
   },
 ]
 
-// ❌ WRONG — cover and body in same section (no page separation!)
+// [X] WRONG — cover and body in same section (no page separation!)
 sections: [
   {
     children: [...coverElements, ...bodyContent],  // everything on one continuous flow
@@ -366,7 +366,7 @@ sections: [
 function buildProposalCover(info) {
   const { school, year, title, subtitle, college, major, author, studentId, advisor, date } = info;
 
-  // ⚠️ Use safeText() for all values
+  // [!] Use safeText() for all values
   const infoRows = [
     ["姓名 (Name)", safeText(author, "XXX")],
     ["专业 (Major)", safeText(major, "XXX")],
@@ -400,7 +400,7 @@ function buildProposalCover(info) {
     })),
   });
 
-  // ⚠️ Correct order: doc type label → info table → "论文题目" label → TITLE → subtitle
+  // [!] Correct order: doc type label → info table → "论文题目" label → TITLE → subtitle
   // Layout balanced: upper 40% for header + info, middle 20% for title, lower 40% for whitespace
   // ★ Rule 8: All large-font paragraphs must set explicit line spacing
   return [
@@ -422,7 +422,7 @@ function buildProposalCover(info) {
 }
 ```
 
-### ⚠️ WPS Compatibility Notes for Academic Covers
+### [!] WPS Compatibility Notes for Academic Covers
 
 Both thesis cover and proposal cover use info tables. These MUST follow the cross-engine rules:
 - Table uses **percentage widths** (`WidthType.PERCENTAGE`), NOT DXA — WPS renders DXA widths differently in nested contexts
@@ -431,9 +431,9 @@ Both thesis cover and proposal cover use info tables. These MUST follow the cros
 - Value column: **LEFT aligned**, `bottom: single sz=4` border = fixed-length underline
 - Cell `margins.top/bottom: 60` is acceptable (small values) but avoid larger values
 - All paragraphs with font size > 12pt (body) must set `spacing: { line: Math.ceil(fontPt * 23), lineRule: "atLeast" }` to prevent top clipping (Rule 8)
-- ⚠️ Do NOT use DXA widths, full-width space padding (`\u3000`), tab stops, or right-alignment for meta info
+- [!] Do NOT use DXA widths, full-width space padding (`\u3000`), tab stops, or right-alignment for meta info
 
-⚠️ **Proposal cover must fit on one page.** Use the same height-budget approach as commercial covers — total content height must stay within 15638 twips (1200 twips safety margin). If the title is very long, reduce font size (minimum 24pt).
+[!] **Proposal cover must fit on one page.** Use the same height-budget approach as commercial covers — total content height must stay within 15638 twips (1200 twips safety margin). If the title is very long, reduce font size (minimum 24pt).
 ```
 
 ---
@@ -453,7 +453,7 @@ Both thesis cover and proposal cover use info tables. These MUST follow the cros
 4. Main results/findings (2–3 sentences)
 5. Research significance/value (1 sentence)
 
-⚠️ **Abstract is NOT a TOC summary.** Must not read as "Chapter 1 introduces... Chapter 2 analyzes..."
+[!] **Abstract is NOT a TOC summary.** Must not read as "Chapter 1 introduces... Chapter 2 analyzes..."
 
 ### English Abstract
 - Title: "Abstract", San Hao Times New Roman Bold, centered, H1 style
@@ -727,7 +727,7 @@ const threeLineTable = new Table({
 
 ## School Standard Override Rule
 
-⚠️ **When user specifies school/journal-specific format requirements, those requirements OVERRIDE all defaults above.**
+[!] **When user specifies school/journal-specific format requirements, those requirements OVERRIDE all defaults above.**
 
 Common override items:
 - Margins (binding margin left 3.5 cm common)

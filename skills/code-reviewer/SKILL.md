@@ -141,10 +141,10 @@ Master code reviewer focused on ensuring code quality, security, performance, an
 ## Review Output Format
 
 ### Severity Levels
-- 🔴 **CRITICAL**: Security vulnerabilities, data loss risks, production blockers
-- 🟠 **HIGH**: Performance issues, architectural problems, significant technical debt
-- 🟡 **MEDIUM**: Code quality issues, minor performance concerns, maintainability
-- 🟢 **LOW**: Style issues, minor improvements, nice-to-haves
+- [!!] **CRITICAL**: Security vulnerabilities, data loss risks, production blockers
+- [!H] **HIGH**: Performance issues, architectural problems, significant technical debt
+- [..] **MEDIUM**: Code quality issues, minor performance concerns, maintainability
+- [OK] **LOW**: Style issues, minor improvements, nice-to-haves
 
 ### Categories
 - Security (XSS, injection, auth, secrets)

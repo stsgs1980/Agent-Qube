@@ -63,11 +63,11 @@ async function editImage(imageSource, editPrompt, outputPath, size = '1024x1024'
   });
 
   const imageBase64 = response.data[0].base64;
-  
+
   // Save edited image
   const buffer = Buffer.from(imageBase64, 'base64');
   fs.writeFileSync(outputPath, buffer);
-  
+
   console.log(`Edited image saved to ${outputPath}`);
   return outputPath;
 }
@@ -313,17 +313,17 @@ async function batchEditImages(editInstructions, outputDir, size = '1024x1024') 
 
 // Usage - Create multiple variations from the same image
 const editInstructions = [
-  { 
+  {
     imageSource: './original.jpg',
-    prompt: 'Change background to blue gradient' 
+    prompt: 'Change background to blue gradient'
   },
-  { 
+  {
     imageSource: './original.jpg',
-    prompt: 'Transform to black and white, high contrast' 
+    prompt: 'Transform to black and white, high contrast'
   },
-  { 
+  {
     imageSource: './original.jpg',
-    prompt: 'Add sunset lighting effects' 
+    prompt: 'Add sunset lighting effects'
   }
 ];
 
@@ -348,7 +348,7 @@ class ImageEditingService {
 
   async initialize() {
     this.zai = await ZAI.create();
-    
+
     if (!fs.existsSync(this.outputDir)) {
       fs.mkdirSync(this.outputDir, { recursive: true });
     }
@@ -360,7 +360,7 @@ class ImageEditingService {
       .update(`${editPrompt}-${Date.now()}`)
       .digest('hex')
       .substring(0, 8);
-    
+
     return `edited_${hash}.png`;
   }
 
@@ -405,7 +405,7 @@ class ImageEditingService {
 
   async createVariations(imageSource, basePrompt, variations, options = {}) {
     const results = [];
-    
+
     for (const variation of variations) {
       const fullPrompt = `${basePrompt}, ${variation}`;
       const result = await this.edit(imageSource, fullPrompt, options);
@@ -688,21 +688,21 @@ async function initZAI() {
 
 app.post('/api/edit-image', async (req, res) => {
   try {
-    const { 
+    const {
       imageSource,           // URL or base64 data URL
-      editPrompt, 
-      size = '1024x1024', 
-      baseDescription = '' 
+      editPrompt,
+      size = '1024x1024',
+      baseDescription = ''
     } = req.body;
 
     if (!imageSource || !editPrompt) {
-      return res.status(400).json({ 
-        error: 'imageSource and editPrompt are required' 
+      return res.status(400).json({
+        error: 'imageSource and editPrompt are required'
       });
     }
 
     // Combine base description with edit instruction
-    const fullPrompt = baseDescription 
+    const fullPrompt = baseDescription
       ? `${baseDescription}, ${editPrompt}`
       : editPrompt;
 
@@ -714,7 +714,7 @@ app.post('/api/edit-image', async (req, res) => {
 
     const imageBase64 = response.data[0].base64;
     const buffer = Buffer.from(imageBase64, 'base64');
-    
+
     const filename = `edited_${Date.now()}.png`;
     const filepath = path.join(outputDir, filename);
     fs.writeFileSync(filepath, buffer);
@@ -735,16 +735,16 @@ app.post('/api/edit-image', async (req, res) => {
 
 app.post('/api/create-variations', async (req, res) => {
   try {
-    const { 
+    const {
       imageSource,      // URL or base64 data URL
-      baseDescription, 
-      variations, 
-      size = '1024x1024' 
+      baseDescription,
+      variations,
+      size = '1024x1024'
     } = req.body;
 
     if (!imageSource || !baseDescription || !variations || !Array.isArray(variations)) {
-      return res.status(400).json({ 
-        error: 'imageSource, baseDescription and variations array are required' 
+      return res.status(400).json({
+        error: 'imageSource, baseDescription and variations array are required'
       });
     }
 
@@ -761,7 +761,7 @@ app.post('/api/create-variations', async (req, res) => {
 
       const imageBase64 = response.data[0].base64;
       const buffer = Buffer.from(imageBase64, 'base64');
-      
+
       const filename = `variation_${Date.now()}_${Math.random().toString(36).substr(2, 9)}.png`;
       const filepath = path.join(outputDir, filename);
       fs.writeFileSync(filepath, buffer);

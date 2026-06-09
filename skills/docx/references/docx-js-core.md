@@ -69,17 +69,17 @@ new SymbolRun({ char: "2022", font: "Symbol" }) // Bullet •
 
 ## Table
 
-**⚠️ CRITICAL**: Always set `margins` on TableCell (or at Table level for global default). Without margins, text touches borders.
+**[!] CRITICAL**: Always set `margins` on TableCell (or at Table level for global default). Without margins, text touches borders.
 
-**⚠️ CRITICAL**: Use `ShadingType.CLEAR` — never `ShadingType.SOLID` (causes black cells).
+**[!] CRITICAL**: Use `ShadingType.CLEAR` — never `ShadingType.SOLID` (causes black cells).
 
-**⚠️ CRITICAL — Table Cross-Page Control**:
+**[!] CRITICAL — Table Cross-Page Control**:
 - Header row MUST set `tableHeader: true` (auto-repeat header on page break)
 - All rows MUST set `cantSplit: true` (prevent row content split across pages)
 - Title paragraph before table MUST set `keepNext: true` (keep title with table)
 
 ```js
-// ⚠️ Title before table — keepNext keeps title with table
+// [!] Title before table — keepNext keeps title with table
 new Paragraph({
   keepNext: true,  // ← critical
   children: [new TextRun({ text: "Table 1 Feature Comparison", bold: true, size: 21 })],
@@ -96,7 +96,7 @@ new Table({
     insideVertical: { style: BorderStyle.NONE },
   },
   rows: [
-    // ⚠️ Header row — tableHeader + cantSplit
+    // [!] Header row — tableHeader + cantSplit
     new TableRow({
       tableHeader: true,   // auto-repeat on page break
       cantSplit: true,      // prevent row split
@@ -109,7 +109,7 @@ new Table({
         })
       ),
     }),
-    // ⚠️ Data rows — cantSplit
+    // [!] Data rows — cantSplit
     new TableRow({
       cantSplit: true,      // prevent row split
       children: ["Data 1", "Data 2"].map(text =>
@@ -135,7 +135,7 @@ width: { size: 50, type: WidthType.PERCENTAGE }
 
 ## ImageRun
 
-**⚠️ CRITICAL**: Always include `type` parameter. Always preserve aspect ratio.
+**[!] CRITICAL**: Always include `type` parameter. Always preserve aspect ratio.
 
 ```js
 const imageBuffer = fs.readFileSync("chart.png");
@@ -158,12 +158,12 @@ new Paragraph({
 
 ## PageBreak
 
-**⚠️ CRITICAL**: PageBreak MUST be inside a Paragraph. Standalone PageBreak crashes Word.
+**[!] CRITICAL**: PageBreak MUST be inside a Paragraph. Standalone PageBreak crashes Word.
 
-**⚠️ Best Practice**: Attach PageBreak to the end of a **paragraph with text content**. Avoid empty paragraph + PageBreak (may cause blank pages). If using multi-section structure, prefer section breaks over PageBreak.
+**[!] Best Practice**: Attach PageBreak to the end of a **paragraph with text content**. Avoid empty paragraph + PageBreak (may cause blank pages). If using multi-section structure, prefer section breaks over PageBreak.
 
 ```js
-// ✅ Recommended — PageBreak attached to content paragraph
+// [OK] Recommended — PageBreak attached to content paragraph
 new Paragraph({
   children: [
     new TextRun({ text: "End of section" }),
@@ -171,10 +171,10 @@ new Paragraph({
   ]
 })
 
-// ✅ Acceptable — but prefer section breaks
+// [OK] Acceptable — but prefer section breaks
 new Paragraph({ children: [new PageBreak()] })
 
-// ✅ Best — use section breaks instead of PageBreak
+// [OK] Best — use section breaks instead of PageBreak
 // Place content in different sections — auto page break
 ```
 
@@ -205,7 +205,7 @@ footers: {
 },
 ```
 
-> ⚠️ **Denominator FORBIDDEN** — never use `PageNumber.TOTAL_PAGES` or "X / Y" format. Show only current page number.
+> [!] **Denominator FORBIDDEN** — never use `PageNumber.TOTAL_PAGES` or "X / Y" format. Show only current page number.
 
 ## Styles Definition
 
@@ -241,7 +241,7 @@ styles: {
 
 ## Lists
 
-**⚠️ CRITICAL**: Each separate numbered list MUST use a unique `reference` name. Reusing the same reference causes numbering to continue instead of restarting.
+**[!] CRITICAL**: Each separate numbered list MUST use a unique `reference` name. Reusing the same reference causes numbering to continue instead of restarting.
 
 ```js
 // In Document numbering config

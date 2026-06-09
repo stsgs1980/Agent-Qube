@@ -816,14 +816,14 @@ Grid display of 6 features. **Two independent flex rows, no flex-wrap**. Icon po
       </div>
       <div style="width:192pt; display:flex; flex-direction:column; align-items:flex-start;">
         <div style="width:36pt; height:36pt; border-radius:8pt; background:${primary-10}; display:flex; align-items:center; justify-content:center; margin-bottom:8pt;">
-          <p style="font-size:18pt; color:${accent}; margin:0; line-height:1;">📊</p>
+          <p style="font-size:18pt; color:${accent}; margin:0; line-height:1;">[Chart]</p>
         </div>
         <p style="font-size:15pt; font-weight:bold; color:${primary-80}; margin:0 0 4pt 0; line-height:1.5;">Feature Name</p>
         <p style="font-size:13pt; color:${primary-40}; margin:0; line-height:1.5;">Brief description</p>
       </div>
       <div style="width:192pt; display:flex; flex-direction:column; align-items:flex-start;">
         <div style="width:36pt; height:36pt; border-radius:8pt; background:${primary-10}; display:flex; align-items:center; justify-content:center; margin-bottom:8pt;">
-          <p style="font-size:18pt; color:${accent}; margin:0; line-height:1;">🔒</p>
+          <p style="font-size:18pt; color:${accent}; margin:0; line-height:1;">[Lock]</p>
         </div>
         <p style="font-size:15pt; font-weight:bold; color:${primary-80}; margin:0 0 4pt 0; line-height:1.5;">Feature Name</p>
         <p style="font-size:13pt; color:${primary-40}; margin:0; line-height:1.5;">Brief description</p>

@@ -37,7 +37,7 @@ jobs:
             fi
           done
           # Instructions
-          for f in instructions/onboarding-protocol.md instructions/git-workflow-rules.md instructions/language-rule.md instructions/diagnostic-disclosure.md instructions/writing-plans.md; do
+          for f in docs/instructions/onboarding-protocol.md docs/instructions/git-workflow-rules.md docs/instructions/language-rule.md docs/instructions/diagnostic-disclosure.md docs/instructions/writing-plans.md; do
             if [ ! -f "$f" ]; then
               echo "MISSING: $f"
               MISSING=1
@@ -46,7 +46,7 @@ jobs:
             fi
           done
           # Standards (no language suffixes, no versions)
-          for f in standards/MARKDOWN_STANDARD.md standards/UNICODE_POLICY.md standards/README_TEMPLATE.md standards/REPRODUCIBILITY-STANDARD.md standards/IMPLEMENTATION_ORDER.md standards/STANDARD_ID_SYSTEM.md standards/CODE_EXAMPLES_GUIDE.md standards/FRONTEND_STANDARD.md standards/GITHUB_STANDARD.md standards/WCAG_2.1_AA_STANDARD.md standards/TESTING_STANDARD.md standards/ERROR_HANDLING_STANDARD.md standards/SECURITY_STANDARD.md; do
+          for f in docs/standards/MARKDOWN_STANDARD.md docs/standards/UNICODE_POLICY.md docs/standards/README_TEMPLATE.md docs/standards/REPRODUCIBILITY-STANDARD.md docs/standards/IMPLEMENTATION_ORDER.md docs/standards/STANDARD_ID_SYSTEM.md docs/standards/CODE_EXAMPLES_GUIDE.md docs/standards/FRONTEND_STANDARD.md docs/standards/GITHUB_STANDARD.md docs/standards/WCAG_2.1_AA_STANDARD.md docs/standards/TESTING_STANDARD.md docs/standards/ERROR_HANDLING_STANDARD.md docs/standards/SECURITY_STANDARD.md; do
             if [ ! -f "$f" ]; then
               echo "MISSING: $f"
               MISSING=1
@@ -55,7 +55,7 @@ jobs:
             fi
           done
           # Templates (Group A)
-          for f in templates/WORKLOG.md templates/TASK_TEMPLATE.md templates/README_WORKLOG.md; do
+          for f in docs/templates/WORKLOG.md docs/templates/TASK_TEMPLATE.md docs/templates/README_WORKLOG.md; do
             if [ ! -f "$f" ]; then
               echo "MISSING: $f"
               MISSING=1
@@ -69,7 +69,7 @@ jobs:
         run: |
           echo "Checking for emoji in markdown files..."
           FAIL=0
-          for f in $(find . -name '*.md' -not -path './.git/*'); do
+          for f in $(find . -name '*.md' -not -path './.git/*' -not -path './node_modules/*'); do
             if rg -l '[\x{1F000}-\x{1FFFF}]' "$f" 2>/dev/null; then
               echo "FOUND emoji in: $f"
               FAIL=1
@@ -96,7 +96,9 @@ jobs:
 
       - name: Check YAML syntax (workflows)
         run: |
-          if command -v python3 &>/dev/null; then
-            python3 -c "import yaml; [yaml.safe_load(open(f)) for f in __import__('glob').glob('.github/workflows/*.yml')]"
-            echo "YAML syntax OK"
-          fi
+          for f in .github/workflows/*.yml; do
+            if command -v python3 &>/dev/null; then
+              python3 -c "import yaml; yaml.safe_load(open('$f'))"
+              echo "YAML syntax OK: $f"
+            fi
+          done

@@ -11,7 +11,7 @@ Broadcast scripts, product promotion copy, livestream scripts, presentation scri
 
 ## 1. Core Principles
 
-⚠️ **A broadcast script is NOT a report, NOT a spec sheet, NOT an encyclopedia.**
+[!] **A broadcast script is NOT a report, NOT a spec sheet, NOT an encyclopedia.**
 
 The goal is for the audience to **understand on first listen, remember key points, and take action.** Therefore:
 
@@ -40,8 +40,8 @@ Title (centered, short and punchy)
 ```
 
 ### Decisions
-- **Cover:** ❌ Not needed
-- **TOC:** ❌ Not needed
+- **Cover:** [X] Not needed
+- **TOC:** [X] Not needed
 - **Header/footer:** Optional, minimal
 - **Sections:** Single section sufficient
 - **Line spacing:** `line: 400` (slightly larger than standard 1.5x for reading/marking ease)

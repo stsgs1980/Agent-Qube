@@ -48,7 +48,7 @@ Fix these before delivery.
    - Avoid purple→blue, blue→cyan, indigo→pink hero gradients unless the brand or brief explicitly earns it.
 
 3. **Emoji as UI icons**
-   - Do not use `✨`, `🚀`, `🎯`, `⚡`, `🔥`, `💡` as feature icons, section markers, button decoration, status labels, or deck bullets.
+   - Do not use `[*]`, `[Go]`, `[Target]`, `⚡`, `[Hot]`, `[Idea]` as feature icons, section markers, button decoration, status labels, or deck bullets.
    - Use inline SVG, typographic numbers, CSS shapes, or no icon.
 
 4. **Invented proof**

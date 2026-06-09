@@ -128,15 +128,15 @@ Intentional combination of different shapes, like an architectural plan.
 - **Use only one color**, layer via opacity (0.1 → 0.5)
 - Strokes over fills (solid elements ≤ 30% of total shapes)
 - stroke-width range: 0.3-0.8px (ultra-thin lines = refined look)
-- **⚠️ All SVG examples below use `currentColor` as placeholder.** When generating actual SVG, replace with the document’s primary color from the palette system. NEVER copy `currentColor` literally into production SVG — substitute the actual hex value.
+- **[!] All SVG examples below use `currentColor` as placeholder.** When generating actual SVG, replace with the document’s primary color from the palette system. NEVER copy `currentColor` literally into production SVG — substitute the actual hex value.
 
 ---
 
 ## Forbidden
 
-- ❌ Figurative icons (flowers, stars, arrows, or other concrete shapes)
-- ❌ Mixing multiple colors
-- ❌ Over-complexity (more than 8 shape elements)
-- ❌ Symmetric / centered placement (offset creates tension)
-- ❌ Thick lines (> 1.5px looks heavy)
-- ❌ Shadows / glow effects
+- [X] Figurative icons (flowers, stars, arrows, or other concrete shapes)
+- [X] Mixing multiple colors
+- [X] Over-complexity (more than 8 shape elements)
+- [X] Symmetric / centered placement (offset creates tension)
+- [X] Thick lines (> 1.5px looks heavy)
+- [X] Shadows / glow effects

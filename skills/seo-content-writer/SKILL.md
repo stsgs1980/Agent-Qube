@@ -118,10 +118,10 @@ When a user requests SEO content:
 1. **Gather Requirements**
 
    Confirm or ask for:
-   
+
    ```markdown
    ### Content Requirements
-   
+
    **Primary Keyword**: [main keyword]
    **Secondary Keywords**: [2-5 related keywords]
    **Target Word Count**: [length]
@@ -172,22 +172,22 @@ When a user requests SEO content:
 3. **Research and Plan**
 
    Before writing:
-   
+
    ```markdown
    ### Content Research
-   
+
    **SERP Analysis**:
    - Top results format: [what's ranking]
    - Average word count: [X] words
    - Common sections: [list]
    - SERP features: [snippets, PAA, etc.]
-   
+
    **Keyword Map**:
    - Primary: [keyword] - use in title, H1, intro, conclusion
    - Secondary: [keywords] - use in H2s, body paragraphs
    - LSI/Related: [terms] - sprinkle naturally throughout
    - Questions: [PAA questions] - use as H2/H3s or FAQ
-   
+
    **Content Angle**:
    [What unique perspective or value will this content provide?]
    ```
@@ -196,23 +196,23 @@ When a user requests SEO content:
 
    ```markdown
    ### Title Optimization
-   
+
    **Requirements**:
    - Include primary keyword (preferably at start)
    - Under 60 characters for full SERP display
    - Compelling and click-worthy
    - Match search intent
-   
+
    **Title Options**:
-   
+
    1. [Title option 1] ([X] chars)
       - Keyword position: [front/middle]
       - Power words: [list]
-   
+
    2. [Title option 2] ([X] chars)
       - Keyword position: [front/middle]
       - Power words: [list]
-   
+
    **Recommended**: [Best option with reasoning]
    ```
 
@@ -220,51 +220,51 @@ When a user requests SEO content:
 
    ```markdown
    ### Meta Description
-   
+
    **Requirements**:
    - 150-160 characters
    - Include primary keyword naturally
    - Include call-to-action
    - Compelling and specific
-   
+
    **Meta Description**:
    "[Description text]" ([X] characters)
-   
+
    **Elements included**:
-   - ✅ Primary keyword
-   - ✅ Value proposition
-   - ✅ CTA or curiosity hook
+   - [OK] Primary keyword
+   - [OK] Value proposition
+   - [OK] CTA or curiosity hook
    ```
 
 6. **Structure Content with SEO Headers**
 
    ```markdown
    ### Content Structure
-   
+
    **H1**: [Primary keyword in H1 - only one per page]
-   
+
    **Introduction** (100-150 words)
    - Hook reader in first sentence
    - State what they'll learn
    - Include primary keyword in first 100 words
-   
+
    **H2**: [Secondary keyword or question]
    [Content section]
-   
+
    **H2**: [Secondary keyword or question]
-   
+
    **H3**: [Sub-topic]
    [Content]
-   
+
    **H3**: [Sub-topic]
    [Content]
-   
+
    **H2**: [Secondary keyword or question]
    [Content]
-   
+
    **H2**: Frequently Asked Questions
    [FAQ section for PAA optimization]
-   
+
    **Conclusion**
    - Summarize key points
    - Include primary keyword
@@ -275,7 +275,7 @@ When a user requests SEO content:
 
    ```markdown
    ### On-Page SEO Checklist
-   
+
    **Keyword Placement**:
    - [ ] Primary keyword in title
    - [ ] Primary keyword in H1
@@ -285,21 +285,21 @@ When a user requests SEO content:
    - [ ] Primary keyword in meta description
    - [ ] Secondary keywords in H2s/H3s
    - [ ] Related terms throughout body
-   
+
    **Content Quality**:
    - [ ] Comprehensive coverage of topic
    - [ ] Original insights or data
    - [ ] Actionable takeaways
    - [ ] Examples and illustrations
    - [ ] Expert quotes or citations (for E-E-A-T)
-   
+
    **Readability**:
    - [ ] Paragraphs of 3-5 sentences (per CORE-EEAT O06 Section Chunking standard)
    - [ ] Varied sentence length
    - [ ] Bullet points and lists
    - [ ] Bold key phrases
    - [ ] Table of contents for long content
-   
+
    **Technical**:
    - [ ] Internal links to relevant pages (2-5)
    - [ ] External links to authoritative sources (2-3)
@@ -313,68 +313,68 @@ When a user requests SEO content:
 
    ```markdown
    # [H1 with Primary Keyword]
-   
+
    [Hook sentence that grabs attention]
-   
+
    [Problem statement or context - why this matters]
-   
+
    [Promise - what the reader will learn/gain] [Include primary keyword naturally]
-   
+
    [Brief overview of what's covered - can be bullet points for scanability]
-   
+
    ## [H2 - First Main Section with Secondary Keyword]
-   
+
    [Introduction to section - 1-2 sentences]
-   
+
    [Main content with valuable information]
-   
+
    [Examples, data, or evidence to support points]
-   
+
    [Transition to next section]
-   
+
    ### [H3 - Sub-section if needed]
-   
+
    [Detailed content]
-   
+
    [Key points in bullet format]:
    - Point 1
    - Point 2
    - Point 3
-   
+
    ## [H2 - Second Main Section]
-   
+
    [Continue with valuable content...]
-   
+
    > **Pro Tip**: [Highlighted tip or key insight]
-   
+
    | Column 1 | Column 2 | Column 3 |
    |----------|----------|----------|
    | Data | Data | Data |
-   
+
    ## [H2 - Additional Sections as Needed]
-   
+
    [Content...]
-   
+
    ## Frequently Asked Questions
-   
+
    ### [Question from PAA or common query]?
-   
+
    [Direct, concise answer in 40-60 words for featured snippet opportunity]
-   
+
    ### [Question 2]?
-   
+
    [Answer]
-   
+
    ### [Question 3]?
-   
+
    [Answer]
-   
+
    ## Conclusion
-   
+
    [Summary of key points - include primary keyword]
-   
+
    [Final thought or insight]
-   
+
    [Clear call-to-action: what should reader do next?]
    ```
 
@@ -382,16 +382,16 @@ When a user requests SEO content:
 
    ```markdown
    ### Featured Snippet Optimization
-   
+
    **For Definition Snippets**:
    "[Term] is [clear, concise definition in 40-60 words]"
-   
+
    **For List Snippets**:
    Create clear, numbered or bulleted lists under H2s
-   
+
    **For Table Snippets**:
    Use comparison tables with clear headers
-   
+
    **For How-To Snippets**:
    Number each step clearly: "Step 1:", "Step 2:", etc.
    ```
@@ -400,11 +400,11 @@ When a user requests SEO content:
 
    ```markdown
    ### Link Recommendations
-   
+
    **Internal Links** (include 2-5):
    1. "[anchor text]" → [/your-page-url] (relevant because: [reason])
    2. "[anchor text]" → [/your-page-url] (relevant because: [reason])
-   
+
    **External Links** (include 2-3 authoritative sources):
    1. "[anchor text]" → [authoritative-source.com] (supports: [claim])
    2. "[anchor text]" → [authoritative-source.com] (supports: [claim])
@@ -417,16 +417,16 @@ When a user requests SEO content:
 
     | Factor | Status | Notes |
     |--------|--------|-------|
-    | Title optimized | ✅/⚠️/❌ | [notes] |
-    | Meta description | ✅/⚠️/❌ | [notes] |
-    | H1 with keyword | ✅/⚠️/❌ | [notes] |
-    | Keyword in first 100 words | ✅/⚠️/❌ | [notes] |
-    | H2s optimized | ✅/⚠️/❌ | [notes] |
-    | Internal links | ✅/⚠️/❌ | [notes] |
-    | External links | ✅/⚠️/❌ | [notes] |
-    | FAQ section | ✅/⚠️/❌ | [notes] |
-    | Readability | ✅/⚠️/❌ | [notes] |
-    | Word count | ✅/⚠️/❌ | [X] words |
+    | Title optimized | [OK]/[!]/[X] | [notes] |
+    | Meta description | [OK]/[!]/[X] | [notes] |
+    | H1 with keyword | [OK]/[!]/[X] | [notes] |
+    | Keyword in first 100 words | [OK]/[!]/[X] | [notes] |
+    | H2s optimized | [OK]/[!]/[X] | [notes] |
+    | Internal links | [OK]/[!]/[X] | [notes] |
+    | External links | [OK]/[!]/[X] | [notes] |
+    | FAQ section | [OK]/[!]/[X] | [notes] |
+    | Readability | [OK]/[!]/[X] | [notes] |
+    | Word count | [OK]/[!]/[X] | [X] words |
 
     **Overall SEO Score**: [X]/10
 
@@ -444,24 +444,24 @@ When a user requests SEO content:
 
     | ID | Standard | Status | Notes |
     |----|----------|--------|-------|
-    | C01 | Intent Alignment: title = content | ✅/⚠️/❌ | [notes] |
-    | C02 | Direct Answer in first 150 words | ✅/⚠️/❌ | [notes] |
-    | C06 | Audience explicitly stated | ✅/⚠️/❌ | [notes] |
-    | C10 | Conclusion answers opening question | ✅/⚠️/❌ | [notes] |
-    | O01 | Heading hierarchy correct | ✅/⚠️/❌ | [notes] |
-    | O02 | Summary/Key Takeaways present | ✅/⚠️/❌ | [notes] |
-    | O06 | Paragraphs 3–5 sentences | ✅/⚠️/❌ | [notes] |
-    | O09 | No filler; consistent terms | ✅/⚠️/❌ | [notes] |
-    | R01 | ≥5 precise data points with units | ✅/⚠️/❌ | [notes] |
-    | R02 | ≥1 citation per 500 words | ✅/⚠️/❌ | [notes] |
-    | R04 | Claims backed by evidence | ✅/⚠️/❌ | [notes] |
-    | R07 | Full entity names used | ✅/⚠️/❌ | [notes] |
-    | C03 | ≥3 query variants covered | ✅/⚠️/❌ | [notes] |
-    | O08 | Table of contents with jump links | ✅/⚠️/❌ | [notes] |
-    | O10 | Images/videos captioned and informative | ✅/⚠️/❌ | [notes] |
-    | E07 | Downloadable template/checklist included | ✅/⚠️/❌ | [notes] |
+    | C01 | Intent Alignment: title = content | [OK]/[!]/[X] | [notes] |
+    | C02 | Direct Answer in first 150 words | [OK]/[!]/[X] | [notes] |
+    | C06 | Audience explicitly stated | [OK]/[!]/[X] | [notes] |
+    | C10 | Conclusion answers opening question | [OK]/[!]/[X] | [notes] |
+    | O01 | Heading hierarchy correct | [OK]/[!]/[X] | [notes] |
+    | O02 | Summary/Key Takeaways present | [OK]/[!]/[X] | [notes] |
+    | O06 | Paragraphs 3–5 sentences | [OK]/[!]/[X] | [notes] |
+    | O09 | No filler; consistent terms | [OK]/[!]/[X] | [notes] |
+    | R01 | ≥5 precise data points with units | [OK]/[!]/[X] | [notes] |
+    | R02 | ≥1 citation per 500 words | [OK]/[!]/[X] | [notes] |
+    | R04 | Claims backed by evidence | [OK]/[!]/[X] | [notes] |
+    | R07 | Full entity names used | [OK]/[!]/[X] | [notes] |
+    | C03 | ≥3 query variants covered | [OK]/[!]/[X] | [notes] |
+    | O08 | Table of contents with jump links | [OK]/[!]/[X] | [notes] |
+    | O10 | Images/videos captioned and informative | [OK]/[!]/[X] | [notes] |
+    | E07 | Downloadable template/checklist included | [OK]/[!]/[X] | [notes] |
 
-    **Items Needing Attention**: [list any ⚠️/❌ items]
+    **Items Needing Attention**: [list any [!]/[X] items]
 
     _For full 80-item audit, use [content-quality-auditor](../../cross-cutting/content-quality-auditor/)_
     ```

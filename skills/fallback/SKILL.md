@@ -32,11 +32,11 @@ class Provider {
     this.priority = config.priority; // 1 = highest priority
     this.enabled = config.enabled || true;
   }
-  
+
   async chat(messages, options = {}) {
     throw new Error('Subclass must implement chat method');
   }
-  
+
   async healthCheck() {
     throw new Error('Subclass must implement healthCheck method');
   }
@@ -56,7 +56,7 @@ class ChatZaiProvider extends Provider {
       priority: 1
     });
   }
-  
+
   async chat(messages, options = {}) {
     const response = await fetch(`${this.baseUrl}/api/chat/completions`, {
       method: 'POST',
@@ -69,14 +69,14 @@ class ChatZaiProvider extends Provider {
         messages: messages
       })
     });
-    
+
     if (!response.ok) {
       throw new Error(`chat.z.ai error: ${response.status}`);
     }
-    
+
     return await response.json();
   }
-  
+
   async healthCheck() {
     try {
       const response = await fetch(`${this.baseUrl}/health`, {
@@ -104,7 +104,7 @@ class AnthropicProvider extends Provider {
       priority: 2
     });
   }
-  
+
   async chat(messages, options = {}) {
     const response = await fetch(`${this.baseUrl}/v1/messages`, {
       method: 'POST',
@@ -119,14 +119,14 @@ class AnthropicProvider extends Provider {
         messages: messages
       })
     });
-    
+
     if (!response.ok) {
       throw new Error(`Anthropic error: ${response.status}`);
     }
-    
+
     return await response.json();
   }
-  
+
   async healthCheck() {
     try {
       const response = await fetch(`${this.baseUrl}/v1/messages`, {
@@ -163,7 +163,7 @@ class OpenRouterProvider extends Provider {
       priority: 3
     });
   }
-  
+
   async chat(messages, options = {}) {
     const response = await fetch(`${this.baseUrl}/v1/chat/completions`, {
       method: 'POST',
@@ -178,14 +178,14 @@ class OpenRouterProvider extends Provider {
         messages: messages
       })
     });
-    
+
     if (!response.ok) {
       throw new Error(`OpenRouter error: ${response.status}`);
     }
-    
+
     return await response.json();
   }
-  
+
   async healthCheck() {
     try {
       const response = await fetch(`${this.baseUrl}/v1/models`, {
@@ -217,27 +217,27 @@ class FallbackManager {
     this.healthCheckInterval = 30000; // 30 seconds
     this.isMonitoring = false;
   }
-  
+
   async chat(messages, options = {}) {
     const providersToTry = this.getProvidersInPriorityOrder();
-    
+
     for (const provider of providersToTry) {
       try {
         console.log(`Attempting ${provider.name}...`);
-        
+
         const result = await provider.chat(messages, options);
-        
+
         // Success - update current provider
         this.currentProvider = provider;
         this.failureCount = 0;
-        
+
         this.logProviderSwitch(provider, 'SUCCESS');
         return result;
-        
+
       } catch (error) {
         console.error(`${provider.name} failed:`, error.message);
         this.failureCount++;
-        
+
         // Check if we should switch providers
         if (this.shouldSwitchProvider()) {
           this.currentProvider = this.getNextProvider();
@@ -245,44 +245,44 @@ class FallbackManager {
         }
       }
     }
-    
+
     // All providers failed
     throw new Error('All providers failed');
   }
-  
+
   getProvidersInPriorityOrder() {
     // Prioritize current provider, then others by priority
     const providers = [...this.providers];
     const currentIndex = providers.indexOf(this.currentProvider);
-    
+
     if (currentIndex > 0) {
       providers.splice(currentIndex, 1);
       providers.unshift(this.currentProvider);
     }
-    
+
     return providers.sort((a, b) => a.priority - b.priority);
   }
-  
+
   shouldSwitchProvider() {
     // Switch if too many failures
     if (this.failureCount >= this.failureThreshold) {
       return true;
     }
-    
+
     // Switch if current provider is unhealthy
     if (!this.currentProvider.enabled) {
       return true;
     }
-    
+
     return false;
   }
-  
+
   getNextProvider() {
     const currentIndex = this.providers.indexOf(this.currentProvider);
     const nextIndex = (currentIndex + 1) % this.providers.length;
     return this.providers[nextIndex];
   }
-  
+
   logProviderSwitch(provider, reason) {
     const logEntry = {
       timestamp: new Date().toISOString(),
@@ -291,11 +291,11 @@ class FallbackManager {
       reason: reason,
       failureCount: this.failureCount
     };
-    
+
     console.log('PROVIDER SWITCH:', logEntry);
     this.appendLog(logEntry);
   }
-  
+
   appendLog(entry) {
     const logLine = `PROVIDER_SWITCH: ${JSON.stringify(entry)}\n`;
     appendToWorklog(logLine);
@@ -311,37 +311,37 @@ class FallbackManagerWithHealth extends FallbackManager {
     super(providers);
     this.healthMonitor = healthMonitor;
   }
-  
+
   async startHealthMonitoring() {
     if (this.isMonitoring) return;
-    
+
     this.isMonitoring = true;
     console.log('Starting provider health monitoring...');
-    
+
     this.healthCheckIntervalId = setInterval(async () => {
       await this.checkAllProviders();
     }, this.healthCheckInterval);
   }
-  
+
   stopHealthMonitoring() {
     if (!this.isMonitoring) return;
-    
+
     clearInterval(this.healthCheckIntervalId);
     this.isMonitoring = false;
     console.log('Stopped provider health monitoring');
   }
-  
+
   async checkAllProviders() {
     for (const provider of this.providers) {
       const isHealthy = await provider.healthCheck();
-      
+
       if (!isHealthy && provider === this.currentProvider) {
         console.warn(`${provider.name} is unhealthy, switching provider`);
         this.currentProvider = this.getNextProvider();
         this.failureCount = 0;
         this.logProviderSwitch(this.currentProvider, 'UNHEALTHY');
       }
-      
+
       provider.enabled = isHealthy;
     }
   }

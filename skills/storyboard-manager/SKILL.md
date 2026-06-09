@@ -371,12 +371,12 @@ python3 .claude/skills/storyboard-manager/scripts/consistency_checker.py . --out
 
 The script identifies issues in three severity levels:
 
-**Critical (🔴)**
+**Critical ([!!])**
 - Major contradictions requiring immediate attention
 - Character appearing after death
 - Fundamental plot contradictions
 
-**Warning (⚠️)**
+**Warning ([!])**
 - Potential inconsistencies to review
 - Age discrepancies
 - Physical description contradictions

@@ -64,13 +64,13 @@ When creating a new PowerPoint presentation from scratch, use the **html2pptx** 
 - Minimize the use of grid systems or nested frames; instead use parallel text directly listed in a clean format
 
 **Requirements**:
-- ✅ State your content-informed design approach BEFORE writing code
-- ✅ Use web-safe fonts only: Arial, Helvetica, Times New Roman, Georgia, Courier New, Verdana, Tahoma, Trebuchet MS, Impact
-- ✅ Create clear visual hierarchy through size, weight, and color — emphasize core points with larger fonts or numbers, creating contrast with smaller elements
-- ✅ Ensure readability: strong contrast, appropriately sized text, clean alignment
-- ✅ Be consistent: use the same color palette and font style throughout the entire presentation — do not change the main color or font family from slide to slide
-- ✅ Use keywords, not long sentences — keep each slide concise (avoid more than 100 words per slide)
-- ✅ Limit emphasis to only the most important elements (no more than 2-3 instances per slide)
+- [OK] State your content-informed design approach BEFORE writing code
+- [OK] Use web-safe fonts only: Arial, Helvetica, Times New Roman, Georgia, Courier New, Verdana, Tahoma, Trebuchet MS, Impact
+- [OK] Create clear visual hierarchy through size, weight, and color — emphasize core points with larger fonts or numbers, creating contrast with smaller elements
+- [OK] Ensure readability: strong contrast, appropriately sized text, clean alignment
+- [OK] Be consistent: use the same color palette and font style throughout the entire presentation — do not change the main color or font family from slide to slide
+- [OK] Use keywords, not long sentences — keep each slide concise (avoid more than 100 words per slide)
+- [OK] Limit emphasis to only the most important elements (no more than 2-3 instances per slide)
 
 #### Color Palette Selection
 

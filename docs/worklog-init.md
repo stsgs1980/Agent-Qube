@@ -1019,10 +1019,10 @@ Work Log:
 - Updated `handleSidebarSelect`: selecting agent from sidebar → setFitMode(false) + setDetailPanelOpen(true)
 - Updated `onToggle` (detail panel): opening panel → setFitMode(false)
 - Tested all transitions via agent-browser:
-  - Default: FIT ON + panel hidden ✅
-  - FIT OFF + panel hidden → expand panel manually ✅
-  - FIT OFF + panel open → click FIT ON → panel auto-collapses ✅
-  - Selecting agent → FIT OFF + panel opens ✅
+  - Default: FIT ON + panel hidden [OK]
+  - FIT OFF + panel hidden → expand panel manually [OK]
+  - FIT OFF + panel open → click FIT ON → panel auto-collapses [OK]
+  - Selecting agent → FIT OFF + panel opens [OK]
 - Lint: 0 errors
 
 Stage Summary:
@@ -1095,7 +1095,7 @@ Stage Summary:
 
 ---
 
-## 🏗️ Agent Qube — План Развития Архитектуры Агентной Системы
+## [Build] Agent Qube — План Развития Архитектуры Агентной Системы
 
 ### Диагноз: текущая архитектура нецелостна
 
@@ -1116,16 +1116,16 @@ parentId → child               →    Workflow / Pipeline
 
 ---
 
-### 🔴 ФАЗА 1: Операционная архитектура (КРИТИЧЕСКИЙ ПРИОРИТЕТ)
+### [!!] ФАЗА 1: Операционная архитектура (КРИТИЧЕСКИЙ ПРИОРИТЕТ)
 
 | # | Задача | Описание | Priority |
 |---|--------|----------|----------|
-| 1.1 | **Workflow Pipeline** | Задача идёт по цепочке: Request → Strateg → Koordinator → Koder → Testirovshchik → Revizor. Каждый шаг = агент + действие + контекст | 🔴 HIGH |
-| 1.2 | **Условная маршрутизация** | Тип задачи определяет путь: coding → Исполнение, analysis → Стратегия, quality check → Контроль. Правила маршрутизации настраиваемые | 🔴 HIGH |
-| 1.3 | **Контракты данных (I/O Schema)** | Выход Agent A = вход Agent B. Schema validation на каждом шаге. Типизированные сообщения между агентами | 🔴 HIGH |
-| 1.4 | **Feedback loops** | Testirovshchik нашёл баг → возвращается к Koder; Revizor забраковал →回到 Koordinator. Циклы с условием выхода | 🔴 HIGH |
-| 1.5 | **Общий контекст задачи (TaskContext)** | Агенты делят task state, промежуточные результаты, историю решений. Контекст растёт по мере прохождения пайплайна | 🟡 MED |
-| 1.6 | **Схема БД для операционки** | Новые модели: Workflow, PipelineStep, AgentMessage, TaskContext. Связи: Workflow → Steps → Messages | 🔴 HIGH |
+| 1.1 | **Workflow Pipeline** | Задача идёт по цепочке: Request → Strateg → Koordinator → Koder → Testirovshchik → Revizor. Каждый шаг = агент + действие + контекст | [!!] HIGH |
+| 1.2 | **Условная маршрутизация** | Тип задачи определяет путь: coding → Исполнение, analysis → Стратегия, quality check → Контроль. Правила маршрутизации настраиваемые | [!!] HIGH |
+| 1.3 | **Контракты данных (I/O Schema)** | Выход Agent A = вход Agent B. Schema validation на каждом шаге. Типизированные сообщения между агентами | [!!] HIGH |
+| 1.4 | **Feedback loops** | Testirovshchik нашёл баг → возвращается к Koder; Revizor забраковал →回到 Koordinator. Циклы с условием выхода | [!!] HIGH |
+| 1.5 | **Общий контекст задачи (TaskContext)** | Агенты делят task state, промежуточные результаты, историю решений. Контекст растёт по мере прохождения пайплайна | [..] MED |
+| 1.6 | **Схема БД для операционки** | Новые модели: Workflow, PipelineStep, AgentMessage, TaskContext. Связи: Workflow → Steps → Messages | [!!] HIGH |
 
 **Модели Prisma (проект):**
 ```prisma
@@ -1200,39 +1200,39 @@ model AgentMessage {
 
 ---
 
-### 🟡 ФАЗА 2: Динамические команды и маршрутизация
+### [..] ФАЗА 2: Динамические команды и маршрутизация
 
 | # | Задача | Описание | Priority |
 |---|--------|----------|----------|
-| 2.1 | **Динамический состав команд** | Под конкретную задачу собирается нужный набор агентов. Не все 26 всегда активны | 🟡 MED |
-| 2.2 | **Протокол коммуникации** | Агенты обмениваются сообщениями через стандартизированный протокол (не просто «связаны» в графе) | 🟡 MED |
-| 2.3 | **Условное ветвление** | If/Else/Switch в пайплайне: разные ветки для разных типов задач | 🟡 MED |
-| 2.4 | **Параллельное выполнение** | Несколько агентов работают над задачей одновременно (Koder + RAG-Specialist) | 🟡 MED |
-| 2.5 | **Приоритизация задач** | Очередь задач с приоритетами. Агент берёт следующую задачу по приоритету | 🟡 MED |
+| 2.1 | **Динамический состав команд** | Под конкретную задачу собирается нужный набор агентов. Не все 26 всегда активны | [..] MED |
+| 2.2 | **Протокол коммуникации** | Агенты обмениваются сообщениями через стандартизированный протокол (не просто «связаны» в графе) | [..] MED |
+| 2.3 | **Условное ветвление** | If/Else/Switch в пайплайне: разные ветки для разных типов задач | [..] MED |
+| 2.4 | **Параллельное выполнение** | Несколько агентов работают над задачей одновременно (Koder + RAG-Specialist) | [..] MED |
+| 2.5 | **Приоритизация задач** | Очередь задач с приоритетами. Агент берёт следующую задачу по приоритету | [..] MED |
 
 ---
 
-### 🟢 ФАЗА 3: Интеллект и самоорганизация
+### [OK] ФАЗА 3: Интеллект и самоорганизация
 
 | # | Задача | Описание | Priority |
 |---|--------|----------|----------|
-| 3.1 | **LLM-оркестратор** | Агент-стратег использует LLM для принятия решений о маршрутизации | 🟢 LOW |
-| 3.2 | **Самоорганизация** | Агенты сами определяют оптимальный пайплайн под задачу | 🟢 LOW |
-| 3.3 | **Обучение на опыте** | Система запоминает успешные пайплайны и предлагает их для похожих задач | 🟢 LOW |
-| 3.4 | **Мониторинг и метрики** | Время прохождения пайплайна, узкие места, процент успешных завершений | 🟡 MED |
-| 3.5 | **Алерты и эскалация** | Авто-эскалация при зависании шага, падении агента, превышении таймаута | 🟡 MED |
+| 3.1 | **LLM-оркестратор** | Агент-стратег использует LLM для принятия решений о маршрутизации | [OK] LOW |
+| 3.2 | **Самоорганизация** | Агенты сами определяют оптимальный пайплайн под задачу | [OK] LOW |
+| 3.3 | **Обучение на опыте** | Система запоминает успешные пайплайны и предлагает их для похожих задач | [OK] LOW |
+| 3.4 | **Мониторинг и метрики** | Время прохождения пайплайна, узкие места, процент успешных завершений | [..] MED |
+| 3.5 | **Алерты и эскалация** | Авто-эскалация при зависании шага, падении агента, превышении таймаута | [..] MED |
 
 ---
 
-### 🔵 ФАЗА 4: UI/UX для операционной архитектуры
+### [!!] ФАЗА 4: UI/UX для операционной архитектуры
 
 | # | Задача | Описание | Priority |
 |---|--------|----------|----------|
-| 4.1 | **Визуальный редактор пайплайнов** | Drag & Drop агентов в цепочку. Настройка условий, контрактов, feedback loops | 🔴 HIGH |
-| 4.2 | **Live-визуализация выполнения** | Анимация прохождения задачи по пайплайну. Какой агент сейчас работает, что передаёт | 🟡 MED |
-| 4.3 | **Дашборд операционки** | Статусы workflow'ов, метрики, алерты — поверх текущего Dashboard | 🟡 MED |
-| 4.4 | **Редактор контрактов данных** | UI для настройки input/output schema между шагами пайплайна | 🟡 MED |
-| 4.5 | **История и аудит** | Просмотр прошлых выполнений, replay, сравнение результатов | 🟢 LOW |
+| 4.1 | **Визуальный редактор пайплайнов** | Drag & Drop агентов в цепочку. Настройка условий, контрактов, feedback loops | [!!] HIGH |
+| 4.2 | **Live-визуализация выполнения** | Анимация прохождения задачи по пайплайну. Какой агент сейчас работает, что передаёт | [..] MED |
+| 4.3 | **Дашборд операционки** | Статусы workflow'ов, метрики, алерты — поверх текущего Dashboard | [..] MED |
+| 4.4 | **Редактор контрактов данных** | UI для настройки input/output schema между шагами пайплайна | [..] MED |
+| 4.5 | **История и аудит** | Просмотр прошлых выполнений, replay, сравнение результатов | [OK] LOW |
 
 ---
 
@@ -1523,11 +1523,11 @@ Work Log:
 Stage Summary:
 - GitHub push successful - all code synced to stsgs1980/Agent Qube
 - Phase 1 (Workflow Pipeline) is FULLY IMPLEMENTED:
-  - ✅ Prisma schema with 5 new models (Workflow, PipelineStep, WorkflowExecution, StepExecution, AgentMessage)
-  - ✅ API routes for CRUD + execution + seeding
-  - ✅ Execution engine with routing, feedback loops, TaskContext, AgentMessage
-  - ✅ Full UI component (2552 lines) with pipeline visualization, data contracts, execution monitor
-  - ✅ 5 seeded workflows with realistic pipeline configurations
+  - [OK] Prisma schema with 5 new models (Workflow, PipelineStep, WorkflowExecution, StepExecution, AgentMessage)
+  - [OK] API routes for CRUD + execution + seeding
+  - [OK] Execution engine with routing, feedback loops, TaskContext, AgentMessage
+  - [OK] Full UI component (2552 lines) with pipeline visualization, data contracts, execution monitor
+  - [OK] 5 seeded workflows with realistic pipeline configurations
 - No code changes needed - all was already implemented from previous session
 - Cron job: unable to create (401 auth error)
 

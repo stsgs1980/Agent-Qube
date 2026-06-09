@@ -27,7 +27,7 @@ Insert **4 elements** in sequence:
 ```js
 const { TableOfContents, Paragraph, TextRun, PageBreak, AlignmentType } = require("docx");
 
-// 1. TOC title — ⛔ DO NOT use HeadingLevel (or TOC will index itself!)
+// 1. TOC title — [X] DO NOT use HeadingLevel (or TOC will index itself!)
 new Paragraph({
   alignment: AlignmentType.CENTER,
   spacing: { before: 480, after: 360 },
@@ -38,7 +38,7 @@ new Paragraph({
   })],
 }),
 
-// 2. TOC field element — ⚠️ first parameter is NOT displayed, it's internal name only
+// 2. TOC field element — [!] first parameter is NOT displayed, it's internal name only
 new TableOfContents("Table of Contents", {
   hyperlink: true,
   headingStyleRange: "1-3",  // match HeadingLevel range used in document
@@ -59,16 +59,16 @@ new Paragraph({ children: [new PageBreak()] }),
 
 ### Heading Requirements
 
-**⚠️ CRITICAL**: TOC only picks up paragraphs with `heading: HeadingLevel.HEADING_X`.
+**[!] CRITICAL**: TOC only picks up paragraphs with `heading: HeadingLevel.HEADING_X`.
 
 ```js
-// ✅ Correct — Heading style, TOC can index
+// [OK] Correct — Heading style, TOC can index
 new Paragraph({
   heading: HeadingLevel.HEADING_1,
   children: [new TextRun({ text: "第一章 引言", bold: true, size: 32, color: c(P.primary) })]
 })
 
-// ❌ Wrong — manual bold + large font, TOC cannot detect
+// [X] Wrong — manual bold + large font, TOC cannot detect
 new Paragraph({
   children: [new TextRun({ text: "第一章 引言", bold: true, size: 32, color: c(P.primary) })]
 })
@@ -134,7 +134,7 @@ sections: [
   { /* Section 1: Cover — no page number, no footer */
     properties: {
       page: { size: pgSize, margin: pgMargin },
-      // ⚠️ Do NOT set page.pageNumbers here — docx-js emits empty <pgNumType/> which confuses WPS
+      // [!] Do NOT set page.pageNumbers here — docx-js emits empty <pgNumType/> which confuses WPS
     },
   },
   { /* Section 2: Front matter (abstract, TOC) — Roman numerals */
@@ -162,18 +162,18 @@ sections: [
 ]
 ```
 
-### ⚠️ Page Number API — Correct Nesting (CRITICAL)
+### [!] Page Number API — Correct Nesting (CRITICAL)
 
 Page number settings MUST be nested inside `page.pageNumbers`, NOT at properties top level:
 
 ```js
-// ❌ WRONG — docx-js ignores these, pgNumType will be empty
+// [X] WRONG — docx-js ignores these, pgNumType will be empty
 properties: {
   pageNumberStart: 1,
   pageNumberFormatType: NumberFormat.DECIMAL,
 }
 
-// ✅ CORRECT — docx-js writes start= and fmt= attributes
+// [OK] CORRECT — docx-js writes start= and fmt= attributes
 properties: {
   page: {
     pageNumbers: { start: 1, formatType: NumberFormat.DECIMAL },
@@ -181,7 +181,7 @@ properties: {
 }
 ```
 
-### ⚠️ Footer Field Instruction — WPS Compatibility (CRITICAL)
+### [!] Footer Field Instruction — WPS Compatibility (CRITICAL)
 
 WPS may ignore `pgNumType fmt` in the section properties. To ensure correct display, the footer PAGE field **MUST** include an explicit format switch via **post-processing**:
 
@@ -189,7 +189,7 @@ After generating the docx, unzip and patch each footer XML:
 - **Roman numeral footer**: replace `PAGE` with `PAGE \* ROMAN \\** MERGEFORMAT`
 - **Arabic numeral footer**: replace `PAGE \* arabic \* MERGEFORMAT`
 
-**⚠️ NEVER use `\* decimal` in instrText** — `decimal` is a docx-js API enum value (`NumberFormat.DECIMAL` for `pgNumType` XML attribute), NOT a valid Word field format switch. Using it causes page numbers to render as "1decimal", "2decimal". The correct Word field switch for Arabic numerals is always `\* arabic`.
+**[!] NEVER use `\* decimal` in instrText** — `decimal` is a docx-js API enum value (`NumberFormat.DECIMAL` for `pgNumType` XML attribute), NOT a valid Word field format switch. Using it causes page numbers to render as "1decimal", "2decimal". The correct Word field switch for Arabic numerals is always `\* arabic`.
 
 ```js
 // Post-process footer XML:
@@ -212,7 +212,7 @@ docXml = docXml.replace(/<w:pgNumType\/>/g, "");
 | Front matter | Abstract, TOC | Roman (I, II, III) | 1 | `PAGE \* ROMAN` |
 | Body | Main content | Arabic (1, 2, 3) | 1 | `PAGE \* arabic` |
 
-⚠️ **The body section MUST set `pageNumbers: { start: 1 }`** — otherwise page numbers continue from the front matter pages, causing TOC page references to be offset. This is the #1 cause of "TOC page numbers are wrong".
+[!] **The body section MUST set `pageNumbers: { start: 1 }`** — otherwise page numbers continue from the front matter pages, causing TOC page references to be offset. This is the #1 cause of "TOC page numbers are wrong".
 
 ### Common Causes of Incorrect Page Numbers
 
@@ -228,7 +228,7 @@ docXml = docXml.replace(/<w:pgNumType\/>/g, "");
 
 ## TOC Refresh Hint (MANDATORY)
 
-**⚠️ When the document contains a TOC, you MUST add the following hint paragraph between the `TableOfContents` element and the PageBreak (so it appears on the TOC page, not the body page).** This ensures users know how to refresh page numbers after editing.
+**[!] When the document contains a TOC, you MUST add the following hint paragraph between the `TableOfContents` element and the PageBreak (so it appears on the TOC page, not the body page).** This ensures users know how to refresh page numbers after editing.
 
 ```js
 new Paragraph({

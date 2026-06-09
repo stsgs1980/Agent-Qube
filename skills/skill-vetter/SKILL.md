@@ -3,7 +3,7 @@ name: skill-vetter
 description: Security-first skill vetting for AI agents. Use before installing any skill from ClawdHub, GitHub, or other sources. Checks for red flags, permission scope, and suspicious patterns.
 ---
 
-# Skill Vetter 🔒
+# Skill Vetter [Lock]
 
 Security-first vetting protocol for AI agent skills. **Never install a skill without vetting it first.**
 
@@ -32,7 +32,7 @@ Questions to answer:
 Read ALL files in the skill. Check for these **RED FLAGS**:
 
 ```
-🚨 REJECT IMMEDIATELY IF YOU SEE:
+[ALERT] REJECT IMMEDIATELY IF YOU SEE:
 ─────────────────────────────────────────
 • curl/wget to unknown URLs
 • Sends data to external servers
@@ -66,10 +66,10 @@ Evaluate:
 
 | Risk Level | Examples | Action |
 |------------|----------|--------|
-| 🟢 LOW | Notes, weather, formatting | Basic review, install OK |
-| 🟡 MEDIUM | File ops, browser, APIs | Full code review required |
-| 🔴 HIGH | Credentials, trading, system | Human approval required |
-| ⛔ EXTREME | Security configs, root access | Do NOT install |
+| [OK] LOW | Notes, weather, formatting | Basic review, install OK |
+| [..] MEDIUM | File ops, browser, APIs | Full code review required |
+| [!!] HIGH | Credentials, trading, system | Human approval required |
+| [X] EXTREME | Security configs, root access | Do NOT install |
 
 ## Output Format
 
@@ -92,12 +92,12 @@ RED FLAGS: [None / List them]
 
 PERMISSIONS NEEDED:
 • Files: [list or "None"]
-• Network: [list or "None"]  
+• Network: [list or "None"]
 • Commands: [list or "None"]
 ───────────────────────────────────────
-RISK LEVEL: [🟢 LOW / 🟡 MEDIUM / 🔴 HIGH / ⛔ EXTREME]
+RISK LEVEL: [[OK] LOW / [..] MEDIUM / [!!] HIGH / [X] EXTREME]
 
-VERDICT: [✅ SAFE TO INSTALL / ⚠️ INSTALL WITH CAUTION / ❌ DO NOT INSTALL]
+VERDICT: [[OK] SAFE TO INSTALL / [!] INSTALL WITH CAUTION / [X] DO NOT INSTALL]
 
 NOTES: [Any observations]
 ═══════════════════════════════════════
@@ -134,4 +134,4 @@ curl -s "https://raw.githubusercontent.com/OWNER/REPO/main/skills/SKILL_NAME/SKI
 
 ---
 
-*Paranoia is a feature.* 🔒🦀
+*Paranoia is a feature.* [Lock][icon]

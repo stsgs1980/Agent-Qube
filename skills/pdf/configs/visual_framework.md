@@ -26,7 +26,7 @@ A document looks "cheap" or "土" when it has too many competing visual elements
 
 **The fix is always:** Delete the decorative element. If the page still communicates its message clearly, it didn't need the decoration. If it doesn't, fix the typography hierarchy — not by adding more visual noise.
 
-### 🚫 The Stock Image / Clipart / AI-Generated Decoration Ban
+### [X] The Stock Image / Clipart / AI-Generated Decoration Ban
 
 > **ABSOLUTE PROHIBITION: Do NOT embed stock photos, clipart, watercolor illustrations, AI-generated images (flowers, patterns, borders, frames, ornaments), or any decorative raster/vector artwork into PDF documents.**
 
@@ -87,7 +87,7 @@ Muddy mid-tones (L 0.30–0.70) for backgrounds produce the "cheap web app" look
 
 Color does not create hierarchy. Size and weight do.
 
-| ❌ Wrong | ✅ Right |
+| [X] Wrong | [OK] Right |
 |----------|---------|
 | Blue heading, grey subheading, black body | All same hue; heading 900 weight 48px, sub 600 36px, body 400 16px |
 | Colored tags/badges for categories | Monochrome tags with border weight variation |

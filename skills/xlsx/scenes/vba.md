@@ -64,14 +64,14 @@ Public Sub Main()
     On Error GoTo ErrHandler
     Application.ScreenUpdating = False
     Application.Calculation = xlCalculationManual
-    
+
     ' [Main logic here]
-    
+
 CleanUp:
     Application.ScreenUpdating = True
     Application.Calculation = xlCalculationAutomatic
     Exit Sub
-    
+
 ErrHandler:
     MsgBox "Error in " & MODULE_NAME & ": " & Err.Description, _
            vbCritical, "Error"
@@ -223,7 +223,7 @@ wb.save('temp.xlsx')
 shutil.copy('temp.xlsx', 'output.xlsm')
 with zipfile.ZipFile('output.xlsm', 'a') as zf:
     zf.write('vbaProject.bin', 'xl/vbaProject.bin')
-    
+
 # Update [Content_Types].xml to register VBA
 # (This is fragile — Method 1 or 2 preferred)
 ```

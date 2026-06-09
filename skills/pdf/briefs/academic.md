@@ -82,8 +82,8 @@ import subprocess, os
 def render_cover(html_path, pdf_path):
     """
     Render HTML cover to PDF via html2poster.js.
-    
-    ⚠️ ALWAYS use html2poster.js for covers (NOT html2pdf-next.js).
+
+    [!] ALWAYS use html2poster.js for covers (NOT html2pdf-next.js).
     Cover HTML uses position:absolute for layout. html2pdf-next.js pre-render
     hooks convert absolute→static to prevent multi-page overlap, which
     destroys cover layouts. html2poster.js preserves absolute positioning.
@@ -124,7 +124,7 @@ with open('final.pdf', 'wb') as f:
 
 **→ Full cover templates: see §PART 4.5 in `typesetting/cover.md` (Templates 08-10).**
 
-> **⚠️ Why HTML/Playwright covers?** LaTeX TikZ `remember picture, overlay` with `margin=0pt` frequently fails to fill the page (right/bottom edges show white). HTML/CSS with `@page { margin: 0 }` and full-bleed background is pixel-exact, with zero ambiguity. This also unifies all three routes (Report, Creative, Academic) under one cover system.
+> **[!] Why HTML/Playwright covers?** LaTeX TikZ `remember picture, overlay` with `margin=0pt` frequently fails to fill the page (right/bottom edges show white). HTML/CSS with `@page { margin: 0 }` and full-bleed background is pixel-exact, with zero ambiguity. This also unifies all three routes (Report, Creative, Academic) under one cover system.
 
 Write the preamble. Start from this foundation and customise per document:
 
@@ -148,7 +148,7 @@ Write the preamble. Start from this foundation and customise per document:
 ]{hyperref}
 
 \geometry{a4paper, top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm}
-% ⚠️ left and right MUST be equal - asymmetric margins cause off-center content
+% [!] left and right MUST be equal - asymmetric margins cause off-center content
 
 \usepackage[numbers,super,sort&compress]{natbib}
 \bibliographystyle{unsrtnat}
@@ -167,13 +167,13 @@ Write the preamble. Start from this foundation and customise per document:
 - `babel` and `polyglossia` are incompatible - load only one
 - CJK: `\usepackage{ctex}` - Tectonic auto-downloads fonts, zero manual setup
 - System fonts via `\setmainfont{}`: probe first with `fc-list :lang=XX`
-- **🔴 Margin symmetry:** `\geometry{left=X, right=X}` - left and right MUST be equal. Asymmetric margins = off-center content = critical bug
-- **🔴 Minimum margins with fancyhdr:** When using `fancyhdr` for headers/footers, `geometry` margins must leave enough room. **Minimum: `top >= 2.0cm`, `bottom >= 1.8cm`**. Also set `\setlength{\headheight}{14pt}` in the preamble. Margins smaller than this cause headers/footers to be pushed outside the page boundary (negative y-coordinates), making them invisible in print.
-- **🔴 Quotation marks (English):** NEVER use straight quotes `"..."`。English text must use LaTeX curly quotes: ` ``left quote'' ` for double, `` `single' `` for single. Straight `"` in LaTeX means right double quote only.
-- **🔴 Quotation marks (Chinese — CRITICAL):** Chinese quoted text like "北漂" MUST use Unicode smart quotes "…" (U+201C/U+201D) directly in the `.tex` source. **NEVER use ASCII `"` for Chinese quotes** — LaTeX interprets `"` as a right double quote (`"`), so `"北漂"` renders as `"北漂"` (two right quotes, no left quote). The correct LaTeX source is: `"北漂"` (literal Unicode characters). `\usepackage{csquotes}` is a safety net but does NOT fix raw ASCII `"` in Chinese text.
+- **[!!] Margin symmetry:** `\geometry{left=X, right=X}` - left and right MUST be equal. Asymmetric margins = off-center content = critical bug
+- **[!!] Minimum margins with fancyhdr:** When using `fancyhdr` for headers/footers, `geometry` margins must leave enough room. **Minimum: `top >= 2.0cm`, `bottom >= 1.8cm`**. Also set `\setlength{\headheight}{14pt}` in the preamble. Margins smaller than this cause headers/footers to be pushed outside the page boundary (negative y-coordinates), making them invisible in print.
+- **[!!] Quotation marks (English):** NEVER use straight quotes `"..."`。English text must use LaTeX curly quotes: ` ``left quote'' ` for double, `` `single' `` for single. Straight `"` in LaTeX means right double quote only.
+- **[!!] Quotation marks (Chinese — CRITICAL):** Chinese quoted text like "北漂" MUST use Unicode smart quotes "…" (U+201C/U+201D) directly in the `.tex` source. **NEVER use ASCII `"` for Chinese quotes** — LaTeX interprets `"` as a right double quote (`"`), so `"北漂"` renders as `"北漂"` (two right quotes, no left quote). The correct LaTeX source is: `"北漂"` (literal Unicode characters). `\usepackage{csquotes}` is a safety net but does NOT fix raw ASCII `"` in Chinese text.
   - **Scope:** This rule applies ONLY to Chinese-language body text. Do NOT replace `"` in English paragraphs (use ` ``...'' ` instead), `verbatim`/`lstlisting`/`minted` environments, `\texttt{}`/`\verb||`/`\url{}`/`\href{}{}` arguments, or BibTeX `.bib` field values.
-- **🔴 Title page isolation:** Cover is generated via HTML/Playwright and merged as page 0 via pypdf - isolation is inherent in the merge pipeline. `\tableofcontents` should be the first page of the `.tex` body. Verify: does TOC start on the page immediately after the cover in the merged PDF?
-- **🔴 TOC requires a cover page:** Unless the user explicitly requests no cover, if the document has `\tableofcontents`, it MUST have a cover page. Structure: Cover (page 1) → TOC (page 2) → Content (page 3+). Do not generate a TOC without a preceding cover page. This rule is consistent with `briefs/report.md`.
+- **[!!] Title page isolation:** Cover is generated via HTML/Playwright and merged as page 0 via pypdf - isolation is inherent in the merge pipeline. `\tableofcontents` should be the first page of the `.tex` body. Verify: does TOC start on the page immediately after the cover in the merged PDF?
+- **[!!] TOC requires a cover page:** Unless the user explicitly requests no cover, if the document has `\tableofcontents`, it MUST have a cover page. Structure: Cover (page 1) → TOC (page 2) → Content (page 3+). Do not generate a TOC without a preceding cover page. This rule is consistent with `briefs/report.md`.
 
 **When no style is specified**, apply a measured, high-craft system:
 1. **Contrast** - clear figure-ground separation
@@ -237,7 +237,7 @@ Row 2 & data & data \\
 ```
 - **Never** let a table header sit alone at the bottom of a page with no data rows following it
 
-**Table width management - prevent column overflow (⚠️ CRITICAL):**
+**Table width management - prevent column overflow ([!] CRITICAL):**
 
 Tables overflowing the column width is the most common LaTeX layout bug in dual-column papers. The table looks fine in single-column preview but clips in IEEE/ACM two-column format.
 
@@ -291,7 +291,7 @@ Ours   & \textbf{0.082} & \textbf{0.054} & \textbf{0.043} & \textbf{0.029} \\
 }
 \end{table}
 ```
-⚠️ `\resizebox` scales fonts too - verify the smallest text is still readable (≥ 6pt effective).
+[!] `\resizebox` scales fonts too - verify the smallest text is still readable (≥ 6pt effective).
 
 4. **Span both columns** for genuinely wide tables (8+ data columns):
 ```latex
@@ -314,23 +314,23 @@ Ours   & \textbf{0.082} & \textbf{0.054} & \textbf{0.043} & \textbf{0.029} \\
 
 **Never**: use a plain `tabular` with 8+ columns in a two-column paper without width constraint - it WILL overflow.
 
-**⚠️ CRITICAL: `\resizebox{\columnwidth}` NOT `\resizebox{\textwidth}` in two-column layouts!**
+**[!] CRITICAL: `\resizebox{\columnwidth}` NOT `\resizebox{\textwidth}` in two-column layouts!**
 In dual-column documents (`twocolumn`, `sigconf`, etc.), `\textwidth` = **full page width** (both columns), while `\columnwidth` = **single column width**. Using `\resizebox{\textwidth}` inside a `table` (single-column float) scales the table to the full page width, causing it to overflow the column boundary by ~50%. **Always use `\resizebox{\columnwidth}` for single-column floats.** Only use `\resizebox{\textwidth}` inside `table*` (full-width float).
 
 ```latex
-% ❌ WRONG in two-column layout
+% [X] WRONG in two-column layout
 \begin{table}[t]
   \resizebox{\textwidth}{!}{% <-- \textwidth = full page, table overflows column!
     \begin{tabular}{lcccccccc} ... \end{tabular}}
 \end{table}
 
-% ✅ CORRECT for single-column float
+% [OK] CORRECT for single-column float
 \begin{table}[t]
   \resizebox{\columnwidth}{!}{% <-- \columnwidth = single column width
     \begin{tabular}{lcccccccc} ... \end{tabular}}
 \end{table}
 
-% ✅ CORRECT for full-width float
+% [OK] CORRECT for full-width float
 \begin{table*}[t]
   \resizebox{\textwidth}{!}{% <-- \textwidth OK here because table* spans both columns
     \begin{tabular}{lcccccccc} ... \end{tabular}}
@@ -339,7 +339,7 @@ In dual-column documents (`twocolumn`, `sigconf`, etc.), `\textwidth` = **full p
 
 ---
 
-**Equation overflow prevention (⚠️ CRITICAL for dual-column papers):**
+**Equation overflow prevention ([!] CRITICAL for dual-column papers):**
 
 Long equations are the **#2 overflow source** after tables in dual-column papers. Column width in ACM `sigconf` is ~241pt; in IEEE `twocolumn` ~252pt. Many standard math expressions exceed this.
 
@@ -354,13 +354,13 @@ Long equations are the **#2 overflow source** after tables in dual-column papers
 
 **Rule M1 — Never put two independent equations on one line in dual-column:**
 ```latex
-% ❌ WRONG — two full equations on one line, guaranteed overflow in sigconf
+% [X] WRONG — two full equations on one line, guaranteed overflow in sigconf
 \begin{equation}
 \mathbf{e}_u^{(l+1)} = \sum_{i} \frac{1}{\sqrt{|N_R(u)|\cdot|N_R(i)|}} \mathbf{e}_i^{(l)}, \quad
 \mathbf{e}_i^{(l+1)} = \sum_{u} \frac{1}{\sqrt{|N_R(i)|\cdot|N_R(u)|}} \mathbf{e}_u^{(l)}
 \end{equation}
 
-% ✅ CORRECT — split into aligned or separate equations
+% [OK] CORRECT — split into aligned or separate equations
 \begin{align}
 \mathbf{e}_u^{(l+1)} &= \sum_{i \in \mathcal{N}_R(u)} \frac{\mathbf{e}_i^{(l)}}{\sqrt{|\mathcal{N}_R(u)| \cdot |\mathcal{N}_R(i)|}}, \label{eq:collab_u} \\
 \mathbf{e}_i^{(l+1)} &= \sum_{u \in \mathcal{N}_R(i)} \frac{\mathbf{e}_u^{(l)}}{\sqrt{|\mathcal{N}_R(i)| \cdot |\mathcal{N}_R(u)|}}. \label{eq:collab_i}
@@ -369,12 +369,12 @@ Long equations are the **#2 overflow source** after tables in dual-column papers
 
 **Rule M2 — Wide fractions: use `split` or `multline`:**
 ```latex
-% ❌ WRONG — softmax with long denominator
+% [X] WRONG — softmax with long denominator
 \begin{equation}
 \alpha_{uv} = \frac{\exp(\text{LeakyReLU}(\mathbf{a}^{\top}[\mathbf{W}\mathbf{e}_u \| \mathbf{W}\mathbf{e}_v]))}{\sum_{k \in \mathcal{N}_S(u)} \exp(\text{LeakyReLU}(\mathbf{a}^{\top}[\mathbf{W}\mathbf{e}_u \| \mathbf{W}\mathbf{e}_k]))}
 \end{equation}
 
-% ✅ CORRECT — define numerator/denominator separately
+% [OK] CORRECT — define numerator/denominator separately
 \begin{equation}
 \alpha_{uv} = \frac{\exp\bigl(f(\mathbf{e}_u, \mathbf{e}_v)\bigr)}{\sum_{k \in \mathcal{N}_S(u)} \exp\bigl(f(\mathbf{e}_u, \mathbf{e}_k)\bigr)},
 \end{equation}
@@ -408,10 +408,10 @@ Algorithm boxes with long `\KwInput` lines or verbose pseudocode frequently over
 
 **Rule A2 — Break long Input/Output lines:**
 ```latex
-% ❌ WRONG — all parameters on one line
+% [X] WRONG — all parameters on one line
 \KwInput{Interaction graph $\mathcal{G}_R$, social graph $\mathcal{G}_S$, embedding dimension $d$, number of GNN layers $L$, learning rate $\eta$, regularization $\lambda$, SSL weight $\gamma$, temperature $\tau$}
 
-% ✅ CORRECT — break into multiple lines
+% [OK] CORRECT — break into multiple lines
 \KwInput{Interaction graph $\mathcal{G}_R$, social graph $\mathcal{G}_S$\\\quad embedding dim $d$, GNN layers $L$, learning rate $\eta$\\\quad regularization $\lambda$, SSL weight $\gamma$, temperature $\tau$}
 ```
 
@@ -641,7 +641,7 @@ python3 "$PDF_SKILL_DIR/scripts/pdf.py" convert.latex diagram.tex    # → diagr
 # \end{figure}
 ```
 
-**🚫 FORBIDDEN: Using TikZ standalone for Report or Creative briefs.** Those routes have no LaTeX compiler. See SKILL.md § "Diagram Generation Strategy".
+**[X] FORBIDDEN: Using TikZ standalone for Report or Creative briefs.** Those routes have no LaTeX compiler. See SKILL.md § "Diagram Generation Strategy".
 
 ### Path B: Complex Diagrams → Playwright+CSS → PNG
 
@@ -783,16 +783,16 @@ Initialize $\theta$ randomly\;
 **This is the #1 visual defect in LaTeX exam papers.** When `\parskip` is set (e.g. `0.5em`) and question numbers are separated from question text by a blank line in the `.tex` source, LaTeX treats them as separate paragraphs — the `\parskip` gap makes it look like an intentional blank line after every number.
 
 ```latex
-% ❌ WRONG — blank line between number and text = new paragraph + parskip gap
+% [X] WRONG — blank line between number and text = new paragraph + parskip gap
 \noindent\textbf{3.}
 
 某工厂原计划生产1200件产品……
 
-% ❌ ALSO WRONG — even without blank line, if \parskip is large
+% [X] ALSO WRONG — even without blank line, if \parskip is large
 \noindent\textbf{3.}  % line break here
 某工厂原计划生产1200件产品……  % LaTeX treats this as same paragraph, but confusing
 
-% ✅ CORRECT — number and text on the SAME LINE, no break
+% [OK] CORRECT — number and text on the SAME LINE, no break
 \noindent\textbf{3.}\;某工厂原计划生产1200件产品……
 ```
 
@@ -909,7 +909,7 @@ Two templates available as separate files. Load the one you need:
 2. Replace placeholder content with user's information
 3. Compile: `python3 "$PDF_SKILL_DIR/scripts/pdf.py" convert.latex resume.tex --runs 2`
 
-**🔴 Resume Text Overlap Prevention:**
+**[!!] Resume Text Overlap Prevention:**
 
 > AltaCV dual-column resumes are the #1 source of text overlap bugs. The sidebar and main column share vertical space but are positioned independently.
 
@@ -920,16 +920,16 @@ Two templates available as separate files. Load the one you need:
 - **Two-page overflow:** If content exceeds 1 page, explicitly add `\newpage` and restart column layout. Do NOT let LaTeX auto-break the `paracol` environment - it misaligns columns on page 2
 - **Compile twice:** Always `--runs 2` to resolve cross-references and stabilize column breaks
 
-**🔴 Resume Minimum Font Size:**
+**[!!] Resume Minimum Font Size:**
 - **Hard floor: 12px (9pt).** No text in the resume may render smaller than 12px, including footnotes, contact info, dates, and skill labels.
 
-**🔴 Resume Line-Break Rules:**
+**[!!] Resume Line-Break Rules:**
 - English: prefer breaking at word boundaries. Long words may be split at syllable boundaries with a hyphen (`-`) - standard typographic practice (e.g., `experi-\nence`).
 - CJK: break between characters, but never separate punctuation from preceding character.
 - Mixed content: respect both rules.
 - Dates/ranges ("Jan 2022 - Present") must stay as one unit.
 
-**🔴 Resume Page-Fill:**
+**[!!] Resume Page-Fill:**
 - Content must fill ≥85% of page height. If content is sparse, increase spacing (`\medskip` → `\bigskip`), increase font size slightly, or add sections (Summary, Awards, Projects). Never leave visible blank area > 3cm at page bottom.
 
 **Template A customisation quick-reference:**
@@ -1012,9 +1012,9 @@ After installing, verify: `tectonic --version`. The `_find_tectonic()` function 
 
 ---
 
-> **⚠️ Legacy Note:** Academic covers previously used ReportLab canvas API (cover_recipe_A/B/C/D/L). This approach is **fully deprecated**. All academic covers now use HTML/Playwright Templates 08-11 (see `typesetting/cover.md` and the pipeline at line 58-118 of this file). Do NOT write ReportLab cover code.
+> **[!] Legacy Note:** Academic covers previously used ReportLab canvas API (cover_recipe_A/B/C/D/L). This approach is **fully deprecated**. All academic covers now use HTML/Playwright Templates 08-11 (see `typesetting/cover.md` and the pipeline at line 58-118 of this file). Do NOT write ReportLab cover code.
 
-### ⚠️ Post-Cover Generation Checks (Mandatory)
+### [!] Post-Cover Generation Checks (Mandatory)
 
 After generating the cover HTML and before converting to PDF, run `poster_validate.py check-html`; after generating the cover PDF, run `pdf_qa.py`:
 

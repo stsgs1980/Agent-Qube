@@ -10,18 +10,18 @@ Also load `engines/design.md` for styling (use **standard** design tokens, NOT I
 
 ## When to Use finance_lite vs finance
 
-| Signal | finance_lite ✅ | finance.md ❌ |
+| Signal | finance_lite [OK] | finance.md [X] |
 |--------|----------------|--------------|
-| 预算表 / budget | ✅ | |
-| 费用报表 / expense report | ✅ | |
-| 项目成本追踪 / project cost tracking | ✅ | |
-| 收支对比 / revenue vs cost | ✅ | |
-| 个人记账 / personal finance | ✅ | |
-| 简单 ROI 计算 / simple ROI calculation | ✅ | |
-| DCF / LBO / 估值模型 (valuation model) | | ✅ |
-| 三表联动 (P&L + BS + CF) | | ✅ |
-| 敏感性分析 / scenario table | | ✅ |
-| IB pitch book level formatting | | ✅ |
+| 预算表 / budget | [OK] | |
+| 费用报表 / expense report | [OK] | |
+| 项目成本追踪 / project cost tracking | [OK] | |
+| 收支对比 / revenue vs cost | [OK] | |
+| 个人记账 / personal finance | [OK] | |
+| 简单 ROI 计算 / simple ROI calculation | [OK] | |
+| DCF / LBO / 估值模型 (valuation model) | | [OK] |
+| 三表联动 (P&L + BS + CF) | | [OK] |
+| 敏感性分析 / scenario table | | [OK] |
+| IB pitch book level formatting | | [OK] |
 
 ---
 

@@ -342,7 +342,7 @@ A repeating component cluster used on menu product pages (e.g., `/menu/product/4
 - Border: `1.5px solid #00754A`
 - Radius: `50px` (full pill)
 - Padding: `14px 40px` (generously larger than default pills — this is a secondary primary action)
-- Label: "Customize" with a gold sparkle ✨ icon inset left
+- Label: "Customize" with a gold sparkle [*] icon inset left
 - Used for: entering the drink-customization flow after size/milk selection
 
 **Add to Order Button (PDP)**

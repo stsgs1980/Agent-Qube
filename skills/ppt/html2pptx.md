@@ -35,9 +35,9 @@ Each HTML slide must include the correct body dimensions:
 ### Key Text Rules
 
 **All text must be inside `<p>`, `<h1>`-`<h6>`, `<ul>`, or `<ol>` tags:**
-- ✅ `<div><p>Text here</p></div>`
-- ❌ `<div>Text here</div>` — **Silently ignored in PowerPoint**
-- ❌ `<span>Text here</span>` — **Silently ignored in PowerPoint**
+- [OK] `<div><p>Text here</p></div>`
+- [X] `<div>Text here</div>` — **Silently ignored in PowerPoint**
+- [X] `<span>Text here</span>` — **Silently ignored in PowerPoint**
 
 **Never use manual bullet symbols (bullet, -, *, etc.)** — use `<ul>` or `<ol>` instead.
 
@@ -267,8 +267,8 @@ slide.addChart(pptx.charts.LINE, data, chartArea);
 ### Critical Rules
 
 **NEVER use `#` prefix** with hex colors in PptxGenJS — causes file corruption.
-- ✅ `color: "FF0000"`, `fill: { color: "0066CC" }`
-- ❌ `color: "#FF0000"`
+- [OK] `color: "FF0000"`, `fill: { color: "0066CC" }`
+- [X] `color: "#FF0000"`
 
 ### Adding Images
 

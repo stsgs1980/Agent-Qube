@@ -49,7 +49,7 @@ Before implementing TTS functionality, be aware of these important limitations:
 function splitTextIntoChunks(text, maxLength = 1000) {
   const chunks = [];
   const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
-  
+
   let currentChunk = '';
   for (const sentence of sentences) {
     if ((currentChunk + sentence).length <= maxLength) {
@@ -60,7 +60,7 @@ function splitTextIntoChunks(text, maxLength = 1000) {
     }
   }
   if (currentChunk) chunks.push(currentChunk.trim());
-  
+
   return chunks;
 }
 ```
@@ -684,12 +684,12 @@ for (const chunk of chunks) {
 The `zai.audio.tts.create()` method returns a standard **Response** object (not a custom object with an `audio` property). Always use:
 
 ```javascript
-// ✅ CORRECT
+// [OK] CORRECT
 const response = await zai.audio.tts.create({ ... });
 const arrayBuffer = await response.arrayBuffer();
 const buffer = Buffer.from(new Uint8Array(arrayBuffer));
 
-// ❌ WRONG - This will not work
+// [X] WRONG - This will not work
 const response = await zai.audio.tts.create({ ... });
 const buffer = Buffer.from(response.audio); // response.audio is undefined
 ```

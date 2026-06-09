@@ -145,7 +145,7 @@ function buildHeadingRuns(text, maxCharsPerLine, runProps) {
 Generated code MUST guard against outputting literal `undefined`, `null`, `NaN`, or empty strings for any visible text field. This is a **hard requirement** — these are never acceptable in a delivered document.
 
 ```js
-// ✅ MANDATORY: Safe text helper — use for ALL user-facing text values
+// [OK] MANDATORY: Safe text helper — use for ALL user-facing text values
 function safeText(value, placeholder) {
   if (value === undefined || value === null || value === "" || String(value) === "NaN" || String(value) === "undefined") {
     return placeholder || "【Please fill in】";
@@ -216,7 +216,7 @@ Add to quality self-check:
 - [ ] All tables use `WidthType.PERCENTAGE` for column widths (WPS tblGrid bug; if DXA is unavoidable, set `columnWidths` explicitly)
 
 ```js
-// ✅ Correct — percentage widths, WPS-safe
+// [OK] Correct — percentage widths, WPS-safe
 new Table({
   width: { size: 100, type: WidthType.PERCENTAGE },
   rows: [new TableRow({ children: [
@@ -225,7 +225,7 @@ new Table({
   ]})],
 });
 
-// ❌ WRONG — DXA widths cause WPS tblGrid mismatch (all gridCol=100)
+// [X] WRONG — DXA widths cause WPS tblGrid mismatch (all gridCol=100)
 new TableCell({ width: { size: 3000, type: WidthType.DXA }, ... })
 ```
 
@@ -256,13 +256,13 @@ When generating any letter-style document (invitation letter, thank-you letter, 
 4. **Body paragraphs** — left-aligned (English) or justified (CJK), with appropriate `spacing.after` between paragraphs
 
 ```js
-// ✅ Correct — closing and sender right-aligned
+// [OK] Correct — closing and sender right-aligned
 new Paragraph({ alignment: AlignmentType.RIGHT, spacing: { before: 400 },
   children: [new TextRun({ text: "Yours sincerely,", size: 24 })] }),
 new Paragraph({ alignment: AlignmentType.RIGHT,
   children: [new TextRun({ text: "Li Hua", size: 24 })] }),
 
-// ❌ WRONG — closing left-aligned (default)
+// [X] WRONG — closing left-aligned (default)
 new Paragraph({
   children: [new TextRun({ text: "Yours sincerely," })] }),
 ```
@@ -331,7 +331,7 @@ Academic cover meta info must use a 2-column table with **percentage widths only
 - **Label column:** adaptive 25–45% of table width, **LEFT aligned**, plain text label + "：". NO full-width space padding, NO right-alignment, NO distributed alignment.
 - **Value column:** remaining percentage, **LEFT aligned**, `bottom border single sz=4` = fixed-length underline (same length for all rows regardless of value text length).
 - **Label column borders:** none (NO bottom border on label cells).
-- ⚠️ Do NOT use DXA widths, full-width space padding (`\u3000`), spacer columns, or tab stops — these render inconsistently between MS Office and WPS.
+- [!] Do NOT use DXA widths, full-width space padding (`\u3000`), spacer columns, or tab stops — these render inconsistently between MS Office and WPS.
 
 ### Rule 8: Large font paragraphs must set explicit line spacing
 
@@ -345,7 +345,7 @@ This applies to ALL large-font paragraphs (cover titles, chapter headings, decor
 
 ### Rule 9: Every TextRun on a colored background MUST set explicit `color`
 
-⚠️ **CRITICAL:** When a TextRun is inside a cell/area with a dark or colored background (shading), it **MUST** explicitly set the `color` property. Omitting `color` defaults to black (`#000000`), which is invisible on dark backgrounds.
+[!] **CRITICAL:** When a TextRun is inside a cell/area with a dark or colored background (shading), it **MUST** explicitly set the `color` property. Omitting `color` defaults to black (`#000000`), which is invisible on dark backgrounds.
 
 **Common mistake:** Subtitle or meta text on R1/R2/R4 dark cover blocks without `color` → appears as invisible black text on dark bg.
 
@@ -358,13 +358,13 @@ This applies to ALL large-font paragraphs (cover titles, chapter headings, decor
 
 ### Rule 10: Page number API nesting and 3-section numbering
 
-⚠️ **CRITICAL:** Page number settings MUST be nested inside `page.pageNumbers`:
+[!] **CRITICAL:** Page number settings MUST be nested inside `page.pageNumbers`:
 
 ```js
-// ❌ WRONG — docx-js ignores top-level pageNumberStart/pageNumberFormatType
+// [X] WRONG — docx-js ignores top-level pageNumberStart/pageNumberFormatType
 properties: { pageNumberStart: 1, pageNumberFormatType: NumberFormat.DECIMAL }
 
-// ✅ CORRECT
+// [OK] CORRECT
 properties: { page: { pageNumbers: { start: 1, formatType: NumberFormat.DECIMAL } } }
 ```
 

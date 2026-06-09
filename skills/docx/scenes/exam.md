@@ -31,7 +31,7 @@ page: { size: { width: 11906, height: 16838 },
   margin: { top: 850, bottom: 850, left: 2200, right: 850 } }
 
 // A3 landscape dual-column (requires OOXML)
-// ⚠️ A3 dual-column may render slightly differently in WPS vs Word. Test in both before batch printing.
+// [!] A3 dual-column may render slightly differently in WPS vs Word. Test in both before batch printing.
 page: { size: { width: 23812, height: 16838, orientation: PageOrientation.LANDSCAPE },
   margin: { top: 850, bottom: 850, left: 2200, right: 850 } }
 ```
@@ -54,7 +54,7 @@ sections: [
 
 ### Template-First Principle
 
-⚠️ **Build framework first, fill content second.** Before writing questions, determine:
+[!] **Build framework first, fill content second.** Before writing questions, determine:
 1. Paper size + margins
 2. Whether seal line is needed
 3. Whether columns are used
@@ -69,10 +69,10 @@ sections: [
 
 | Scenario | Seal Line | Student Info Position |
 |----------|-----------|---------------------|
-| Formal standardized exam | ✅ Required | Left vertical info column |
-| Midterm / Final | ✅ Recommended | Left vertical info column |
-| Unit quiz | ❌ Optional | Header horizontal info row |
-| Daily practice | ❌ Skip | Header horizontal info row |
+| Formal standardized exam | [OK] Required | Left vertical info column |
+| Midterm / Final | [OK] Recommended | Left vertical info column |
+| Unit quiz | [X] Optional | Header horizontal info row |
+| Daily practice | [X] Skip | Header horizontal info row |
 
 ### Seal Line Implementation
 
@@ -151,7 +151,7 @@ Should include: total score, exam duration, answer method, special requirements 
 - Row: Score | blank... | blank
 - Table centered, 80% page width
 
-⚠️ **Header area should not be too full** — title + info + instructions + score table should not exceed 1/3 of the page.
+[!] **Header area should not be too full** — title + info + instructions + score table should not exceed 1/3 of the page.
 
 ---
 
@@ -171,12 +171,12 @@ const C = {
 
 | Subject / Question Type | Recommendation |
 |------------------------|----------------|
-| Math multiple choice + fill-in | ✅ Suitable for columns |
-| Physics multiple choice | ✅ Suitable for columns |
-| Chinese reading / composition | ❌ Not suitable |
-| English cloze / reading | ❌ Not suitable |
-| History source-based | ❌ Not suitable |
-| Geography map reading | ❌ Not suitable |
+| Math multiple choice + fill-in | [OK] Suitable for columns |
+| Physics multiple choice | [OK] Suitable for columns |
+| Chinese reading / composition | [X] Not suitable |
+| English cloze / reading | [X] Not suitable |
+| History source-based | [X] Not suitable |
+| Geography map reading | [X] Not suitable |
 
 ### Question Numbering
 
@@ -185,14 +185,14 @@ Entire paper uses consistent three-level numbering:
 - **Questions:** 1. 2. 3. ... (Arabic + period)
 - **Sub-questions:** (1) (2) (3) ... (parenthesized)
 
-⚠️ **No extra symbols before question numbers** (no `•`, `▸`, `▪`, `-`, `*`). The number itself is the only marker. **Never use docx numbering/bullet list styles** for question numbers — must use plain TextRun manual numbering.
+[!] **No extra symbols before question numbers** (no `•`, `▸`, `▪`, `-`, `*`). The number itself is the only marker. **Never use docx numbering/bullet list styles** for question numbers — must use plain TextRun manual numbering.
 
 ```js
-// ✅ Correct — plain TextRun manual numbering
+// [OK] Correct — plain TextRun manual numbering
 new Paragraph({ spacing: { before: 120, after: 60, line: 360 },
   children: [new TextRun({ text: `${i+1}. ${question}`, size: 21, font: { eastAsia: "SimSun" } })] })
 
-// ❌ Wrong — numbering causes Word to add bullets
+// [X] Wrong — numbering causes Word to add bullets
 new Paragraph({ numbering: { reference: "xxx", level: 0 }, // ← Forbidden!
   children: [new TextRun({ text: question })] })
 ```
@@ -207,7 +207,7 @@ subQuestion: { before: 60, after: 40 }     // Between sub-questions
 
 ### Page Break Control
 
-⚠️ Key principles:
+[!] Key principles:
 - **Question stem and answer area must not split** across pages
 - **Source material and questions on same page**
 - **Figures adjacent to their questions**
@@ -217,7 +217,7 @@ subQuestion: { before: 60, after: 40 }     // Between sub-questions
 new Paragraph({ keepNext: true, keepLines: true, children: [...] })
 ```
 
-⚠️ **Answer question page break rule (mandatory):**
+[!] **Answer question page break rule (mandatory):**
 
 Complete combination (stem + figure + answer lines) must be considered as a unit. If remaining space cannot fit stem + figure + at least 3 answer lines, push entire question to next page.
 
@@ -232,7 +232,7 @@ Use `keepNext: true` to chain: stem → figure → first 3 answer lines.
 When a question references "underlined part" (划线部分), the relevant text MUST use actual underline formatting (`underline: { type: UnderlineType.SINGLE }`). **Never** show "划线部分为 XXX" as plain text annotation — the underline must be visually rendered.
 
 ```js
-// ✅ Correct — actual underline on the referenced text
+// [OK] Correct — actual underline on the referenced text
 new Paragraph({ children: [
   new TextRun({ text: "1. It is ", size: 21, font: { ascii: "Times New Roman" } }),
   new TextRun({ text: "a butterfly", size: 21, font: { ascii: "Times New Roman" },
@@ -240,7 +240,7 @@ new Paragraph({ children: [
   new TextRun({ text: ". (Ask about the underlined part)", size: 21, font: { ascii: "Times New Roman" } }),
 ]})
 
-// ❌ Wrong — underlined part described as annotation text
+// [X] Wrong — underlined part described as annotation text
 new TextRun({ text: "1. It is a butterfly. (对划线部分提问) 注：划线部分为 a butterfly" })
 ```
 
@@ -263,7 +263,7 @@ answerLine: 500  // Answer line spacing for writing room
 ```
 
 ### Paragraph Rules
-- ⚠️ **Never use consecutive returns for whitespace** — use `spacing.before/after`
+- [!] **Never use consecutive returns for whitespace** — use `spacing.before/after`
 - Chinese questions use Chinese punctuation; English materials use English punctuation
 - Mixed CN/EN: use Times New Roman or Calibri for English text
 
@@ -273,7 +273,7 @@ answerLine: 500  // Answer line spacing for writing room
 
 ### Core Rule
 
-⚠️ **Options must NEVER be aligned with spaces!** Must use borderless tables.
+[!] **Options must NEVER be aligned with spaces!** Must use borderless tables.
 
 ### Option Layout — Borderless Table
 
@@ -316,7 +316,7 @@ new Paragraph({ spacing: { before: 140, after: 80, line: 400 },
   children: [new TextRun({ text: `${num}. Question text ________________.`, size: 21, font: "SimSun" })] })
 ```
 
-⚠️ Fill-in lines must not break across lines — if line is too long, put the blank on the next line.
+[!] Fill-in lines must not break across lines — if line is too long, put the blank on the next line.
 
 ---
 
@@ -331,7 +331,7 @@ new Paragraph({ spacing: { before: 200, after: 60, line: 360 }, keepNext: true,
 ### Answer Lines
 ```js
 // Light grey answer lines (CCCCCC), NOT black
-// ⚠️ Answer lines are ONLY for writing space within each question — never as dividers between questions
+// [!] Answer lines are ONLY for writing space within each question — never as dividers between questions
 function answerLines(count) {
   return Array(count).fill(null).map(() =>
     new Paragraph({ spacing: { before: 0, after: 0, line: 500 },
@@ -341,13 +341,13 @@ function answerLines(count) {
 }
 ```
 
-⚠️ **Separation between questions:**
+[!] **Separation between questions:**
 
 Use **only spacing** (`spacing.before: 200`) for visual separation between questions. **Forbidden:**
-- ❌ Grey horizontal lines (borders)
-- ❌ Color block dividers (Table-simulated separators)
-- ❌ Symbol dividers (e.g., `───────`)
-- ❌ Any visual separator decoration
+- [X] Grey horizontal lines (borders)
+- [X] Color block dividers (Table-simulated separators)
+- [X] Symbol dividers (e.g., `───────`)
+- [X] Any visual separator decoration
 
 ### Answer Space vs. Points
 
@@ -386,7 +386,7 @@ new Paragraph({ alignment: AlignmentType.RIGHT, indent: { right: 420 },
 
 ### Grid Count Calculation
 
-⚠️ **Grid count must exceed required word count by 20–30%** (for title, paragraph indents, line breaks).
+[!] **Grid count must exceed required word count by 20–30%** (for title, paragraph indents, line breaks).
 
 | Required Words | Min Grid Count | Recommended Layout |
 |---------------|---------------|-------------------|
@@ -425,7 +425,7 @@ function compositionGrid(rows, colsPerRow) {
 
 ### English Writing Area (Horizontal Lines) — MANDATORY for English Writing Questions
 
-⚠️ **Every English writing/composition question MUST include ruled horizontal lines.** A blank area without lines is FORBIDDEN — students need lines to write on.
+[!] **Every English writing/composition question MUST include ruled horizontal lines.** A blank area without lines is FORBIDDEN — students need lines to write on.
 
 ```js
 function writingLines(count) {
@@ -495,7 +495,7 @@ The answer key file should include:
 ```
 
 ### Rules
-1. ⚠️ **Never place answer content directly after the last question without a page/section break**
+1. [!] **Never place answer content directly after the last question without a page/section break**
 2. Answer content should be concise — no answer lines, no grid, plain text only
 3. Calculation/proof questions: show key steps, not just final answer
 4. If the exam has figures, answers may reference "see Figure X" without re-embedding
@@ -521,7 +521,7 @@ new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 100 },
 - Maps must have: scale bar, north arrow, legend
 - Coordinate graphs must have: axis labels, tick marks, units
 
-### ⚠️ Figure-Text Order (Strictly Enforced)
+### [!] Figure-Text Order (Strictly Enforced)
 
 **For questions with figures, element order must be:**
 ```
@@ -539,7 +539,7 @@ new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 100 },
 - Physics experiment diagrams must match described apparatus
 - Figure width: geometry ≤ 50% page width, data/experiment ≤ 70%
 
-### ⚠️ Figure Diversity Rule (Mandatory)
+### [!] Figure Diversity Rule (Mandatory)
 
 **No duplicate figures in the entire paper.** Even if two questions involve the same type (e.g., both triangles), each must have a distinct figure:
 1. Different labels (different vertex letters, angles, side lengths)
@@ -619,7 +619,7 @@ footers: { default: new Footer({ children: [
 ] }) }
 ```
 
-⚠️ **Denominator FORBIDDEN** — never use `PageNumber.TOTAL_PAGES` or "Page X of Y". Show only current page number.
+[!] **Denominator FORBIDDEN** — never use `PageNumber.TOTAL_PAGES` or "Page X of Y". Show only current page number.
 
 ### Headers
 - May contain seal line prompt or subject name

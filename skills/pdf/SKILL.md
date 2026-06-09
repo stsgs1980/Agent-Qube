@@ -28,9 +28,9 @@ Determine task weight to control how much context to load:
 
 Light tasks skip typesetting files entirely. Standard tasks load them on demand per the brief's instructions.
 
-### ⚠️ Pre-Routing Checks (run BEFORE matching brief)
+### [!] Pre-Routing Checks (run BEFORE matching brief)
 
-1. **Emoji Check** - Scan user content for intentional emoji (decorative 📊🎯🔥, not OS-level emoji input). If found → **force Creative brief** regardless of document type. ReportLab renders emoji as □ squares; LaTeX drops them entirely.
+1. **Emoji Check** - Scan user content for intentional emoji (decorative [Chart][Target][Hot], not OS-level emoji input). If found → **force Creative brief** regardless of document type. ReportLab renders emoji as □ squares; LaTeX drops them entirely.
 2. **CJK Check** - Chinese/Japanese/Korean content needs font coverage. Report brief must use `UniSong`/`UniHei` registered fonts; Creative brief must load Google Fonts Noto Sans SC with `font-display: swap`; Academic brief must use `\usepackage{ctex}`.
 3. **Size Check** - Non-standard page sizes (not A4/Letter/A3) → prefer Creative brief (Playwright handles any dimension). ReportLab can do custom sizes but pagination is manual.
 4. **Character Safety Check** - Before writing any content string, scan for Japanese kana (の、が、は etc.), unusual Unicode symbols, or non-CJK characters that may corrupt during encoding transit ( Especially when code is written via heredoc/base64/LLM output). Replace with plain Chinese equivalents: `の`→`之/的/缔`, `々`→omit or write full character. **If content must preserve Japanese, use only standard CJK Unified Ideographs (U+4E00-U+9FFF) and common kana; avoid rare/private-use codepoints.**
@@ -89,12 +89,12 @@ User Request
 
 Below is an exhaustive map of every known PDF request type to its handling strategy. If a scenario is not listed, route to the closest match or ask the user.
 
-#### 📄 Creation (Generate PDF from scratch)
+#### [Doc] Creation (Generate PDF from scratch)
 
 | Scenario | Route | Notes |
 |----------|-------|-------|
 | Report / white paper / analysis | report.md | ReportLab structured document |
-| Report with emoji | **creative.md** | 🚨 Emoji rule override |
+| Report with emoji | **creative.md** | [ALERT] Emoji rule override |
 | Business proposal | report.md | Structured + data tables |
 | Contract / legal document | report.md | Add signature placeholders (dotted line + label) |
 | Invoice / receipt | report.md | Table-heavy, precision alignment |
@@ -119,7 +119,7 @@ Below is an exhaustive map of every known PDF request type to its handling strat
 | Infographic | creative.md | Data visualization + design |
 | Calendar / schedule | creative.md | Grid layout + custom dimensions |
 
-#### 🔧 Processing (Manipulate existing PDF)
+#### [Tool] Processing (Manipulate existing PDF)
 
 | Scenario | Route | Command / Method |
 |----------|-------|------------------|
@@ -148,7 +148,7 @@ Below is an exhaustive map of every known PDF request type to its handling strat
 
 ### Special Routing Rules
 
-**🚨 Emoji rule (CRITICAL - check FIRST)**: Content with intentional emoji (📊🎯🔥💡 etc.) → force **briefs/creative.md** regardless of document type. ReportLab renders emoji as □ squares; LaTeX silently drops them. This rule overrides all other routing. Even if the user says "report" - if the content has emoji, use Creative pipeline.
+**[ALERT] Emoji rule (CRITICAL - check FIRST)**: Content with intentional emoji ([Chart][Target][Hot][Idea] etc.) → force **briefs/creative.md** regardless of document type. ReportLab renders emoji as □ squares; LaTeX silently drops them. This rule overrides all other routing. Even if the user says "report" - if the content has emoji, use Creative pipeline.
 
 **Non-standard page size rule**: Dimensions other than A4/Letter/A3 → strongly prefer **briefs/creative.md**. Playwright handles any arbitrary page size natively. ReportLab requires manual pagination math.
 
@@ -288,7 +288,7 @@ story.append(img)
 # \includegraphics[width=\columnwidth]{diagram.png}
 ```
 
-**🚫 FORBIDDEN for Report/Creative briefs:** Do NOT use TikZ standalone → compile → pdftoppm → PNG pipeline. This route has no LaTeX compiler and the extra compilation steps are error-prone.
+**[X] FORBIDDEN for Report/Creative briefs:** Do NOT use TikZ standalone → compile → pdftoppm → PNG pipeline. This route has no LaTeX compiler and the extra compilation steps are error-prone.
 
 **TikZ remains valid ONLY for:**
 - Academic brief with simple diagrams (≤6 nodes, linear/hierarchical)
@@ -356,7 +356,7 @@ python3 "$PDF_SKILL_DIR/scripts/pdf.py" convert.html input.html --output output.
 
 Pre-render hooks auto-handle @page injection, overflow detection, cover adaptation, font loading, and pdf-lib metadata.
 
-#### ⚠️ Iron Rule: No Hand-Written Playwright Scripts
+#### [!] Iron Rule: No Hand-Written Playwright Scripts
 
 Common issues with hand-written Python `page.pdf()` (the dedicated scripts handle these automatically):
 1. **Missing `@page` rule** → browser default margin causes content overflow to second page or white edges
@@ -367,7 +367,7 @@ Common issues with hand-written Python `page.pdf()` (the dedicated scripts handl
 
 **Iron rule: Posters and cover pages use `html2poster.js`, multi-page documents use `html2pdf-next.js`. Do not write hand-written Python Playwright scripts.**
 
-> **⚠️ Cover page gotcha:** Cover HTML uses `position: absolute` for layout. `html2pdf-next.js` pre-render hooks convert absolute-positioned elements to `static` flow (to prevent multi-page overlap), which **destroys** cover layouts. Always use `html2poster.js` for cover pages.
+> **[!] Cover page gotcha:** Cover HTML uses `position: absolute` for layout. `html2pdf-next.js` pre-render hooks convert absolute-positioned elements to `static` flow (to prevent multi-page overlap), which **destroys** cover layouts. Always use `html2poster.js` for cover pages.
 
 ### No overflow:hidden on Fixed-Size Pages (html2pdf-next.js only)
 
@@ -659,9 +659,9 @@ palette.cascade --title "..." --format json                # Full structured JSO
 palette.cascade --title "..." --format css                 # CSS custom properties by tier
 palette.cascade --title "..." --format reportlab           # Ready-to-paste ReportLab Python code
 ```
-**⚠️ Cascade palette is the preferred palette system.** It enforces area ∝ 1/saturation (larger areas = lower saturation) and outputs unified color subsets for cover, body, and charts from one base hue. Use `palette.cascade` instead of `palette.generate` for new documents.
+**[!] Cascade palette is the preferred palette system.** It enforces area ∝ 1/saturation (larger areas = lower saturation) and outputs unified color subsets for cover, body, and charts from one base hue. Use `palette.cascade` instead of `palette.generate` for new documents.
 
-**⚠️ Report route MUST call `palette.cascade` (or `palette.generate`) before writing any ReportLab code.** The output is copy-paste ready - no manual hex picking allowed.
+**[!] Report route MUST call `palette.cascade` (or `palette.generate`) before writing any ReportLab code.** The output is copy-paste ready - no manual hex picking allowed.
 
 > **Note**: `design_engine.py compile` produces **HTML** from a JSON blueprint. To get a **PDF**, use `pdf.py convert.blueprint` which internally calls `compile` → Playwright render → PDF output. In the Creative pipeline, always use `convert.blueprint` for the final PDF.
 
@@ -669,9 +669,9 @@ palette.cascade --title "..." --format reportlab           # Ready-to-paste Repo
 
 | Brief | Primary Tool | Secondary | Emoji Support | Custom Page Size |
 |-------|-------------|-----------|---------------|-----------------|
-| Report | ReportLab + pypdf | **Playwright (cover)** | ❌ (tofu □) | Manual pagination |
-| Creative | Playwright | html2pdf-next.js (pdf-lib for post-processing) | ✅ native | ✅ any size |
-| Academic | Tectonic + pypdf | **Playwright (cover)** | ❌ (dropped) | Template-dependent |
+| Report | ReportLab + pypdf | **Playwright (cover)** | [X] (tofu □) | Manual pagination |
+| Creative | Playwright | html2pdf-next.js (pdf-lib for post-processing) | [OK] native | [OK] any size |
+| Academic | Tectonic + pypdf | **Playwright (cover)** | [X] (dropped) | Template-dependent |
 | Process | pikepdf, pdfplumber | LibreOffice (soffice) | N/A | N/A |
 
 > **Unified Cover System**: All routes generate covers via HTML/Playwright. Report uses Templates 01–07, Academic uses Templates 08–10 (dark backgrounds, scholarly typography), Creative generates cover + body in one HTML document. Cover PDFs are merged with body PDFs via pypdf.
@@ -754,7 +754,7 @@ if _scripts not in sys.path:
     sys.path.insert(0, _scripts)
 ```
 
-**⚠️ NEVER use bare `python3 scripts/pdf.py ...`** - it only works if cwd happens to be the skill directory. Always use `$PDF_SKILL_DIR/scripts/` as the absolute prefix.
+**[!] NEVER use bare `python3 scripts/pdf.py ...`** - it only works if cwd happens to be the skill directory. Always use `$PDF_SKILL_DIR/scripts/` as the absolute prefix.
 
 ---
 
@@ -820,11 +820,11 @@ Run `pdf_qa.py` after generating a PDF. It auto-detects: metadata completeness, 
 - [ ] **Absolute Anchor Grid**: All elements use percentage Y-anchors (Part 0, A0.1). NO flow-based layout
 - [ ] **Z-Index Layers**: Render in strict order: Layer 0 (bg fill) → Layer 1 (decorative, CLIPPED) → Layer 2 (structure lines) → Layer 3 (text)
 - [ ] **Typography Weight System**: Use weight/spacing/opacity hierarchy per A0.2 (Kicker: 16pt+3pt spacing+60% opacity; Hero: 45-65pt Heavy; Meta: 20-22pt; Summary: 16-18pt Regular line-height 1.6)
-- [ ] **Mandatory Summary Block** 🆕: Every cover MUST include a Summary/Description drawer (2-4 lines). If user provides none, auto-generate placeholder text (S3.5)
+- [ ] **Mandatory Summary Block** [NEW]: Every cover MUST include a Summary/Description drawer (2-4 lines). If user provides none, auto-generate placeholder text (S3.5)
 - [ ] **Safety checks**: Hero title overflow (max 3 lines, auto-reduce font S3.1); Zone collision detection (S3.2); Uppercase lock for Latin kickers/footers/watermarks (S3.3); Hard width boundary enforcement (S3.4); Summary auto-generation (S3.5); **Background watermark full-display enforcement (S3.6)**
-- [ ] **Background watermark complete** 🆕: All background layer watermark text (year, document type, sidebar text) must be 100% visible within page bounds - auto-shrink font if needed, NEVER clip/truncate
-- [ ] **Data binding correct** 🆕: Hero Title = company/entity name (biggest, heaviest text); Kicker = report type/subtitle (small decorative text). NEVER reverse this mapping
-- [ ] **Fill Engine applied** 🆕: Font floor enforced (body ≥ 14pt single-col / 12pt dual-col, H1 ≥ 32pt, H2 ≥ 24pt, H3 ≥ 18pt); Fill Ratio calculated; inflation triggered when < 65%; Y-axis golden-ratio anchor when < 40%
+- [ ] **Background watermark complete** [NEW]: All background layer watermark text (year, document type, sidebar text) must be 100% visible within page bounds - auto-shrink font if needed, NEVER clip/truncate
+- [ ] **Data binding correct** [NEW]: Hero Title = company/entity name (biggest, heaviest text); Kicker = report type/subtitle (small decorative text). NEVER reverse this mapping
+- [ ] **Fill Engine applied** [NEW]: Font floor enforced (body ≥ 14pt single-col / 12pt dual-col, H1 ≥ 32pt, H2 ≥ 24pt, H3 ≥ 18pt); Fill Ratio calculated; inflation triggered when < 65%; Y-axis golden-ratio anchor when < 40%
 - [ ] **Selected one of 7+4 templates**: General templates 01–07 + Academic templates 08–10 + Institutional template 11. Autonomously select the best-fit template by analyzing document intent (Calm/Tension/Energy/Authority/Warmth) and document type per Part 2 Intent × Type matrix. Thesis proposals/dissertations/institutional submissions → **default Template 11**. No global default - every selection must be a deliberate design decision
 - [ ] **Typography weight hierarchy**: Hero 45-65pt Heavy, Meta 20-22pt Regular, Kicker/Footer 16pt with 3pt letter-spacing + 60% opacity, Summary 16-18pt Regular
 - [ ] **Base spacing unit**: `U = W * 0.05` - all spacing should be multiples of U
@@ -838,7 +838,7 @@ Run `pdf_qa.py` after generating a PDF. It auto-detects: metadata completeness, 
 - [ ] **Line-to-text minimum gap** �F: Decorative lines (Layer 2) must be at least `U` (= `W * 0.05`) away from any text content
 - [ ] **No dark/gradient backgrounds**: No dark fills, no gradients, no high-saturation schemes
 - [ ] **Hard width enforcement**: Text wraps vertically at zone boundary, NEVER bleeds horizontally past assigned width
-- [ ] **🚫 NEVER use ReportLab for covers** — ALL covers (Report, Creative, Academic) are generated via HTML/Playwright. See cover.md for the 10-template system. If you catch yourself writing `canvas.setFillColor()` + `canvas.rect()` for a cover background, STOP — switch to HTML/Playwright.
+- [ ] **[X] NEVER use ReportLab for covers** — ALL covers (Report, Creative, Academic) are generated via HTML/Playwright. See cover.md for the 10-template system. If you catch yourself writing `canvas.setFillColor()` + `canvas.rect()` for a cover background, STOP — switch to HTML/Playwright.
 - [ ] **Line-length alignment (S3.7)**: Vertical lines match text block height (± 1U); horizontal lines ≥ widest text element width (never shorter than text)
 - [ ] **Vertical balance (S3.8)**: No >40% dead whitespace at bottom; sparse content uses centered distribution; CJK titles 15-20% larger than Latin equivalent
 - [ ] **Percentage positioning safety (S3.9)**: Every element with `top: XX%` must have a containing block with deterministic height (`height: 100%`, `inset: 0`, or `top+bottom` pair). Wrappers without explicit height + percentage-positioned children = overlap bug. Prefer px values over percentages
@@ -898,7 +898,7 @@ Run `pdf_qa.py` after generating a PDF. It auto-detects: metadata completeness, 
 - [ ] **Whitespace is design**: Empty space between elements is intentional and valuable. Do NOT fill every gap with decorative elements, horizontal rules, or filler content
 - [ ] **Typography over decoration**: Create visual hierarchy through font size, weight, spacing, and color — not through adding more visual elements. If a design looks busy, REMOVE elements rather than rearranging them
 - [ ] **2-typeface maximum**: Entire document uses at most 2 font families (one serif, one sans-serif). No mixing 3+ fonts for “variety”
-- [ ] **🚫 NO stock images / clipart / AI-generated decorations**: NEVER embed watercolor flowers, floral borders, gold frames, stock photos, clipart illustrations, or AI-generated artwork for decoration. Use geometric shapes (CSS/SVG from geometry.md) + typography for all visual design. Only user-provided content images (photos, logos, diagrams) are allowed. See `visual_framework.md` Stock Image Ban
+- [ ] **[X] NO stock images / clipart / AI-generated decorations**: NEVER embed watercolor flowers, floral borders, gold frames, stock photos, clipart illustrations, or AI-generated artwork for decoration. Use geometric shapes (CSS/SVG from geometry.md) + typography for all visual design. Only user-provided content images (photos, logos, diagrams) are allowed. See `visual_framework.md` Stock Image Ban
 
 ### LaTeX-Specific (academic.md)
 

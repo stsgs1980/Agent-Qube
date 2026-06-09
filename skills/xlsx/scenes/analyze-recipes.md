@@ -219,7 +219,7 @@ f'  - SUMIFS(H$1:H{r-1}, A$1:A{r-1}, A{r}, D$1:D{r-1}, D{r})))'
 
 **Key**: `SUMIFS(H$1:H{r-1}, ...)` creates a running total of already-allocated amounts, achieving row-by-row deduction.
 
-⚠️ This is a self-referencing formula pattern — openpyxl cannot verify it. Must open in Excel to confirm calculation.
+[!] This is a self-referencing formula pattern — openpyxl cannot verify it. Must open in Excel to confirm calculation.
 
 ### Data Provenance Implementation
 

@@ -1,6 +1,6 @@
 # Playwright + CSS Rendering Engine
 
-> **⚠️ Before writing any code, read [`_rules.md`](references/_rules.md) — three non-negotiable rules on overlap, hierarchy, and color.**
+> **[!] Before writing any code, read [`_rules.md`](references/_rules.md) — three non-negotiable rules on overlap, hierarchy, and color.**
 
 **Core principle: Content-driven, not template-driven. Analyze content structure first, then decide layout, then render.**
 
@@ -57,7 +57,7 @@ Infographics (KPI cards, data posters) are simpler to analyze:
 ### 2.1 Flowchart Layout Decision Tree
 
 ```
-⚠️ DEFAULT RULE: When user asks "generate/create XXX 流程图" without specifying format,
+[!] DEFAULT RULE: When user asks "generate/create XXX 流程图" without specifying format,
    DEFAULT to Layout C (Phased Vertical). Almost all real-world processes have phases.
 
 User specified Mermaid/markdown?
@@ -74,11 +74,11 @@ User specified Mermaid/markdown?
                     └─ No → Layout C: CSS Phased Vertical flowchart (fallback also uses C)
 ```
 
-**⚠️ Layout A (Grid) and Layout B (Snake) are only for very special scenarios (e.g., flat comparison, unordered parallel items). Flowcharts default to Layout C.**
+**[!] Layout A (Grid) and Layout B (Snake) are only for very special scenarios (e.g., flat comparison, unordered parallel items). Flowcharts default to Layout C.**
 
-### 🚫 Flowchart Anti-Patterns (FORBIDDEN)
+### [X] Flowchart Anti-Patterns (FORBIDDEN)
 
-| ❌ Bad Pattern | ✅ Correct Pattern |
+| [X] Bad Pattern | [OK] Correct Pattern |
 |---|---|
 | Phase titles (一、二、三...) as isolated left-side text labels | Phase titles as colored title bars, wrapped inside group cards |
 | All nodes flat-laid in Grid without group containers | Each phase wrapped in a `.phase-group` card containing its steps |
@@ -92,7 +92,7 @@ User specified Mermaid/markdown?
 ```python
 def calc_flowchart_canvas(node_count, max_text_len, parallel_count, has_roles, layout):
     node_width = max(180, max_text_len * 16)  # ~16px per CJK char (including padding)
-    
+
     if layout == 'snake':
         cols = min(4, node_count)
         rows = (node_count + cols - 1) // cols
@@ -109,7 +109,7 @@ def calc_flowchart_canvas(node_count, max_text_len, parallel_count, has_roles, l
         width = cols * (node_width + 60) + 120
         rows = (node_count + cols - 1) // cols
         height = rows * 120 + 200
-    
+
     return max(width, 800), max(height, 600)
 ```
 
@@ -117,7 +117,7 @@ def calc_flowchart_canvas(node_count, max_text_len, parallel_count, has_roles, l
 
 **Iron rule: Node background = low-saturation light color, border = high-saturation color. Large high-saturation areas = children's drawing.**
 
-**⚠️ Text contrast iron rule: Dark/accent background nodes must use light text (white or near-white) for title and description.**
+**[!] Text contrast iron rule: Dark/accent background nodes must use light text (white or near-white) for title and description.**
 Light background → dark text (`#1F2937`), dark background → light text (`#FFFFFF` or `#FFF7ED`).
 Common mistake: Endpoint/highlight node switched to dark background, but description text remains dark gray, making it completely unreadable.
 
@@ -137,11 +137,11 @@ Overall chart background = white #FFFFFF.
 **Phase bar colors**: Same-hue gradient (blue-gray family), **never use different hues per phase**.
 
 ```css
-/* ✅ Same-hue blue-gray progression */
+/* [OK] Same-hue blue-gray progression */
 .phase-1 { background: #F0F4F8; border-left: 4px solid #64748B; }
 .phase-2 { background: #E8EDF2; border-left: 4px solid #5B7A99; }
 
-/* ❌ Different hue per phase (rainbow effect) */
+/* [X] Different hue per phase (rainbow effect) */
 .phase-1 { background: #EFF6FF; border-left: 4px solid #3B82F6; }  /* blue */
 .phase-2 { background: #F0FDF4; border-left: 4px solid #10B981; }  /* green */
 .phase-3 { background: #FFF7ED; border-left: 4px solid #F59E0B; }  /* amber */
@@ -160,7 +160,7 @@ from playwright.async_api import async_playwright
 async def html_to_image(html_path, output_path, selector='#root',
                         width=1200, height=None, scale=2):
     """HTML → PNG/PDF
-    
+
     scale: 2 (default crisp), 1.5 (large canvas 3000px+), 3 (print).
     Width must accommodate ALL content. After first render, auto-resize viewport to fit.
     """
@@ -172,7 +172,7 @@ async def html_to_image(html_path, output_path, selector='#root',
         )
         await page.goto(f'file://{html_path}', wait_until='networkidle')
         await page.wait_for_timeout(500)
-        
+
         if output_path.endswith('.pdf'):
             await page.pdf(path=output_path, print_background=True)
         else:
@@ -184,10 +184,10 @@ async def html_to_image(html_path, output_path, selector='#root',
                 await page.set_viewport_size({'width': fit_w, 'height': fit_h})
                 await page.wait_for_timeout(200)
             await el.screenshot(path=output_path)
-        
+
         await browser.close()
         import os
-        print(f'✅ {output_path} ({os.path.getsize(output_path)/1024:.0f}KB)')
+        print(f'[OK] {output_path} ({os.path.getsize(output_path)/1024:.0f}KB)')
 ```
 
 ### 3.2 HTML Universal Shell
@@ -199,7 +199,7 @@ async def html_to_image(html_path, output_path, selector='#root',
 <meta charset="UTF-8">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  
+
   :root {
     --text: #111827;
     --text-sub: #6B7280;
@@ -217,14 +217,14 @@ async def html_to_image(html_path, output_path, selector='#root',
     --negative: #EF4444;
     --connector: #94A3B8;
   }
-  
+
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'SimHei', system-ui, sans-serif;
     background: var(--bg);
     color: var(--text);
     -webkit-font-smoothing: antialiased;
   }
-  
+
   #root { width: fit-content; min-width: 800px; margin: 0 auto; padding: 48px 40px; }
 </style>
 </head>
@@ -309,8 +309,8 @@ For: Flowcharts with branches/decisions, >10 nodes or long CJK text.
 }
 
 /* ─── Parallel branch constraints (prevent overlap when multiple nodes in same row) ─── */
-/* 
-  ⚠️ Parallel branch iron rules:
+/*
+  [!] Parallel branch iron rules:
   1. Gap between parallel nodes in same row ≥ 40px (guaranteed by .flow-grid gap)
   2. Each node max-width: 260px + word-break: break-word (set in .flow-node)
   3. If parallel nodes > 3 → switch to vertical branch layout (don't force-squeeze into one row)
@@ -357,26 +357,26 @@ function drawConnectors(connections) {
   const svg = document.getElementById('connectorSvg');
   const container = svg.parentElement;
   const cRect = container.getBoundingClientRect();
-  
+
   svg.setAttribute('width', cRect.width);
   svg.setAttribute('height', cRect.height);
   svg.setAttribute('viewBox', `0 0 ${cRect.width} ${cRect.height}`);
-  
+
   // Clear old connectors (keep defs)
   svg.querySelectorAll('line, path, text.connector-label').forEach(el => el.remove());
-  
+
   connections.forEach(([fromId, toId, label]) => {
     const fromEl = document.querySelector(`[data-id="${fromId}"]`);
     const toEl = document.querySelector(`[data-id="${toId}"]`);
     if (!fromEl || !toEl) return;
-    
+
     const f = fromEl.getBoundingClientRect();
     const t = toEl.getBoundingClientRect();
     const x1 = f.left + f.width/2 - cRect.left;
     const y1 = f.bottom - cRect.top;
     const x2 = t.left + t.width/2 - cRect.left;
     const y2 = t.top - cRect.top;
-    
+
     if (Math.abs(x1 - x2) < 10) {
       // Same column → straight line
       const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
@@ -390,7 +390,7 @@ function drawConnectors(connections) {
       path.setAttribute('d', `M ${x1} ${y1} L ${x1} ${midY} L ${x2} ${midY} L ${x2} ${y2}`);
       svg.appendChild(path);
     }
-    
+
     if (label) {
       const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
       text.setAttribute('x', (x1 + x2) / 2);
@@ -416,7 +416,7 @@ function ensureArrowDef(svg) {
 ```html
 <div id="root">
   <div class="flow-title">流程图标题</div>
-  
+
   <div style="position: relative;">
     <svg class="flow-connectors" id="connectorSvg"></svg>
     <div class="flow-grid" id="flowGrid">
@@ -435,7 +435,7 @@ function ensureArrowDef(svg) {
       </div>
     </div>
   </div>
-  
+
   <div class="flow-legend">
     <div class="legend-item"><div class="legend-dot" style="border-color:#3B82F6;background:#EFF6FF;"></div>步骤</div>
     <div class="legend-item"><div class="legend-dot" style="border-color:#F59E0B;background:#FFF7ED;"></div>判断</div>
@@ -531,9 +531,9 @@ Phase-to-phase connector arrows MUST match the logical flow direction. If the fl
 
 /* Phase colors — same-hue blue-gray gradient (low saturation, easy on the eyes)
    All phases share the blue-gray color family, distinguished by brightness progression.
-   🚫 FORBIDDEN: Different hue per phase (blue→green→amber→purple) — becomes rainbow with many phases.
-   ✅ CORRECT: Progress within same hue family (light→dark), or pure grayscale + single-color accent.
-   
+   [X] FORBIDDEN: Different hue per phase (blue→green→amber→purple) — becomes rainbow with many phases.
+   [OK] CORRECT: Progress within same hue family (light→dark), or pure grayscale + single-color accent.
+
    Two schemes provided below; model selects based on phase count:
    - ≤4 phases: Scheme A (blue-gray progression)
    - 5-7 phases: Scheme B (neutral gray base + blue accent progression)
@@ -574,7 +574,7 @@ Phase-to-phase connector arrows MUST match the logical flow direction. If the fl
 ```html
 <div id="root">
   <div class="flow-title">项目流程</div>
-  
+
   <div class="phase-group phase-1">
     <div class="phase-title">第一阶段：需求分析</div>
     <div class="phase-steps">
@@ -583,10 +583,10 @@ Phase-to-phase connector arrows MUST match the logical flow direction. If the fl
       <div class="phase-step"><span class="step-num">3</span>需求优先级排序</div>
     </div>
   </div>
-  
+
   <!-- Phase-to-phase arrow (use SVG or simple centered down arrow) -->
   <div style="text-align:center; color:#94A3B8; font-size:24px; margin: 8px 0;">↓</div>
-  
+
   <div class="phase-group phase-2">
     <div class="phase-title">第二阶段：设计开发</div>
     <div class="phase-steps">
@@ -793,9 +793,9 @@ Priority:
 
 | Capability | Playwright+CSS | matplotlib | ECharts |
 |------|---------------|------------|---------|
-| Gradients/shadows/rounded | ✅ Full CSS power | ❌ Limited | ⚠️ Partial |
-| Responsive layout | ✅ Flexbox/Grid | ❌ Fixed size | ⚠️ resize |
-| PNG/PDF export | ✅ Native | ✅ savefig | ⚠️ Needs Playwright |
-| Precise data charts | ⚠️ Manual | ✅ Built-in | ✅ Built-in |
+| Gradients/shadows/rounded | [OK] Full CSS power | [X] Limited | [!] Partial |
+| Responsive layout | [OK] Flexbox/Grid | [X] Fixed size | [!] resize |
+| PNG/PDF export | [OK] Native | [OK] savefig | [!] Needs Playwright |
+| Precise data charts | [!] Manual | [OK] Built-in | [OK] Built-in |
 
 **Best practice: CSS for layout and visual design, embed ECharts/SVG for precise charts.**

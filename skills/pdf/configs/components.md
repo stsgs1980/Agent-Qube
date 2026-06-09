@@ -1,21 +1,21 @@
 # Components — Art Direction JSON Lexicon
 
-This file defines the strict component vocabulary for the Creative pipeline. 
+This file defines the strict component vocabulary for the Creative pipeline.
 
-**CRITICAL RULE: DO NOT OUTPUT HTML OR CSS.** 
+**CRITICAL RULE: DO NOT OUTPUT HTML OR CSS.**
 You are an Art Director. You only output JSON. To use these components, insert their corresponding JSON objects into the `components` array of your page blueprint. The `design_engine.py` will automatically compile them into gallery-grade visual assets.
 
 ---
 
 ## 1. Glass_Canvas
-The primary container for readable body text. Simulates printed text on frosted acrylic. 
+The primary container for readable body text. Simulates printed text on frosted acrylic.
 
 **JSON Blueprint Structure:**
 ```json
 {
   "type": "Glass_Canvas",
   "markdown_content": "### The Divide\nYour text goes here. Supports standard Markdown.",
-  "tension_score": 0.8 
+  "tension_score": 0.8
 }
 ```
 **Parameters:**

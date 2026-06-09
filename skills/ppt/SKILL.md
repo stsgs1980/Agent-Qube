@@ -291,25 +291,25 @@ If the answer to any is "no", revise before proceeding.
    ```javascript
    const pptxgen = require('pptxgenjs');
    const html2pptx = require('./html2pptx');
-   
+
    const pptx = new pptxgen();
    pptx.layout = 'LAYOUT_16x9';
-   
+
    // Optional: custom font configuration
    const fontConfig = { cjk: 'Microsoft YaHei', latin: 'Corbel' };
-   
+
    // Process ALL slides with warnings collection
    const allWarnings = [];
    for (const htmlFile of slideFiles) {
      const { slide, placeholders, warnings } = await html2pptx(htmlFile, pptx, { fontConfig });
      allWarnings.push(...warnings);
    }
-   
+
    // Add charts to placeholder areas if any
    if (placeholders.length > 0) {
        slide.addChart(pptx.charts.LINE, chartData, placeholders[0]);
    }
-   
+
    await pptx.writeFile('output.pptx');
    ```
 
@@ -332,14 +332,14 @@ If the answer to any is "no", revise before proceeding.
 
 Before finalizing, do a quick visual quality scan:
 
-- ✅ Real photographs used (cover + at least 1 other slide)
-- ✅ Background variety (at least 3 different treatments)
-- ✅ No 2 consecutive slides look the same
-- ✅ Multiple layout structures used (aim for 5+)
-- ✅ Card styles vary across pages
-- ✅ Every slide has a clear visual focal point
-- ✅ At least 1 dramatic full-bleed or dark page exists
-- ✅ All referenced image files exist and are > 10KB
+- [OK] Real photographs used (cover + at least 1 other slide)
+- [OK] Background variety (at least 3 different treatments)
+- [OK] No 2 consecutive slides look the same
+- [OK] Multiple layout structures used (aim for 5+)
+- [OK] Card styles vary across pages
+- [OK] Every slide has a clear visual focal point
+- [OK] At least 1 dramatic full-bleed or dark page exists
+- [OK] All referenced image files exist and are > 10KB
 
 If major issues are found, fix and regenerate. Minor imperfections are acceptable — don't over-optimize at the cost of creativity.
 

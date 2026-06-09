@@ -4,7 +4,7 @@
 
 Finance API provides comprehensive financial data access interfaces, including real-time market data, historical stock prices, and the latest financial news.
 
-### 🌐 Access via API Gateway
+### [Web] Access via API Gateway
 
 **This API is accessed through the web-dev-ai-gateway unified proxy service.**
 

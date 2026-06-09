@@ -787,11 +787,11 @@ import ZAI from 'z-ai-web-dev-sdk';
 async function readPagesInParallel(urls, concurrency = 3) {
   const zai = await ZAI.create();
   const results = [];
-  
+
   // Process in batches
   for (let i = 0; i < urls.length; i += concurrency) {
     const batch = urls.slice(i, i + concurrency);
-    
+
     const batchResults = await Promise.allSettled(
       batch.map(url =>
         zai.functions.invoke('page_reader', { url })
@@ -935,8 +935,8 @@ app.post('/api/read-page', async (req, res) => {
     const { url } = req.body;
 
     if (!url) {
-      return res.status(400).json({ 
-        error: 'URL is required' 
+      return res.status(400).json({
+        error: 'URL is required'
       });
     }
 
@@ -967,8 +967,8 @@ app.post('/api/read-multiple', async (req, res) => {
     const { urls } = req.body;
 
     if (!urls || !Array.isArray(urls)) {
-      return res.status(400).json({ 
-        error: 'URLs array is required' 
+      return res.status(400).json({
+        error: 'URLs array is required'
       });
     }
 
@@ -1055,12 +1055,12 @@ class ScheduledFetcher {
       console.log(`Fetching ${url}...`);
       const result = await this.fetchContent(url);
       this.results.push(result);
-      
+
       // Keep only last 100 results
       if (this.results.length > 100) {
         this.results = this.results.slice(-100);
       }
-      
+
       console.log(`Fetched: ${result.success ? result.title : result.error}`);
     });
   }

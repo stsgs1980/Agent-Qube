@@ -30,9 +30,9 @@
 ```
 
 **Practical Standards**:
-- Last page content ratio >= 40% → ✅ Pass
-- Last page content ratio 25%-40% → ⚠️ Acceptable but optimization recommended
-- Last page content ratio < 25% → ❌ Must adjust
+- Last page content ratio >= 40% → [OK] Pass
+- Last page content ratio 25%-40% → [!] Acceptable but optimization recommended
+- Last page content ratio < 25% → [X] Must adjust
 
 ---
 
@@ -215,7 +215,7 @@ figure, .card, .kpi-card, .project-card {
 }
 ```
 
-> **⚠️ Image `max-height` is critical.** `break-inside: avoid` alone can cause images to occupy an entire page when the image is tall. Always pair with `max-height` from overflow.md (`img { max-height: 45vh }`) to prevent single images from consuming a full page.
+> **[!] Image `max-height` is critical.** `break-inside: avoid` alone can cause images to occupy an entire page when the image is tall. Always pair with `max-height` from overflow.md (`img { max-height: 45vh }`) to prevent single images from consuming a full page.
 
 ### List Item Binding
 ```css

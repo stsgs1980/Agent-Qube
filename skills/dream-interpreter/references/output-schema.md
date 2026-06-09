@@ -13,21 +13,21 @@
   "visual_elements": ["string — 视觉元素标识，最多5个，见 visual-mapping.md"],
   "interpretations": {
     "zhouGong": {
-      "icon": "🔮",
+      "icon": "[Crystal]",
       "title": "周公解梦",
       "content": "string — 主体解读，100-200字",
       "fortune": "string — 吉凶判断：大吉/吉/中性/中性偏凶/凶",
       "advice": "string — 一句话建议，宜忌格式"
     },
     "freud": {
-      "icon": "🧠",
+      "icon": "[Brain]",
       "title": "心理分析",
       "content": "string — 心理分析，100-200字",
       "insight": "string — 一句话核心洞察",
       "advice": "string — 一个具体的自我关照建议"
     },
     "cyber": {
-      "icon": "🌀",
+      "icon": "[Spiral]",
       "title": "赛博神棍",
       "content": "string — 赛博解读，100-200字",
       "prediction": "string — 一句离谱预言",

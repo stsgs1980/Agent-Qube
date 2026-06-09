@@ -85,11 +85,11 @@ Background    → Pure white / primary at opacity 3-8%
 
 The following are automatic failures:
 
-- ❌ 4 cards using 4 completely different colors (red/blue/green/purple)
-- ❌ Alternating table rows in different colors (blue row/pink row)
-- ❌ Rainbow-colored pie charts/bar charts
-- ❌ Each section with a different theme color
-- ❌ Gradient transitioning from warm to cool tones (red → blue)
+- [X] 4 cards using 4 completely different colors (red/blue/green/purple)
+- [X] Alternating table rows in different colors (blue row/pink row)
+- [X] Rainbow-colored pie charts/bar charts
+- [X] Each section with a different theme color
+- [X] Gradient transitioning from warm to cool tones (red → blue)
 
 ---
 
@@ -109,7 +109,7 @@ Accent:          hsl(H+15, S, L)        — Warnings, highlights (micro hue shif
 
 ### Example: Deriving from a primary color
 
-> ⚠️ The hex values below are **examples only**. In production, use `palette.cascade` or `palette.generate` to compute the full palette from intent.
+> [!] The hex values below are **examples only**. In production, use `palette.cascade` or `palette.generate` to compute the full palette from intent.
 
 ```css
 :root {
@@ -169,10 +169,10 @@ When distinguishing multiple sibling elements (e.g., multiple cards, categories)
 - **Primary to transparent**: `linear-gradient(90deg, var(--c-primary), transparent)` — for decorative lines
 
 ### Forbidden Gradients
-- ❌ Warm-to-cool crossover: `linear-gradient(#ff6b6b, #4ecdc4)`
-- ❌ More than 3 colors: `linear-gradient(red, yellow, green, blue)`
-- ❌ Neon gradients: Any high-saturation gradient
-- ❌ Gratuitous gradients: Gradients added purely for "looks nice" without purpose
+- [X] Warm-to-cool crossover: `linear-gradient(#ff6b6b, #4ecdc4)`
+- [X] More than 3 colors: `linear-gradient(red, yellow, green, blue)`
+- [X] Neon gradients: Any high-saturation gradient
+- [X] Gratuitous gradients: Gradients added purely for "looks nice" without purpose
 
 ---
 

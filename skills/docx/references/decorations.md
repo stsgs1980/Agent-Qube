@@ -4,7 +4,7 @@
 
 Uses only docx-js native capabilities for visual decoration — no external tools (like Playwright screenshots). Suitable for covers, chapter separators, page background enhancement.
 
-**When to fall back to Playwright?**  
+**When to fall back to Playwright?**
 Only when gradients, complex illustrations, or brand visuals are needed that pure OOXML cannot express. Default: prefer native solutions below.
 
 ### Decoration Element Library
@@ -51,7 +51,7 @@ function buildCoverR6(config) {
   const CONTENT_H = 16838 - FOOTER_H;
   const shading = { fill: P.bg || "F7F7F5", type: ShadingType.CLEAR };
 
-  // ⚠️ R6 uses a simplified title layout: prefer single line, shrink font to fit
+  // [!] R6 uses a simplified title layout: prefer single line, shrink font to fit
   const availW = 11906 - PAD_L - PAD_R;
   const { titlePt, titleLines } = calcTitleLayoutR6(config.title, availW, 36, 22);
   const titleSize = titlePt * 2;
@@ -390,8 +390,8 @@ function infoCard(title, items, accentColor) {
 //         right-aligned info block with accent right border, Swiss cross anchor
 // Key features: ■ square accent dot, open-frame tables, large whitespace
 //
-// ⚠️ MANDATORY: All cover non-negotiables apply (margin=0, 16838 exact, allNoBorders)
-// ⚠️ Title uses calcTitleLayout() with maxPt=36 (not 40 — R7 uses lighter visual weight)
+// [!] MANDATORY: All cover non-negotiables apply (margin=0, 16838 exact, allNoBorders)
+// [!] Title uses calcTitleLayout() with maxPt=36 (not 40 — R7 uses lighter visual weight)
 
 function buildCoverR7(config) {
   const P = palettes[config.palette || "ST-1"];

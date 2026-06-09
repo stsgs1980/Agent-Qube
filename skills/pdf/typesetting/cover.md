@@ -4,7 +4,7 @@
 
 ---
 
-## ⚠️ Critical Rules (Read First)
+## [!] Critical Rules (Read First)
 
 1. **Cover is OPTIONAL.** Do NOT force a cover on documents that don't need one. When in doubt, skip.
 2. **Unified cover system.** All routes (Report, Creative, Academic) use the HTML/Playwright cover system. Templates 01-07 are general-purpose; Templates 08-10 are academic-specific (dark backgrounds, scholarly typography); **Template 11 is institutional (white bg, black border frame, structured fields)**. All routes generate covers via Playwright and merge via pypdf.
@@ -20,13 +20,13 @@
 
 | Document Type | Cover Needed | Notes |
 |---------------|-------------|-------|
-| Formal report (annual, research, white paper) | ✅ Required | Conveys professionalism |
-| Proposal / plan | ✅ Required | First impression is everything |
-| Resume | ❌ Not needed | Content itself is the cover |
-| Menu / flyer / card | ❌ Not needed | Single page or function-oriented |
-| Invitation | ❌ Not needed | The front side IS the cover |
-| Lab report / academic paper | ⚠️ Situational | Add when template requires it |
-| Portfolio / lookbook | ✅ Required | Cover sets the tone |
+| Formal report (annual, research, white paper) | [OK] Required | Conveys professionalism |
+| Proposal / plan | [OK] Required | First impression is everything |
+| Resume | [X] Not needed | Content itself is the cover |
+| Menu / flyer / card | [X] Not needed | Single page or function-oriented |
+| Invitation | [X] Not needed | The front side IS the cover |
+| Lab report / academic paper | [!] Situational | Add when template requires it |
+| Portfolio / lookbook | [OK] Required | Cover sets the tone |
 
 ---
 
@@ -92,11 +92,11 @@ Use **weight**, **letter-spacing**, and **opacity** to create hierarchy - not ju
 | Role | Size | Weight | Letter-Spacing | Line-Height | Opacity | Purpose |
 |------|------|--------|----------------|-------------|---------|---------|
 | **Kicker / Footer** (decorative text) | 16pt | Regular | 3pt (very wide) | - | 60% | Wide spacing + transparency makes 16pt text feel delicate and recessive |
-| **Summary / Description** (summary paragraph) 🆕 | 16-18pt | Regular | normal | **1.6** | 85% | **Fill visual space** - 2-4 lines of descriptive text that prevents empty covers |
+| **Summary / Description** (summary paragraph) [NEW] | 16-18pt | Regular | normal | **1.6** | 85% | **Fill visual space** - 2-4 lines of descriptive text that prevents empty covers |
 | **Meta / Subtitle** (secondary text) | 20-22pt | Light / Regular | normal | 1.4 | 85% | Comfortable reading rhythm, clear secondary hierarchy |
 | **Hero Title** (main title) | 45-65pt (CJK: 50-80pt) | Black / Heavy (extra bold) | normal-tight | **1.15** (multi-line) | 100% | Must create overwhelming scale contrast; visually dominates the page. CJK characters need +15-20% size to match Latin visual weight |
 
-### 🔴 Data-to-Drawer Binding Rule
+### [!!] Data-to-Drawer Binding Rule
 
 > **Hero Title = Company/entity name. Kicker = Report type/subtitle. Never reverse.**
 
@@ -116,7 +116,7 @@ When users provide structured information (company name + report name/type), the
 3. If user explicitly labels "title" and "subtitle" → title → Hero Title, subtitle → Kicker
 4. **Never use report type names (e.g. "Annual Report", "White Paper") as Hero Title's largest text** - report type is always Kicker-level decorative text
 
-### The Summary Block Rule (Anti-Void Iron Rule) 🆕
+### The Summary Block Rule (Anti-Void Iron Rule) [NEW]
 
 > Every cover MUST include a Summary/Description text block. If the user provides no summary, the system MUST auto-generate one.
 
@@ -180,11 +180,11 @@ canvas.clipPath(p, stroke=0)
 canvas.restoreState()
 ```
 
-> ⚠️ **Clip scope = Layer 1 ONLY。** In HTML/CSS covers, `overflow: hidden` must ONLY be on the Layer 1 background container. Layer 2 (lines) and Layer 3 (text) containers must NOT have `overflow: hidden`.
+> [!] **Clip scope = Layer 1 ONLY。** In HTML/CSS covers, `overflow: hidden` must ONLY be on the Layer 1 background container. Layer 2 (lines) and Layer 3 (text) containers must NOT have `overflow: hidden`.
 > For ReportLab body pages: `saveState()`/`restoreState()` must close immediately after Layer 1 background rendering.
 > Layer 2 (lines) and Layer 3 (text) must never be rendered within a clip scope, otherwise text will be clipped.
 
-### 🔴 Anti-Clip Bug (Layer 3 Text Truncation Fix)
+### [!!] Anti-Clip Bug (Layer 3 Text Truncation Fix)
 
 **Symptom:** Cover text is visible but truncated by an invisible boundary, only half visible.
 
@@ -192,7 +192,7 @@ canvas.restoreState()
 
 **Iron rule (HTML/CSS - canonical cover implementation):**
 ```html
-<!-- ✅ CORRECT - overflow:hidden only on Layer 1 -->
+<!-- [OK] CORRECT - overflow:hidden only on Layer 1 -->
 <div class="cover-layer-1" style="position:absolute; inset:0; overflow:hidden; z-index:1;">
   <!-- Background decorative elements -->
 </div>
@@ -203,7 +203,7 @@ canvas.restoreState()
   <!-- Text content, no overflow:hidden -->
 </div>
 
-<!-- ❌ WRONG - global overflow:hidden clips text -->
+<!-- [X] WRONG - global overflow:hidden clips text -->
 <div class="cover-container" style="overflow:hidden;">
   <div class="layer-1">...</div>
   <div class="layer-2">...</div>
@@ -213,7 +213,7 @@ canvas.restoreState()
 
 **Iron rule (ReportLab - body page background element reference):**
 ```python
-# ✅ CORRECT - clip only wraps Layer 1
+# [OK] CORRECT - clip only wraps Layer 1
 canvas.saveState()
 canvas.clipPath(page_clip, stroke=0)
 render_layer_1_background(canvas)   # Background decoration
@@ -222,7 +222,7 @@ canvas.restoreState()                # ← Must close here immediately!
 render_layer_2_lines(canvas)         # Structure lines - not inside clip
 render_layer_3_text(canvas)          # Text content - not inside clip
 
-# ❌ WRONG - text clipped by clip scope
+# [X] WRONG - text clipped by clip scope
 canvas.saveState()
 canvas.clipPath(page_clip, stroke=0)
 render_layer_1_background(canvas)
@@ -238,7 +238,7 @@ canvas.restoreState()
 .cover-text-layer { overflow: visible; z-index: 3; } /* text not clipped */
 ```
 
-### 🔴 No Page Border/Frame
+### [!!] No Page Border/Frame
 
 **Symptom:** A rectangular border appears around the entire cover page, looking like a table.
 
@@ -250,7 +250,7 @@ canvas.restoreState()
 Frame(x, y, w, h, showBoundary=0)  # Always 0
 
 # Never draw a full-page border on the cover
-canvas.rect(0, 0, W, H)  # ❌ BANNED on cover page
+canvas.rect(0, 0, W, H)  # [X] BANNED on cover page
 
 # If using doc.showBoundary, cover page must be skipped
 doc = SimpleDocTemplate(..., showBoundary=0)  # Always 0 in production
@@ -265,7 +265,7 @@ doc = SimpleDocTemplate(..., showBoundary=0)  # Always 0 in production
 }
 ```
 
-### 🔴 Minimum Spacing Between Decorative Lines and Text (Line-to-Text Spacing)
+### [!!] Minimum Spacing Between Decorative Lines and Text (Line-to-Text Spacing)
 
 **Symptom:** Decorative lines on the cover (Layer 2 dividers, corner marks, sidebar edges) are flush against or overlapping with text.
 
@@ -286,7 +286,7 @@ i.e., at least 1 U of whitespace between line edges and text edges
 # Example: Template 01 vertical thick line to title spacing
 thick_line_x = 0.10 * W
 title_x = thick_line_x + 2 * U  # 2U spacing to the right of the thick line
-# ❌ WRONG: title_x = thick_line_x + 5  # 5pt is too close, will overlap
+# [X] WRONG: title_x = thick_line_x + 5  # 5pt is too close, will overlap
 ```
 
 ---
@@ -322,7 +322,7 @@ All templates inherit the A0.0-A0.3 architecture rules above.
 |--------|----------|---------|-------------|
 | **A - Kicker** | `0.15 * H` | Report type / subtitle (e.g. "2025 Annual Report Summary") | 16pt, Regular, letter-spacing 3pt, opacity 60%, uppercase |
 | **B - Hero Title** | `0.30 * H` | **Company/entity name** (e.g. "GREENTECH") | 45-65pt (CJK: 50-80pt), Heavy. Company name is the visual center |
-| **C - Summary** 🆕 | `0.50 * H` | 2-3 lines descriptive text about the report | 16-18pt, Regular, line-height 1.6, opacity 85%. **Width limit: `W * 0.6`**, auto-wrap. This drawer fills the mid-page void |
+| **C - Summary** [NEW] | `0.50 * H` | 2-3 lines descriptive text about the report | 16-18pt, Regular, line-height 1.6, opacity 85%. **Width limit: `W * 0.6`**, auto-wrap. This drawer fills the mid-page void |
 | **D - Meta/Date** | `0.75 * H` | Author, org, date | 16-20pt, Regular. Top edge separated by the 1pt meta line |
 
 ### Best For
@@ -335,7 +335,7 @@ Technology reports, data analysis, dashboard summaries, technical white papers
 **Design intent:** Top-bottom symmetry. Top bar provides structural weight, bottom-right info block creates diagonal balance. Solves the "empty edges" problem.
 
 ### Layer 1 - Background
-- **Background giant year watermark:** Text = current year (e.g. "2026"), **Max font size = 180pt**, measure rendered width - if it exceeds `W * 0.85`, scale down proportionally. Position: `X = W - 20pt` (right edge), `Y = 0.15*H`. Color = primary at **4% opacity**. Font weight = Black. ⚠️ **Full-display iron rule: watermark text must be 100% within the visible page area - cropping is strictly forbidden. Prefer reducing font size over truncation.**
+- **Background giant year watermark:** Text = current year (e.g. "2026"), **Max font size = 180pt**, measure rendered width - if it exceeds `W * 0.85`, scale down proportionally. Position: `X = W - 20pt` (right edge), `Y = 0.15*H`. Color = primary at **4% opacity**. Font weight = Black. [!] **Full-display iron rule: watermark text must be 100% within the visible page area - cropping is strictly forbidden. Prefer reducing font size over truncation.**
 
 ### Layer 2 - Structure
 - **Top bar (skyline):** Rectangle at `(0, 0)`, width = `W`, height = **15pt**, primary color fill. Edge-to-edge.
@@ -346,7 +346,7 @@ Technology reports, data analysis, dashboard summaries, technical white papers
 | Drawer | Position | Content | Constraints |
 |--------|----------|---------|-------------|
 | **Left upper - Title group** | `X = 0.12*W`, `Y = 0.15*H` | Kicker (report type/subtitle, 16pt) → Hero Title (company/entity name, 45-65pt / CJK 50-80pt, Heavy) | Stack downward from anchor |
-| **Mid-left - Summary** 🆕 | `X = 0.12*W`, `Y = 0.50*H` | Descriptive paragraph | 16-18pt, Regular, line-height 1.6. **Width limit: `W * 0.5`** |
+| **Mid-left - Summary** [NEW] | `X = 0.12*W`, `Y = 0.50*H` | Descriptive paragraph | 16-18pt, Regular, line-height 1.6. **Width limit: `W * 0.5`** |
 | **Right lower - Meta** | Right-aligned at `X = 0.88*W - 20pt`, `Y = 0.70*H` | Date, version, author | **Right-aligned**, 16-20pt. Must hug the 4pt accent line |
 
 ### Best For
@@ -359,7 +359,7 @@ Annual reports, financial summaries, investor documents, corporate governance re
 **Design intent:** Everything hard-left. Right-side watermark counterbalances the asymmetry. Solves the "right half is empty" bug.
 
 ### Layer 1 - Background
-- **Right-side vertical watermark (load-bearing wall):** Extract a short English word (e.g. "REPORT"). **Auto-scaling font size:** `Max_Font_Size = 180pt`, measure total height after rotation - if it exceeds `H * 0.85`, scale down proportionally. **Rotate 90° clockwise** (or use vertical text mode). Anchor at `X = 0.85*W`, vertically centered: `Y = (H - rendered_text_width) / 2`. Color = primary at **3% opacity**. ⚠️ **Full-display iron rule: watermark text must be 100% within the visible page area - cropping is strictly forbidden. Prefer reducing font size over truncation.**
+- **Right-side vertical watermark (load-bearing wall):** Extract a short English word (e.g. "REPORT"). **Auto-scaling font size:** `Max_Font_Size = 180pt`, measure total height after rotation - if it exceeds `H * 0.85`, scale down proportionally. **Rotate 90° clockwise** (or use vertical text mode). Anchor at `X = 0.85*W`, vertically centered: `Y = (H - rendered_text_width) / 2`. Color = primary at **3% opacity**. [!] **Full-display iron rule: watermark text must be 100% within the visible page area - cropping is strictly forbidden. Prefer reducing font size over truncation.**
 
 ### Layer 2 - Structure
 - **Color dash (visual guide line):** At `(0.12*W, 0.15*H)`, draw a horizontal bar: width = **50pt**, height = **5pt**, primary color.
@@ -374,7 +374,7 @@ Annual reports, financial summaries, investor documents, corporate governance re
 | **A - Color dash** | `0.15 * H` | Structure element (not text) | 50pt × 5pt bar |
 | **B - Kicker** | `0.20 * H` | Report type / subtitle | 16pt, Regular, letter-spacing 3pt, uppercase, opacity 60% |
 | **C - Hero Title** | `0.28 * H` | **Company/entity name** | 45-65pt (CJK: 50-80pt), Heavy |
-| **D - Summary** 🆕 | `0.45 * H` | Descriptive paragraph (key anti-void element) | 16-18pt, Regular, line-height 1.6. **Width limit: `W * 0.55`** (must not collide with right watermark) |
+| **D - Summary** [NEW] | `0.45 * H` | Descriptive paragraph (key anti-void element) | 16-18pt, Regular, line-height 1.6. **Width limit: `W * 0.55`** (must not collide with right watermark) |
 | **E - Meta** | `0.70 * H` | Author, org, version | 20pt, Regular, line-height 2.0. Left of the 2pt accent line |
 | **F - Footer** | `0.90 * H` | Date + doc number, right-aligned at `X = 0.88*W` | 16pt, Regular, opacity 60% |
 
@@ -413,7 +413,7 @@ White papers, project proposals, government documents, technical standards
 |------|------|-------|
 | Kicker | 16pt | Uppercase, letter-spacing 4pt, opacity 50%. Bound to report type/subtitle |
 | Hero Title | 48-60pt | Heavy - slightly smaller than other templates to fit center composition. **Bound to company/entity name** |
-| Summary 🆕 | 16-18pt | Regular, line-height 1.6, center-aligned, width ≤ `W * 0.6` |
+| Summary [NEW] | 16-18pt | Regular, line-height 1.6, center-aligned, width ≤ `W * 0.6` |
 | Meta | 16pt | Regular, opacity 60%, at bottom of group |
 
 ### Best For
@@ -433,7 +433,7 @@ Gallery catalogs, design portfolios, exhibition materials, luxury brand document
 | Group | Position | Content | Constraints |
 |-------|----------|---------|-------------|
 | **Upper-left group** | Anchor: `X = 0.15*W`, `Y = 0.20*H` | Kicker (report type/subtitle, 16pt gap) → Hero Title (company/entity name, 45-65pt / CJK 50-80pt, Heavy) | Left-aligned. Width limit: `W * 0.7` |
-| **Lower-right group** 🆕 | Anchor: `X = 0.45*W`, `Y = 0.60*H` | Summary + Meta + Footer | **Left-aligned** (NOT right-aligned - intentional asymmetry). A **3pt vertical accent line** of height = group text height is drawn at `X = 0.45*W - 12pt` as a visual anchor. Line-height 2.0 for meta, 24pt gap before footer |
+| **Lower-right group** [NEW] | Anchor: `X = 0.45*W`, `Y = 0.60*H` | Summary + Meta + Footer | **Left-aligned** (NOT right-aligned - intentional asymmetry). A **3pt vertical accent line** of height = group text height is drawn at `X = 0.45*W - 12pt` as a visual anchor. Line-height 2.0 for meta, 24pt gap before footer |
 
 **Visual effect:** Upper-left and lower-right groups are "pulled apart" across the diagonal. The empty top-right and bottom-left create tension, not emptiness.
 
@@ -474,7 +474,7 @@ These create 4 zones:
 |------|---------|---------|---------|-------|
 | **A** | Kicker / report type | `0.10*W` - `0.90*W` | `0.15*H` - `0.23*H` | Left-aligned at `X = 0.12*W` |
 | **B** | **Hero Title (company/entity name)** | `0.10*W` - `0.43*W` | `0.28*H` - `0.70*H` | **Width = `0.33*W`**. Font must be large enough to physically fill the cell. Text wraps at boundary. |
-| **C** | **Summary text** 🆕 | `0.48*W` - `0.90*W` | `0.28*H` - `0.70*H` | **Must contain substantial descriptive text** - this zone MUST be filled. 16-18pt, Regular, line-height 1.6. This is the primary anti-empty-page mechanism. |
+| **C** | **Summary text** [NEW] | `0.48*W` - `0.90*W` | `0.28*H` - `0.70*H` | **Must contain substantial descriptive text** - this zone MUST be filled. 16-18pt, Regular, line-height 1.6. This is the primary anti-empty-page mechanism. |
 | **D** | Footer / date / number | `0.10*W` - `0.90*W` | `0.78*H` - `0.88*H` | Can split: left part + right-aligned part |
 
 ### Zone Overflow Protection (MANDATORY)
@@ -506,7 +506,7 @@ Swiss-style design, data-heavy reports, structured corporate documents, annual r
 
 ### Layer 1 - Background
 - **Left sidebar block (giant sidebar pillar):** Rectangle at `(0, 0)`, width = **`0.1*W`** (~80pt on A4), height = `H`. Primary color fill.
-- **Sidebar watermark:** Inside the sidebar, render a short word (doc type or year) rotated **-90°**, white at **15% opacity**, vertically centered within the sidebar. **Auto-scaling font size:** `Max_Font_Size = H * 0.5`, measure total height after rotation - if it exceeds `H * 0.85`, scale down proportionally. ⚠️ **Full-display iron rule: watermark text must be 100% within the visible page area - cropping is strictly forbidden.**
+- **Sidebar watermark:** Inside the sidebar, render a short word (doc type or year) rotated **-90°**, white at **15% opacity**, vertically centered within the sidebar. **Auto-scaling font size:** `Max_Font_Size = H * 0.5`, measure total height after rotation - if it exceeds `H * 0.85`, scale down proportionally. [!] **Full-display iron rule: watermark text must be 100% within the visible page area - cropping is strictly forbidden.**
 
 ### Layer 2 - Structure
 - **Bottom horizontal line:** At `Y = 0.90*H`, from `X = Left_Edge` to `X = 0.90*W`. Line width = **1pt**, primary color at 30% opacity.
@@ -524,7 +524,7 @@ Swiss-style design, data-heavy reports, structured corporate documents, annual r
 |---------|-------|
 | Kicker | 16pt, Regular, uppercase, letter-spacing 3pt, opacity 60%. Bound to report type/subtitle |
 | Hero Title | 45-65pt, Heavy. **Bound to company/entity name** |
-| Summary 🆕 | 16-18pt, Regular, line-height 1.6. Width ≤ `0.90*W - Left_Edge` |
+| Summary [NEW] | 16-18pt, Regular, line-height 1.6. Width ≤ `0.90*W - Left_Edge` |
 | Meta | 20pt, Regular, line-height 1.8 |
 
 **Footer (separate from centered group):**
@@ -556,7 +556,7 @@ Template selection uses a two-dimensional matrix: **Intent** (from `visual_frame
 
 > **Legacy mapping:** "Formal/Corporate" tone → Authority intent, "Minimalist" tone → Calm intent, "Luxurious/Editorial" tone → Authority intent.
 
-**⚠️ No Global Default.** When no specific style is explicitly requested, the LLM MUST analyze the document's content, tone, and audience to autonomously select the most fitting template. Cross-reference the Intent (derived from content via `design_engine.py derive` or manual judgment) with the Document Type to find the best match. Every cover selection must be a deliberate design decision.
+**[!] No Global Default.** When no specific style is explicitly requested, the LLM MUST analyze the document's content, tone, and audience to autonomously select the most fitting template. Cross-reference the Intent (derived from content via `design_engine.py derive` or manual judgment) with the Document Type to find the best match. Every cover selection must be a deliberate design decision.
 
 ---
 
@@ -649,7 +649,7 @@ watermark_text = watermark_text.upper()  # Always uppercase
 
 ---
 
-## S3.4 - Hard Width Boundary Enforcement 🆕
+## S3.4 - Hard Width Boundary Enforcement [NEW]
 
 **Every drawer/zone has a maximum width. Text wrapping MUST respect this width exactly.**
 
@@ -668,7 +668,7 @@ for i, line in enumerate(wrapped_lines):
 
 ---
 
-## S3.5 - Mandatory Summary Auto-Generation 🆕
+## S3.5 - Mandatory Summary Auto-Generation [NEW]
 
 **If the user provides only a title and no description/summary, the system MUST generate placeholder text.**
 
@@ -684,7 +684,7 @@ if not summary_text or summary_text.strip() == "":
 
 ---
 
-## S3.6 - Background Watermark Full-Display Enforcement 🆕
+## S3.6 - Background Watermark Full-Display Enforcement [NEW]
 
 **All watermark text in the background layer (Layer 1) must be 100% within the visible page area. Cropping, truncation, or extending beyond page boundaries is strictly forbidden.**
 
@@ -865,7 +865,7 @@ CJK Summary:       17-20pt (Latin: 16-18pt)
 
 **Preferred pattern — flat structure with px values (safest):**
 ```css
-/* ✅ CORRECT: children positioned directly in .cover with px values */
+/* [OK] CORRECT: children positioned directly in .cover with px values */
 .cover { position: relative; width: 794px; height: 1123px; }
 .kicker   { position: absolute; top: 225px;  left: 95px; }
 .title    { position: absolute; top: 292px;  left: 95px; }
@@ -875,14 +875,14 @@ CJK Summary:       17-20pt (Latin: 16-18pt)
 
 **Acceptable — wrapper with deterministic height:**
 ```css
-/* ✅ OK: wrapper has inset:0, so height = parent height = 1123px */
+/* [OK] OK: wrapper has inset:0, so height = parent height = 1123px */
 .content-left { position: absolute; inset: 0; width: 55%; }
 .title   { position: absolute; top: 26%; }  /* 26% of 1123px = 292px ✓ */
 ```
 
 **Forbidden — wrapper with no height:**
 ```css
-/* ❌ BANNED: .content-left has no height/bottom, percentage top is undefined */
+/* [X] BANNED: .content-left has no height/bottom, percentage top is undefined */
 .content-left { position: absolute; left: 12%; top: 0; width: 55%; }
 .title   { position: absolute; top: 26%; }  /* 26% of WHAT? → collapse → overlap */
 .summary { position: absolute; top: 48%; }  /* stacks on top of title */
@@ -907,18 +907,18 @@ Cover background = Pure white / very light gray / primary at 5-8% opacity
 
 ### Absolutely Forbidden
 
-- ❌ Dark large-area solid backgrounds (dark blue, dark green, black filling the page)
-- ❌ Gradient backgrounds (any `linear-gradient` / `radial-gradient` as large-area fill)
-- ❌ High-saturation color schemes
-- ❌ Rainbow / multi-color gradients
-- ❌ Dense textures or patterns
-- ❌ Piling on decorative elements - restraint > clutter
-- ❌ More than 2 typefaces on a cover
-- ❌ Centered text + gradient/solid background (PowerPoint aesthetic)
+- [X] Dark large-area solid backgrounds (dark blue, dark green, black filling the page)
+- [X] Gradient backgrounds (any `linear-gradient` / `radial-gradient` as large-area fill)
+- [X] High-saturation color schemes
+- [X] Rainbow / multi-color gradients
+- [X] Dense textures or patterns
+- [X] Piling on decorative elements - restraint > clutter
+- [X] More than 2 typefaces on a cover
+- [X] Centered text + gradient/solid background (PowerPoint aesthetic)
 
 ### Safe Cover Color Schemes (Reference Only)
 
-> ⚠️ These are **examples for reference**. In normal workflow, run `palette.cascade --title "<title>" --mode minimal --format css` to generate the actual cover colors. Do NOT copy these hex values directly.
+> [!] These are **examples for reference**. In normal workflow, run `palette.cascade --title "<title>" --mode minimal --format css` to generate the actual cover colors. Do NOT copy these hex values directly.
 
 | Name | Primary | Secondary | Background | Use Case |
 |------|---------|-----------|------------|----------|
@@ -1040,7 +1040,7 @@ Cover background = Pure white / very light gray / primary at 5-8% opacity
 | Indigo | `#1e3a5f` | `#2d5f8a` | `#7A90A5` | Technical |
 | Ink Stone | `#1a1a2e` | `#4a4a5e` | `#8080A0` | Formal occasions |
 
-> ⚠️ These are **fallback defaults** when the palette system is unavailable. In normal workflow, run `palette.cascade` to generate mathematically harmonious colors and inject them into the `:root` variables.
+> [!] These are **fallback defaults** when the palette system is unavailable. In normal workflow, run `palette.cascade` to generate mathematically harmonious colors and inject them into the `:root` variables.
 
 ---
 
@@ -1130,7 +1130,7 @@ Cover background = Pure white / very light gray / primary at 5-8% opacity
 | Ink Blue | `#0D1B2A` | `#3D5A80` | `#8898A8` | Formal reports |
 | Deep Navy | `#0a1628` | `#5B8DB8` | `#7A9AB5` | Engineering |
 
-> ⚠️ These are **fallback defaults**. In normal workflow, run `palette.cascade` to generate colors and inject into `:root`.
+> [!] These are **fallback defaults**. In normal workflow, run `palette.cascade` to generate colors and inject into `:root`.
 
 ---
 
@@ -1218,7 +1218,7 @@ Cover background = Pure white / very light gray / primary at 5-8% opacity
 
 **Design intent:** The universal institutional cover. White background with a thick black border frame, all content centered, structured field slots with underline placeholders. Matches the style required by most universities worldwide for thesis proposals, dissertations, and formal institutional documents. Also suitable for government reports and official submissions. Zero decorative elements - the formality IS the design.
 
-**⚠️ This template is exempt from PART 4 Academic Cover Color Rules (dark backgrounds).** It uses a white/light background by design, aligning with institutional formatting requirements.
+**[!] This template is exempt from PART 4 Academic Cover Color Rules (dark backgrounds).** It uses a white/light background by design, aligning with institutional formatting requirements.
 
 ```
 ┌─────────────────────────────────┐

@@ -113,21 +113,21 @@ const DECORATIVE_LINE_DETECTION = `
 (function detectOverlaps(minGapPx) {
   // Collect all elements
   const allElements = document.querySelectorAll('*');
-  
+
   const textElements = [];
   const lineElements = [];
-  
+
   // Classify elements
   for (const el of allElements) {
     const rect = el.getBoundingClientRect();
     if (rect.width === 0 || rect.height === 0) continue;
-    
+
     const tag = el.tagName.toLowerCase();
     const style = getComputedStyle(el);
-    
+
     // Skip invisible elements
     if (style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0') continue;
-    
+
     // Detect decorative lines
     const isHR = tag === 'hr';
     const isThinH = rect.height <= 5 && rect.width > 20;  // thin horizontal line
@@ -136,7 +136,7 @@ const DECORATIVE_LINE_DETECTION = `
     const aspectV = rect.height / rect.width;
     const isWideRatio = aspectH > 15 && rect.height <= 8;  // very wide, very thin
     const isTallRatio = aspectV > 15 && rect.width <= 8;   // very tall, very thin
-    
+
     // Check if element has only border (no text content, no background image)
     const hasOnlyBorder = (
       el.textContent.trim() === '' &&
@@ -145,7 +145,7 @@ const DECORATIVE_LINE_DETECTION = `
        style.borderLeftWidth !== '0px' || style.borderRightWidth !== '0px')
     );
     const isBorderLine = hasOnlyBorder && (rect.height <= 8 || rect.width <= 8);
-    
+
     if (isHR || isThinH || isThinV || isWideRatio || isTallRatio || isBorderLine) {
       lineElements.push({
         tag: tag,
@@ -155,15 +155,15 @@ const DECORATIVE_LINE_DETECTION = `
       });
       continue;
     }
-    
+
     // Detect text elements (has direct text content or is a heading/paragraph)
     const textTags = ['h1','h2','h3','h4','h5','h6','p','span','a','li','td','th','label','summary'];
     const hasDirectText = Array.from(el.childNodes).some(n => n.nodeType === 3 && n.textContent.trim());
-    
+
     if (textTags.includes(tag) || hasDirectText) {
       // Skip if this is inside a decorative element
       if (rect.height < 3) continue;
-      
+
       textElements.push({
         tag: tag,
         class: el.className || '',
@@ -172,32 +172,32 @@ const DECORATIVE_LINE_DETECTION = `
       });
     }
   }
-  
+
   // De-duplicate: if a parent and child text element both overlap the same line,
   // only keep the more specific (smaller) one to avoid duplicate reports.
   // Sort text elements by area (smallest first) so we can skip parents.
   textElements.sort((a, b) => (a.rect.width * a.rect.height) - (b.rect.width * b.rect.height));
-  
+
   // Check overlaps between text elements and line elements
   const overlaps = [];
   const reportedPairs = new Set(); // track "lineIndex:textContent" to deduplicate
-  
+
   for (const text of textElements) {
     for (const line of lineElements) {
       const tr = text.rect;
       const lr = line.rect;
-      
+
       if (line.type === 'horizontal') {
         // Check vertical overlap/proximity
         const textTop = tr.y;
         const textBottom = tr.y + tr.height;
         const lineTop = lr.y;
         const lineBottom = lr.y + lr.height;
-        
+
         // Check horizontal overlap (they must share some X range)
         const xOverlap = !(tr.x + tr.width < lr.x || lr.x + lr.width < tr.x);
         if (!xOverlap) continue;
-        
+
         // Calculate vertical gap
         let vGap;
         if (lineTop >= textBottom) {
@@ -207,7 +207,7 @@ const DECORATIVE_LINE_DETECTION = `
         } else {
           vGap = 0;  // overlapping
         }
-        
+
         if (vGap < minGapPx) {
           // De-dup: same line region, only report the smallest (most specific) text element
           const lineKey = 'h:' + Math.round(lr.x) + ',' + Math.round(lr.y);
@@ -233,11 +233,11 @@ const DECORATIVE_LINE_DETECTION = `
         const textRight = tr.x + tr.width;
         const lineLeft = lr.x;
         const lineRight = lr.x + lr.width;
-        
+
         // Check vertical overlap (they must share some Y range)
         const yOverlap = !(tr.y + tr.height < lr.y || lr.y + lr.height < tr.y);
         if (!yOverlap) continue;
-        
+
         // Calculate horizontal gap
         let hGap;
         if (lineLeft >= textRight) {
@@ -247,7 +247,7 @@ const DECORATIVE_LINE_DETECTION = `
         } else {
           hGap = 0;
         }
-        
+
         if (hGap < minGapPx) {
           const lineKey = 'v:' + Math.round(lr.x) + ',' + Math.round(lr.y);
           if (!reportedPairs.has(lineKey)) {
@@ -269,7 +269,7 @@ const DECORATIVE_LINE_DETECTION = `
       }
     }
   }
-  
+
   return {
     textElements: textElements.length,
     lineElements: lineElements.length,

@@ -14,7 +14,7 @@ You are an expert design-system guideline author for Professional.
 Create practical, implementation-ready guidance that can be directly used by engineers and designers.
 
 ## Brand
-Electronics shop 
+Electronics shop
 
 ## Style Foundations
 - Visual style: modern

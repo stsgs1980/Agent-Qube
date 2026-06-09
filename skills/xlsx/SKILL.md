@@ -175,7 +175,7 @@ for sub in [XLSX_SKILL_DIR, os.path.join(XLSX_SKILL_DIR, "templates")]:
         sys.path.insert(0, sub)
 ```
 
-**⚠️ NEVER use bare `python3 xlsx.py ...`** — it only works if cwd happens to be the skill directory. Always use the absolute path.
+**[!] NEVER use bare `python3 xlsx.py ...`** — it only works if cwd happens to be the skill directory. Always use the absolute path.
 
 ### Tool Reference
 
@@ -211,20 +211,20 @@ Blueprint → Build & Self-check (per-sheet) → Inspect → Pivot (if needed) �
 
 | Capability | Supported | Scene/Engine |
 |-----------|-----------|-------------|
-| Create from scratch | ✅ | scenes/create |
-| Edit existing file | ✅ | scenes/edit |
-| Data analysis & EDA | ✅ | scenes/analyze |
-| Format conversion | ✅ | scenes/convert |
-| Financial models (DCF/LBO/P&L) | ✅ | scenes/finance |
-| Simple budgets & expenses | ✅ | scenes/finance_lite |
-| VBA macros & automation | ✅ | scenes/vba + engines/vba-templates |
-| Batch processing | ✅ | scenes/advanced |
-| Embedded charts | ✅ | engines/chart |
-| Smart chart recommendation | ✅ | engines/chart |
-| Design system & styling | ✅ | engines/design |
-| PivotTable creation | ✅ | quality/pipeline (pivot cmd) |
-| Formula validation | ✅ | quality/pipeline |
-| Structural validation | ✅ | quality/pipeline |
-| Data provenance tracking | ✅ | scenes/analyze |
-| Large file handling | ✅ | scenes/advanced |
-| Data protection & locking | ✅ | scenes/advanced |
+| Create from scratch | [OK] | scenes/create |
+| Edit existing file | [OK] | scenes/edit |
+| Data analysis & EDA | [OK] | scenes/analyze |
+| Format conversion | [OK] | scenes/convert |
+| Financial models (DCF/LBO/P&L) | [OK] | scenes/finance |
+| Simple budgets & expenses | [OK] | scenes/finance_lite |
+| VBA macros & automation | [OK] | scenes/vba + engines/vba-templates |
+| Batch processing | [OK] | scenes/advanced |
+| Embedded charts | [OK] | engines/chart |
+| Smart chart recommendation | [OK] | engines/chart |
+| Design system & styling | [OK] | engines/design |
+| PivotTable creation | [OK] | quality/pipeline (pivot cmd) |
+| Formula validation | [OK] | quality/pipeline |
+| Structural validation | [OK] | quality/pipeline |
+| Data provenance tracking | [OK] | scenes/analyze |
+| Large file handling | [OK] | scenes/advanced |
+| Data protection & locking | [OK] | scenes/advanced |

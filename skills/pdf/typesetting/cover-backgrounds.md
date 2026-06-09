@@ -2,11 +2,11 @@
 
 > Background is the canvas behind the canvas. It should be felt, not seen.
 
-> **⚠️ V2.1 Note:** Since all covers are now rendered via HTML/Playwright, the canonical implementation is **CSS/HTML**. The ReportLab Python examples below are kept as **algorithmic reference** (coordinates, ratios, opacity values) — translate them to equivalent CSS `background`, `linear-gradient`, `radial-gradient`, `transform`, and `clip-path` properties when implementing. The design intent and constraints (opacity limits, Z-index rules, WCAG contrast) apply regardless of rendering engine.
+> **[!] V2.1 Note:** Since all covers are now rendered via HTML/Playwright, the canonical implementation is **CSS/HTML**. The ReportLab Python examples below are kept as **algorithmic reference** (coordinates, ratios, opacity values) — translate them to equivalent CSS `background`, `linear-gradient`, `radial-gradient`, `transform`, and `clip-path` properties when implementing. The design intent and constraints (opacity limits, Z-index rules, WCAG contrast) apply regardless of rendering engine.
 
 ---
 
-## 🔴 Global Constraints
+## [!!] Global Constraints
 
 Before executing any specific background algorithm, these three iron rules must be obeyed — they are the baseline to ensure backgrounds remain subtle and never overwhelm:
 
@@ -145,7 +145,7 @@ c.restoreState()
 
 **Calculation logic**:
 - `Text` = Extract year (e.g. "2026")
-- **🔴 Font Size Adaptive Algorithm (Full Text Display Iron Rule):**
+- **[!!] Font Size Adaptive Algorithm (Full Text Display Iron Rule):**
   1. `Max_Font_Size` = `W × 0.45` (ideal maximum)
   2. Measure total text height after rotation: `Text_Width = measure(Text, Max_Font_Size)` (after 90° rotation, original width becomes vertical height)
   3. Available vertical space = `H × 0.85` (leaving `H × 0.075` safety margin top and bottom)
@@ -155,7 +155,7 @@ c.restoreState()
 - `Anchor_X` = `W × 0.03` (text fully within page, flush to left but not exceeding)
 - `Anchor_Y` = Vertically centered = `(H - Text_Width) / 2` (text centered after rotation)
 
-**⚠️ Full Display Iron Rule: Background watermark text must be 100% within the visible page area. Any clipping is strictly forbidden. Reduce font size rather than truncate.**
+**[!] Full Display Iron Rule: Background watermark text must be 100% within the visible page area. Any clipping is strictly forbidden. Reduce font size rather than truncate.**
 
 **Visual effect**: A complete bold number watermark appears on the left side, vertically centered, becoming the visual supporting pillar. Text is fully readable.
 
@@ -193,7 +193,7 @@ c.restoreState()
 
 **Calculation logic**:
 - `Text` = Document type English initials (e.g. "REPORT")
-- **🔴 Font Size Adaptive Algorithm (Full Text Display Iron Rule):**
+- **[!!] Font Size Adaptive Algorithm (Full Text Display Iron Rule):**
   1. `Max_Font_Size` = `W × 0.3` (ideal maximum)
   2. Measure text rendering width: `Text_Width = measure(Text, Max_Font_Size)`
   3. Available horizontal space = `W × 0.90` (leaving `W × 0.05` safety margin left and right)
@@ -203,7 +203,7 @@ c.restoreState()
 - `Anchor_X` = `W × 0.05`
 - `Anchor_Y` = Text baseline within the bottom safe zone of the page: `H × 0.92` (text fully displayed at page bottom, not truncated)
 
-**⚠️ Full Display Iron Rule: Background watermark text must be 100% within the visible page area. Any clipping is strictly forbidden. Reduce font size rather than truncate.**
+**[!] Full Display Iron Rule: Background watermark text must be 100% within the visible page area. Any clipping is strictly forbidden. Reduce font size rather than truncate.**
 
 **Visual effect**: Text sits solidly at the bottom like a foundation, fully readable, extremely dignified. No more half-truncated text.
 
@@ -292,13 +292,13 @@ c.restoreState()
 
 ---
 
-## 🛠️ Combination & Circuit Breaker (The Combination Matrix)
+## [Tools] Combination & Circuit Breaker (The Combination Matrix)
 
 To ensure diversity in auto-generated backgrounds while preventing visual chaos, the system must implement a **"background combination state machine"**.
 
 For each PDF generation, randomly select one of the following 3 legal Recipes, **cross-boundary combinations are strictly forbidden**:
 
-### ✅ Recipe A: Minimal Modern
+### [OK] Recipe A: Minimal Modern
 
 **Combination**: `Option 1.1 (deep-space arc)` — **this one only, no other elements**
 
@@ -311,7 +311,7 @@ For each PDF generation, randomly select one of the following 3 legal Recipes, *
 
 ---
 
-### ✅ Recipe B: Engineering/Academic
+### [OK] Recipe B: Engineering/Academic
 
 **Combination**: `Option 3.1 (coordinate cross)` **+** `Option 2.1 (side giant spine)`
 
@@ -328,7 +328,7 @@ For each PDF generation, randomly select one of the following 3 legal Recipes, *
 
 ---
 
-### ✅ Recipe C: Solid/Weighty
+### [OK] Recipe C: Solid/Weighty
 
 **Combination**: `Option 1.2 (sharp angle cut)` **+** `Option 2.2 (bottom full text)`
 
@@ -343,7 +343,7 @@ For each PDF generation, randomly select one of the following 3 legal Recipes, *
 
 ---
 
-## 🚫 Circuit Breaker Rules (Hard Constraints)
+## [X] Circuit Breaker Rules (Hard Constraints)
 
 The following combinations are **hard-forbidden**; violations are bugs:
 

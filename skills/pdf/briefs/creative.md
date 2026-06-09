@@ -41,7 +41,7 @@ You must parse the raw text and categorize it into typographic roles:
 
 You will construct your JSON Blueprint using ONLY the following components. These map directly to the `configs/components.md` assets. Do not invent new component types.
 
-> **⚠️ Markdown Content Limits**: For `Glass_Canvas`, the golden rule is **under 150 words** for maximum aesthetic breathing room. Absolute physical limit is **250 words**. If content exceeds 250 words, the design engine will overflow. You MUST summarize it or split it into a new page.
+> **[!] Markdown Content Limits**: For `Glass_Canvas`, the golden rule is **under 150 words** for maximum aesthetic breathing room. Absolute physical limit is **250 words**. If content exceeds 250 words, the design engine will overflow. You MUST summarize it or split it into a new page.
 
 ### 1. `Hero_Typography`
 Giant, page-dominating text. Usually interacts with the background via blend modes.
@@ -93,7 +93,7 @@ A visual element. The engine will apply a gradient blend to it.
   - `source` (string): A URL, or a descriptive prompt if you expect the system to generate it.
   - `caption` (string, optional): Tiny text under the image.
 
-> ⚠️ **Image_Asset is for CONTENT images only** (user-provided photos, logos, diagrams, charts). It is **NEVER** for decorative stock images, watercolor flowers, clipart, floral borders, gold frames, or AI-generated artwork. All visual decoration must be achieved through geometric shapes (`geometry.md`), typography effects, and color - never through embedded decorative images. See `visual_framework.md` Stock Image Ban.
+> [!] **Image_Asset is for CONTENT images only** (user-provided photos, logos, diagrams, charts). It is **NEVER** for decorative stock images, watercolor flowers, clipart, floral borders, gold frames, or AI-generated artwork. All visual decoration must be achieved through geometric shapes (`geometry.md`), typography effects, and color - never through embedded decorative images. See `visual_framework.md` Stock Image Ban.
 
 ### 7. `Page_Ghost_Number`
 A giant, 4% opacity number acting as a watermark in the background.
@@ -278,8 +278,8 @@ Food:        8 × 250/700 ≈ 3 rows → grid_area "10 / 1 / 13 / 13"
 
 **Anti-pattern to avoid:**
 ```
-❌ Two Glass_Canvas with very different text lengths both get "5/1/9/13" and "9/1/13/13"
-✅ Longer one gets more rows: "5/1/10/13" and "10/1/13/13"
+[X] Two Glass_Canvas with very different text lengths both get "5/1/9/13" and "9/1/13/13"
+[OK] Longer one gets more rows: "5/1/10/13" and "10/1/13/13"
 ```
 
 ---
@@ -623,7 +623,7 @@ Study these examples to understand how to translate raw requests into perfect bl
 ## Pre-Flight Checklist (Self-Correction before generating output)
 
 Before you output the JSON block, verify:
-0. **🚨 VECTOR OUTPUT IRON RULE:** The final PDF MUST be generated via `page.pdf()` / `convert.blueprint` - NEVER `page.screenshot()` → image → wrap as PDF. Screenshot PDFs are blurry raster images. `page.pdf()` produces vector text that stays sharp at any zoom level.
+0. **[ALERT] VECTOR OUTPUT IRON RULE:** The final PDF MUST be generated via `page.pdf()` / `convert.blueprint` - NEVER `page.screenshot()` → image → wrap as PDF. Screenshot PDFs are blurry raster images. `page.pdf()` produces vector text that stays sharp at any zoom level.
 1. **Did I write ANY HTML or CSS?** If yes, delete it. Only output JSON.
 2. **Is any `Glass_Canvas` markdown content too long?** Count the words. Over 150? Summarize it or push to the next page.
 3. **Is the JSON perfectly formatted?** Missing commas or unescaped quotes will crash the `design_engine.py` parser.
@@ -645,8 +645,8 @@ Before you output the JSON block, verify:
 17. **Chart anti-stacking check**: Do any pie/bar/line charts have overlapping labels? Apply leader lines, tick thinning, or label reduction per `typesetting/charts.md`.
 18. **Chart axis cleanup check**: Are top/right spines deleted? Grid lines dashed at 20% opacity (or hidden)? No solid grid lines.
 19. **Donut default check**: Are pie charts rendered as donuts (hole ratio 60-70%)? Solid pies = FAIL unless explicitly requested.
-20. **🚨 Triple Delivery check (MANDATORY)**: Creative pipeline must deliver **three files** to the user: (1) PDF - the final vector PDF; (2) HTML - the compiled `*_rendered.html` file; (3) Image - a full-page screenshot preview (PNG/JPG). After `convert.blueprint` generates the PDF and HTML, take a screenshot of the HTML for preview. Report all three file paths to the user.
-21. **🚨 HTML Pre-Render Validation (MANDATORY for ALL HTML→PDF paths)**: Before calling `html2pdf-next.js`, `html2poster.js`, or `convert.blueprint`, run `poster_validate.py check-html` on the HTML file. This catches overflow:hidden on containers, missing @media screen auto-scale, font fallback gaps, contrast issues, and more. **Any ERROR-level issue must be fixed before generating the PDF.** Warnings are non-blocking but should be reviewed.
+20. **[ALERT] Triple Delivery check (MANDATORY)**: Creative pipeline must deliver **three files** to the user: (1) PDF - the final vector PDF; (2) HTML - the compiled `*_rendered.html` file; (3) Image - a full-page screenshot preview (PNG/JPG). After `convert.blueprint` generates the PDF and HTML, take a screenshot of the HTML for preview. Report all three file paths to the user.
+21. **[ALERT] HTML Pre-Render Validation (MANDATORY for ALL HTML→PDF paths)**: Before calling `html2pdf-next.js`, `html2poster.js`, or `convert.blueprint`, run `poster_validate.py check-html` on the HTML file. This catches overflow:hidden on containers, missing @media screen auto-scale, font fallback gaps, contrast issues, and more. **Any ERROR-level issue must be fixed before generating the PDF.** Warnings are non-blocking but should be reviewed.
     ```bash
     python3 "$PDF_SKILL_DIR/scripts/poster_validate.py" check-html page.html
     # If errors found, auto-fix:
@@ -670,7 +670,7 @@ Execute the design.
 
 When writing raw HTML/CSS for Playwright (bypassing the JSON Blueprint pipeline - e.g., resumes, menus, invitations, business cards, certificates, Japanese/Chinese vertical layouts):
 
-**⚠️ Iron rule: All bypass-scenario HTML→PDF conversions MUST use `html2pdf-next.js` — do NOT write custom Python Playwright scripts.** `html2pdf-next.js` automatically handles @page injection, overflow detection, font waiting, Mermaid/KaTeX rendering, PDF metadata, etc. See the "HTML→PDF Engine Selection Rules" section in SKILL.md.
+**[!] Iron rule: All bypass-scenario HTML→PDF conversions MUST use `html2pdf-next.js` — do NOT write custom Python Playwright scripts.** `html2pdf-next.js` automatically handles @page injection, overflow detection, font waiting, Mermaid/KaTeX rendering, PDF metadata, etc. See the "HTML→PDF Engine Selection Rules" section in SKILL.md.
 
 ```bash
 node "$PDF_SKILL_DIR/scripts/html2pdf-next.js" input.html --output output.pdf --width 210mm --height 297mm
@@ -681,9 +681,9 @@ node "$PDF_SKILL_DIR/scripts/html2pdf-next.js" input.html --output output.pdf --
    @page { size: 800px 1200px; margin: 0; }  /* CONCRETE values only - CSS variables NOT supported in @page */
    html, body { margin: 0; padding: 0; width: 800px; height: 1200px; }
    ```
-   **⚠️ @page rules do NOT resolve CSS variables** (`var(--x)` is silently ignored, falls back to A4). Always use concrete `px` values.
-   **⚠️ html/body must have explicit width + min-height** matching the canvas size. Use `min-height` (not `height`) so content taller than the design height expands naturally into a single long-page PDF.
-   **⚠️ Poster = seamless pagination.** When content exceeds `@page` height, `html2pdf-next.js` lets Playwright paginate at page boundaries - each page has the same dimensions, content flows seamlessly across pages (like scrolling a long image). Do NOT expand to a single oversized page.
+   **[!] @page rules do NOT resolve CSS variables** (`var(--x)` is silently ignored, falls back to A4). Always use concrete `px` values.
+   **[!] html/body must have explicit width + min-height** matching the canvas size. Use `min-height` (not `height`) so content taller than the design height expands naturally into a single long-page PDF.
+   **[!] Poster = seamless pagination.** When content exceeds `@page` height, `html2pdf-next.js` lets Playwright paginate at page boundaries - each page has the same dimensions, content flows seamlessly across pages (like scrolling a long image). Do NOT expand to a single oversized page.
    `design_engine.py` handles this automatically via `override_css`.
 
 0.25. **Body Background for Multi-Page Mixed-Color Documents (MANDATORY)**:
@@ -761,7 +761,7 @@ node "$PDF_SKILL_DIR/scripts/html2pdf-next.js" input.html --output output.pdf --
    ```
    System CJK fonts vary across macOS/Linux - Google Fonts guarantee glyph coverage without relying on system fonts. `design_engine.py` already handles this automatically via `<link>` tag.
 4. **Post-Generation Text Verification**: After Playwright renders the PDF, extract text from every page and scan for `?` or `\ufffd`. If found, the source HTML has encoding-corrupted characters that must be replaced in the Python source.
-5. **🚨 HTML Pre-Render Validation (MANDATORY)**: After writing the HTML file and before running `html2pdf-next.js`, always run the HTML validator:
+5. **[ALERT] HTML Pre-Render Validation (MANDATORY)**: After writing the HTML file and before running `html2pdf-next.js`, always run the HTML validator:
    ```bash
    python3 "$PDF_SKILL_DIR/scripts/poster_validate.py" check-html <your_file>.html
    ```

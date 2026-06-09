@@ -53,19 +53,19 @@ Each template file contains its own framework-specific rules (spacing, connector
 
 # Part 1: Routing
 
-## ⚠️ Format Constraint Rule (HIGHEST PRIORITY)
+## [!] Format Constraint Rule (HIGHEST PRIORITY)
 
 **When the user specifies an output format/tool, you MUST comply. Never substitute.**
 
 | User Says | You Must Do | Forbidden |
 |-----------|------------|-----------|
-| "use mermaid code" / "用Mermaid格式输出" / "转化为mermaid" / "mermaid流程" | ① Output Mermaid code block (```mermaid ... ```) ② Also provide a rendered image preview | ❌ Cannot only give image without code; ❌ Cannot screenshot raw code text as image |
-| "use markdown code" | Output markdown-formatted hierarchy | ❌ Cannot switch to HTML/CSS |
-| "via mermaid or markdown code" | Choose one of the two, output code text | ❌ Cannot switch to any non-specified format |
+| "use mermaid code" / "用Mermaid格式输出" / "转化为mermaid" / "mermaid流程" | ① Output Mermaid code block (```mermaid ... ```) ② Also provide a rendered image preview | [X] Cannot only give image without code; [X] Cannot screenshot raw code text as image |
+| "use markdown code" | Output markdown-formatted hierarchy | [X] Cannot switch to HTML/CSS |
+| "via mermaid or markdown code" | Choose one of the two, output code text | [X] Cannot switch to any non-specified format |
 | "flowchart" / "mind map" (no format specified) | Free to choose the best approach | - |
-| "use echarts/d3" | Must use the specified framework | ❌ Cannot switch |
+| "use echarts/d3" | Must use the specified framework | [X] Cannot switch |
 
-### 🚫 FORBIDDEN: Mermaid Code Screenshot
+### [X] FORBIDDEN: Mermaid Code Screenshot
 **NEVER take a screenshot of raw Mermaid source code and deliver it as the "diagram image".** This is the worst possible outcome — the user gets neither usable code nor a visual diagram. When the user requests Mermaid format:
 1. **MUST** output the Mermaid code in a fenced code block (````mermaid`)
 2. **SHOULD** also render the code into a visual diagram image (via mermaid-cli or Playwright + mermaid.js)
@@ -78,9 +78,9 @@ When the user specifies Mermaid but content triggers auto-upgrade conditions (>8
 3. **Never silently switch** to Playwright+CSS when user explicitly asked for Mermaid
 
 When a specified tool hits rendering difficulties (e.g., mermaid CDN fails):
-- ✅ Output raw mermaid code text, tell user to view at mermaid.live
-- ❌ Secretly switch to another framework
-- ❌ Screenshot the code text as an "image"
+- [OK] Output raw mermaid code text, tell user to view at mermaid.live
+- [X] Secretly switch to another framework
+- [X] Screenshot the code text as an "image"
 
 ---
 
@@ -88,7 +88,7 @@ When a specified tool hits rendering difficulties (e.g., mermaid CDN fails):
 
 ### 1. Structural Diagrams
 
-#### 🔴 Flowchart Default: Phased Vertical (HIGHEST PRIORITY)
+#### [!!] Flowchart Default: Phased Vertical (HIGHEST PRIORITY)
 
 **When the user asks to "generate/create a XXX flowchart/流程图" without specifying format, the DEFAULT layout is Phased Vertical (Layout C in `references/playwright-css.md`).**
 
@@ -106,7 +106,7 @@ This is because nearly all real-world processes (manufacturing, legal proceeding
 - Process involves multiple roles/departments
 - Process has clear start/end with intermediate stages
 
-**⚠️ When in doubt, default to Layout C.** A phased layout with only 1 phase still looks professional. A Grid layout with phases looks like a mess.
+**[!] When in doubt, default to Layout C.** A phased layout with only 1 phase still looks professional. A Grid layout with phases looks like a mess.
 
 #### Other Structural Diagrams
 - Simple flowchart (≤6 nodes, truly flat, no phases): **Mermaid**
@@ -186,7 +186,7 @@ These rules apply to ALL charts regardless of framework. Framework-specific rule
 
 5. **Label clarity over label method.** The goal is zero overlap — choose the method that achieves it for each chart type. Direct labels, legends, and leader lines are all valid; what matters is that nothing overlaps.
 
-### 🚫 FORBIDDEN: Any Text Overlapping Any Other Element
+### [X] FORBIDDEN: Any Text Overlapping Any Other Element
 **No label, legend, annotation, or title may overlap any other visual element.** This is the single most common matplotlib defect. Both direct labels AND legends can cause overlap — neither is inherently safe.
 
 **Anti-overlap decision tree:**
@@ -209,7 +209,7 @@ These rules apply to ALL charts regardless of framework. Framework-specific rule
   - Radar: below chart (`bbox_to_anchor=(0.5, -0.15), loc='upper center'`)
   - Heatmap: no legend needed (colorbar suffices)
 
-**🔧 Mandatory: auto-adjust legend to prevent overlap.** Copy this snippet after placing any legend:
+**[Tool] Mandatory: auto-adjust legend to prevent overlap.** Copy this snippet after placing any legend:
 ```python
 # ── Auto-adjust legend position to prevent overlap ──
 fig.canvas.draw()  # must render first to get bboxes
@@ -241,7 +241,7 @@ if legend:
 ```
 - **After placing legend**: always call `plt.tight_layout()` or `fig.subplots_adjust()` to ensure legend is not clipped
 
-🚫 FORBIDDEN:
+[X] FORBIDDEN:
 - `loc='best'` — matplotlib's "best" frequently overlaps data
 - `loc='upper right'` / `loc='lower right'` on line/bar charts — high collision risk
 - Direct labels on pie slices < 5% without leader lines
@@ -264,7 +264,7 @@ if legend:
 | Morandi Warm | `#4B4A45` | `#FAF8F4` | `#EAE4DB` | `#C6866A` |
 | Invisible Precision | `#37352F` | `#FFFFFF` | `#F7F7F7` | `#2383E2` |
 
-### 🚫 Forbidden Background Colors
+### [X] Forbidden Background Colors
 
 | Color | Forbidden Hex Values |
 |-------|---------------------|
@@ -274,7 +274,7 @@ if legend:
 | Pure purple | `#8B5CF6`, `#7C3AED`, `#A855F7` |
 | Pure amber | `#F59E0B`, `#D97706`, `#FB923C` |
 
-### ✅ Allowed Background Colors
+### [OK] Allowed Background Colors
 
 | Color | Hex Values |
 |-------|------------|
@@ -314,7 +314,7 @@ Paul Tol palette: `['#0077BB', '#33BBEE', '#009988', '#EE7733', '#CC3311', '#EE3
 Default `device_scale_factor=2`. Large mind maps (3000px+): 1.5. PDF embed: 1-1.5. Print: 3.
 After render, read `bounding_box()` and resize viewport to fit. Min viewport: 800px single-col, 1200px multi-col.
 
-### 🚫 FORBIDDEN: `max-width` on Mermaid/SVG Containers
+### [X] FORBIDDEN: `max-width` on Mermaid/SVG Containers
 Mermaid's dagre engine produces SVGs with unpredictable width (especially with subgraphs, CJK text, or parallel branches). **NEVER set `max-width` on the Mermaid container element.** Use `width: fit-content; min-width: 800px;` instead.
 
 **Root cause**: Mermaid SVGs overflow their CSS container silently. `bounding_box()` (Playwright) returns the CSS box model size, NOT the SVG's actual rendered size. So auto-resize viewport based on `bounding_box()` alone will still produce clipped screenshots.
@@ -385,7 +385,7 @@ Before delivery, verify:
 
 ## Anti-Pattern Quick Reference
 
-| ❌ Don't | ✅ Do This Instead |
+| [X] Don't | [OK] Do This Instead |
 |----------|-------------------|
 | matplotlib default blue `#1f77b4` | Use this skill's palette |
 | 3D bar/pie | Always 2D |

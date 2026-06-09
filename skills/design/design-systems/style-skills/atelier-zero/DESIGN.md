@@ -231,15 +231,15 @@ the page-of-008 counter on the right.
 
 ## 9. Anti-patterns
 
-- ❌ No drop shadows above 30px blur. No gradients on text.
-- ❌ No emoji in product copy. ★ is allowed once in the nav CTA.
-- ❌ No glassmorphism, no neon, no neumorphism, no rounded
+- [X] No drop shadows above 30px blur. No gradients on text.
+- [X] No emoji in product copy. ★ is allowed once in the nav CTA.
+- [X] No glassmorphism, no neon, no neumorphism, no rounded
   corners larger than 24px (except 32px on the dark "Selected Work" panel).
-- ❌ No more than one coral CTA per viewport.
-- ❌ No collage image without corner brackets and at least one
+- [X] No more than one coral CTA per viewport.
+- [X] No collage image without corner brackets and at least one
   monospace annotation.
-- ❌ No Roman numeral skipped — sections must be sequential.
-- ❌ No pure white, no pure black, no pure 100%-saturation accent.
+- [X] No Roman numeral skipped — sections must be sequential.
+- [X] No pure white, no pure black, no pure 100%-saturation accent.
 
 ### Anti-patterns specific to AI-generated imagery
 
@@ -248,16 +248,16 @@ open-design-landing skill. Several common image-model defaults will
 silently break the Atelier Zero aesthetic, so they are forbidden in
 every collage prompt and rejected on visual review:
 
-- ❌ No lens flares, light leaks, bloom, or cinematic post-FX. The
+- [X] No lens flares, light leaks, bloom, or cinematic post-FX. The
   paper-and-museum mood is matte, not cinematic.
-- ❌ No glitch, datamosh, RGB-split, or scanline artifacts.
-- ❌ No photorealistic human faces or stock-portrait people. Plaster
+- [X] No glitch, datamosh, RGB-split, or scanline artifacts.
+- [X] No photorealistic human faces or stock-portrait people. Plaster
   fragments, busts, and small scale figures only — eyes never look at
   the viewer.
-- ❌ No visible AI signatures, watermarks, generator logos, or
+- [X] No visible AI signatures, watermarks, generator logos, or
   hallucinated model captions. The rendered surface must read as a
   printed page, not a model output.
-- ❌ No DSLR-style shallow depth-of-field bokeh on the collage
+- [X] No DSLR-style shallow depth-of-field bokeh on the collage
   fragments — every plane stays in focus.
 
 ## 10. Responsive Behavior

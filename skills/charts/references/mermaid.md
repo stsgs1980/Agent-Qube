@@ -1,6 +1,6 @@
 # Mermaid Template Library
 
-> **⚠️ Before writing any code, read [`_rules.md`](references/_rules.md) — three non-negotiable rules on overlap, hierarchy, and color.**
+> **[!] Before writing any code, read [`_rules.md`](references/_rules.md) — three non-negotiable rules on overlap, hierarchy, and color.**
 
 
 Mermaid is the best "text-as-diagram" solution — write structural diagrams with Markdown-like syntax, zero design skills needed.
@@ -8,7 +8,7 @@ Best for: flowcharts, sequence diagrams, architecture diagrams, Gantt charts, cl
 
 **Core advantages**: text is version-controllable, minimal maintenance cost, high rendering consistency, CJK support.
 
-## ⚠️ Flowchart Quality Rules (Highest Priority)
+## [!] Flowchart Quality Rules (Highest Priority)
 
 ### Font Size Control
 Mermaid font sizes are controlled via `themeVariables` and CSS:
@@ -28,15 +28,15 @@ flowchart: {
 
 **Connector style must be consistent throughout the chart**: do not mix straight, curved, and polylines in the same diagram. Mermaid controls this globally via the `curve` parameter.
 
-### ⚠️ Mermaid Flowchart Hard Constraints (MANDATORY)
+### [!] Mermaid Flowchart Hard Constraints (MANDATORY)
 
 The following constraints are enforced **when generating Mermaid flowchart code**, not as post-checks:
 
-1. **Node text must be wrapped in quotes**: `A["用户登录"]` ✅ / `A[用户登录]` ❌ — quotes prevent CJK special characters from causing parse errors
+1. **Node text must be wrapped in quotes**: `A["用户登录"]` [OK] / `A[用户登录]` [X] — quotes prevent CJK special characters from causing parse errors
 2. **Max 10 CJK characters per line in node text**: exceed → use `<br>` to break → `A["用户身份<br>验证模块"]`
 3. **Max 5 nodes per subgraph**: exceed → split into multiple subgraphs or switch to CSS approach
 4. **Max 10 total nodes**: exceed → switch to CSS flowchart template in `references/playwright-css.md`
-5. **Max 6 CJK characters in connector labels**: `-->|验证通过|` ✅ / `-->|用户身份验证通过后跳转|` ❌
+5. **Max 6 CJK characters in connector labels**: `-->|验证通过|` [OK] / `-->|用户身份验证通过后跳转|` [X]
 6. **Config params must use enlarged values**: `padding: 32, nodeSpacing: 80, rankSpacing: 80`
 
 ## Rendering Methods
@@ -74,8 +74,8 @@ The following constraints are enforced **when generating Mermaid flowchart code*
     themeVariables: {
       // See "Theme configuration" below
     },
-    flowchart: { 
-      curve: 'basis', 
+    flowchart: {
+      curve: 'basis',
       padding: 32,           // Node padding (CJK chars 50% wider than Latin, need more space)
       nodeSpacing: 80,       // Horizontal spacing (prevents CJK node overlap)
       rankSpacing: 80,       // Vertical spacing between ranks (prevents overlap between levels)
@@ -104,12 +104,12 @@ async def mermaid_to_png(html_path, png_path, width=1400, scale=2):
             device_scale_factor=scale
         )
         await page.goto(f'file://{html_path}', wait_until='load', timeout=30000)
-        
+
         # Wait for Mermaid SVG to render
         await page.wait_for_selector('#diagram svg', timeout=15000)
         await page.wait_for_timeout(1000)
-        
-        # ⚠️ Read SVG's ACTUAL rendered size (not CSS box model!)
+
+        # [!] Read SVG's ACTUAL rendered size (not CSS box model!)
         # Mermaid SVGs often overflow their CSS container — getBBox/clientRect
         # returns the true size, while CSS bounding_box() returns the clipped box.
         svg_size = await page.evaluate('''() => {
@@ -118,32 +118,32 @@ async def mermaid_to_png(html_path, png_path, width=1400, scale=2):
             const r = svg.getBoundingClientRect();
             return { width: r.width, height: r.height };
         }''')
-        
+
         el = page.locator('#diagram')
         css_bbox = await el.bounding_box()
-        
+
         svg_w = svg_size['width'] if svg_size else width
         svg_h = svg_size['height'] if svg_size else 800
         css_w = css_bbox['width'] if css_bbox else width
         css_h = css_bbox['height'] if css_bbox else 800
-        
+
         # Use the LARGER of CSS box and SVG actual size
         fit_w = max(width, int(max(svg_w, css_w) + 200))
         fit_h = int(max(svg_h, css_h) + 200)
-        
+
         await page.set_viewport_size({'width': fit_w, 'height': fit_h})
         await page.wait_for_timeout(500)
-        
+
         await el.screenshot(path=png_path)
         await browser.close()
-        
+
         import os
-        print(f'✅ {png_path} ({os.path.getsize(png_path)/1024:.0f}KB)')
+        print(f'[OK] {png_path} ({os.path.getsize(png_path)/1024:.0f}KB)')
 
 # asyncio.run(mermaid_to_png('./output/diagram.html', './output/diagram.png'))
 ```
 
-> **⚠️ CRITICAL: CSS `bounding_box()` vs SVG actual size**
+> **[!] CRITICAL: CSS `bounding_box()` vs SVG actual size**
 >
 > Mermaid generates SVGs that can be wider/taller than their CSS container. `bounding_box()` (Playwright) and `getBoundingClientRect()` on the container return **CSS box model size**, which may be smaller than the SVG's viewBox.
 >
@@ -276,7 +276,7 @@ flowchart TB
 
 ```mermaid
 flowchart LR
-    subgraph 前端["🖥️ 前端"]
+    subgraph 前端["[Screen] 前端"]
         A[React App] --> B[API 调用]
     end
     subgraph 后端["⚙️ 后端"]
@@ -297,15 +297,15 @@ Shows interaction sequence between systems/actors.
 ```mermaid
 sequenceDiagram
     actor 用户
-    participant 前端 as 🖥️ 前端
+    participant 前端 as [Screen] 前端
     participant API as ⚙️ API 网关
-    participant DB as 🗄️ 数据库
+    participant DB as [DB] 数据库
 
     用户->>前端: 点击登录
     前端->>API: POST /auth/login
     API->>DB: 查询用户
     DB-->>API: 用户信息
-    
+
     alt 验证成功
         API-->>前端: 200 + JWT Token
         前端-->>用户: 跳转首页
@@ -313,7 +313,7 @@ sequenceDiagram
         API-->>前端: 401 未授权
         前端-->>用户: 显示错误提示
     end
-    
+
     Note over 前端,API: Token 有效期 24 小时
 ```
 
@@ -332,12 +332,12 @@ sequenceDiagram
 
 ```mermaid
 flowchart TB
-    subgraph 用户层["👤 用户层"]
+    subgraph 用户层["[User] 用户层"]
         U1[Web 浏览器]
         U2[移动 App]
     end
 
-    subgraph 接入层["🌐 接入层"]
+    subgraph 接入层["[Web] 接入层"]
         GW[API Gateway<br><small>Nginx + Rate Limit</small>]
         LB[负载均衡<br><small>Round Robin</small>]
     end
@@ -348,7 +348,7 @@ flowchart TB
         S3[推荐服务<br><small>PyTorch</small>]
     end
 
-    subgraph 数据层["🗄️ 数据层"]
+    subgraph 数据层["[DB] 数据层"]
         DB[(PostgreSQL)]
         RD[(Redis Cache)]
         ES[(Elasticsearch)]
@@ -462,7 +462,7 @@ erDiagram
 
 ## Template 7: Mind Map
 
-> ⚠️ Mermaid mindmap has limited layout capabilities. **For high-quality mind maps**, prefer `references/mindmap-css.md`.
+> [!] Mermaid mindmap has limited layout capabilities. **For high-quality mind maps**, prefer `references/mindmap-css.md`.
 > The following approach is for **quick drafts** or embedding in Markdown documents, with CSS injection to optimize visual quality.
 
 ### Optimized HTML Shell (Important! Use this, not the default template)
@@ -487,7 +487,7 @@ Mermaid mindmap doesn't support `style`/`classDef`, but you can greatly improve 
   #diagram { min-width: 900px; }
 
   /* ─── CSS injection to optimize Mermaid mindmap rendering ─── */
-  /* 
+  /*
    * Actual SVG class names in Mermaid v11 mindmap:
    * - .section-root = root node
    * - .section-0 ~ .section-N = first-level branches (in order)
@@ -592,7 +592,7 @@ mindmap
 
 ### Auto-Upgrade Rules (Important!)
 
-> ⚠️ **Never trim user content just to fit Mermaid!**
+> [!] **Never trim user content just to fit Mermaid!**
 > Content comes first; tools serve content, not the other way around.
 
 When content complexity exceeds Mermaid mindmap's comfort zone, **auto-switch to CSS approach** (`references/mindmap-css.md`):
@@ -638,11 +638,11 @@ mindmap
 
 ### Known Limitations of Mermaid Mindmap
 
-- ❌ No `style` / `classDef` support for direct node coloring (CSS injection of SVG styles only)
-- ❌ Line thickness/curvature cannot be controlled from Mermaid syntax (CSS override `.mindmap-edge`)
-- ❌ Node spacing calculated by algorithm, cannot be manually specified
-- ❌ Long CJK text easily overlaps with connectors (strict character count control needed)
-- ⚠️ CSS injection depends on Mermaid internal class naming, may break on version upgrades
+- [X] No `style` / `classDef` support for direct node coloring (CSS injection of SVG styles only)
+- [X] Line thickness/curvature cannot be controlled from Mermaid syntax (CSS override `.mindmap-edge`)
+- [X] Node spacing calculated by algorithm, cannot be manually specified
+- [X] Long CJK text easily overlaps with connectors (strict character count control needed)
+- [!] CSS injection depends on Mermaid internal class naming, may break on version upgrades
 
 **Conclusion**: For quick drafts use Mermaid + the CSS-optimized shell above; for production output use CSS mind map → `references/mindmap-css.md`
 
@@ -720,16 +720,16 @@ linkStyle 1 stroke:#10B981,stroke-width:2px,stroke-dasharray: 5 5
 
 | Capability | Mermaid | Playwright+CSS | draw.io |
 |------|---------|---------------|---------|
-| Learning curve | ✅ Very low (Markdown-like) | Medium (HTML/CSS) | ✅ Very low (drag&drop) |
-| Version control friendly | ✅ Plain text | ✅ Plain text | ❌ XML binary |
-| Flowcharts | ✅ Built-in | ⚠️ Manual layout | ✅ Drag&drop |
-| Sequence diagrams | ✅ Built-in | ❌ Very complex | ✅ Templates |
-| Gantt charts | ✅ Built-in | ❌ Build from scratch | ⚠️ Limited |
-| Class/ER diagrams | ✅ Built-in | ❌ Not suited | ✅ Templates |
-| Visual freedom | ⚠️ Limited | ✅ Full freedom | ✅ Free |
-| PNG export | ✅ mmdc/Playwright | ✅ Playwright | ✅ Built-in |
-| CJK support | ✅ Native | ✅ Font config | ✅ Native |
-| Auto layout | ✅ Automatic | ❌ Manual | ⚠️ Semi-auto |
+| Learning curve | [OK] Very low (Markdown-like) | Medium (HTML/CSS) | [OK] Very low (drag&drop) |
+| Version control friendly | [OK] Plain text | [OK] Plain text | [X] XML binary |
+| Flowcharts | [OK] Built-in | [!] Manual layout | [OK] Drag&drop |
+| Sequence diagrams | [OK] Built-in | [X] Very complex | [OK] Templates |
+| Gantt charts | [OK] Built-in | [X] Build from scratch | [!] Limited |
+| Class/ER diagrams | [OK] Built-in | [X] Not suited | [OK] Templates |
+| Visual freedom | [!] Limited | [OK] Full freedom | [OK] Free |
+| PNG export | [OK] mmdc/Playwright | [OK] Playwright | [OK] Built-in |
+| CJK support | [OK] Native | [OK] Font config | [OK] Native |
+| Auto layout | [OK] Automatic | [X] Manual | [!] Semi-auto |
 
 **Principle: Use Mermaid for structural/relationship diagrams, Playwright+CSS for creative design diagrams.**
 
@@ -772,7 +772,7 @@ A[第一行<br>第二行<br><small>小字注释</small>]
 
 1. **Insufficient node padding**: ensure `flowchart.padding` is at least `24` (CJK chars are ~50% wider than Latin)
 2. **Text too long**: use `<br>` for manual line breaks, or shorten text
-3. **Canvas too narrow**: use `width: fit-content` on `#diagram` container (🚫 NEVER use `max-width` — Mermaid SVG width is unpredictable)
+3. **Canvas too narrow**: use `width: fit-content` on `#diagram` container ([X] NEVER use `max-width` — Mermaid SVG width is unpredictable)
 4. **Node spacing too small**: increase `nodeSpacing` and `rankSpacing` (recommended 60+)
 5. **When using classDef**: ensure `font-size` isn't too large, 12-14px is ideal
 

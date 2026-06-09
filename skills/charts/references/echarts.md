@@ -1,6 +1,6 @@
 # ECharts Template Library
 
-> **⚠️ Before writing any code, read [`_rules.md`](references/_rules.md) — three non-negotiable rules on overlap, hierarchy, and color.**
+> **[!] Before writing any code, read [`_rules.md`](references/_rules.md) — three non-negotiable rules on overlap, hierarchy, and color.**
 
 
 ECharts strengths: interactivity (tooltip/zoom/linking), big data (Canvas renders millions of points smoothly), strong Chinese community.
@@ -202,7 +202,7 @@ const option = {
 
 ## Template 4: Dashboard (Multi-Chart Linking)
 
-⚠️ **ECharts multi-chart dashboard anti-overlap rules** (highest priority):
+[!] **ECharts multi-chart dashboard anti-overlap rules** (highest priority):
 1. Maximum 4 subplots per canvas; more must be split into multiple HTML files
 2. Each subplot's `grid` area must not overlap; maintain ≥5% safety margin between adjacent grids
 3. Pie chart `center` and `radius` must not intrude into other subplots' grid areas
@@ -236,7 +236,7 @@ const option = {
 ### Four-Chart Dashboard (Safe Layout Template)
 
 ```javascript
-// ⚠️ Key: grid areas precisely defined, no overlap, maintain safety margins
+// [!] Key: grid areas precisely defined, no overlap, maintain safety margins
 const option = {
   ...baseOption(THEME, '数据全景仪表盘'),
   grid: [
@@ -303,8 +303,8 @@ const option = {
 ### What If More Than 4 Subplots?
 
 ```javascript
-// ❌ Wrong: 8 charts crammed into one canvas — all labels will inevitably overlap
-// ✅ Correct: split into 2 HTML files
+// [X] Wrong: 8 charts crammed into one canvas — all labels will inevitably overlap
+// [OK] Correct: split into 2 HTML files
 
 // dashboard_overview.html — 4 overview charts
 // dashboard_detail.html  — 4 detailed analysis charts
@@ -355,7 +355,7 @@ async def echarts_to_png(html_path, png_path, width=900, height=520):
         await page.wait_for_timeout(800)  # Wait for animation to complete
         await page.locator('#chart').screenshot(path=png_path)
         await browser.close()
-        print(f'✅ {png_path}')
+        print(f'[OK] {png_path}')
 
 # asyncio.run(echarts_to_png('./output/chart.html', './output/chart.png'))
 ```
@@ -364,7 +364,7 @@ async def echarts_to_png(html_path, png_path, width=900, height=520):
 
 ## Template 5: Tree (Interactive Only)
 
-**⚠️ For static PNG export, use Playwright+CSS (see `mindmap-css.md`). ECharts tree connector length and node spacing cannot be finely controlled — static output is not aesthetically satisfying.**
+**[!] For static PNG export, use Playwright+CSS (see `mindmap-css.md`). ECharts tree connector length and node spacing cannot be finely controlled — static output is not aesthetically satisfying.**
 
 **ECharts tree is suitable for interactive scenarios** (click expand/collapse, hover tooltip, zoom/drag). For PNG/PDF static output, the CSS approach looks better.
 
@@ -378,10 +378,10 @@ const option = {
     data: [treeData],      // Tree-structured JSON data
     layout: 'orthogonal',  // Orthogonal layout (right-angle connectors)
     orient: 'LR',          // Direction: LR(left→right) / RL / TB(top→bottom) / BT
-    
+
     // Node spacing control (key params to prevent crowding)
     initialTreeDepth: -1,  // -1=expand all, positive=initial expand depth
-    
+
     // Label style
     label: {
       position: 'left',         // Leaf node label position
@@ -392,19 +392,19 @@ const option = {
     leaves: {
       label: { position: 'right' }  // Leaf labels on right
     },
-    
+
     // Connector style
     lineStyle: {
       color: '#94A3B8',
       width: 1.5,
       curveness: 0.5,    // Curvature, 0=straight, 0.5=natural curve
     },
-    
+
     // Node style
     itemStyle: {
       borderWidth: 1.5,
     },
-    
+
     // Animation
     animationDuration: 550,
     animationDurationUpdate: 750,
@@ -465,10 +465,10 @@ function styleTreeData(node, depth) {
       label: { fontSize: 12, color: '#475569', padding: [3, 8] }
     }
   ];
-  
+
   const style = styles[Math.min(depth, styles.length - 1)];
   Object.assign(node, style);
-  
+
   if (node.children) {
     node.children.forEach(child => styleTreeData(child, depth + 1));
   }
@@ -538,7 +538,7 @@ const option = {
   series: [{
     type: 'graph',
     layout: 'force',     // Force-directed auto layout
-    
+
     // Force model params (controls repulsion and attraction)
     force: {
       repulsion: 300,    // Repulsion force (higher = more spread out, recommended 200-500)
@@ -546,17 +546,17 @@ const option = {
       edgeLength: [100, 200],  // Edge length range
       layoutAnimation: true,
     },
-    
+
     roam: true,          // Allow drag and zoom
     draggable: true,     // Allow dragging nodes
-    
+
     // Nodes
     data: nodes,
     // Edges
     links: links,
     // Categories (for coloring)
     categories: categories,
-    
+
     // Labels
     label: {
       show: true,
@@ -564,14 +564,14 @@ const option = {
       fontSize: 12,
       fontFamily: 'PingFang SC, SimHei, sans-serif',
     },
-    
+
     // Connector style
     lineStyle: {
       color: 'source',   // Edge color follows source node
       curveness: 0.3,    // Curvature
       width: 1.5,
     },
-    
+
     // Highlight effect
     emphasis: {
       focus: 'adjacency',   // Highlight adjacent nodes on hover
@@ -616,7 +616,7 @@ const option = {
     type: 'graph',
     layout: 'none',  // Fixed layout, positions determined by x/y
     data: [
-      { name: '开始', x: 300, y: 50, symbolSize: 40, 
+      { name: '开始', x: 300, y: 50, symbolSize: 40,
         itemStyle: { color: '#EFF6FF', borderColor: '#3B82F6', borderWidth: 2 } },
       { name: '处理', x: 300, y: 200, symbolSize: 35 },
       { name: '判断', x: 300, y: 350, symbolSize: 35,
@@ -642,10 +642,10 @@ const option = {
 
 | Capability | ECharts | Plotly | Chart.js |
 |------|---------|--------|----------|
-| Canvas rendering (big data) | ✅ Millions | ❌ SVG-based | ✅ But limited |
-| Chinese docs | ✅ Official | ❌ English | ❌ English |
-| Candlestick | ✅ Built-in | ❌ Plugin needed | ❌ None |
-| Maps | ✅ Built-in China map | ✅ mapbox | ❌ None |
-| 3D Charts | ✅ echarts-gl | ✅ Built-in | ❌ None |
-| No Node.js needed | ✅ CDN import | ❌ Needs plotly.js | ✅ CDN |
-| Server-side rendering | ✅ node-echarts | ✅ orca | ✅ chartjs-node |
+| Canvas rendering (big data) | [OK] Millions | [X] SVG-based | [OK] But limited |
+| Chinese docs | [OK] Official | [X] English | [X] English |
+| Candlestick | [OK] Built-in | [X] Plugin needed | [X] None |
+| Maps | [OK] Built-in China map | [OK] mapbox | [X] None |
+| 3D Charts | [OK] echarts-gl | [OK] Built-in | [X] None |
+| No Node.js needed | [OK] CDN import | [X] Needs plotly.js | [OK] CDN |
+| Server-side rendering | [OK] node-echarts | [OK] orca | [OK] chartjs-node |

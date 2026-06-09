@@ -2,19 +2,19 @@
 
 把题目数组 → 一个可独立打开的 HTML 练习网页。
 
-## ✨ 功能一览
+## [*] 功能一览
 
-- 📂 **双重筛选**：分类（学科/子模块） + 学习状态（已掌握/未做/错题）
-- 🎯 **4 种题型**：选择 / 判断 / 填空 / 简答
-- 🤖 **智能答题**：选 ≠ 提交，可反复改；答错给一次重试机会
+- [Folder] **双重筛选**：分类（学科/子模块） + 学习状态（已掌握/未做/错题）
+- [Target] **4 种题型**：选择 / 判断 / 填空 / 简答
+- [Bot] **智能答题**：选 ≠ 提交，可反复改；答错给一次重试机会
 - ⌨️ **键盘快捷键**：A/B/C/D · Enter · ← → · Space
-- 📝 **模拟考模式**：选题量 + 限时 + 一次性提交 + 成绩页
-- 🧠 **记忆口诀**：题目带 `memory_tip` 字段会高亮显示
-- 🌓 **主题切换**：明 / 暗双主题，localStorage 记忆
-- 💾 **进度持久化**：浏览器记住每题状态，关掉再开还在
-- 📱 **移动端适配**：手机也能用
+- [Note] **模拟考模式**：选题量 + 限时 + 一次性提交 + 成绩页
+- [Brain] **记忆口诀**：题目带 `memory_tip` 字段会高亮显示
+- [Theme] **主题切换**：明 / 暗双主题，localStorage 记忆
+- [Save] **进度持久化**：浏览器记住每题状态，关掉再开还在
+- [Mobile] **移动端适配**：手机也能用
 
-## 🚀 快速上手
+## [Go] 快速上手
 
 ```bash
 # 1. 准备题目 JSON 文件（数组）
@@ -29,7 +29,7 @@ EOF
 python3 scripts/build_quiz_html.py /tmp/q.json --title "数学练习" --open
 ```
 
-## 📁 目录结构
+## [icon] 目录结构
 
 ```
 quiz-html/
@@ -44,7 +44,7 @@ quiz-html/
     └── demo.html             # 示例：已注入的可直接打开的 demo
 ```
 
-## 🔗 与 quiz-mastery 联动
+## [Link] 与 quiz-mastery 联动
 
 本 skill 不直接出题，专门负责"题目 → 网页"这一步。
 出题/导入请用 `quiz-mastery`。完整链路：
@@ -63,14 +63,14 @@ quiz-mastery 出题
  浏览器打开 → 用户开始练
 ```
 
-## 📝 题目字段
+## [Note] 题目字段
 
 | 字段 | 必填 | 类型 | 说明 |
 |---|---|---|---|
-| `type` | ✅ | string | `single_choice` / `true_false` / `fill_blank` / `short_answer` |
-| `prompt` | ✅ | string | 题干 |
+| `type` | [OK] | string | `single_choice` / `true_false` / `fill_blank` / `short_answer` |
+| `prompt` | [OK] | string | 题干 |
 | `options` | 选择题 | array | `["A. xxx", "B. yyy", ...]` |
-| `answer` | ✅ | string | 标准答案 |
+| `answer` | [OK] | string | 标准答案 |
 | `explanation` | 推荐 | string | 解析（支持 `**粗体**` `*斜体*` `\` 代码 \``） |
 | `knowledge_point` | 推荐 | string | 知识点名（侧边栏分组用） |
 | `category` | 推荐 | string | 分类路径，建议格式 `"学科 / 子模块"` |
@@ -88,7 +88,7 @@ quiz-mastery 出题
 | `Space` | 查看答案 |
 | `Ctrl/⌘+Enter` | 模拟考一键交卷 |
 
-## 🛠️ 命令行参数
+## [Tools] 命令行参数
 
 ```
 python3 build_quiz_html.py <questions.json> [options]
@@ -100,7 +100,7 @@ python3 build_quiz_html.py <questions.json> [options]
   --open          生成后用浏览器打开
 ```
 
-## 🔍 退出码
+## [Search] 退出码
 
 | 码 | 含义 |
 |---|---|
@@ -108,7 +108,7 @@ python3 build_quiz_html.py <questions.json> [options]
 | 1 | 参数错误 / 文件不存在 / 模板缺失 |
 | 2 | JSON 解析失败 / 数据格式不合法 |
 
-## 📌 边界
+## [Pin] 边界
 
 | 任务 | 用谁 |
 |---|---|

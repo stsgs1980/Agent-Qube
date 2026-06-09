@@ -11,7 +11,7 @@
 5. If complex → also load `references/docx-js-advanced.md`
 6. Plan document structure (outline)
 7. Write JS/TS using docx library
-   ⚠️ **BEFORE writing any string**: scan ALL Chinese text for curly quotes `""''` and replace with `\u201c \u201d \u2018 \u2019` — bare curly quotes break JS syntax (see docx-js-advanced.md § Quotes Escaping)
+   [!] **BEFORE writing any string**: scan ALL Chinese text for curly quotes `""''` and replace with `\u201c \u201d \u2018 \u2019` — bare curly quotes break JS syntax (see docx-js-advanced.md § Quotes Escaping)
 8. Run with `bun run generate.js` (or `node generate.js`)
 9. If TOC → run `python3 "$DOCX_SCRIPTS/add_toc_placeholders.py" output.docx --auto`
 10. Run post-generation checklist (see SKILL.md)
@@ -27,9 +27,9 @@ When the user provides a reference document (PDF/docx) as a **formatting templat
 4. **Preserve template-specific elements** — school-specific forms, signature areas, stamp placeholders, advisor comment blocks → reproduce as-is with placeholder text (e.g., "Advisor (signature):")
 5. **Maintain formatting fidelity** — font choices, table layouts, spacing, and alignment should match the template, not the standard design-system palettes
 
-⚠️ **Do NOT apply standard cover recipes (R1–R7) when a user-provided template defines its own cover format.** Follow the template's cover layout instead. Standard `common-rules.md` constraints (e.g., `WidthType.PERCENTAGE`, `allNoBorders` for cover wrapper, `Rule 8` line spacing) still apply for cross-engine compatibility.
+[!] **Do NOT apply standard cover recipes (R1–R7) when a user-provided template defines its own cover format.** Follow the template's cover layout instead. Standard `common-rules.md` constraints (e.g., `WidthType.PERCENTAGE`, `allNoBorders` for cover wrapper, `Rule 8` line spacing) still apply for cross-engine compatibility.
 
-⚠️ **Each distinct page type = separate section.** Cover section (margin: 0), body section (standard margins), appendix/form pages (may need different margins or orientation). Never place cover + body + appendix in a single section.
+[!] **Each distinct page type = separate section.** Cover section (margin: 0), body section (standard margins), appendix/form pages (may need different margins or orientation). Never place cover + body + appendix in a single section.
 
 ---
 
@@ -62,11 +62,11 @@ Covers use **7 validated layout recipes (R1–R7)**, auto-selected by `selectCov
 | report | R1 (Pure Paragraph Left) | by industry |
 | default | R1 (Pure Paragraph Left) | DS-1 |
 
-⚠️ **Long title routing:** After selecting recipe, apply `applyLongTitleOverride(result, titleLength)`. Titles >20 chars on R3/R4/R6 → fall back to R1. Titles >30 chars on R2 → fall back to R1. R5 is never overridden.
+[!] **Long title routing:** After selecting recipe, apply `applyLongTitleOverride(result, titleLength)`. Titles >20 chars on R3/R4/R6 → fall back to R1. Titles >30 chars on R2 → fall back to R1. R5 is never overridden.
 
-⚠️ **Academic thesis cover:** Use `buildAcademicCover()` from `scenes/academic.md`.
+[!] **Academic thesis cover:** Use `buildAcademicCover()` from `scenes/academic.md`.
 
-⚠️ **Thesis proposal report (开题报告):** Use `buildProposalCover()` from `scenes/academic.md`. Cover MUST be an independent section. Keywords: "开题报告" (Chinese), "thesis proposal", "research proposal" — NOT the same as business proposals (which use R4).
+[!] **Thesis proposal report (开题报告):** Use `buildProposalCover()` from `scenes/academic.md`. Cover MUST be an independent section. Keywords: "开题报告" (Chinese), "thesis proposal", "research proposal" — NOT the same as business proposals (which use R4).
 
 ### Table of Contents?
 - **YES**: 3+ major sections (H1 headings)
@@ -204,4 +204,4 @@ Packer.toBuffer(doc).then(buf => { fs.writeFileSync("output.docx", buf); });
 ```bash
 python3 "$DOCX_SCRIPTS/postcheck.py" output.docx
 ```
-⚠️ **Running postcheck.py is MANDATORY.** Fix all ❌ errors before delivering.
+[!] **Running postcheck.py is MANDATORY.** Fix all [X] errors before delivering.

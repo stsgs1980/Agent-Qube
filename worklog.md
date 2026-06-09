@@ -1687,3 +1687,96 @@ Stage Summary:
 - Hierarchy page works correctly with zero JS errors
 - WS shows OFFLINE due to Next.js rewrite limitation for socket.io (known issue)
 - Fallback status simulation keeps data fresh even without WS connection
+
+---
+Task ID: 3
+Agent: Fix Agent
+Task: Fix trailing whitespace and tabs in markdown files checked by CI
+
+Work Log:
+- Ran trailing whitespace check: found ~300 violations across 35+ .md files in skills/, docs/instructions/, docs/standards/, docs/templates/
+- Ran tab check: found 0 violations (no tabs in any checked files)
+- Fixed all trailing whitespace with: `find skills/ docs/instructions/ docs/standards/ docs/templates/ -name '*.md' -exec sed -i 's/[[:space:]]*$//' {} +` plus sed on AGENT_RULES.md, README.md, PROJECT_CONFIG.md
+- Affected files span: skills/video-understand, skills/charts/references, skills/image-generation, skills/ASR, skills/fallback, skills/image-edit, skills/web-reader, skills/health-check, skills/api-retry, skills/seo-content-writer, skills/TTS, skills/web-search, skills/LLM, skills/VLM, skills/xlsx, skills/pdf, skills/design, skills/ppt, skills/docx, and many more
+- Verified trailing whitespace check returns empty output (PASS)
+- Verified tab check returns empty output (PASS)
+
+Stage Summary:
+- Trailing whitespace: ~300 lines fixed across 35+ markdown files
+- Tabs: 0 violations found (no fix needed)
+- Both CI checks now pass (grep returns nothing)
+
+---
+Task ID: 1
+Agent: CI Fix Agent
+Task: Fix GitHub CI Workflows to Match Actual Project Structure
+
+Work Log:
+- Read worklog.md and both CI workflow files (.github/workflows/ci.yml and .github/workflows/validate.yml)
+- Verified actual project structure: files live under docs/instructions/, docs/standards/, docs/templates/ (NOT root-level)
+- Confirmed root-level instructions/, standards/, templates/ directories do NOT exist
+- Confirmed skills/ IS at root level (no change needed)
+
+ci.yml changes:
+- Instructions paths: instructions/*.md -> docs/instructions/*.md (5 files)
+- Standards paths: standards/*.md -> docs/standards/*.md (13 files)
+- Templates paths: templates/*.md -> docs/templates/*.md (3 files)
+- Emoji check: added -not -path './node_modules/*' to find command (no path change needed since it scans all .md)
+- YAML syntax check: replaced brittle python3 -c "import yaml; [yaml.safe_load(open(f)) for f in __import__('glob').glob('.github/workflows/*.yml')]" with simple for loop: for f in .github/workflows/*.yml; do python3 -c "import yaml; yaml.safe_load(open('$f'))"; done
+
+validate.yml changes:
+- Instructions paths: instructions/*.md -> docs/instructions/*.md (5 files)
+- Standards paths: standards/*.md -> docs/standards/*.md (4 files)
+- Templates paths: templates/*.md -> docs/templates/*.md (3 files)
+- Emoji check: instructions/*.md -> docs/instructions/*.md (skills/**/*.md stays at root)
+- Trailing whitespace check: skills/ instructions/ standards/ templates/ -> skills/ docs/instructions/ docs/standards/ docs/templates/
+- Tabs check: same path updates as trailing whitespace
+
+- Both YAML files validated: python3 yaml.safe_load() passes for both
+
+Stage Summary:
+- 2 workflow files fixed with correct docs/ paths
+- All root-level path references (instructions/, standards/, templates/) updated to docs/ subdirectories
+- skills/ paths kept at root level (correct, no change needed)
+- YAML syntax check replaced with simpler shell for-loop approach
+- Both files pass YAML validation
+
+---
+Task ID: 2
+Agent: Fix Agent
+Task: Fix README.md version and clean emoji from key markdown files
+
+Work Log:
+- Fixed README.md last line: "Next.js 15" -> "Next.js 16"
+- Cleaned ROADMAP.md: replaced all emoji status indicators (17 replacements)
+  - Done -> [OK], In Progress -> [!!], Planned -> [..], Backlog -> [ ]
+- Cleaned 101 skill markdown files in skills/: 1278 emoji replaced total
+- Cleaned 3 docs files: worklog-init.md, MARKDOWN_STANDARD_RU_v2.1.md, MARKDOWN_STANDARD_EN_v2.1.md
+- docs/instructions/ was already emoji-free (no changes needed)
+- AGENT_RULES.md and README.md were already emoji-free (after our version fix)
+- Emoji mapping used: status indicators, object icons, nature symbols, tech devices, action markers
+- Final verification: rg finds zero emoji (U+1F000-U+1FFFF) in any .md file
+
+Stage Summary:
+- README.md version corrected: Next.js 15 -> Next.js 16
+- 104 markdown files cleaned of emoji across skills/, docs/, and root
+- ~1300 total emoji replaced with ASCII text equivalents
+- All markdown files pass CI emoji check (U+1F000-U+1FFFF range)
+
+---
+Task ID: 1-4
+Agent: main
+Task: Fix failing GitHub CI/CD workflows and clean up codebase
+
+Work Log:
+- Fixed CI workflow paths: instructions/ → docs/instructions/, standards/ → docs/standards/, templates/ → docs/templates/
+- Fixed README.md "Built with:" line: Next.js 15 → Next.js 16
+- Cleaned emoji from 104+ markdown files (skills/, docs/, root files)
+- Stripped trailing whitespace from all CI-checked files (.md, .py, .js, .ts, .css, .xsd, etc.)
+- Verified all CI checks pass locally: file structure, emoji, stack signature, whitespace, tabs
+
+Stage Summary:
+- CI workflows now reference correct project structure
+- All emoji replaced with ASCII equivalents
+- Zero trailing whitespace/tabs violations
+- Pre-push hook and validate.sh already working correctly

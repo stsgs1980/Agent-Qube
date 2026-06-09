@@ -74,9 +74,9 @@ See SKILL.md for complete conversion table.
 
 **Fix**: Use `ShadingType.CLEAR` not `ShadingType.SOLID`:
 ```js
-// ❌ WRONG
+// [X] WRONG
 shading: { type: ShadingType.SOLID, fill: "F1F5F9" }
-// ✅ CORRECT
+// [OK] CORRECT
 shading: { type: ShadingType.CLEAR, fill: "F1F5F9" }
 ```
 
@@ -122,32 +122,32 @@ new ImageRun({ data: buf, transformation: { width: displayWidth, height: display
 
 **Fix**: PageBreak must always be wrapped in a Paragraph:
 ```js
-// ❌ WRONG — standalone
+// [X] WRONG — standalone
 children: [new PageBreak()]
-// ✅ CORRECT — inside Paragraph
+// [OK] CORRECT — inside Paragraph
 children: [new Paragraph({ children: [new PageBreak()] })]
 ```
 
 ---
 
-## Bug: Quotation marks break JavaScript syntax — ⚠️ #1 MOST COMMON BUG
+## Bug: Quotation marks break JavaScript syntax — [!] #1 MOST COMMON BUG
 
 **This is the single most frequent code generation error.** Chinese text routinely uses curly quotes `""` for emphasis, proper nouns, and event names (e.g., "双11", "前低后高", "618"大促). These MUST be Unicode-escaped — bare curly quotes silently break JS syntax.
 
 **Rule: scan ALL Chinese text for `""''` and replace with `\u201c \u201d \u2018 \u2019` BEFORE writing the string.**
 
 ```js
-// ❌ WRONG — curly quotes in Chinese text break syntax (extremely common)
+// [X] WRONG — curly quotes in Chinese text break syntax (extremely common)
 para("行业增速呈现"前低后高"的态势，在"618"大促拉动下增长。")
 "他说"你好""       // \u201c \u201d
 'It's a test'      // \u2019
 
-// ✅ CORRECT — Unicode escapes for ALL curly quotes
+// [OK] CORRECT — Unicode escapes for ALL curly quotes
 para("行业增速呈现\u201c前低后高\u201d的态势，在\u201c618\u201d大促拉动下增长。")
 "他说\u201c你好\u201d"
 "It\u2019s a test"
 
-// ✅ Straight quotes: escape or use alternate delimiters
+// [OK] Straight quotes: escape or use alternate delimiters
 "He said \"hello\""
 'He said "hello"'
 ```
@@ -194,19 +194,19 @@ function removeTrailingPageBreak(section) {
 
 ### 1. `ShadingType.SOLID` shows black in WPS
 ```js
-// ❌ WPS shows solid black
+// [X] WPS shows solid black
 shading: { type: ShadingType.SOLID, fill: "F1F5F9" }
-// ✅ Both renderers show correct color
+// [OK] Both renderers show correct color
 shading: { type: ShadingType.CLEAR, fill: "F1F5F9" }
 ```
 
 ### 2. `verticalAlign: "center"` in exact-height rows shifts content
 WPS ignores vertical centering in `rule: "exact"` rows — content stays at top, creating visual mismatch.
 ```js
-// ❌ Inconsistent between Word and WPS
+// [X] Inconsistent between Word and WPS
 new TableRow({ height: { value: 800, rule: "exact" },
   children: [new TableCell({ verticalAlign: VerticalAlign.CENTER, ... })] })
-// ✅ Use top alignment + margins/spacing for positioning
+// [OK] Use top alignment + margins/spacing for positioning
 new TableRow({ height: { value: 800, rule: "exact" },
   children: [new TableCell({ verticalAlign: VerticalAlign.TOP,
     margins: { top: 200 }, ... })] })
@@ -215,10 +215,10 @@ new TableRow({ height: { value: 800, rule: "exact" },
 ### 3. Tab stops misalign in WPS
 Tab widths differ between Word and WPS. Never use tabs for alignment.
 ```js
-// ❌ Tab-based alignment — breaks in WPS
+// [X] Tab-based alignment — breaks in WPS
 new Paragraph({ tabStops: [{ type: TabStopType.RIGHT, position: 8000 }],
   children: [new TextRun({ text: "Party A:\tCompany Name" })] })
-// ✅ Borderless table for alignment — consistent everywhere
+// [OK] Borderless table for alignment — consistent everywhere
 new Table({ borders: allNoBorders, rows: [new TableRow({ children: [
   new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Party A:" })] })] }),
   new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Company Name" })] })] }),
@@ -228,10 +228,10 @@ new Table({ borders: allNoBorders, rows: [new TableRow({ children: [
 ### 4. Nested tables in exact-height cells overflow differently
 Word calculates nested table heights more accurately than WPS. Use stacked tables instead.
 ```js
-// ❌ Nested table inside exact-height cell
+// [X] Nested table inside exact-height cell
 new TableRow({ height: { value: 16838, rule: "exact" },
   children: [new TableCell({ children: [nestedTable1, nestedTable2] })] })
-// ✅ Stacked approach — content table + filler table
+// [OK] Stacked approach — content table + filler table
 [contentTable, fillerTable]  // both at top level, heights sum to 16838
 ```
 
@@ -289,14 +289,14 @@ new Table({
 
 **Fix**: Always use **paragraph borders** for decorative lines:
 ```js
-// ✅ Paragraph border — renders consistently in both MS Office and WPS
+// [OK] Paragraph border — renders consistently in both MS Office and WPS
 new Paragraph({
   indent: { left: 1000, right: 1000 },
   border: { top: { style: BorderStyle.SINGLE, size: 18, color: accentColor, space: 20 } },
   children: [],
 })
 
-// ❌ NEVER use text characters for decorative lines
+// [X] NEVER use text characters for decorative lines
 new TextRun({ text: "───────────────" })  // width varies across engines
 ```
 

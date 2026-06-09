@@ -1,6 +1,6 @@
 # CSS Mind Map Rendering Engine
 
-> **⚠️ Before writing any code, read [`_rules.md`](references/_rules.md) — three non-negotiable rules on overlap, hierarchy, and color.**
+> **[!] Before writing any code, read [`_rules.md`](references/_rules.md) — three non-negotiable rules on overlap, hierarchy, and color.**
 
 **Core principle: Content-driven, not template-driven. First analyze the content structure, then decide on the layout, and finally render.**
 
@@ -102,7 +102,7 @@ def calc_canvas(branch_count, max_depth, total_nodes, max_text_len, layout):
     # Lower bounds
     width = max(width, 1200)
     height = max(height, 600)
-    
+
     return width, height
 ```
 
@@ -158,7 +158,7 @@ async def mindmap_to_png(html_path, png_path, width=1600):
         page = await browser.new_page(viewport={'width': width, 'height': 1200}, device_scale_factor=2)
         await page.goto(f'file://{html_path}', wait_until='networkidle')
         await page.wait_for_timeout(500)
-        
+
         el = page.locator('#mindmap')
         bbox = await el.bounding_box()
         # First expansion: ensure content is not clipped
@@ -166,11 +166,11 @@ async def mindmap_to_png(html_path, png_path, width=1600):
         expand_h = int(bbox['height'] + 100)
         await page.set_viewport_size({'width': expand_w, 'height': expand_h})
         await page.wait_for_timeout(200)
-        
+
         # Call connector script
         await page.evaluate('if(typeof drawAllLines==="function") drawAllLines()')
         await page.wait_for_timeout(200)
-        
+
         # Second contraction: measure actual content right edge, trim right-side blank space
         trim = await page.evaluate('''() => {
             const map = document.getElementById('mindmap');
@@ -189,19 +189,19 @@ async def mindmap_to_png(html_path, png_path, width=1600):
         # Redraw connectors (viewport changed so coordinates change)
         await page.evaluate('if(typeof drawAllLines==="function") drawAllLines()')
         await page.wait_for_timeout(200)
-        
+
         await el.screenshot(path=png_path)
         await browser.close()
-        
+
         import os
-        print(f'✅ {png_path} ({os.path.getsize(png_path)/1024:.0f}KB)')
+        print(f'[OK] {png_path} ({os.path.getsize(png_path)/1024:.0f}KB)')
 ```
 
 ### 3.2 Universal Recursive Connector Script v4-fix (All Styles)
 
 This script automatically handles tree connectors of **any depth** (3, 4, 5 levels... all work). HTML for styles A and B should include this script at the end.
 
-**⚠️ DOM Structure Convention (connector script depends on this structure):**
+**[!] DOM Structure Convention (connector script depends on this structure):**
 
 ```
 #mindmap
@@ -224,7 +224,7 @@ This script automatically handles tree connectors of **any depth** (3, 4, 5 leve
 
 **Also supports legacy structure (.branches/.right-branches/.left-branches), backward compatible.**
 
-**⚠️ CSS Indentation Rules (connectors depend on child nodes having offset relative to parent, no indentation = broken connectors):**
+**[!] CSS Indentation Rules (connectors depend on child nodes having offset relative to parent, no indentation = broken connectors):**
 ```css
 /* .tree-layout structure (new version) must include these paddings */
 .left-side .children, .left-side .leaf-group, .left-side .deep-group {
@@ -236,10 +236,10 @@ This script automatically handles tree connectors of **any depth** (3, 4, 5 leve
 ```
 
 **Common causes of missing connectors/layout errors:**
-- **⚠️ `.sub-branch` missing `display: flex`** (most critical! Without flex, `flex-direction: row-reverse` doesn't work, left-side leaves won't expand left, instead all pile up on the right)
-- **⚠️ Child node containers missing padding-left/padding-right** (without indentation, child nodes align with parent, midX is outside child nodes, connectors break)
-- **⚠️ `.lr-tree` / `.tree` should not have `z-index`** (creates stacking context, covers SVG connectors)
-- **⚠️ Leaf nodes must NOT stretch to equal width** — each leaf should size to its own text content (`white-space: nowrap` or `width: fit-content`). Never add `width: 100%`, `flex-grow: 1`, or `align-items: stretch` to leaf containers. Leaves with shorter text should be narrower than leaves with longer text.
+- **[!] `.sub-branch` missing `display: flex`** (most critical! Without flex, `flex-direction: row-reverse` doesn't work, left-side leaves won't expand left, instead all pile up on the right)
+- **[!] Child node containers missing padding-left/padding-right** (without indentation, child nodes align with parent, midX is outside child nodes, connectors break)
+- **[!] `.lr-tree` / `.tree` should not have `z-index`** (creates stacking context, covers SVG connectors)
+- **[!] Leaf nodes must NOT stretch to equal width** — each leaf should size to its own text content (`white-space: nowrap` or `width: fit-content`). Never add `width: 100%`, `flex-grow: 1`, or `align-items: stretch` to leaf containers. Leaves with shorter text should be narrower than leaves with longer text.
 - Leaf container not named `.leaf-group` (using `.child-list`, `.sub-items`, etc.)
 - Deep-level container not named `.deep-group`
 - `#mindmap` missing `position: relative`
@@ -260,7 +260,7 @@ This script automatically handles tree connectors of **any depth** (3, 4, 5 leve
  */
 function drawAllLines() {
   const map = document.getElementById('mindmap');
-  if (!map) { console.error('❌ #mindmap not found'); return; }
+  if (!map) { console.error('[X] #mindmap not found'); return; }
   const cRect = map.getBoundingClientRect();
 
   const old = map.querySelector('svg.lines');
@@ -391,7 +391,7 @@ function drawAllLines() {
 
   // ─── Main flow ───
   const rootNode = map.querySelector('.root-node');
-  if (!rootNode) { console.error('❌ .root-node not found'); return; }
+  if (!rootNode) { console.error('[X] .root-node not found'); return; }
   const rp = rel(rootNode);
 
   // Left side: collect all L1 branch-nodes, draw polylines with connect() (with vertical spine)
@@ -429,7 +429,7 @@ function drawAllLines() {
   });
 
   map.insertBefore(svg, map.firstChild);
-  console.log(`✅ Drew ${lineCount} lines`);
+  console.log(`[OK] Drew ${lineCount} lines`);
 }
 ```
 
@@ -637,7 +637,7 @@ Recommended branch color combos per intent:
   margin: 0 60px; text-align: center;
 }
 
-/* ⚠️ sub-branch must be flex, otherwise flex-direction: row-reverse won't work, leaves won't expand left */
+/* [!] sub-branch must be flex, otherwise flex-direction: row-reverse won't work, leaves won't expand left */
 .sub-branch { display: flex; align-items: flex-start; gap: 0; }
 
 .left-branches { display: flex; flex-direction: column; gap: 16px; }
@@ -703,7 +703,7 @@ Recommended branch color combos per intent:
 
 ## Style C: Card Grid (when user explicitly requests "cards" / "modules")
 
-> ⚠️ This is not a mind map — it's a modular display. No connectors; use cards + color coding to show relationships.
+> [!] This is not a mind map — it's a modular display. No connectors; use cards + color coding to show relationships.
 
 ```html
 <!DOCTYPE html>
@@ -779,7 +779,7 @@ Recommended branch color combos per intent:
   <div class="card-grid">
     <div class="card blue">
       <div class="card-header">
-        <div class="card-icon">📋</div>
+        <div class="card-icon">[List]</div>
         <div class="card-title">模块A</div>
       </div>
       <ul class="card-items">
@@ -902,7 +902,7 @@ After rendering, verify against this checklist:
 
 ---
 
-## ⛔ Radial Layout Warning
+## [X] Radial Layout Warning
 
 **Radial layout is strongly discouraged.** Using `position: absolute` for fixed branch positions leads to overlap when branches increase, and deep levels cannot be handled.
 

@@ -316,12 +316,12 @@ def heatmap(data: list, row_labels: list, col_labels: list, title: str = "",
 
 ## Embedding in Documents (MANDATORY — Preserve Aspect Ratio)
 
-**⚠️ Core Rule: When embedding any chart image, you MUST read actual image dimensions to calculate displayHeight. NEVER hardcode both width and height.**
+**[!] Core Rule: When embedding any chart image, you MUST read actual image dimensions to calculate displayHeight. NEVER hardcode both width and height.**
 
 Pie and radar charts are square — mismatched width/height produces ellipses or diamonds.
 
 ```js
-// ✅ Correct: read actual image dimensions
+// [OK] Correct: read actual image dimensions
 const chartBuffer = fs.readFileSync("bar.png");
 const sizeOf = require("image-size");
 const dims = sizeOf(chartBuffer);
@@ -342,7 +342,7 @@ new Paragraph({
 ```
 
 ```js
-// ❌ Wrong: hardcoded width and height (pie becomes ellipse, radar becomes diamond)
+// [X] Wrong: hardcoded width and height (pie becomes ellipse, radar becomes diamond)
 new ImageRun({
   data: chartBuffer,
   transformation: { width: 500, height: 350 },  // wrong ratio!
@@ -351,7 +351,7 @@ new ImageRun({
 ```
 
 ```python
-# ✅ Python (ReportLab) correct approach:
+# [OK] Python (ReportLab) correct approach:
 from PIL import Image as PILImage
 from reportlab.platypus import Image
 pil_img = PILImage.open('chart.png')

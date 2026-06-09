@@ -24,18 +24,18 @@ jobs:
             README.md \
             skills/git-safe-ops/SKILL.md \
             skills/dev-watchdog/SKILL.md \
-            instructions/onboarding-protocol.md \
-            instructions/git-workflow-rules.md \
-            instructions/language-rule.md \
-            instructions/diagnostic-disclosure.md \
-            instructions/writing-plans.md \
-            standards/README_TEMPLATE.md \
-            standards/UNICODE_POLICY.md \
-            standards/MARKDOWN_STANDARD.md \
-            standards/REPRODUCIBILITY-STANDARD.md \
-            templates/WORKLOG.md \
-            templates/TASK_TEMPLATE.md \
-            templates/README_WORKLOG.md
+            docs/instructions/onboarding-protocol.md \
+            docs/instructions/git-workflow-rules.md \
+            docs/instructions/language-rule.md \
+            docs/instructions/diagnostic-disclosure.md \
+            docs/instructions/writing-plans.md \
+            docs/standards/README_TEMPLATE.md \
+            docs/standards/UNICODE_POLICY.md \
+            docs/standards/MARKDOWN_STANDARD.md \
+            docs/standards/REPRODUCIBILITY-STANDARD.md \
+            docs/templates/WORKLOG.md \
+            docs/templates/TASK_TEMPLATE.md \
+            docs/templates/README_WORKLOG.md
           do
             if [ ! -f "$f" ]; then
               echo "MISSING: $f"
@@ -50,7 +50,7 @@ jobs:
         run: |
           echo "Checking for emoji (U+1F000+)..."
           ERRORS=0
-          for f in skills/**/*.md instructions/*.md; do
+          for f in skills/**/*.md docs/instructions/*.md; do
             if [ -f "$f" ]; then
               if rg -l '[\x{1F000}-\x{1FFFF}]' "$f" 2>/dev/null; then
                 echo "EMOJI FOUND in $f"
@@ -86,7 +86,7 @@ jobs:
             --include='*.md' --include='*.py' --include='*.js' --include='*.ts' --include='*.tsx' \
             --include='*.yml' --include='*.yaml' --include='*.json' --include='*.css' \
             --include='*.xsd' --include='*.tex' --include='*.sty' \
-            skills/ instructions/ standards/ templates/ \
+            skills/ docs/instructions/ docs/standards/ docs/templates/ \
             AGENT_RULES.md README.md PROJECT_CONFIG.md 2>/dev/null; then
             echo "Found trailing whitespace"
             exit 1
@@ -100,7 +100,7 @@ jobs:
             --include='*.md' --include='*.py' --include='*.js' --include='*.ts' --include='*.tsx' \
             --include='*.yml' --include='*.yaml' --include='*.json' --include='*.css' \
             --include='*.xsd' --include='*.tex' --include='*.sty' \
-            skills/ instructions/ standards/ templates/ \
+            skills/ docs/instructions/ docs/standards/ docs/templates/ \
             AGENT_RULES.md README.md PROJECT_CONFIG.md 2>/dev/null; then
             echo "Found tabs (use spaces only)"
             exit 1

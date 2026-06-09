@@ -322,7 +322,7 @@ const horizontalTable = new Table({
 });
 ```
 
-**⚠️ CRITICAL**: Always set `margins` at the Table or TableCell level. Without margins, text touches cell borders.
+**[!] CRITICAL**: Always set `margins` at the Table or TableCell level. Without margins, text touches cell borders.
 
 ### Table Color Token Derivation
 
@@ -345,7 +345,7 @@ const t = palette.table;
 // Horizontal: use t.headerBg, t.headerText, t.innerLine
 ```
 
-**⚠️ High-saturation accent override**: For DM-1, FG-1, and SN-2, the table colors are intentionally darkened/desaturated relative to the cover accent. Bright accent colors that look good on dark cover backgrounds are too eye-straining on white body pages. Always use `palette.table.*` for tables, never the raw `palette.accent`.
+**[!] High-saturation accent override**: For DM-1, FG-1, and SN-2, the table colors are intentionally darkened/desaturated relative to the cover accent. Bright accent colors that look good on dark cover backgrounds are too eye-straining on white body pages. Always use `palette.table.*` for tables, never the raw `palette.accent`.
 
 ---
 ---
@@ -362,13 +362,13 @@ Covers use **7 validated layout recipes** + **parameterized variants** instead o
 
 Each palette defines 3 core colors (Background, Primary, Accent) + derived cover/table tokens.
 
-⚠️ **Disambiguation: `cover.titleColor` is a COLOR value, not title text.** All keys under `cover: { ... }` are **color hex codes** for styling cover text elements. They are NOT text content. The actual title text comes from `config.title`. Never use `P.titleColor` as the `text` parameter of a `TextRun` — it must only be used as the `color` parameter.
+[!] **Disambiguation: `cover.titleColor` is a COLOR value, not title text.** All keys under `cover: { ... }` are **color hex codes** for styling cover text elements. They are NOT text content. The actual title text comes from `config.title`. Never use `P.titleColor` as the `text` parameter of a `TextRun` — it must only be used as the `color` parameter.
 
 ```js
-// ✅ Correct — config.title is the text, P.titleColor is the color
+// [OK] Correct — config.title is the text, P.titleColor is the color
 new TextRun({ text: config.title, color: P.titleColor })
 
-// ❌ WRONG — using color value as text content
+// [X] WRONG — using color value as text content
 new TextRun({ text: P.titleColor, color: P.titleColor })  // displays "FFFFFF" as visible text!
 ```
 
@@ -385,7 +385,7 @@ const coverPalettes = {
     cover: { titleColor: "1284BA", subtitleColor: "606060", metaColor: "707070", footerColor: "A0A0A0" },
     table: { headerBg: "1284BA", headerText: "FFFFFF", accentLine: "1284BA", innerLine: "D8E4EC", surface: "EDF4F9" },
   },
-  "SN-2": { // Soft Purple — creative, branding, events (⚠️ NOT for business)
+  "SN-2": { // Soft Purple — creative, branding, events ([!] NOT for business)
     bg: "EBDCEF", primary: "73593C", accent: "B13DC6",
     cover: { titleColor: "73593C", subtitleColor: "606060", metaColor: "707070", footerColor: "A0A0A0" },
     table: { headerBg: "7A4D8A", headerText: "FFFFFF", accentLine: "7A4D8A", innerLine: "D8D0DE", surface: "F2EDF5" },
@@ -425,13 +425,13 @@ const coverPalettes = {
   "DM-1": { // Deep Cyan — AI, tech proposals, digital transformation
     bg: "162235", primary: "FFFFFF", accent: "37DCF2",
     cover: { titleColor: "FFFFFF", subtitleColor: "B0B8C0", metaColor: "90989F", footerColor: "687078" },
-    // ⚠️ Table uses darkened accent (#1B6B7A) — bright #37DCF2 is too saturated for white-page tables
+    // [!] Table uses darkened accent (#1B6B7A) — bright #37DCF2 is too saturated for white-page tables
     table: { headerBg: "1B6B7A", headerText: "FFFFFF", accentLine: "1B6B7A", innerLine: "C8DDE2", surface: "EDF3F5" },
   },
   "FG-1": { // Forest Mint — ESG, environmental, sustainability, agriculture
     bg: "0C1F1A", primary: "FFFFFF", accent: "3DDBB5",
     cover: { titleColor: "FFFFFF", subtitleColor: "B0B8C0", metaColor: "90989F", footerColor: "687078" },
-    // ⚠️ Table uses darkened accent (#2A7A65) — bright #3DDBB5 is too saturated for white-page tables
+    // [!] Table uses darkened accent (#2A7A65) — bright #3DDBB5 is too saturated for white-page tables
     table: { headerBg: "2A7A65", headerText: "FFFFFF", accentLine: "2A7A65", innerLine: "C5D8D0", surface: "EDF5F2" },
   },
   "GO-1": { // Graphite Orange — proposals, bidding, PRD
@@ -464,13 +464,13 @@ const coverPalettes = {
 };
 ```
 
-### ⚠️ Dark Cover → Light Table Rule
+### [!] Dark Cover → Light Table Rule
 
 Covers with dark backgrounds (DS-1, IG-1, DM-1, FG-1, GO-1) use bright accent on dark bg.
 Body page tables are always on WHITE background — table colors use **darkened/desaturated** variants of the accent.
 High-saturation accent colors (DM-1 #37DCF2, FG-1 #3DDBB5, SN-2 #B13DC6) are explicitly overridden in `table.*` fields above.
 
-### ⚠️ SN-2 Scene Restriction
+### [!] SN-2 Scene Restriction
 
 SN-2 (Soft Purple) is restricted to creative/branding/event documents ONLY.
 It MUST NOT be used for: business reports, consulting, finance, legal, government, medical, or technical documents.
@@ -498,7 +498,7 @@ It MUST NOT be used for: business reports, consulting, finance, legal, governmen
 
 ---
 
-### ⚠️ Recipe Routing Rules (Replaces Free Selection)
+### [!] Recipe Routing Rules (Replaces Free Selection)
 
 ```js
 function selectCoverRecipe(docType, industry, titleLength) {
@@ -632,19 +632,19 @@ When the user does NOT specify an exact title, the model should craft a title wi
 
 ---
 
-### ⚠️ Cover Page Break Rules
+### [!] Cover Page Break Rules
 
 Cover should be an independent section — **no PageBreak at the end needed**. The next section automatically starts a new page.
 
 ```js
-// ✅ Correct — cover is a separate section, no trailing PageBreak
+// [OK] Correct — cover is a separate section, no trailing PageBreak
 sections: [
   { properties: { /* Cover section, margin all 0 */ }, children: buildCover(...) },
   { properties: { /* Body section */ }, children: buildContent(...) },
 ]
 ```
 
-### ⚠️ Cover Content Overflow Prevention (Mandatory)
+### [!] Cover Content Overflow Prevention (Mandatory)
 
 1. Cover section page margin is 0; total content height ≤ 15638 twips (1200 twips safety margin for cross-engine compatibility — MS Office renders large fonts taller than calculated).
 2. Color block Table `height` must use `rule: "exact"` (never `"atLeast"`).
@@ -661,7 +661,7 @@ sections: [
 9. **Cover wrapper table MUST use explicit `allNoBorders`**: The outer 16838 wrapper table and ALL nested tables inside the cover MUST set borders to NONE explicitly. Never rely on docx-js default borders (`single/auto/sz=4`). Default borders add ~8 twips per edge, which causes MS Office to calculate a total height slightly exceeding 16838 → content overflows to a blank page 2. WPS is more lenient but MS Office is strict. **This is the #1 cause of "blank page 2 in MS Office but not in WPS".**
 
 ```js
-// ✅ MANDATORY: Define and use allNoBorders for every cover table
+// [OK] MANDATORY: Define and use allNoBorders for every cover table
 const NB = { style: BorderStyle.NONE, size: 0, color: "FFFFFF" };
 const noBorders = { top: NB, bottom: NB, left: NB, right: NB };
 const allNoBorders = { top: NB, bottom: NB, left: NB, right: NB,
@@ -676,14 +676,14 @@ new Table({
 10. **Decorative lines MUST use paragraph borders, NEVER text characters**: Horizontal decorative lines (accent strips, dividers, frame edges) must be implemented with `paragraph border.top` or `border.bottom` — never with text characters like `───`, `━━━`, `═══`, or `——————`. Character-drawn lines render at inconsistent widths across MS Office and WPS (font metrics differ), causing lines to appear truncated or misaligned. Paragraph borders render pixel-perfect in both engines and their width is controlled precisely via `indent.left` / `indent.right`.
 
 ```js
-// ✅ Correct — paragraph border (R2 style thick accent rule)
+// [OK] Correct — paragraph border (R2 style thick accent rule)
 new Paragraph({
   indent: { left: 1000, right: 1000 },
   border: { top: { style: BorderStyle.SINGLE, size: 18, color: P.accent, space: 20 } },
   children: [],
 })
 
-// ❌ FORBIDDEN — text character line (renders inconsistently)
+// [X] FORBIDDEN — text character line (renders inconsistently)
 new Paragraph({
   children: [new TextRun({ text: "───────────────", color: P.accent })]
 })
@@ -715,7 +715,7 @@ new Paragraph({
 
 ---
 
-### ⚠️ Cover Title Layout — calcTitleLayout() (Mandatory for ALL Recipes)
+### [!] Cover Title Layout — calcTitleLayout() (Mandatory for ALL Recipes)
 
 **Every cover recipe MUST use `calcTitleLayout()` to determine title font size and line breaks.** Hardcoding font sizes or passing the full title as a single TextRun is FORBIDDEN.
 
@@ -923,7 +923,7 @@ children.push(new Paragraph({ spacing: { before: spacing.bottomSpacing } }));
 
 ---
 
-### ⚠️ CRITICAL — Cover Section Non-Negotiables (ALL Recipes)
+### [!] CRITICAL — Cover Section Non-Negotiables (ALL Recipes)
 
 These 3 properties are MANDATORY for every cover implementation (R1–R7). Omitting ANY of them causes cover layout failure:
 
@@ -937,7 +937,7 @@ These 3 properties are MANDATORY for every cover implementation (R1–R7). Omitt
 ```js
 sections: [
   {
-    // ⚠️ Cover section — margin MUST be 0, separate from body
+    // [!] Cover section — margin MUST be 0, separate from body
     properties: {
       page: {
         size: { width: 11906, height: 16838 },
@@ -978,7 +978,7 @@ Visual hierarchy (top to bottom):
 7. Footer line with top accent separator (paragraph `border.top`)
 
 ```js
-// ⚠️ MANDATORY: Cover section must use margin: 0. See "Cover Section Non-Negotiables" above.
+// [!] MANDATORY: Cover section must use margin: 0. See "Cover Section Non-Negotiables" above.
 // Section: { properties: { page: { size: { width: 11906, height: 16838 },
 //   margin: { top: 0, bottom: 0, left: 0, right: 0 } } }, children: buildCoverR1(config) }
 
@@ -988,12 +988,12 @@ function buildCoverR1(config) {
   const P = config.palette;
   const padL = 1200, padR = 800;
 
-  // ⚠️ MANDATORY: Use calcTitleLayout() for dynamic font size + line breaking
+  // [!] MANDATORY: Use calcTitleLayout() for dynamic font size + line breaking
   const availableWidth = 11906 - padL - padR - 300; // -300 for border space
   const { titlePt, titleLines } = calcTitleLayout(config.title, availableWidth, 40, 24);
   const titleSize = titlePt * 2;
 
-  // ⚠️ MANDATORY: Use calcCoverSpacing() for dynamic spacing
+  // [!] MANDATORY: Use calcCoverSpacing() for dynamic spacing
   const spacing = calcCoverSpacing({
     titleLineCount: titleLines.length, titlePt,
     hasSubtitle: !!config.subtitle, hasEnglishLabel: !!config.englishLabel,
@@ -1074,7 +1074,7 @@ function buildCoverR1(config) {
       })],
     })],
   })];
-  // Total height: 16838 (single wrapper, zero nested tables) ✅
+  // Total height: 16838 (single wrapper, zero nested tables) [OK]
 }
 ```
 
@@ -1098,12 +1098,12 @@ Visual hierarchy (top to bottom):
 9. Footer + bottom thick accent rule (paragraph `border.bottom`)
 
 ```js
-// ⚠️ MANDATORY: Cover section must use margin: 0. See "Cover Section Non-Negotiables" above.
+// [!] MANDATORY: Cover section must use margin: 0. See "Cover Section Non-Negotiables" above.
 function buildCoverR2(config) {
   const P = config.palette;
   const padL = 1400, padR = 1400;
 
-  // ⚠️ MANDATORY: Use calcTitleLayout() for dynamic font size + line breaking
+  // [!] MANDATORY: Use calcTitleLayout() for dynamic font size + line breaking
   const { titlePt, titleLines } = calcTitleLayout(config.title, 11906 - padL - padR, 40, 24);
   const titleSize = titlePt * 2;
   const thickBorder = { style: BorderStyle.SINGLE, size: 18, color: P.accent, space: 20 };
@@ -1184,7 +1184,7 @@ function buildCoverR2(config) {
       })],
     })],
   })];
-  // Total height: 16838 (single wrapper, zero nested tables) ✅
+  // Total height: 16838 (single wrapper, zero nested tables) [OK]
 }
 ```
 
@@ -1209,13 +1209,13 @@ Visual hierarchy (top to bottom):
 10. Footer (centered)
 
 ```js
-// ⚠️ MANDATORY: Cover section must use margin: 0. See "Cover Section Non-Negotiables" above.
+// [!] MANDATORY: Cover section must use margin: 0. See "Cover Section Non-Negotiables" above.
 function buildCoverR3(config) {
   const P = config.palette;
   const cardIndent = 2200; // left + right indent to create "card" feel
   const innerWidth = 11906 - cardIndent * 2 - 400;
 
-  // ⚠️ MANDATORY: Use calcTitleLayout() for dynamic font size + line breaking
+  // [!] MANDATORY: Use calcTitleLayout() for dynamic font size + line breaking
   const { titlePt, titleLines } = calcTitleLayout(config.title, innerWidth, 40, 24);
   const titleSize = titlePt * 2;
 
@@ -1312,7 +1312,7 @@ function buildCoverR3(config) {
       })],
     })],
   })];
-  // Total height: 16838 (single wrapper, zero nested tables) ✅
+  // Total height: 16838 (single wrapper, zero nested tables) [OK]
 }
 ```
 
@@ -1324,13 +1324,13 @@ function buildCoverR3(config) {
 **Architecture:** Uses R1's proven single 16838 wrapper. Upper dark block is a nested table inside the wrapper. Content positioning uses `spacing.before` (reliable) instead of `margins.top` (unreliable across engines).
 
 ```js
-// ⚠️ MANDATORY: Cover section must use margin: 0. See "Cover Section Non-Negotiables" above.
+// [!] MANDATORY: Cover section must use margin: 0. See "Cover Section Non-Negotiables" above.
 function buildCoverR4(config) {
   const P = config.palette;
   const padL = 1200, padR = 800;
   const availableWidth = 11906 - padL - padR;
 
-  // ⚠️ MANDATORY: Use calcTitleLayout() for dynamic font size + line breaking
+  // [!] MANDATORY: Use calcTitleLayout() for dynamic font size + line breaking
   const { titlePt, titleLines } = calcTitleLayout(config.title, availableWidth, 40, 26);
   const titleSize = titlePt * 2;
 
@@ -1436,7 +1436,7 @@ function buildCoverR4(config) {
       })],
     })],
   })];
-  // Total height: 16838 (outer wrapper, R1 architecture) ✅
+  // Total height: 16838 (outer wrapper, R1 architecture) [OK]
 }
 ```
 
@@ -1455,8 +1455,8 @@ function buildCoverR4(config) {
 - **Label column borders:** none (no bottom border on label cells).
 - **Value column:** remaining %, **LEFT aligned**, `bottom: single sz=4` border = fixed-length underline (consistent length for all rows regardless of text).
 - No left/right/top borders on either column.
-- ⚠️ Do NOT use DXA widths, full-width space padding (`\u3000`), spacer columns, or tab stops — WPS renders them inconsistently.
-- ⚠️ Do NOT use `margins.top` on the wrapper cell — use `spacing.before` on first paragraph instead.
+- [!] Do NOT use DXA widths, full-width space padding (`\u3000`), spacer columns, or tab stops — WPS renders them inconsistently.
+- [!] Do NOT use `margins.top` on the wrapper cell — use `spacing.before` on first paragraph instead.
 
 **Known limitation:** When meta lines ≥ 6 AND title has 3 lines, MS Office may render content slightly taller than WPS, potentially clipping the footer line. Mitigate by reducing `midSpacing` or using a smaller title font.
 
@@ -1496,7 +1496,7 @@ function calcR5MetaLayout(metaEntries, fontPt = 12) {
 }
 
 // Build R5 academic cover meta info table.
-// ⚠️ CRITICAL cross-engine rules:
+// [!] CRITICAL cross-engine rules:
 //   - Table width: WidthType.PERCENTAGE (NOT DXA — WPS breaks with DXA)
 //   - Column widths: WidthType.PERCENTAGE
 //   - Label column: LEFT aligned, plain text (NO full-width space padding)
@@ -1550,7 +1550,7 @@ function buildR5MetaTable(metaEntries) {
   });
 }
 
-// ⚠️ MANDATORY: Cover section must use margin: 0. See "Cover Section Non-Negotiables" above.
+// [!] MANDATORY: Cover section must use margin: 0. See "Cover Section Non-Negotiables" above.
 function buildCoverR5(config) {
   const PAGE_H = 16838, SAFETY = 1200;
   const safeH = PAGE_H - SAFETY; // 15638
@@ -1648,7 +1648,7 @@ function buildCoverR5(config) {
   })];
   // Height budget example (short title, 4 meta lines):
   // topSpacing(3818) + schoolName(906) + title(1028) + subtitle(945) + midSpacing(1467)
-  // + metaTable(4×520=2080) + bottomSpacing(5268) + footer(476) = ~15988 < 15838 ✅
+  // + metaTable(4×520=2080) + bottomSpacing(5268) + footer(476) = ~15988 < 15838 [OK]
 }
 ```
 

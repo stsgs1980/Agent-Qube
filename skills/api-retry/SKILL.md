@@ -31,47 +31,47 @@ const retryConfig = {
 
 async function fetchWithRetry(url, options = {}) {
   let lastError;
-  
+
   for (let attempt = 0; attempt <= retryConfig.maxRetries; attempt++) {
     try {
       const response = await fetch(url, options);
-      
+
       if (response.ok) {
         return response;
       }
-      
+
       // Check if error is retryable
       if (!isRetryable(response.status)) {
         throw new Error(`Non-retryable status: ${response.status}`);
       }
-      
+
       // Calculate delay with exponential backoff
       const delay = Math.min(
         retryConfig.initialDelay * Math.pow(retryConfig.backoffMultiplier, attempt),
         retryConfig.maxDelay
       );
-      
+
       console.log(`Attempt ${attempt + 1} failed with status ${response.status}. Retrying in ${delay}ms...`);
       await sleep(delay);
-      
+
     } catch (error) {
       lastError = error;
-      
+
       if (attempt === retryConfig.maxRetries) {
         throw lastError;
       }
-      
+
       // Network errors are always retryable
       const delay = Math.min(
         retryConfig.initialDelay * Math.pow(retryConfig.backoffMultiplier, attempt),
         retryConfig.maxDelay
       );
-      
+
       console.log(`Network error on attempt ${attempt + 1}. Retrying in ${delay}ms...`);
       await sleep(delay);
     }
   }
-  
+
   throw lastError;
 }
 
@@ -96,7 +96,7 @@ class CircuitBreaker {
     this.lastFailureTime = null;
     this.state = 'CLOSED'; // CLOSED, OPEN, HALF_OPEN
   }
-  
+
   async execute(fn) {
     if (this.state === 'OPEN') {
       if (Date.now() - this.lastFailureTime < this.timeout) {
@@ -104,7 +104,7 @@ class CircuitBreaker {
       }
       this.state = 'HALF_OPEN';
     }
-    
+
     try {
       const result = await fn();
       this.onSuccess();
@@ -114,16 +114,16 @@ class CircuitBreaker {
       throw error;
     }
   }
-  
+
   onSuccess() {
     this.failureCount = 0;
     this.state = 'CLOSED';
   }
-  
+
   onFailure() {
     this.failureCount++;
     this.lastFailureTime = Date.now();
-    
+
     if (this.failureCount >= this.failureThreshold) {
       this.state = 'OPEN';
       console.log(`Circuit breaker OPEN after ${this.failureCount} failures`);
@@ -162,7 +162,7 @@ const response = await circuitBreaker.execute(async () => {
 async function chatZaiRequest(endpoint, options = {}) {
   const url = `https://chat.z.ai${endpoint}`;
   const circuitBreaker = new CircuitBreaker(5, 60000);
-  
+
   return await circuitBreaker.execute(async () => {
     return await fetchWithRetry(url, {
       ...options,
@@ -181,7 +181,7 @@ try {
     method: 'POST',
     body: JSON.stringify({ model: 'glm-4.7', messages })
   });
-  
+
   const data = await response.json();
   return data;
 } catch (error) {
@@ -213,7 +213,7 @@ function logRetryAttempt(attempt, status, delay) {
     delay: delay,
     circuitBreakerState: circuitBreaker.state
   });
-  
+
   retryMetrics.retryCount++;
 }
 
@@ -224,7 +224,7 @@ function logCircuitBreakerTrip(state, duration) {
     fromState: state,
     duration: duration
   });
-  
+
   retryMetrics.circuitBreakerTrips++;
 }
 ```

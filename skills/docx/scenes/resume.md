@@ -217,7 +217,7 @@ const S = {
 ```js
 page: { margin: { top: 0, bottom: 0, left: 0, right: 0 } }
 // Use Table to simulate columns: columnWidths: [3400, 8506]
-// ⚠️ Row height must use "exact" with safety margin to prevent overflow blank pages
+// [!] Row height must use "exact" with safety margin to prevent overflow blank pages
 // Row height: height: { value: 16038, rule: "exact" }
 // 16038 = 16838(A4 height) - 1200(safety margin for cross-engine compatibility)
 ```
@@ -431,7 +431,7 @@ When user provides a job description:
 - 1 page content: Sidebar templates (A/C) or single-column template (B)
 - Over 1 page: Prefer Template B; if using A/C, switch page 2 to full-width layout with a name bar at the top (Name | Title)
 
-⚠️ **Multi-page resumes must use multi-section structure:**
+[!] **Multi-page resumes must use multi-section structure:**
 
 Page 1 and Page 2 must be **different sections** for independent margin and layout control:
 
@@ -450,14 +450,14 @@ sections: [
 ]
 ```
 
-⚠️ **Template B multi-page handling:**
+[!] **Template B multi-page handling:**
 
 Template B header banner uses Table simulation:
 1. Banner `columnWidths` must equal **page content area width** (pageWidth - marginLeft - marginRight), not full page width
 2. If banner needs full page width → set page 1 section margin to 0, banner columnWidths to 11906
 3. Page 2+ must be independent sections, margin.top ≥ 800
 
-⚠️ **Page 2+ top spacing rules (mandatory):**
+[!] **Page 2+ top spacing rules (mandatory):**
 
 1. **Page margin.top must be ≥ 800 twips** (~1.4 cm), never 0
 2. **Page 2+ needs a header info bar:** concise `Name | Title` bar, height ~400–600 twips, separated from body with light background or bottom line

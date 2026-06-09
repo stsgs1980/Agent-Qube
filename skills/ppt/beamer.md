@@ -355,7 +355,7 @@ When extracting images from PDFs, you **must crop precisely to the figure bounda
 python3 scripts/pdf.py extract.image paper.pdf -o ./images_out/
 
 # Wrong: screenshot full page then crop — almost always includes extra content
-# ❌ Do not do this
+# [X] Do not do this
 ```
 
 If an image cannot be cleanly extracted (e.g., it spans multiple pages or is overlaid with text), you may use a PDF page screenshot with `\includegraphics` `trim` and `clip` to crop precisely — but the result **must not include any surrounding text, captions, or page margins**:
@@ -388,7 +388,7 @@ Use `\graphicspath{{figures/}}` in the preamble so `\includegraphics` only needs
 | `.pdf` / `.eps` (vector) | Line art, flowcharts, plots — preferred, scales without loss |
 | `.png` (raster) | Photos, screenshots, experimental results — ensure resolution ≥ 150dpi |
 | `.jpg` (raster) | Photographic images — smaller file size |
-| ❌ `.svg` | Not directly supported by Beamer — convert to PDF first |
+| [X] `.svg` | Not directly supported by Beamer — convert to PDF first |
 
 Prefer vector formats (PDF/EPS). For experimental photos and other raster images, ensure sufficient resolution.
 
@@ -455,7 +455,7 @@ When one column contains an image (with optional caption) and the other contains
 **The fix:** Use `[c]` on `\begin{columns}` so both columns are vertically centered against each other. If `[c]` alone is not enough (e.g., the image+caption combo is much shorter than the block column), add vertical spacing above the image to nudge it toward the visual center:
 
 ```latex
-% ✅ Correct: [c] alignment centers both columns
+% [OK] Correct: [c] alignment centers both columns
 \begin{columns}[c]
   \column{0.50\textwidth}
   \begin{center}
@@ -757,17 +757,17 @@ When the user provides a reference paper, thesis, or any source document:
    ```latex
    \author[Guo C. et al.]{Guo C., Zhang K., Sun H., Zhu L., Zhang Y., Wang G., Li A., Bai Z., Liu L., Li C.}
    ```
-   Never concatenate names without spaces (e.g., ❌ `CongcongGuo,KeZhang`).
+   Never concatenate names without spaces (e.g., [X] `CongcongGuo,KeZhang`).
 
 3. **Reference entries must preserve original language.** If a cited paper has a Chinese title, keep the Chinese title in the reference list. If it has an English title, keep English. Do not translate references to match the slide language.
 
 4. **Title page layout for bilingual scenarios.** When the slide language differs from the paper language (e.g., Chinese slides for an English paper), keep the original paper title in `\title{}` and put the translation in `\subtitle{}`. Never mix two languages at the same level:
    ```latex
-   % ✅ Correct: English title + Chinese subtitle
+   % [OK] Correct: English title + Chinese subtitle
    \title{Root Cortical Senescence Enhances Drought Tolerance in Cotton}
    \subtitle{根系皮层衰老增强棉花耐旱性}
-   
-   % ❌ Wrong: two languages jammed into \title
+
+   % [X] Wrong: two languages jammed into \title
    \title{Root Cortical Senescence Enhances Drought Tolerance in Cotton 根系皮层衰老增强棉花耐旱性}
    ```
 
@@ -936,7 +936,7 @@ Each color carries a fixed semantic meaning. **Never assign colors based on aest
 3. **Categorical distinction uses blue + green, never red.** If you want to visually distinguish two categories on the same slide (e.g., left column = observational methods, right column = molecular methods), use `myblue` for one category and `mygreen` for the other. Red is reserved for genuinely negative content only.
 
 ```latex
-% ✅ Correct: four parallel method blocks, all same color
+% [OK] Correct: four parallel method blocks, all same color
 \begin{columns}[T]
   \column{0.48\textwidth}
   \begin{fblock}[2.5cm]{Morphological Observation}
@@ -956,7 +956,7 @@ Each color carries a fixed semantic meaning. **Never assign colors based on aest
   \end{fblock}
 \end{columns}
 
-% ✅ Also correct: categorical distinction with blue + green
+% [OK] Also correct: categorical distinction with blue + green
 \begin{columns}[T]
   \column{0.48\textwidth}
   % Observation category → blue
@@ -974,7 +974,7 @@ Each color carries a fixed semantic meaning. **Never assign colors based on aest
   \end{fexampleblock}
 \end{columns}
 
-% ❌ Wrong: red used for neutral content
+% [X] Wrong: red used for neutral content
 \begin{falertblock}[2.5cm]{Biochemical Assays}  % NOT a warning/problem!
   Content...
 \end{falertblock}
@@ -1027,7 +1027,7 @@ Tables that appear alongside tcolorbox blocks on the same slide should be wrappe
 | Table is the only element on the slide | May remain unwrapped with `\centering` |
 
 ```latex
-% ✅ Correct: table wrapped in block, consistent with other blocks on slide
+% [OK] Correct: table wrapped in block, consistent with other blocks on slide
 \begin{ablock}{Optimization Level Comparison}
   {\footnotesize
   \begin{tabularx}{\linewidth}{lCCC}
@@ -1041,7 +1041,7 @@ Tables that appear alongside tcolorbox blocks on the same slide should be wrappe
   }
 \end{ablock}
 
-% ❌ Wrong: bare table next to styled blocks
+% [X] Wrong: bare table next to styled blocks
 \begin{tabular}{lcc}
   ...
 \end{tabular}
@@ -1065,11 +1065,11 @@ This makes tables scannable at a glance — the audience can see the pattern wit
 All block title bars on the same slide should have comparable visual weight. If one block uses `myblue!85` for the title bar, don't pair it with a `mygreen!100` title bar — the green will appear much heavier. Keep title bar saturation levels consistent:
 
 ```latex
-% ✅ Consistent: both use !85 saturation
+% [OK] Consistent: both use !85 saturation
 colframe=myblue!85   % blue block
 colframe=mygreen!80  % green block (slightly lower to compensate green's higher perceived brightness)
 
-% ❌ Inconsistent: one muted, one vivid
+% [X] Inconsistent: one muted, one vivid
 colframe=myblue!60   % muted blue
 colframe=mygreen!100 % vivid green — too dominant
 ```
@@ -1083,7 +1083,7 @@ All list environments on the same slide must use the **same bullet/numbering sty
 | All lists are unordered collections | Use `itemize` with consistent bullet style everywhere |
 | All lists are ordered steps/sequences | Use `enumerate` everywhere |
 | One list is steps, another is features | OK to differ — but document the semantic reason |
-| One block uses ❶❷❸, another uses • bullets | ❌ Inconsistent — pick one style |
+| One block uses ❶❷❸, another uses • bullets | [X] Inconsistent — pick one style |
 
 **Circled numbers / custom list markers:**
 - If using circled numbers (❶❷❸❹), do NOT use raw Unicode characters — they may fail in some compilers
@@ -1116,11 +1116,11 @@ Technical terms, version numbers, short parenthetical units, and numeric express
 | `white-space: nowrap` equivalent: put in `\mbox{}` | Version strings, short labels | `\mbox{v2.0-beta}` |
 
 ```latex
-% ❌ Bad: "202" and "LoC)" split across lines
+% [X] Bad: "202" and "LoC)" split across lines
 PyTorch BSR sparse (202
 LoC)
 
-% ✅ Good: kept together
+% [OK] Good: kept together
 PyTorch BSR sparse (\mbox{202 LoC})
 % or
 PyTorch BSR sparse (202~LoC)
@@ -1142,7 +1142,7 @@ When using a two-column layout, both columns should have comparable **content de
 | Adjust column width ratio | Give the denser column more space |
 
 ```latex
-% ❌ Sparse: 7 bare items in a tall block, lots of wasted space
+% [X] Sparse: 7 bare items in a tall block, lots of wasted space
 \begin{fblock}[5.5cm]{Baselines}
   \begin{itemize}
     \item cuSPARSE
@@ -1152,7 +1152,7 @@ When using a two-column layout, both columns should have comparable **content de
   \end{itemize}
 \end{fblock}
 
-% ✅ Better: split into two themed blocks, balanced density
+% [OK] Better: split into two themed blocks, balanced density
 \begin{fblock}[2.5cm]{Vendor Libraries}
   \begin{itemize}
     \item cuSPARSE — NVIDIA official sparse BLAS
@@ -1201,7 +1201,7 @@ Do NOT use any of the following:
 All content on every slide must be immediately visible. Write plain `\item` without overlay specs. Do not wrap blocks, figures, or equations in `\uncover` or `\only`.
 
 ```latex
-% ✅ Default (non-courseware): all content static, fully visible
+% [OK] Default (non-courseware): all content static, fully visible
 \begin{itemize}
   \item First key point
   \item Second key point
@@ -1230,7 +1230,7 @@ This allows the instructor to present the problem, let students think, then reve
 ##### Courseware overlay pattern
 
 ```latex
-% ✅ Courseware: problem shown first, proof revealed on next click
+% [OK] Courseware: problem shown first, proof revealed on next click
 \begin{frame}{Theorem: Triangle Inequality}
   \begin{block}{Problem}
     Prove that for any real numbers $a$ and $b$: $|a + b| \leq |a| + |b|$.
@@ -1245,7 +1245,7 @@ This allows the instructor to present the problem, let students think, then reve
   }
 \end{frame}
 
-% ✅ Courseware: step-by-step solution reveal
+% [OK] Courseware: step-by-step solution reveal
 \begin{frame}{Example: Solving a Quadratic Equation}
   \begin{block}{Problem}
     Solve $x^2 - 5x + 6 = 0$.
@@ -1287,20 +1287,20 @@ This allows the instructor to present the problem, let students think, then reve
 **Clarification:** Inline overlay commands like `\alert<2>{text}` or `\textcolor<3>{...}` inside an item's content do NOT count as item-level overlays. It is fine to use `\alert<>` selectively on some items while all `\item` specs themselves remain un-overlayed.
 
 ```latex
-% ✅ Correct: all items animated (in a proof)
+% [OK] Correct: all items animated (in a proof)
 \begin{itemize}
   \item<2-> Step 1: Assume the hypothesis
   \item<3-> Step 2: Apply the theorem
   \item<4-> Step 3: Conclude \qed
 \end{itemize}
 
-% ✅ Correct: no items animated (problem statement, always visible)
+% [OK] Correct: no items animated (problem statement, always visible)
 \begin{itemize}
   \item Given: $\triangle ABC$ with $\angle A = 90°$
   \item Prove: $BC^2 = AB^2 + AC^2$
 \end{itemize}
 
-% ❌ Wrong: mixed animation in one list
+% [X] Wrong: mixed animation in one list
 \begin{itemize}
   \item<1-> First point
   \item Second point        % ← no overlay, inconsistent
@@ -1313,7 +1313,7 @@ This allows the instructor to present the problem, let students think, then reve
 When a block contains a list, choose ONE level to animate — either animate the block as a whole, or animate the list items inside, but not both simultaneously (double-animation causes confusing timing):
 
 ```latex
-% ✅ Option A: animate the block, list appears all at once
+% [OK] Option A: animate the block, list appears all at once
 \uncover<2->{%
 \begin{ablock}{Proof}
   \begin{itemize}
@@ -1323,7 +1323,7 @@ When a block contains a list, choose ONE level to animate — either animate the
 \end{ablock}
 }
 
-% ✅ Option B: block always visible, animate items inside
+% [OK] Option B: block always visible, animate items inside
 \begin{ablock}{Solution Steps}
   \begin{itemize}
     \item<2-> Step one
@@ -1331,7 +1331,7 @@ When a block contains a list, choose ONE level to animate — either animate the
   \end{itemize}
 \end{ablock}
 
-% ❌ Wrong: double animation (block AND items)
+% [X] Wrong: double animation (block AND items)
 \uncover<2->{%
 \begin{ablock}{Proof}
   \begin{itemize}

@@ -72,7 +72,7 @@ for name in wb.sheetnames:
 
 ### 1c. Cross-Sheet Column Semantic Mapping (MANDATORY before any merge/copy)
 
-**⚠️ NEVER copy columns by position index alone when merging sheets.**
+**[!] NEVER copy columns by position index alone when merging sheets.**
 
 When two sheets have similar headers (e.g., both have columns A-V), the same column position may hold completely different data. Always:
 
@@ -173,7 +173,7 @@ When the user asks to "make it look better" or "format nicely":
 
 **But**: if the file already has a consistent style, enhance it rather than replacing it. Add what's missing (alignment, column widths, alternating fills) without changing existing colors or fonts. Use `copy_style()` (above) to match adjacent cells.
 
-## ⚠️ Dangerous Operations
+## [!] Dangerous Operations
 
 | Operation | Risk | Mitigation |
 |-----------|------|-----------|

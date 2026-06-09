@@ -1,4 +1,4 @@
-# ⚠️ STRUCTURAL DIAGRAM IRON LAWS
+# [!] STRUCTURAL DIAGRAM IRON LAWS
 
 These rules apply to Playwright+CSS structural diagrams (flowcharts, mind maps, radial grids, org charts). They are enforced by the template files. Violating any = task failure.
 
@@ -24,7 +24,7 @@ Required:
 
 ## 3. NODE BACKGROUND COLORS
 
-**🚫 Forbidden as background (too saturated for large fills):**
+**[X] Forbidden as background (too saturated for large fills):**
 
 | Color | Forbidden Hex |
 |-------|--------------|
@@ -35,7 +35,7 @@ Required:
 | Pure amber | `#F59E0B`, `#D97706`, `#FB923C` |
 | Any color: R/G/B > 0xCC and saturation > 50% | — |
 
-**✅ Allowed as background:**
+**[OK] Allowed as background:**
 
 | Color | Hex | Usage |
 |-------|-----|-------|

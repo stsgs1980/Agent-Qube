@@ -143,7 +143,7 @@ new Paragraph({ children: [new PageBreak()] })
 
 ## Quotes Escaping in JS Strings
 
-**⚠️⚠️⚠️ CRITICAL — #1 MOST COMMON BUG ⚠️⚠️⚠️**
+**[!][!][!] CRITICAL — #1 MOST COMMON BUG [!][!][!]**
 
 Bare Chinese curly quotation marks (`""` `''`) in JS string literals **WILL break syntax and crash document generation**. This bug occurs most often in **Chinese body text** where curly quotes are used for emphasis, proper nouns, event names, or quoted speech — e.g., `"双11"`, `"前低后高"`, `"618"大促`. **Every single occurrence** of `""''` in text content MUST be Unicode-escaped. No exceptions.
 
@@ -157,17 +157,17 @@ Bare Chinese curly quotation marks (`""` `''`) in JS string literals **WILL brea
 | `'` | U+0027 | `\'` or wrap string in double quotes / template literal |
 
 ```js
-// ❌ WRONG — curly quotes in Chinese text break JS syntax (VERY COMMON MISTAKE)
+// [X] WRONG — curly quotes in Chinese text break JS syntax (VERY COMMON MISTAKE)
 content.push(para("2025年四个季度行业增速呈现"前低后高"的态势。在"618"大促、"双11""双12"活动拉动下增长显著。"));
 new TextRun({ text: "他说"你好"" })
 new TextRun({ text: 'It's a test' })
 
-// ✅ CORRECT — ALL curly quotes replaced with Unicode escapes
+// [OK] CORRECT — ALL curly quotes replaced with Unicode escapes
 content.push(para("2025年四个季度行业增速呈现\u201c前低后高\u201d的态势。在\u201c618\u201d大促、\u201c双11\u201d\u201c双12\u201d活动拉动下增长显著。"));
 new TextRun({ text: "他说\u201c你好\u201d" })
 new TextRun({ text: "It\u2019s a test" })
 
-// ✅ CORRECT — straight quotes escaped or use alternate delimiters
+// [OK] CORRECT — straight quotes escaped or use alternate delimiters
 new TextRun({ text: "He said \"hello\"" })
 new TextRun({ text: 'He said "hello"' })
 new TextRun({ text: `He said "hello"` })
@@ -235,7 +235,7 @@ const doc = new Document({
 # Using LibreOffice (headless)
 libreoffice --headless --convert-to pdf output.docx
 
-# ⚠️ TOC Rule: If document has TOC, warn user that:
+# [!] TOC Rule: If document has TOC, warn user that:
 # 1. LibreOffice conversion may show empty TOC
 # 2. User should open in Word first, update fields (Ctrl+A → F9), save, then convert
 # 3. Or use Word's "Save as PDF" for best results
