@@ -77,7 +77,7 @@ export default function AgentHierarchy({ onBack }: { onBack?: () => void }) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', background: '#000' }}>
-      <HierarchyHeader wsConnected={wsConnected} onRefresh={fetchAgents} onAddAgent={() => st.setShowAddAgent(true)} />
+      <HierarchyHeader wsConnected={wsConnected} onRefresh={fetchAgents} onAddAgent={() => st.setShowAddAgent(true)} onBack={onBack} />
       <HierarchyControls viewMode={st.viewMode} setViewMode={st.setViewMode} showLayers={st.showLayers} setShowLayers={st.setShowLayers} searchQuery={st.searchQuery} setSearchQuery={st.setSearchQuery} visibleEdgeTypes={st.visibleEdgeTypes} toggleEdgeType={st.toggleEdgeType} fitMode={st.fitMode} selectedAgentId={st.selectedAgentId} handleFitView={st.handleFitView} handleFocus={st.handleFocus} reactFlowInstanceRef={reactFlowInstanceRef} />
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
         <div className="custom-scrollbar" style={{ overflowY: 'auto' }}><GroupSidebar agents={agents} activeFilter={st.activeFilter} onFilterChange={st.setActiveFilter} selectedAgentId={st.selectedAgentId} onSelectAgent={st.handleSidebarSelect} /></div>

@@ -1840,3 +1840,20 @@ Stage Summary:
 - src/lib/prompting/ restored with all 43 files
 - Responsive audit complete — biggest issues in Hierarchy view (unusable below 1024px)
 - Vercel deployment advice provided (see message below)
+
+---
+Task ID: 2
+Agent: main
+Task: Add back-to-dashboard button on Hierarchy page
+
+Work Log:
+- Added ArrowLeft import to hierarchy-header.tsx
+- Added onBack prop to HierarchyHeader component
+- Made "Dashboard" breadcrumb text clickable (arrow + text, cyan color, hover effect)
+- Passed onBack from agent-hierarchy-v2.tsx → HierarchyHeader
+- Verified via agent-browser: button appears, click returns to dashboard
+
+Stage Summary:
+- Hierarchy page now has "← Dashboard" button in the breadcrumb area
+- Clicking it navigates back to the main dashboard view
+- Pushed to GitHub for Vercel auto-deploy

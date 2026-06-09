@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { RefreshCw, Plus, ChevronRight } from 'lucide-react'
+import { RefreshCw, Plus, ChevronRight, ArrowLeft } from 'lucide-react'
 
 // ─── Header bar with Agent Qube branding, WS status, Refresh, Add Agent ─────────────
 
@@ -9,10 +9,12 @@ export function HierarchyHeader({
   wsConnected,
   onRefresh,
   onAddAgent,
+  onBack,
 }: {
   wsConnected: boolean
   onRefresh: () => void
   onAddAgent: () => void
+  onBack?: () => void
 }) {
   return (
     <div style={{
@@ -32,7 +34,17 @@ export function HierarchyHeader({
           <span style={{ fontSize: 13, fontWeight: 700 }}> Qube</span>
         </div>
         <div style={{ fontSize: 11, color: '#64748B', display: 'flex', alignItems: 'center', gap: 6 }}>
-          <span>Dashboard</span>
+          {onBack ? (
+            <button onClick={onBack} style={{
+              fontSize: 11, color: '#06B6D4', cursor: 'pointer', background: 'none', border: 'none',
+              display: 'flex', alignItems: 'center', gap: 4, padding: 0,
+              transition: 'color 0.15s', fontWeight: 500,
+            }} onMouseEnter={e => e.currentTarget.style.color = '#22D3EE'} onMouseLeave={e => e.currentTarget.style.color = '#06B6D4'}>
+              <ArrowLeft size={12} />Dashboard
+            </button>
+          ) : (
+            <span>Dashboard</span>
+          )}
           <ChevronRight size={10} color="#555" />
           <span style={{ color: '#fff', fontWeight: 600 }}>Hierarchy</span>
         </div>
