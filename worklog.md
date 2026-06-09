@@ -1780,3 +1780,21 @@ Stage Summary:
 - All emoji replaced with ASCII equivalents
 - Zero trailing whitespace/tabs violations
 - Pre-push hook and validate.sh already working correctly
+
+---
+Task ID: 6
+Agent: main
+Task: Study and fix Hierarchy page errors
+
+Work Log:
+- Studied all hierarchy components (25 files)
+- Found and fixed: ROLE_CONFIG 'Communication' group had label: 'Comms' instead of 'Communication'
+- Verified fix in browser: nodes now show "Communication" instead of "Comms"
+- Checked detail panel, edge rendering, search, layout modes - all working
+- No console errors, no TypeScript errors in hierarchy components
+- Sidebar group labels correctly show group name + count in separate spans
+- Detail panel opens/closes correctly, shows agent info, skills, connections, tasks
+
+Stage Summary:
+- Fixed Communication label truncation (Comms → Communication)
+- Hierarchy page functional with no blocking errors

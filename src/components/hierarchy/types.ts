@@ -47,7 +47,7 @@ export const ROLE_CONFIG: Record<string, { color: string; colorRgb: string; labe
   'Execution':     { color: '#0891B2', colorRgb: '8,145,178',   label: 'Execution',  level: 3 },
   'Memory':         { color: '#0E7490', colorRgb: '14,116,144',  label: 'Memory',     level: 4 },
   'Monitoring':     { color: '#155E75', colorRgb: '21,94,117',   label: 'Monitoring', level: 4 },
-  'Communication':   { color: '#164E63', colorRgb: '22,78,99',    label: 'Comms',      level: 4 },
+  'Communication':   { color: '#164E63', colorRgb: '22,78,99',    label: 'Communication', level: 4 },
   'Learning':       { color: '#0C4A6E', colorRgb: '12,74,110',   label: 'Learning',   level: 4 },
 }
 
