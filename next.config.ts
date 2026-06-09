@@ -7,6 +7,14 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   reactStrictMode: false,
+  async rewrites() {
+    return [
+      {
+        source: '/socket.io/:path*',
+        destination: 'http://127.0.0.1:3003/socket.io/:path*',
+      },
+    ]
+  },
   allowedDevOrigins: [
     '.space-z.ai',
     'localhost',

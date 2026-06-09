@@ -1,0 +1,15 @@
+▲ Next.js 16.1.3 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://21.0.14.138:3000
+- Environments: .env
+
+✓ Starting...
+✓ Ready in 573ms
+ GET / 200 in 1505ms (compile: 1340ms, render: 165ms)
+ GET / 200 in 1021ms (compile: 782ms, render: 239ms)
+ GET /api/workflows 200 in 109ms (compile: 91ms, render: 18ms)
+ GET /api/stats 200 in 114ms (compile: 68ms, render: 46ms)
+ GET / 200 in 31ms (compile: 4ms, render: 26ms)
+ GET /api/workflows 200 in 9ms (compile: 3ms, render: 6ms)
+ GET /api/stats 200 in 17ms (compile: 3ms, render: 15ms)
+ GET /api/hierarchy 200 in 40ms (compile: 31ms, render: 9ms)
