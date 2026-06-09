@@ -1537,3 +1537,41 @@ Stage Summary:
 - Studio has unique Flow Editor with undo/redo/template system not in architector
 - Studio has 12 wireframes (Skill Forge, Template Gallery, Knowledge Base, Standards Manager, etc.) as concepts
 - P-MAS-v2 remains unknown - user needs to grant access or make public
+
+---
+Task ID: cleanup-1
+Agent: Main Agent
+Task: Cross-analysis cleanup: garbage removal + anti-monolith fixes
+
+Work Log:
+- Copied worklog.md from P-MAS_init to docs/worklog-init.md (1551 lines of development history)
+- Deleted wireframes/05-unified-studio.html (not related to project)
+- Phase 1 — Garbage cleanup (~66 MB recovered):
+  - Deleted 4 nested duplicate directories: public/public/, examples/examples/, download/download/, agent-ctx/agent-ctx/
+  - Deleted __pycache__/ (4 directories, 191 KB)
+  - Deleted mini-services/ws-service/node_modules/ (4.6 MB)
+  - Deleted skills/ppt/scripts/tectonic binary (10.2 MB ELF)
+  - Deleted skills/design/design-templates/ (48 MB — 4 oversized HTML files)
+  - Deleted 8 orphan PNG screenshots (2.3 MB)
+  - Deleted packages/ui/src/ui/ (49 components, 0 imports, 247 KB)
+  - Deleted package-lock.json + packages/*/package-lock.json (keeping only bun.lock)
+  - Consolidated 5 duplicate doc trees (ai-rules/, instructions/, standards/, templates/, docs-pmas/) into docs/
+  - Fixed .gitignore: added *.db-shm, *.db-wal, __pycache__/, dev.log, *.pid, mini-services/*/node_modules/
+- Phase 2 — Anti-monolith fixes:
+  - Deleted src/components/agent-hierarchy.tsx (3,455-line dead monolith; v2 at hierarchy/agent-hierarchy-v2.tsx replaces it)
+  - Fixed cross-layer violation in instructions.ts + instructions-ai-rules.ts (wrapped import examples in code blocks)
+  - Created src/components/prompt-studio/index.ts barrel export
+  - Extracted 4 direct fetch calls to custom hooks:
+    - useExecutionHistory hook (from agent-execution-history.tsx)
+    - usePromptHistory hook (from prompt-history.tsx)
+    - useQuickActions hook (from quick-actions-panel.tsx)
+    - createAgent mutation in useAgentMutations (from add-agent-modal.tsx)
+- Added anti-hallucination-guard git submodule with verify-docs
+- Ran setup.sh: pre-commit hook, pre-push hook, scripts, verify-docs tool installed
+
+Stage Summary:
+- ~66 MB of garbage removed from project
+- 3,455-line dead monolith deleted (replaced by modular v2)
+- All doc duplicates consolidated into docs/ (single source of truth)
+- 4 components refactored to use hooks instead of direct fetch
+- anti-hallucination-guard submodule active with pre-commit hooks
