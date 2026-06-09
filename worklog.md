@@ -1798,3 +1798,24 @@ Work Log:
 Stage Summary:
 - Fixed Communication label truncation (Comms → Communication)
 - Hierarchy page functional with no blocking errors
+
+---
+Task ID: 8
+Agent: main
+Task: Add cascade-guard submodule and run setup
+
+Work Log:
+- Added git submodule: https://github.com/stsgs1980/cascade-guard.git → cascade-guard/
+- Ran cascade-guard/setup.sh — idempotent install completed
+- Setup deployed: cascade-cli.sh, cascade-init.sh to project root
+- Created cascade-state.json template
+- Integrated with anti-hallucination-guard (cascade checks added to pre-commit hook)
+- Pre-push hook updated with cascade-guard validation
+- .gitignore updated with cascade-state.json.bak
+- Cascade rules (C-1 to C-9) appended to AGENT_RULES.md
+- Validation passed: ./cascade-cli.sh validate
+
+Stage Summary:
+- Two submodules now: anti-hallucination-guard + cascade-guard
+- Rule namespacing: AHG rules 1-6, Cascade rules C-1..C-9
+- cascade-state.json ready for project tasks

@@ -32,3 +32,6 @@ upload/
 download/*.docx
 download/*.xlsx
 .env.example
+
+# Cascade guard backups
+cascade-state.json.bak
