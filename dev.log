@@ -13,3 +13,4 @@
  GET /api/workflows 200 in 9ms (compile: 3ms, render: 6ms)
  GET /api/stats 200 in 17ms (compile: 3ms, render: 15ms)
  GET /api/hierarchy 200 in 40ms (compile: 31ms, render: 9ms)
+ GET / 200 in 34ms (compile: 6ms, render: 28ms)
