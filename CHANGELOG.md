@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to P-MAS-v2 (Multi-Agent System Dashboard & Hierarchy Visualization) will be documented in this file.
+All notable changes to Agent Qube (Multi-Agent System Dashboard & Hierarchy Visualization) will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -43,7 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- P-MAS Dashboard with 26 agents across 8 role groups (Strategy, Tactics, Control, Execution, Memory, Monitoring, Communication, Learning)
+- Agent Qube Dashboard with 26 agents across 8 role groups (Strategy, Tactics, Control, Execution, Memory, Monitoring, Communication, Learning)
 - Dark theme design system (#000000 background, Cyan #06B6D4 accent, monochrome + single color)
 - Quick Stats row with `AnimatedCounter` and `MiniSparkline` components
 - Status Distribution chart with semantic color mapping (Active=Cyan, Idle=Slate, Paused=Amber, Standby=Indigo, Error=Rose, Offline=Zinc)

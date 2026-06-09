@@ -1,7 +1,7 @@
 # CLAUDE.md — Rules for Claude Code
 
-## Product: P-MAS-v2
-Prompt-based Multi-Agent System Dashboard.
+## Product: Agent Qube
+Agent Qube -- Multi-Agent System Dashboard.
 26 AI agents across 8 role groups. Agent Hierarchy + Workflow Pipeline + real-time monitoring.
 
 ## Role Groups

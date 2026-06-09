@@ -159,7 +159,7 @@ io.on('connection', (socket) => {
 // ─── Start Server ─────────────────────────────────────────────────────────────
 
 httpServer.listen(PORT, () => {
-  console.log(`[ws-service] P-MAS WebSocket service running on port ${PORT}`)
+  console.log(`[ws-service] Agent Qube WebSocket service running on port ${PORT}`)
   console.log(`[ws-service] DB: ${DB_PATH}`)
   console.log(`[ws-service] Agents in DB: ${getAllAgents().length}`)
 

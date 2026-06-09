@@ -3,7 +3,7 @@
 import type { IntentMatch, AgentRole, CognitiveFormula } from './prompt-analysis-types'
 import type { PipelineStepDraft } from './prompt-analysis-types'
 
-// ─── Agent role → P-MAS role group ────────────────────────────
+// ─── Agent role → Agent Qube role group ────────────────────────────
 
 export const ROLE_TO_GROUP: Record<string, string> = {
   'code-architect': 'Strategy',

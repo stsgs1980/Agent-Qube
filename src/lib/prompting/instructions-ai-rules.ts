@@ -8,15 +8,15 @@ import type { InstructionEntry } from './instructions-types'
 export const AI_RULES: InstructionEntry[] = [
   {
     id: 'ai-rules-core',
-    title: 'P-MAS-v2 AI Rules (Core)',
+    title: 'Agent Qube AI Rules (Core)',
     category: 'ai-rules',
-    description: 'P-MAS-v2 core rules: 26 agents, 8 role groups, 6 connection types, 5 hierarchy layers, anti-monolith rules, import patterns, tech stack.',
+    description: 'Agent Qube core rules: 26 agents, 8 role groups, 6 connection types, 5 hierarchy layers, anti-monolith rules, import patterns, tech stack.',
     version: '2.0.0',
-    keywords: ['architecture', 'agents', 'hierarchy', 'anti-monolith', 'p-mas', 'import-patterns'],
+    keywords: ['architecture', 'agents', 'hierarchy', 'anti-monolith', 'agent-qube', 'import-patterns'],
     lineCount: 140,
-    content: `# P-MAS-v2 -- AI Rules (Core)
+    content: `# Agent Qube -- AI Rules (Core)
 
-## Product: P-MAS-v2 (Prompt-based Multi-Agent System)
+## Product: Agent Qube (Prompt-based Multi-Agent System)
 Multi-Agent System Dashboard with 26 AI agents across 8 role groups.
 Three views: Dashboard, Agent Hierarchy (React Flow + Dagre), Workflow Pipeline.
 
@@ -60,7 +60,7 @@ Next.js 16, React 19, TypeScript 5, Tailwind CSS 4, shadcn/ui, Prisma SQLite, Re
     id: 'ai-rules-enforcement',
     title: 'Code Enforcement Rules',
     category: 'ai-rules',
-    description: 'Anti-monolith enforcement: max-lines (200), max-use-state (3), no-inline-styles. ESLint configuration for P-MAS-v2.',
+    description: 'Anti-monolith enforcement: max-lines (200), max-use-state (3), no-inline-styles. ESLint configuration for Agent Qube.',
     version: '2.0.0',
     keywords: ['eslint', 'enforcement', 'linting', 'anti-monolith', 'max-lines'],
     lineCount: 37,
@@ -89,13 +89,13 @@ export default [{
   },
   {
     id: 'ai-rules-library',
-    title: 'P-MAS-v2 Component Rules',
+    title: 'Agent Qube Component Rules',
     category: 'ai-rules',
-    description: 'Component quality checklist (10 items), adding new components workflow (7 steps), P-MAS component categories.',
+    description: 'Component quality checklist (10 items), adding new components workflow (7 steps), Agent Qube component categories.',
     version: '2.0.0',
-    keywords: ['components', 'quality', 'checklist', 'p-mas', 'library'],
+    keywords: ['components', 'quality', 'checklist', 'agent-qube', 'library'],
     lineCount: 40,
-    content: `# P-MAS-v2 Component Rules
+    content: `# Agent Qube Component Rules
 
 ## Component Quality Checklist
 - TypeScript interface for all props (no any)
@@ -129,7 +129,7 @@ export default [{
     id: 'ai-rules-project',
     title: 'Project-Specific AI Rules Template',
     category: 'ai-rules',
-    description: 'Template for project-specific AI rules: stack definition (Next.js 16, P-MAS-v2, Tailwind CSS 4, TypeScript), custom rules, structure, API endpoints, environment variables.',
+    description: 'Template for project-specific AI rules: stack definition (Next.js 16, Agent Qube, Tailwind CSS 4, TypeScript), custom rules, structure, API endpoints, environment variables.',
     version: '2.0.0',
     keywords: ['project-template', 'stack', 'configuration', 'api-endpoints', 'env-vars'],
     lineCount: 24,

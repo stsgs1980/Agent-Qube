@@ -3,7 +3,7 @@
 import React from 'react'
 import { RefreshCw, Plus, ChevronRight } from 'lucide-react'
 
-// ─── Header bar with P-MAS branding, WS status, Refresh, Add Agent ─────────────
+// ─── Header bar with Agent Qube branding, WS status, Refresh, Add Agent ─────────────
 
 export function HierarchyHeader({
   wsConnected,
@@ -26,10 +26,10 @@ export function HierarchyHeader({
           background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.2)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           fontSize: 13, fontWeight: 800, color: '#06B6D4',
-        }}>P</div>
+        }}>Q</div>
         <div>
-          <span style={{ fontSize: 13, fontWeight: 700 }}>P-</span>
-          <span style={{ fontSize: 13, fontWeight: 700, color: '#06B6D4' }}>MAS</span>
+          <span style={{ fontSize: 13, fontWeight: 700, color: '#06B6D4' }}>Agent</span>
+          <span style={{ fontSize: 13, fontWeight: 700 }}> Qube</span>
         </div>
         <div style={{ fontSize: 11, color: '#64748B', display: 'flex', alignItems: 'center', gap: 6 }}>
           <span>Dashboard</span>

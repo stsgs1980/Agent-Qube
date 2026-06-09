@@ -1,8 +1,8 @@
-# P-MAS Hierarchy v2 — Work Instructions
+# Agent Qube Hierarchy v2 — Work Instructions
 
 ## Architecture Overview
 
-The Hierarchy page is a React Flow + Dagre-based DAG visualization of the P-MAS multi-agent system. It renders 26 AI agents as node-cards in a top-down hierarchical layout across 5 layers (L0-L4).
+The Hierarchy page is a React Flow + Dagre-based DAG visualization of the Agent Qube multi-agent system. It renders 26 AI agents as node-cards in a top-down hierarchical layout across 5 layers (L0-L4).
 
 ## File Structure
 

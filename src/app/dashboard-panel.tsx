@@ -73,7 +73,7 @@ export default function DashboardPanel({ onOpenHierarchy, onOpenWorkflows }: { o
 
       <footer className="flex-shrink-0 flex items-center justify-between px-5 py-2" style={{ background: '#0A0A0A', borderTop: '1px solid rgba(51,51,51,0.3)' }}>
         <div className="flex items-center gap-3">
-          <span className="text-[10px] font-semibold tracking-wider" style={{ color: '#64748B' }}>P-MAS</span>
+          <span className="text-[10px] font-semibold tracking-wider" style={{ color: '#64748B' }}>Agent Qube</span>
           <span className="text-[9px]" style={{ color: '#4B5563' }}>v5.2</span>
           <span className="flex items-center gap-1 px-1.5 py-0.5 rounded-full" style={{ background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.2)' }}>
             <span className="w-1.5 h-1.5 rounded-full" style={{ background: '#22C55E' }} /><span className="text-[8px] font-bold" style={{ color: '#22C55E' }}>ONLINE</span>

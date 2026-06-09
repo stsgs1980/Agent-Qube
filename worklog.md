@@ -1,6 +1,6 @@
-# Worklog — P-MAS-v2
+# Worklog -- Agent Qube
 
-> Agent work journal for the Prompt-based Multi-Agent System Dashboard project.
+> Agent work journal for Agent Qube -- Multi-Agent System Dashboard project.
 
 ---
 
@@ -1575,3 +1575,90 @@ Stage Summary:
 - All doc duplicates consolidated into docs/ (single source of truth)
 - 4 components refactored to use hooks instead of direct fetch
 - anti-hallucination-guard submodule active with pre-commit hooks
+
+---
+Task ID: 4
+Agent: Rename Agent
+Task: Rename docs from P-MAS/P-MAS-v2 to Agent Qube
+
+Work Log:
+- Updated README.md: title "P-MAS v2" -> "Agent Qube", subtitle "Prompt-based Multi-Agent System" -> "Agent Qube", overview "P-MAS v2 is an interactive dashboard" -> "Agent Qube is an interactive dashboard", git clone URL github.com/stsgs1980/P-MAS-v2.git -> github.com/stsgs1980/agent-qube.git, "cd P-MAS-v2" -> "cd agent-qube"
+- Updated CHANGELOG.md: "P-MAS-v2 (Multi-Agent System Dashboard" -> "Agent Qube (Multi-Agent System Dashboard", "P-MAS Dashboard with 26 agents" -> "Agent Qube Dashboard with 26 agents"
+- Updated ROADMAP.md: title "# P-MAS Roadmap" -> "# Agent Qube Roadmap"
+- Updated CLAUDE.md: "Product: P-MAS-v2" -> "Product: Agent Qube", "Prompt-based Multi-Agent System Dashboard." -> "Agent Qube -- Multi-Agent System Dashboard."
+- Updated PROJECT_CONFIG.md: "Project-specific settings for P-MAS-v2." -> "Project-specific settings for Agent Qube."
+- Updated docs/hierarchy-redesign-analysis.md: "P-MAS . Hierarchy" -> "Agent Qube . Hierarchy"
+- Updated docs/hierarchy-v2-usage.md: title "# P-MAS Hierarchy v2" -> "# Agent Qube Hierarchy v2", "the P-MAS multi-agent system" -> "the Agent Qube multi-agent system"
+- Updated docs/worklog-init.md: title "# P-MAS Agent Hierarchy Dashboard" -> "# Agent Qube Agent Hierarchy Dashboard", all P-MAS and PMAS references in body -> Agent Qube, roadmap section "P-MAS Dashboard" -> "Agent Qube Dashboard"
+- Updated docs/prompt-studio-vision.md: "P-MAS v2 feature" -> "Agent Qube feature", "brain of P-MAS" -> "brain of Agent Qube", "P-MAS Agents" -> "Agent Qube Agents", "P-MAS DB" -> "Agent Qube DB" (2 occurrences), "P-MAS > Prompt Studio" -> "Agent Qube > Prompt Studio", "P-MAS agents to steps" -> "Agent Qube agents to steps"
+- Updated docs/planning/phase-plan.md: "Performance-Lab, P-MAS, CHROMEDNA" -> "Performance-Lab, Agent Qube, CHROMEDNA"
+- Updated worklog.md: header "# Worklog -- P-MAS-v2" -> "# Worklog -- Agent Qube", intro "the Prompt-based Multi-Agent System Dashboard project" -> "Agent Qube -- Multi-Agent System Dashboard project" (task history content preserved)
+- Files NOT modified (no P-MAS references found): docs/PROJECT_CONFIG.md, docs/architecture/architecture.md
+
+Stage Summary:
+- 10 documentation files updated with P-MAS/P-MAS-v2/PMAS -> Agent Qube replacements
+- worklog.md header/intro updated (task history content preserved as requested)
+- Git clone URL changed: github.com/stsgs1980/P-MAS-v2.git -> github.com/stsgs1980/agent-qube.git
+- "cd P-MAS-v2" changed to "cd agent-qube" in README.md
+- "Prompt-based Multi-Agent System Dashboard" changed to "Agent Qube -- Multi-Agent System Dashboard" in CLAUDE.md
+
+---
+Task ID: 5
+Agent: Rename Agent
+Task: Rename lib source P-MAS/P-MAS-v2/PMAS references to Agent Qube
+
+Work Log:
+- Searched 12 source files for P-MAS, P-MAS-v2, PMAS, P-mas, p-mas references
+- Replaced all branding references with "Agent Qube" equivalents
+- Verified zero remaining P-MAS/PMAS references in all 12 target files
+
+Files changed:
+1. src/lib/prompting-integration.ts: "P-MAS Resilience Layer" -> "Agent Qube Resilience Layer", "P-MAS resilience modules" -> "Agent Qube resilience modules", section comment updated
+2. src/lib/api-retry.ts: "Part of agent-toolkit integration for P-MAS" -> "Part of agent-toolkit integration for Agent Qube"
+3. src/lib/resilience.ts: "P-MAS Resilience Layer" -> "Agent Qube Resilience Layer"
+4. src/lib/prompting/instructions.ts: 10 replacements across 4 AI_RULES entries (titles, descriptions, keywords, content headers, product names, component rule names, ESLint descriptions, template descriptions)
+5. src/lib/prompting/instructions-ai-rules.ts: 10 replacements matching instructions.ts (duplicate data source)
+6. src/lib/prompting/package.json: GitHub repo URL P-MAS-v2.git -> agent-qube.git
+7. src/hooks/prompt-analysis-mappings.ts: "Agent role -> P-MAS role group" -> "Agent role -> Agent Qube role group"
+8. src/app/api/agents/prompt/route.ts: "Map P-MAS formula abbreviations" -> "Map Agent Qube formula abbreviations"
+9. src/components/prompt-studio/prompt-studio.tsx: Header brand "P-MAS" -> "Agent Qube" in StudioHeader
+10. mini-services/watchdog/index.ts: "P-MAS Dev Server Watchdog" -> "Agent Qube Dev Server Watchdog"
+11. mini-services/ws-service/index.ts: "P-MAS WebSocket service" -> "Agent Qube WebSocket service"
+12. upload/chat-dialogue.json: 9 replacements (project name, GitHub URLs, CPU core label, file paths)
+
+Stage Summary:
+- 12 files updated, 0 remaining P-MAS/PMAS references in target files
+- Keywords updated: p-mas -> agent-qube in instruction entries
+- GitHub repo URLs updated: P-MAS-v2.git -> agent-qube.git, P-mas-studio -> agent-qube
+- All UI-facing branding now reads "Agent Qube" instead of "P-MAS"
+
+
+---
+Task ID: rename-1
+Agent: Main Agent
+Task: Complete project rename from P-MAS/P-MAS-v2 to Agent Qube
+
+Work Log:
+- Updated package.json: name -> "agent-qube"
+- Updated src/app/layout.tsx: all metadata (title, description, keywords, authors, OG, twitter)
+- Updated src/app/dashboard-panel.tsx: footer branding "P-MAS" -> "Agent Qube"
+- Updated src/components/dashboard/dashboard-header.tsx: h1 heading "P-MAS" -> "Agent Qube"
+- Updated src/components/hierarchy/hierarchy-header.tsx: logo letter "P" -> "Q", "P-MAS" -> "Agent Qube"
+- Updated src/components/workflows/workflow-pipeline.tsx: header "P-MAS" -> "Agent Qube"
+- Updated src/hooks/use-quick-actions.ts: filename "p-mas-hierarchy.json" -> "agent-qube-hierarchy.json"
+- Updated src/app/api/health/route.ts: service identifier "p-mas" -> "agent-qube"
+- Updated mini-services/watchdog/package.json: name "p-mas-watchdog" -> "agent-qube-watchdog"
+- Delegated docs rename to subagent (Task 4): README.md, CHANGELOG.md, ROADMAP.md, CLAUDE.md, PROJECT_CONFIG.md, and 5 more docs files
+- Delegated source rename to subagent (Task 5): prompting-integration.ts, api-retry.ts, resilience.ts, instructions.ts, instructions-ai-rules.ts, prompting/package.json, prompt-analysis-mappings.ts, agents/prompt/route.ts, prompt-studio.tsx, watchdog/index.ts, ws-service/index.ts, chat-dialogue.json
+- Fixed syntax error introduced by subagent in instructions-ai-rules.ts (missing comma)
+- Created new SVG logo for Agent Qube (isometric cube with Q letter, cyan neon theme)
+- Verified: zero P-MAS references remain in src/ directory
+- Verified: dev server returns HTTP 200, lint passes for src/ (only pre-existing errors in packages/ and docs/templates/)
+- Verified via agent-browser: "Agent Qube" shown in header, hierarchy view, workflow view, and footer
+
+Stage Summary:
+- Full project rename from P-MAS/P-MAS-v2 to Agent Qube completed
+- 25+ files updated across src/, docs/, mini-services/, and root configs
+- New isometric cube SVG logo with cyan Q letter
+- Browser-verified: all views show "Agent Qube" branding
+- Remaining P-MAS references only in worklog.md historical records (intentionally preserved)

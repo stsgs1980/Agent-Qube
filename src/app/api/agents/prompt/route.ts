@@ -63,7 +63,7 @@ export async function POST(request: Request) {
     const systemPrompt = buildSystemPrompt(ctx)
 
     // ── 2. Resolve cognitive formula from prompting library ──
-    // Map P-MAS formula abbreviations to prompting library formula IDs
+    // Map Agent Qube formula abbreviations to prompting library formula IDs
     const formulaIdMap: Record<string, string> = {
       CoT: 'cf-first-principles',
       ToT: 'cf-anchoring-break',

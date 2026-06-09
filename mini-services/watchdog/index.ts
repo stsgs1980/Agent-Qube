@@ -1,4 +1,4 @@
-// P-MAS Dev Server Watchdog
+// Agent Qube Dev Server Watchdog
 // Checks every 30 seconds if Next.js dev server is alive on port 3000
 // Restarts it if dead
 

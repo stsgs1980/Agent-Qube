@@ -1,6 +1,6 @@
 # Prompt Studio -- Design Document
 
-> P-MAS v2 feature: interactive prompt engineering workspace
+> Agent Qube feature: interactive prompt engineering workspace
 > Created: 2026-05-15
 > Author: Z.ai + stsgs1980
 
@@ -8,7 +8,7 @@
 
 ## 1. Vision
 
-Prompt Studio is the "brain" of P-MAS -- the interface where you:
+Prompt Studio is the "brain" of Agent Qube -- the interface where you:
 
 1. **Write a task** in natural language (RU/EN)
 2. **See how the system thinks** -- intent detection, formula selection, agent assignment
@@ -39,7 +39,7 @@ This is NOT a chatbot. This is a **training ground + control panel** for semi-au
 | evaluation/blind-compare.ts | A/B comparison | blindCompare(promptA, promptB) |
 | evaluation/benchmark.ts | 40-check audit | CORE-EEAT benchmark |
 
-### 2.2 P-MAS Agents (26 in DB)
+### 2.2 Agent Qube Agents (26 in DB)
 
 8 groups x 20 cognitive formulas x 6 action types = fully operational pipeline system.
 
@@ -65,7 +65,7 @@ User Input (natural language)
 [Formula Selector] -- which cognitive formula fits this intent?
      |
      v
-[Agent Mapper] -- which agents from P-MAS DB handle this?
+[Agent Mapper] -- which agents from Agent Qube DB handle this?
      |
      v
 [Workflow Builder] -- auto-generate PipelineSteps from the above
@@ -93,7 +93,7 @@ Prompt Studio is a **4th view** alongside Dashboard, Hierarchy, Workflows:
 
 ```
 +-----------------------------------------------+
-| P-MAS  > Prompt Studio              [LIVE]     |
+| Agent Qube  > Prompt Studio              [LIVE]     |
 +-----------------------------------------------+
 |                                                 |
 | +-------------------------------------------+  |
@@ -207,7 +207,7 @@ Prompt Studio is a **4th view** alongside Dashboard, Hierarchy, Workflows:
 - [ ] User types a task in RU or EN
 - [ ] System shows detected intent with confidence %
 - [ ] System shows recommended cognitive formula with explanation
-- [ ] System maps P-MAS agents to steps
+- [ ] System maps Agent Qube agents to steps
 - [ ] User can see the auto-generated pipeline
 - [ ] User can simulate execution and see step results
 - [ ] Everything is documented in worklog after each step

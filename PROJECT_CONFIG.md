@@ -1,6 +1,6 @@
 # Project Configuration
 
-> Project-specific settings for P-MAS-v2.
+> Project-specific settings for Agent Qube.
 > This file is NOT part of the toolkit standards -- it is created per project.
 >
 > Toolkit version: v1.9.1

@@ -73,7 +73,7 @@ React Flow (reactflow.dev) даёт из коробки:
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│ Header: P-MAS · Hierarchy · [Search] [Filters] [+]  │
+│ Header: Agent Qube · Hierarchy · [Search] [Filters] [+]  │
 ├────────┬────────────────────────────────────┬───────┤
 │        │                                    │       │
 │ Side   │     React Flow Canvas             │ Detail│

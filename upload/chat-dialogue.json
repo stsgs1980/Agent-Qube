@@ -1,8 +1,8 @@
 {
   "session_id": "web-acc1b950-c1bd-42d9-83c1-6328a32ff66f",
   "chat_id": "6c923cc5-e0b5-464a-8ee8-4ab32c241702",
-  "project": "P-MAS Studio -- Visual IDE for Multi-Agent Systems",
-  "github": "https://github.com/stsgs1980/P-mas-studio",
+  "project": "Agent Qube Studio -- Visual IDE for Multi-Agent Systems",
+  "github": "https://github.com/stsgs1980/agent-qube",
   "dialogue": [
     {
       "turn": 1,
@@ -67,7 +67,7 @@
     {
       "turn": 11,
       "role": "assistant",
-      "message": "Created v5: pmas-studio-landing-v5.html. CPU 'Orchestrator / P-MAS Core' centered, routes radiate outward via Manhattan routing (90-degree turns). 3 main routes to endpoint circles aligned with 3 cards below. Lines: thin (1px), barely visible (opacity 0.03-0.06). Subtle pulses (8px dash on 900px path). Three.js dust particles."
+      "message": "Created v5: pmas-studio-landing-v5.html. CPU 'Orchestrator / Agent Qube Core' centered, routes radiate outward via Manhattan routing (90-degree turns). 3 main routes to endpoint circles aligned with 3 cards below. Lines: thin (1px), barely visible (opacity 0.03-0.06). Subtle pulses (8px dash on 900px path). Three.js dust particles."
     },
     {
       "turn": 12,
@@ -89,18 +89,18 @@
     {
       "turn": 15,
       "role": "assistant",
-      "message": "Updated all 3 GitHub links (nav, hero button, footer) to https://github.com/p-mas-studio with target=_blank"
+      "message": "Updated all 3 GitHub links (nav, hero button, footer) to https://github.com/agent-qube with target=_blank"
     },
     {
       "turn": 16,
       "role": "user",
-      "message": "https://github.com/stsgs1980/P-mas-studio вот ссылка",
+      "message": "https://github.com/stsgs1980/agent-qube вот ссылка",
       "context": "User provided correct GitHub URL"
     },
     {
       "turn": 17,
       "role": "assistant",
-      "message": "Updated all 3 GitHub links to https://github.com/stsgs1980/P-mas-studio"
+      "message": "Updated all 3 GitHub links to https://github.com/stsgs1980/agent-qube"
     },
     {
       "turn": 18,
@@ -138,7 +138,7 @@
     {
       "turn": 24,
       "role": "user",
-      "message": "https://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@github.com/stsgs1980/P-mas-studio.git",
+      "message": "https://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@github.com/stsgs1980/agent-qube.git",
       "context": "User provided GitHub PAT token for push access"
     },
     {
@@ -172,8 +172,8 @@
       "download/pmas-studio-design-variants.html (design variants)",
       "download/pmas-architector-extension.html (Architector extension)",
       "download/agent-ide-wireframe.html (Agent IDE wireframe)",
-      "download/p-mas-studio/ROADMAP.md (project roadmap)",
-      "download/p-mas-studio/PROJECT_DECISIONS.md (architecture decisions)",
+      "download/agent-qube/ROADMAP.md (project roadmap)",
+      "download/agent-qube/PROJECT_DECISIONS.md (architecture decisions)",
       "README.md (repo readme)"
     ],
     "deleted": [
@@ -202,3 +202,4 @@
     "Create repo structure, migrate code, setup domains"
   ]
 }
+      

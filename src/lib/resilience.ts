@@ -1,5 +1,5 @@
 /**
- * P-MAS Resilience Layer
+ * Agent Qube Resilience Layer
  *
  * Unified exports for the API resilience toolkit integrated from agent-toolkit.
  * Provides retry logic, circuit breaker, health checking, and fallback management.

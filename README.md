@@ -1,6 +1,6 @@
-# P-MAS v2
+# Agent Qube
 
-**Prompt-based Multi-Agent System** — Visualize and manage 26 AI agents across 8 role groups with cognitive formulas, real-time WebSocket updates, and LLM-powered workflow execution.
+**Agent Qube** — Visualize and manage 26 AI agents across 8 role groups with cognitive formulas, real-time WebSocket updates, and LLM-powered workflow execution.
 
 [![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat-square)](https://nextjs.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square)](https://www.typescriptlang.org)
@@ -12,7 +12,7 @@
 
 ## Overview
 
-P-MAS v2 is an interactive dashboard for a multi-agent AI system. It renders a real-time, zoomable hierarchy of 26 agents organized into 8 role groups across 5 layers (L0--L4), connected by 6 edge types. The system integrates a prompting library with 20 cognitive formulas, supports LLM-powered workflow execution via the Z.ai SDK, and streams agent status changes over WebSocket.
+Agent Qube is an interactive dashboard for a multi-agent AI system. It renders a real-time, zoomable hierarchy of 26 agents organized into 8 role groups across 5 layers (L0--L4), connected by 6 edge types. The system integrates a prompting library with 20 cognitive formulas, supports LLM-powered workflow execution via the Z.ai SDK, and streams agent status changes over WebSocket.
 
 ## Architecture
 
@@ -101,8 +101,8 @@ CoT, ToT, GoT, CoVe, ReAct, Reflexion, ReWOO, MoA, and 12 more -- each mapped to
 ### Installation
 
 ```bash
-git clone https://github.com/stsgs1980/P-MAS-v2.git
-cd P-MAS-v2
+git clone https://github.com/stsgs1980/agent-qube.git
+cd agent-qube
 bun install
 bun run db:push
 bun run dev

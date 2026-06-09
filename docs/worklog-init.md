@@ -1,4 +1,4 @@
-# P-MAS Agent Hierarchy Dashboard — Worklog
+# Agent Qube Agent Hierarchy Dashboard — Worklog
 
 ---
 Task ID: 1
@@ -136,7 +136,7 @@ Work Log:
 - Improved Network Activity chart: animated gradient fill (color pulses), full grid lines (0/25/50/75/100%), Y-axis labels, line draw-in animation on mount
 - Added micro-interactions: hover effects with smooth transitions on all interactive elements (scale, glow, border color changes)
 - Replaced Architecture Overview text with SVG diagram: boxes with accent borders, curved arrow paths with labels, proper node layout
-- Added System Status badge next to PMAS header: cyan pulsing dot + "ONLINE" text
+- Added System Status badge next to Agent Qube header: cyan pulsing dot + "ONLINE" text
 - Improved Footer: added version v5.1, ONLINE status badge, last refreshed timestamp, build info
 - Added Refresh Data button in header with spinning RefreshCw icon animation during refresh
 - Added search/filter functionality: input in header filters Role Groups, Formulas, and Edge Types by name/description
@@ -291,7 +291,7 @@ Stage Summary:
 - Cron job creation failed (401 - system limitation)
 
 ---
-## P-MAS Dashboard — Roadmap & Planned Improvements
+## Agent Qube Dashboard — Roadmap & Planned Improvements
 
 ### Phase 1: UI/UX Fixes (CURRENT)
 
@@ -400,7 +400,7 @@ Stage Summary:
 ---
 Task ID: 12
 Agent: Main Orchestrator
-Task: Redesign P-MAS Agent Hierarchy view with Sidebar layout
+Task: Redesign Agent Qube Agent Hierarchy view with Sidebar layout
 
 Work Log:
 - Fixed file corruption: Lines with `hiddenEdgeTypes` and `highlightedConnections` had `[h` ANSI escape sequences embedded. Fixed using byte-level replacement with Python.
@@ -516,8 +516,8 @@ Work Log:
 - Hierarchy VLM analysis: Sidebar visible with Stats, Legend, Connections sections, SVG nodes visible, no overlapping elements
 - Found browser console errors from stale cache: ArchitectureDiagram not defined, Palette not defined, date.toLocaleTimeString not a function, mounted not defined, connections before initialization
 - Verified these errors were from stale browser HMR cache - after clearing .next cache and reloading fresh, no errors found
-- Updated layout.tsx metadata: changed title from "Z.ai Code Scaffold" to "P-MAS Dashboard — Multi-Agent System"
-- Updated description, keywords, authors, openGraph, and twitter metadata to P-MAS branding
+- Updated layout.tsx metadata: changed title from "Z.ai Code Scaffold" to "Agent Qube Dashboard — Multi-Agent System"
+- Updated description, keywords, authors, openGraph, and twitter metadata to Agent Qube branding
 - Verified lint passes with 0 errors
 - Created cron job for periodic review (failed with 401 authorization error)
 - Dev server stability issue: process keeps getting killed (possibly OOM or process management issue)
@@ -527,7 +527,7 @@ Stage Summary:
 - Full-page screenshots taken and analyzed with VLM - both pages render correctly
 - W1280 layout confirmed working on both pages
 - No overlapping elements in hierarchy view (sidebar layout working)
-- Metadata updated to P-MAS branding
+- Metadata updated to Agent Qube branding
 - Lint: 0 errors
 - Cron job creation failed (401)
 - Dev server process management issue (needs investigation)
@@ -535,21 +535,21 @@ Stage Summary:
 ---
 Task ID: 15
 Agent: Main Orchestrator
-Task: Replace my-project content with P-MAS project files
+Task: Replace my-project content with Agent Qube project files
 
 Work Log:
 - Removed old my-project content (src, prisma, db, public, standards, templates, docs, instructions, agent-ctx, preview, upload, download, AGENT_RULES.md, etc.)
-- Copied all P-MAS files from /home/z/pmas to /home/z/my-project (src, prisma, standards, templates, docs, instructions, agent-ctx, public, upload, db, AGENT_RULES.md, PROJECT_CONFIG.md, README.md, Caddyfile, worklog.md, components.json)
+- Copied all Agent Qube files from /home/z/pmas to /home/z/my-project (src, prisma, standards, templates, docs, instructions, agent-ctx, public, upload, db, AGENT_RULES.md, PROJECT_CONFIG.md, README.md, Caddyfile, worklog.md, components.json)
 - Copied pmas/package.json to my-project and ran `bun install` — 3 new packages installed: @types/dagre, @xyflow/react, dagre
 - Ran `npx prisma db push` — database already in sync
 - Seeded database via POST /api/seed — 26 agents + 26 tasks created
 - Started dev server with `npx next dev -p 3000 </dev/null >/tmp/zdev.log 2>&1 &`
-- Verified GET / returns 200 (P-MAS Dashboard)
+- Verified GET / returns 200 (Agent Qube Dashboard)
 - Verified GET /hierarchy returns 200 (Agent Hierarchy)
 - Server process dies after first few requests (known sandbox behavior per dev-watchdog skill)
 
 Stage Summary:
-- P-MAS project fully migrated to /home/z/my-project
+- Agent Qube project fully migrated to /home/z/my-project
 - All dependencies installed (including @xyflow/react for React Flow)
 - Database seeded with 26 agents across 8 role groups
 - Both Dashboard (/) and Hierarchy (/hierarchy) pages serving 200
@@ -578,7 +578,7 @@ Stage Summary:
 ---
 Task ID: 16
 Agent: Main Orchestrator
-Task: Audit P-MAS — what's on real API data vs hardcoded demo data
+Task: Audit Agent Qube — what's on real API data vs hardcoded demo data
 
 Work Log:
 - Checked all API routes: /api/agents (200), /api/tasks (200), /api/hierarchy (200), /api/health (200), /api/seed (405 on GET, POST works)
@@ -601,7 +601,7 @@ Stage Summary:
 ---
 Task ID: 17
 Agent: full-stack-developer
-Task: Create /api/stats endpoint for P-MAS Dashboard
+Task: Create /api/stats endpoint for Agent Qube Dashboard
 
 Work Log:
 - Read existing seed route (/api/seed/route.ts) to understand DB usage patterns and schema
@@ -675,7 +675,7 @@ Stage Summary:
 ---
 Task ID: 2 (migration)
 Agent: full-stack-developer
-Task: Migrate P-MAS Dashboard from Hardcoded to Real API Data
+Task: Migrate Agent Qube Dashboard from Hardcoded to Real API Data
 
 Work Log:
 - Read full page.tsx (~2045 lines after changes) to understand component structure and all hardcoded constants
@@ -783,7 +783,7 @@ Stage Summary:
 ---
 Task ID: 3
 Agent: full-stack-developer
-Task: Implement Connection Flow Animation for P-MAS hierarchy edges
+Task: Implement Connection Flow Animation for Agent Qube hierarchy edges
 
 Work Log:
 - Read current agent-edge.tsx (77 lines), types.ts (349 lines), agent-hierarchy-v2.tsx (954 lines)
@@ -871,7 +871,7 @@ Stage Summary:
 ---
 Task ID: 4
 Agent: full-stack-developer
-Task: Implement WebSocket Real-Time Updates for P-MAS
+Task: Implement WebSocket Real-Time Updates for Agent Qube
 
 Work Log:
 - Created ws-service mini-service at `/home/z/my-project/mini-services/ws-service/`
@@ -926,7 +926,7 @@ Work Log:
 - Started ws-service (port 3003) — confirmed running with 26 agents
 - Tested PUT /api/agents/[id] — works correctly
 - Lint: 0 errors
-- Pushed to GitHub: commit a062dd0 → stsgs1980/P-MAS main
+- Pushed to GitHub: commit a062dd0 → stsgs1980/Agent Qube main
 - Cron job creation failed (401 — system limitation)
 
 Stage Summary:
@@ -949,7 +949,7 @@ Work Log:
 - Hierarchy VLM analysis: No major rendering issues, sidebar well-organized, nodes and connections visible
 - Found issue: No footer on dashboard page
 - Found issue: Sidebar agent names could be truncated (narrow sidebar)
-- Fixed dashboard: Added sticky footer with P-MAS v5.2, ONLINE status badge, Updated timestamp, agent count, Next.js 16 + Turbopack info
+- Fixed dashboard: Added sticky footer with Agent Qube v5.2, ONLINE status badge, Updated timestamp, agent count, Next.js 16 + Turbopack info
 - Fixed sidebar: Increased width from 260px to 280px, added title attribute to agent names for hover tooltip, added max-w-[60px] truncate to role text
 - Verified hierarchy view renders correctly with all 26 agents, proper connections, clean sidebar layout
 - Lint: 0 errors
@@ -957,7 +957,7 @@ Work Log:
 
 Stage Summary:
 - 14 screenshots taken and analyzed with VLM
-- Dashboard footer added (P-MAS v5.2, ONLINE, timestamp, tech stack info)
+- Dashboard footer added (Agent Qube v5.2, ONLINE, timestamp, tech stack info)
 - Sidebar width increased (260px → 280px), agent name tooltips added
 - All visual QA passed — both pages render correctly
 - No visual bugs, no overlapping elements, consistent monochrome cyan design
@@ -1076,7 +1076,7 @@ Work Log:
 
 Stage Summary:
 - All .png files cleaned from project directory
-- 60 files deleted, committed and pushed to GitHub (stsgs1980/P-MAS)
+- 60 files deleted, committed and pushed to GitHub (stsgs1980/Agent Qube)
 - Cron job creation blocked by 401 auth error (system limitation, not code issue)
 - Project repo is clean and up to date
 
@@ -1086,7 +1086,7 @@ Agent: Main Orchestrator
 Task: Записать план развития архитектуры агентной системы
 
 Work Log:
-- Проанализирована текущая архитектура P-MAS
+- Проанализирована текущая архитектура Agent Qube
 - Выявлен критический пробел: текущая архитектура — это «орг-схема», а не «агентная система»
 - Записан план развития в 4 фазы
 
@@ -1095,7 +1095,7 @@ Stage Summary:
 
 ---
 
-## 🏗️ P-MAS — План Развития Архитектуры Агентной Системы
+## 🏗️ Agent Qube — План Развития Архитектуры Агентной Системы
 
 ### Диагноз: текущая архитектура нецелостна
 
@@ -1303,7 +1303,7 @@ Work Log:
 1. **Full-Page Layout Support** (fullPage, onBack, onOpenHierarchy props):
    - When fullPage=true: renders full page with W1280 centered layout
    - Top header bar (48px, dark #0D0D0D, top cyan accent line)
-   - Left section: Back button (ArrowLeft) + P-MAS logo + "Workflow Pipeline" title
+   - Left section: Back button (ArrowLeft) + Agent Qube logo + "Workflow Pipeline" title
    - Center: Search bar to filter workflows by name/tags/description
    - Right: Hierarchy button + Refresh button
    - Collapsible LEFT SIDEBAR (280px/48px) with toggle button
@@ -1521,7 +1521,7 @@ Work Log:
 - Cron job creation failed (401 - known system limitation)
 
 Stage Summary:
-- GitHub push successful - all code synced to stsgs1980/P-MAS
+- GitHub push successful - all code synced to stsgs1980/Agent Qube
 - Phase 1 (Workflow Pipeline) is FULLY IMPLEMENTED:
   - ✅ Prisma schema with 5 new models (Workflow, PipelineStep, WorkflowExecution, StepExecution, AgentMessage)
   - ✅ API routes for CRUD + execution + seeding
@@ -1531,7 +1531,7 @@ Stage Summary:
 - No code changes needed - all was already implemented from previous session
 - Cron job: unable to create (401 auth error)
 
-## P-MAS Project — Current Status Assessment
+## Agent Qube Project — Current Status Assessment
 
 **Implemented & Working:**
 - Dashboard (page.tsx): Monochrome cyan, collapsible sections, search, notifications, sparklines, animated counters

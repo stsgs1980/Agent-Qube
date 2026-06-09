@@ -87,7 +87,7 @@ function StudioHeader({ onBack }: { onBack?: () => void }) {
       <div className="flex items-center gap-3 flex-shrink-0">
         {onBack && <button onClick={onBack} className="w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-200 hover:scale-110" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(51,51,51,0.4)' }} title="Back"><ArrowLeft size={16} style={{ color: '#06B6D4' }} /></button>}
         <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: 'rgba(6,182,212,0.15)', border: '1px solid rgba(6,182,212,0.25)' }}><Sparkles size={16} style={{ color: '#06B6D4' }} /></div>
-        <span className="text-base font-bold" style={{ color: '#06B6D4' }}>P-MAS</span><span className="text-sm" style={{ color: '#475569' }}>|</span><span className="text-base font-medium text-white">Prompt Studio</span>
+        <span className="text-base font-bold" style={{ color: '#06B6D4' }}>Agent Qube</span><span className="text-sm" style={{ color: '#475569' }}>|</span><span className="text-base font-medium text-white">Prompt Studio</span>
       </div>
       <div className="flex-1" />
       <div className="flex items-center gap-2 px-3 py-1 rounded-full" style={{ background: 'rgba(6,182,212,0.08)', border: '1px solid rgba(6,182,212,0.2)' }}>

@@ -1,15 +1,15 @@
 /**
- * P-MAS Resilience Layer — Extended with @stsgs/prompting
+ * Agent Qube Resilience Layer — Extended with @stsgs/prompting
  *
  * Unified exports for the API resilience toolkit integrated from agent-toolkit.
  * Now also exports prompting resilience patterns (withRetry, CircuitBreaker, etc.)
- * alongside the existing P-MAS resilience modules.
+ * alongside the existing Agent Qube resilience modules.
  *
  * Usage:
  *   import { fetchWithRetry, CircuitBreaker, withPromptRetry, PromptCircuitBreaker } from '@/lib/resilience';
  */
 
-// ─── Existing P-MAS resilience ──────────────────────────────
+// ─── Existing Agent Qube resilience ──────────────────────────────
 export { fetchWithRetry, defaultRetryConfig } from "./api-retry";
 export type { RetryConfig } from "./api-retry";
 

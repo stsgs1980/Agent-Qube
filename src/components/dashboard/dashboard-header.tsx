@@ -40,7 +40,7 @@ export function DashboardHeader({ onOpenHierarchy, onOpenWorkflows, onToggleSide
             <Brain className="w-4 h-4" style={{ color: '#06B6D4' }} />
           </div>
           <div className="flex items-center gap-2">
-            <h1 className="text-white font-bold text-sm tracking-wide">P-MAS</h1>
+            <h1 className="text-white font-bold text-sm tracking-wide">Agent Qube</h1>
             <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-full" style={{ background: wsConnected ? 'rgba(34,197,94,0.08)' : 'rgba(239,68,68,0.08)', border: wsConnected ? '1px solid rgba(34,197,94,0.2)' : '1px solid rgba(239,68,68,0.2)' }}>
               <span className="relative flex h-1.5 w-1.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style={{ background: wsConnected ? '#22C55E' : '#EF4444' }} />

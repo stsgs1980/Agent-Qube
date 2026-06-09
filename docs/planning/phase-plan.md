@@ -249,7 +249,7 @@ Key insight: Phase 1 from the original plan = data preparation for @stsgs/ui (no
 ## Component Library Catalog — Source Inventory & Wave Plan
 
 > Two source repos scanned:
-> 1. **Component-Browser-Public-v1.0** — 290 files, 20 categories, 273 unique component names. Raw extracted components from multiple projects (DS_Reference, Performance-Lab, P-MAS, CHROMEDNA, Flow-Studio-Pro, etc.)
+> 1. **Component-Browser-Public-v1.0** — 290 files, 20 categories, 273 unique component names. Raw extracted components from multiple projects (DS_Reference, Performance-Lab, Agent Qube, CHROMEDNA, Flow-Studio-Pro, etc.)
 > 2. **Component-Browser** — Browser app itself (Next.js + Prisma + shadcn). 11 browser-specific components (ComponentCard, CompareModal, ComponentDetailModal, etc.)
 
 ### Source 1: Component-Browser-Public-v1.0 Inventory

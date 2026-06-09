@@ -3,7 +3,7 @@
  *
  * Provides robust retry logic for HTTP requests to external APIs.
  * Implements exponential backoff with configurable delays and retry limits.
- * Part of agent-toolkit integration for P-MAS.
+ * Part of agent-toolkit integration for Agent Qube.
  *
  * @see skills/api-retry/SKILL.md
  */

@@ -1,4 +1,4 @@
-# P-MAS Roadmap
+# Agent Qube Roadmap
 
 > Multi-Agent System Dashboard & Hierarchy Visualization
 

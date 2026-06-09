@@ -15,24 +15,24 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "P-MAS Dashboard — Multi-Agent System",
-  description: "P-MAS Agent Hierarchy Dashboard — Prompt-based Multi-Agent System with 26 agents across 8 role groups.",
-  keywords: ["P-MAS", "Multi-Agent System", "Agent Hierarchy", "Cognitive Formulas", "Dashboard", "Next.js"],
-  authors: [{ name: "P-MAS Team" }],
+  title: "Agent Qube — Multi-Agent System",
+  description: "Agent Qube — Multi-Agent System Dashboard with 26 agents across 8 role groups.",
+  keywords: ["Agent Qube", "Multi-Agent System", "Agent Hierarchy", "Cognitive Formulas", "Dashboard", "Next.js"],
+  authors: [{ name: "Agent Qube Team" }],
   icons: {
     icon: "https://z-cdn.chatglm.cn/z-ai/static/logo.svg",
   },
   openGraph: {
-    title: "P-MAS Dashboard",
-    description: "Prompt-based Multi-Agent System Dashboard",
+    title: "Agent Qube Dashboard",
+    description: "Multi-Agent System Dashboard",
     url: "https://chat.z.ai",
-    siteName: "P-MAS",
+    siteName: "Agent Qube",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "P-MAS Dashboard",
-    description: "Prompt-based Multi-Agent System Dashboard",
+    title: "Agent Qube Dashboard",
+    description: "Multi-Agent System Dashboard",
   },
 };
 

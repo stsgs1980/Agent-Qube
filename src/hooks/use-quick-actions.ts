@@ -36,7 +36,7 @@ export function useQuickActions() {
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
-      a.download = 'p-mas-hierarchy.json'
+      a.download = 'agent-qube-hierarchy.json'
       document.body.appendChild(a)
       a.click()
       document.body.removeChild(a)
