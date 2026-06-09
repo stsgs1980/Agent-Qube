@@ -58,14 +58,14 @@ export default function DashboardPanel({ onOpenHierarchy, onOpenWorkflows }: { o
             </div>
           )}
           <KPIStrip quickStats={data.quickStats} />
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 mt-4">
             <StatusDistributionCard statusDistribution={data.statusDistribution} />
             <TopPerformersCard topPerformersProp={data.topPerformers} roleGroupsProp={data.roleGroups} />
             <SystemHealthCard />
-            <div className="lg:col-span-2"><NetworkActivityChart data={data.networkActivityData} /></div>
+            <div className="xl:col-span-2"><NetworkActivityChart data={data.networkActivityData} /></div>
             <RecentActivityTimeline events={data.activityEvents} />
             <ConnectionHeatmap data={data.connectionHeatmapData} />
-            <div className="lg:col-span-2"><FormulaAgentMappingGrid /></div>
+            <div className="xl:col-span-2"><FormulaAgentMappingGrid /></div>
           </div>
           <div className="mt-6"><WorkflowStatsSection workflowsData={data.workflowsData} onOpenWorkflows={onOpenWorkflows} /></div>
         </main>

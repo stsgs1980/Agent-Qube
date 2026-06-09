@@ -29,9 +29,9 @@ export default function WorkflowPipeline({ fullPage, onBack, onOpenHierarchy }: 
   )
 
   if (fullPage) return (
-    <div className="min-h-screen bg-black flex justify-center">
+    <div className="h-screen bg-black">
       <style>{KEYFRAMES}</style>
-      <div className="max-w-[1280px] w-full h-screen flex flex-col relative overflow-hidden select-none">
+      <div className="w-full h-full flex flex-col relative overflow-hidden select-none">
         <div className="relative z-40 flex items-center h-12 flex-shrink-0 px-4 gap-4" style={{ background: '#0D0D0D', borderBottom: '1px solid rgba(51,51,51,0.5)' }}>
           <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, #06B6D4, transparent)' }} />
           <div className="flex items-center gap-2 flex-shrink-0">

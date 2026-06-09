@@ -1819,3 +1819,24 @@ Stage Summary:
 - Two submodules now: anti-hallucination-guard + cascade-guard
 - Rule namespacing: AHG rules 1-6, Cascade rules C-1..C-9
 - cascade-state.json ready for project tasks
+
+---
+Task ID: 1
+Agent: main
+Task: Restore deleted directories and lib/prompting, audit responsive layout, advise on Vercel
+
+Work Log:
+- Restored src/lib/prompting/ (43 files) via git checkout HEAD
+- Fixed skills/ dir permission issue (root-owned parent): extracted via git archive to /tmp, copied back with correct ownership (81 skill folders)
+- Restored anti-hallucination-guard/ and cascade-guard/ git submodules via `git submodule update --init --recursive`
+- Verified wireframes/ (9 HTML files) and tools/ (verify-docs) were still present
+- Conducted comprehensive responsive layout audit across all 3 main views
+- Found 22 issues: 7 critical, 8 medium, 7 low
+- Key critical issues: AgentEditModal 420px width, GroupSidebar 220px fixed, DetailPanel 280px fixed, WorkflowSidebar 280px, HierarchyControls toolbar overflow
+- Analyzed Vercel deployment requirements for the user's setup
+
+Stage Summary:
+- All deleted directories fully restored (skills: 81 folders, submodules: 2, wireframes: 9 files, tools: 1 utility)
+- src/lib/prompting/ restored with all 43 files
+- Responsive audit complete — biggest issues in Hierarchy view (unusable below 1024px)
+- Vercel deployment advice provided (see message below)
