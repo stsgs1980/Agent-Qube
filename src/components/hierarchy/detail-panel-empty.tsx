@@ -11,7 +11,7 @@ export function DetailPanelEmpty({ onToggle }: { onToggle: () => void }) {
         borderLeft: '1px solid rgba(51,51,51,0.25)',
         flexDirection: 'column', position: 'relative',
       }}
-      className="hidden lg:flex lg:w-[280px] lg:flex-shrink-0"
+      className="hidden-mobile lg-flex lg-w-280 lg-flex-shrink-0"
     >
       <div style={{ padding: '8px 12px', display: 'flex', justifyContent: 'flex-end' }}>
         <button

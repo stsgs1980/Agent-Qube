@@ -21,7 +21,7 @@ export function DetailPanelCollapsed({
         paddingTop: 12,
         gap: 12,
       }}
-      className="hidden lg:flex lg:w-9 lg:flex-shrink-0"
+      className="hidden-mobile lg-flex lg-w-9 lg-flex-shrink-0"
     >
       <button
         onClick={onToggle}

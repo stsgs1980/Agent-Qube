@@ -69,7 +69,7 @@ export function DetailPanel({
   }
 
   return (
-    <div style={{ background: '#0A0A0A', borderLeft: '1px solid rgba(51,51,51,0.25)', flexDirection: 'column' }} className="terrain-scroll hidden lg:flex lg:w-[280px] lg:flex-shrink-0 overflow-y-auto">
+    <div style={{ background: '#0A0A0A', borderLeft: '1px solid rgba(51,51,51,0.25)', flexDirection: 'column' }} className="terrain-scroll hidden-mobile lg-flex lg-w-280 lg-flex-shrink-0 lg-overflow-y-auto overflow-y-auto">
       <AgentDetailHeader
         agent={agent}
         onToggle={onToggle}

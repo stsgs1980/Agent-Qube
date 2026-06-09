@@ -1,7 +1,32 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@source "../components/**/*.{ts,tsx}";
+@source "./*.{ts,tsx}";
+
 @custom-variant dark (&:is(.dark *));
+
+/* Responsive utility classes for dynamically-applied class names (Tailwind v4 production build fix) */
+@media (max-width: 63.99rem) {
+  .hidden-mobile { display: none !important; }
+}
+@media (min-width: 64rem) {
+  .lg-flex { display: flex !important; }
+  .lg-w-220 { width: 220px !important; }
+  .lg-w-280 { width: 280px !important; }
+  .lg-w-9 { width: 2.25rem !important; }
+  .lg-flex-shrink-0 { flex-shrink: 0 !important; }
+  .lg-relative { position: relative !important; }
+  .lg-overflow-y-auto { overflow-y: auto !important; }
+  .lg-z-auto { z-index: auto !important; }
+  .lg-gap-6 { gap: 1.5rem !important; }
+  .lg-block { display: block !important; }
+}
+@media (min-width: 40rem) {
+  .sm-grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  .sm-p-5 { padding: 1.25rem !important; }
+  .sm-block { display: block !important; }
+}
 
 @theme inline {
   --color-background: var(--background);

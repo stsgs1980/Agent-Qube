@@ -1916,3 +1916,21 @@ Stage Summary:
 - output: "standalone" is for Docker/self-hosted, NOT Vercel
 - socket.io rewrite to localhost doesn't work on serverless
 - These were likely causing Vercel builds to fail or serve stale content
+
+---
+Task ID: 6
+Agent: main
+Task: Fix Tailwind v4 production build not generating responsive classes
+
+Work Log:
+- Discovered Tailwind v4 + @tailwindcss/postcss doesn't scan JSX className strings in production build
+- @source directive and @config didn't fix the issue
+- @utility doesn't support colons in class names (lg:flex)
+- Solution: Added plain CSS media query classes in globals.css (hidden-mobile, lg-flex, lg-w-220, etc.)
+- Replaced all Tailwind responsive classes in 5 hierarchy components with custom CSS classes
+- Verified all classes present in production build CSS output
+
+Stage Summary:
+- Root cause: Tailwind v4 production build doesn't scan dynamic className strings
+- Fix: Custom CSS classes with media queries instead of Tailwind responsive utilities
+- All responsive classes now work in both dev and production
