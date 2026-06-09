@@ -39,11 +39,11 @@ export function DetailPanelEdit({
   return (
     <div
       style={{
-        flexShrink: 0, background: '#0A0A0A',
+        background: '#0A0A0A',
         borderLeft: '1px solid rgba(51,51,51,0.25)',
-        display: 'flex', flexDirection: 'column', overflowY: 'auto',
+        flexDirection: 'column',
       }}
-      className="terrain-scroll w-0 lg:w-[280px] overflow-hidden lg:overflow-y-auto"
+      className="terrain-scroll hidden lg:flex lg:w-[280px] lg:flex-shrink-0 overflow-y-auto"
     >
       {/* Header */}
       <div style={{ padding: 16, position: 'relative', borderBottom: '1px solid rgba(51,51,51,0.2)' }}>

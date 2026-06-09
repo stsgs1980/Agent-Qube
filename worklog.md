@@ -1880,3 +1880,23 @@ Stage Summary:
 - Desktop (1440px) layout unchanged
 - Hierarchy: sidebar + detail panel hidden on mobile, visible on lg+
 - Workflows: sidebar becomes overlay on mobile with backdrop
+
+---
+Task ID: 4
+Agent: main
+Task: Fix sidebar/detail panel not hiding on mobile (w-0 didn't work with inline display:flex)
+
+Work Log:
+- Changed GroupSidebar from w-0/lg:w-[220px] to hidden lg:flex lg:w-[220px]
+- Changed DetailPanel from w-0/lg:w-[280px] to hidden lg:flex lg:w-[280px]
+- Changed DetailPanelEmpty from w-0/lg:w-[280px] to hidden lg:flex lg:w-[280px]
+- Changed DetailPanelEdit from w-0/lg:w-[280px] to hidden lg:flex lg:w-[280px]
+- Changed DetailPanelCollapsed from w-0/lg:w-9 to hidden lg:flex lg:w-9
+- Removed inline display:flex and flexShrink:0 that overrode Tailwind hidden
+- Verified locally: sidebar hidden on mobile (375px), visible on desktop (1440px)
+
+Stage Summary:
+- Root cause: inline style display:flex + flexShrink:0 overrode Tailwind w-0/hidden
+- Fix: use Tailwind hidden/lg:flex pattern instead of w-0 approach
+- All 5 panel variants fixed
+- Canvas now takes full width on mobile, sidebar+detail visible on lg+

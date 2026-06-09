@@ -14,16 +14,14 @@ export function DetailPanelCollapsed({
   return (
     <div
       style={{
-        flexShrink: 0,
         background: '#0A0A0A',
         borderLeft: '1px solid rgba(51,51,51,0.25)',
-        display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         paddingTop: 12,
         gap: 12,
       }}
-      className="w-0 lg:w-9 overflow-hidden"
+      className="hidden lg:flex lg:w-9 lg:flex-shrink-0"
     >
       <button
         onClick={onToggle}
