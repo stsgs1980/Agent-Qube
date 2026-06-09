@@ -11,7 +11,7 @@
   .hidden-mobile { display: none !important; }
 }
 @media (min-width: 64rem) {
-  .lg-flex { display: flex !important; }
+  .lg-flex { display: flex !important; flex-direction: column; }
   .lg-w-220 { width: 220px !important; }
   .lg-w-280 { width: 280px !important; }
   .lg-w-9 { width: 2.25rem !important; }

@@ -9,7 +9,7 @@ export function DetailPanelEmpty({ onToggle }: { onToggle: () => void }) {
       style={{
         background: '#0A0A0A',
         borderLeft: '1px solid rgba(51,51,51,0.25)',
-        flexDirection: 'column', position: 'relative',
+        position: 'relative',
       }}
       className="hidden-mobile lg-flex lg-w-280 lg-flex-shrink-0"
     >

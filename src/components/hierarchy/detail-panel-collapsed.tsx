@@ -16,7 +16,6 @@ export function DetailPanelCollapsed({
       style={{
         background: '#0A0A0A',
         borderLeft: '1px solid rgba(51,51,51,0.25)',
-        flexDirection: 'column',
         alignItems: 'center',
         paddingTop: 12,
         gap: 12,
