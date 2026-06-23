@@ -1,0 +1,1654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>P-MAS v2 — Prompt Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #000000;
+      color: #fafafa;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .mono { font-family: 'JetBrains Mono', 'SF Mono', monospace; }
+    button { font-family: inherit; cursor: pointer; }
+    input, textarea, select { font-family: inherit; }
+
+    /* ===== HEADER BAR ===== */
+    .header {
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #27272a;
+      padding: 0 24px;
+      max-width: 1440px;
+      margin: 0 auto;
+      width: 100%;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(0, 0, 0, 0.92);
+      backdrop-filter: blur(12px);
+    }
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    .logo { font-size: 20px; font-weight: 700; color: #06B6D4; letter-spacing: 2px; }
+    .header-title { font-size: 15px; font-weight: 600; color: #fafafa; }
+    .header-title-sep { color: #27272a; margin: 0 4px; }
+    .header-center { display: flex; align-items: center; gap: 0; }
+    .tab {
+      padding: 8px 20px; font-size: 13px; font-weight: 500; color: #a1a1aa;
+      cursor: pointer; border-bottom: 2px solid transparent;
+      transition: color 0.2s, border-color 0.25s; user-select: none; white-space: nowrap;
+      background: none; border-top: none; border-left: none; border-right: none;
+    }
+    .tab:hover { color: #fafafa; }
+    .tab.active { color: #06B6D4; border-bottom-color: #06B6D4; }
+    .header-right { display: flex; align-items: center; gap: 12px; }
+    .icon-btn {
+      width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+      border-radius: 6px; cursor: pointer; color: #a1a1aa;
+      transition: background 0.2s, color 0.2s; border: none; background: none;
+    }
+    .icon-btn:hover { background: #111118; color: #fafafa; }
+
+    /* ===== PAGE WRAP ===== */
+    .page-wrap {
+      max-width: 1440px; width: 100%; margin: 0 auto; padding: 0;
+      flex: 1; display: flex; flex-direction: column;
+    }
+
+    /* ===== COMPOSE TAB LAYOUT ===== */
+    .compose-layout {
+      display: flex; flex: 1; min-height: calc(100vh - 56px); overflow: hidden;
+    }
+    .panel-left {
+      width: 320px; min-width: 320px; border-right: 1px solid #27272a;
+      overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 20px;
+    }
+    .panel-center {
+      flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 20px;
+      min-width: 0;
+    }
+    .panel-right {
+      width: 300px; min-width: 300px; border-left: 1px solid #27272a;
+      overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 16px;
+    }
+
+    /* ===== SECTION TITLES ===== */
+    .section-title {
+      font-size: 12px; font-weight: 600; color: #a1a1aa;
+      text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 12px;
+    }
+
+    /* ===== CARDS ===== */
+    .card {
+      background: #0A0A0F; border: 1px solid #27272a; border-radius: 10px;
+      padding: 16px; transition: border-color 0.2s;
+    }
+    .card:hover { border-color: #333; }
+
+    /* ===== PROMPT INPUT ===== */
+    .prompt-textarea {
+      width: 100%; min-height: 200px; background: #111118; border: 1px solid #27272a;
+      border-radius: 8px; color: #fafafa; font-size: 14px; line-height: 1.6;
+      padding: 14px; resize: vertical; outline: none; transition: border-color 0.2s;
+    }
+    .prompt-textarea:focus { border-color: #06B6D4; }
+    .prompt-textarea::placeholder { color: #52525b; }
+    .char-count {
+      font-size: 11px; color: #52525b; text-align: right; margin-top: 6px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .btn-row { display: flex; gap: 8px; margin-top: 12px; }
+    .btn-primary {
+      flex: 1; padding: 10px 16px; background: #06B6D4; color: #000; border: none;
+      border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn-primary:hover { background: #22D3EE; }
+    .btn-primary:active { transform: scale(0.98); }
+    .btn-ghost {
+      padding: 10px 16px; background: transparent; color: #a1a1aa;
+      border: 1px solid #27272a; border-radius: 8px; font-size: 13px; font-weight: 500;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .btn-ghost:hover { border-color: #06B6D4; color: #fafafa; }
+
+    /* ===== FRAMEWORK SELECTOR ===== */
+    .framework-select {
+      position: relative;
+    }
+    .framework-dropdown-btn {
+      width: 100%; padding: 10px 14px; background: #111118; border: 1px solid #27272a;
+      border-radius: 8px; color: #a1a1aa; font-size: 13px; text-align: left;
+      cursor: pointer; display: flex; align-items: center; justify-content: space-between;
+      transition: border-color 0.2s;
+    }
+    .framework-dropdown-btn:hover { border-color: #06B6D4; }
+    .framework-dropdown-btn.open { border-color: #06B6D4; border-radius: 8px 8px 0 0; }
+    .framework-dropdown-btn .arrow { transition: transform 0.2s; font-size: 10px; }
+    .framework-dropdown-btn.open .arrow { transform: rotate(180deg); }
+    .framework-list {
+      position: absolute; top: 100%; left: 0; right: 0; z-index: 50;
+      background: #0A0A0F; border: 1px solid #06B6D4; border-top: none;
+      border-radius: 0 0 8px 8px; max-height: 0; overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+    .framework-list.open { max-height: 400px; overflow-y: auto; }
+    .framework-item {
+      padding: 10px 14px; cursor: pointer; border-bottom: 1px solid #1a1a24;
+      transition: background 0.15s;
+    }
+    .framework-item:hover { background: #111118; }
+    .framework-item:last-child { border-bottom: none; }
+    .framework-item-name { font-size: 13px; font-weight: 600; color: #fafafa; }
+    .framework-item-desc { font-size: 11px; color: #52525b; margin-top: 2px; }
+    .framework-item.selected { background: rgba(6,182,212,0.08); }
+    .framework-item.selected .framework-item-name { color: #06B6D4; }
+    .framework-selected-badge {
+      display: inline-flex; align-items: center; gap: 6px; margin-top: 8px;
+      padding: 6px 10px; background: rgba(6,182,212,0.1); border: 1px solid rgba(6,182,212,0.3);
+      border-radius: 6px; font-size: 12px; color: #06B6D4; font-weight: 600;
+    }
+    .framework-selected-badge .fw-name { font-family: 'JetBrains Mono', monospace; }
+
+    /* ===== INTENT DETECTION ===== */
+    .intent-section { margin-top: 4px; }
+    .intent-row {
+      display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 13px;
+    }
+    .intent-label { color: #52525b; min-width: 100px; }
+    .intent-value { color: #fafafa; font-weight: 500; }
+    .intent-badge {
+      display: inline-flex; padding: 2px 10px; border-radius: 20px; font-size: 11px;
+      font-weight: 600; background: rgba(6,182,212,0.12); color: #06B6D4;
+      border: 1px solid rgba(6,182,212,0.25);
+    }
+    .intent-confidence {
+      font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #10b981; font-weight: 600;
+    }
+    .intent-keywords { display: flex; gap: 4px; flex-wrap: wrap; }
+    .keyword-tag {
+      padding: 2px 8px; background: #1a1a24; border-radius: 4px; font-size: 11px;
+      color: #a1a1aa; font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* ===== SCORE GAUGE (SVG Circular) ===== */
+    .score-display { text-align: center; }
+    .gauge-wrap {
+      position: relative; width: 160px; height: 160px; margin: 0 auto 20px;
+    }
+    .gauge-center {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      text-align: center;
+    }
+    .gauge-grade { font-size: 42px; font-weight: 700; line-height: 1; }
+    .gauge-score { font-size: 16px; color: #a1a1aa; font-family: 'JetBrains Mono', monospace; margin-top: 2px; }
+    .gauge-label { font-size: 11px; color: #52525b; margin-top: 2px; }
+
+    /* ===== DIMENSION BARS ===== */
+    .dim-bars { display: flex; flex-direction: column; gap: 12px; margin-top: 8px; }
+    .dim-row {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .dim-label {
+      width: 120px; font-size: 12px; color: #a1a1aa; white-space: nowrap; overflow: hidden;
+      text-overflow: ellipsis; flex-shrink: 0;
+    }
+    .dim-bar-track {
+      flex: 1; height: 8px; background: #1a1a24; border-radius: 4px; overflow: hidden;
+      position: relative;
+    }
+    .dim-bar-fill {
+      height: 100%; border-radius: 4px; transition: width 1s ease; width: 0;
+    }
+    .dim-score {
+      width: 28px; font-size: 12px; font-weight: 600; text-align: right;
+      font-family: 'JetBrains Mono', monospace; flex-shrink: 0;
+    }
+    .dim-grade {
+      width: 22px; font-size: 11px; font-weight: 700; text-align: center;
+      flex-shrink: 0; border-radius: 3px; padding: 1px 4px;
+    }
+
+    /* ===== IMPROVEMENTS ===== */
+    .improvement-item {
+      display: flex; gap: 12px; padding: 12px; background: #111118; border-radius: 8px;
+      border-left: 3px solid #f59e0b; margin-bottom: 8px;
+    }
+    .improvement-rank {
+      font-size: 14px; font-weight: 700; color: #f59e0b; min-width: 20px; text-align: center;
+    }
+    .improvement-content { flex: 1; }
+    .improvement-dim { font-size: 13px; font-weight: 600; color: #fafafa; }
+    .improvement-score {
+      font-size: 12px; color: #f59e0b; font-family: 'JetBrains Mono', monospace; margin-left: 6px;
+    }
+    .improvement-advice { font-size: 12px; color: #a1a1aa; margin-top: 4px; line-height: 1.5; }
+
+    /* ===== BEFORE/AFTER ===== */
+    .toggle-row {
+      display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
+    }
+    .toggle-switch {
+      position: relative; width: 40px; height: 22px; cursor: pointer;
+    }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider {
+      position: absolute; inset: 0; background: #27272a; border-radius: 11px;
+      transition: background 0.3s;
+    }
+    .toggle-slider::before {
+      content: ''; position: absolute; height: 16px; width: 16px;
+      left: 3px; bottom: 3px; background: #fafafa; border-radius: 50%;
+      transition: transform 0.3s;
+    }
+    .toggle-switch input:checked + .toggle-slider { background: #06B6D4; }
+    .toggle-switch input:checked + .toggle-slider::before { transform: translateX(18px); }
+    .toggle-label { font-size: 12px; color: #a1a1aa; }
+    .toggle-label.active { color: #06B6D4; font-weight: 600; }
+
+    .prompt-before {
+      padding: 14px; background: #111118; border: 1px solid #27272a;
+      border-radius: 8px; font-size: 13px; color: #52525b; line-height: 1.6;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .prompt-after {
+      padding: 14px; background: rgba(6,182,212,0.04); border: 1px solid rgba(6,182,212,0.2);
+      border-radius: 8px; font-size: 13px; color: #fafafa; line-height: 1.7;
+      font-family: 'JetBrains Mono', monospace; white-space: pre-wrap;
+    }
+    .prompt-after .highlight { color: #06B6D4; font-weight: 600; }
+    .prompt-after .neg { color: #ef4444; }
+
+    .new-score-row {
+      display: flex; align-items: center; gap: 12px; margin-top: 12px;
+      padding: 10px 14px; background: rgba(16,185,129,0.06); border: 1px solid rgba(16,185,129,0.2);
+      border-radius: 8px;
+    }
+    .new-score-grade {
+      font-size: 28px; font-weight: 700; color: #10b981;
+    }
+    .new-score-detail { font-size: 13px; }
+    .new-score-num { font-weight: 600; color: #10b981; font-family: 'JetBrains Mono', monospace; }
+    .new-score-delta {
+      font-size: 12px; color: #10b981; font-weight: 600;
+      padding: 2px 8px; background: rgba(16,185,129,0.12); border-radius: 4px;
+      margin-left: auto;
+    }
+    .applied-techniques {
+      display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px;
+    }
+    .tech-badge {
+      padding: 3px 10px; background: rgba(6,182,212,0.08); border: 1px solid rgba(6,182,212,0.2);
+      border-radius: 4px; font-size: 11px; color: #06B6D4; font-weight: 500;
+    }
+
+    /* ===== PIPELINE VISUALIZATION ===== */
+    .pipeline-flow {
+      display: flex; align-items: center; gap: 0; margin-top: 8px;
+      overflow-x: auto; padding: 8px 0;
+    }
+    .pipeline-node {
+      display: flex; align-items: center; gap: 6px; padding: 6px 14px;
+      background: #111118; border: 1px solid #27272a; border-radius: 20px;
+      font-size: 11px; font-weight: 600; color: #a1a1aa; white-space: nowrap;
+      transition: all 0.3s; flex-shrink: 0;
+    }
+    .pipeline-node.active {
+      background: rgba(6,182,212,0.1); border-color: #06B6D4; color: #06B6D4;
+    }
+    .pipeline-node.completed {
+      background: rgba(16,185,129,0.06); border-color: rgba(16,185,129,0.3); color: #10b981;
+    }
+    .pipeline-node .pip-icon { font-size: 13px; }
+    .pipeline-arrow {
+      color: #27272a; font-size: 14px; flex-shrink: 0; margin: 0 4px;
+    }
+    .pipeline-arrow.active { color: #06B6D4; }
+
+    /* ===== TIPS PANEL ===== */
+    .tip-item {
+      display: flex; gap: 10px; padding: 10px 12px; background: #111118;
+      border-radius: 8px; cursor: pointer; transition: all 0.2s;
+      border: 1px solid transparent; font-size: 12px; color: #a1a1aa; line-height: 1.5;
+    }
+    .tip-item:hover {
+      border-color: rgba(6,182,212,0.3); background: rgba(6,182,212,0.04); color: #fafafa;
+    }
+    .tip-icon { font-size: 16px; flex-shrink: 0; line-height: 1.3; }
+    .tip-apply {
+      font-size: 10px; color: #06B6D4; font-weight: 600; margin-top: 4px;
+    }
+
+    /* ===== TECHNIQUE BROWSER ===== */
+    .tech-search {
+      width: 100%; padding: 8px 12px; background: #111118; border: 1px solid #27272a;
+      border-radius: 6px; color: #fafafa; font-size: 12px; outline: none;
+      transition: border-color 0.2s;
+    }
+    .tech-search:focus { border-color: #06B6D4; }
+    .tech-search::placeholder { color: #52525b; }
+    .tech-list { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; max-height: 360px; overflow-y: auto; }
+    .tech-card {
+      display: flex; align-items: center; gap: 8px; padding: 8px 10px;
+      background: #0A0A0F; border: 1px solid #1a1a24; border-radius: 6px;
+      cursor: pointer; transition: all 0.2s; font-size: 12px;
+    }
+    .tech-card:hover { border-color: #27272a; background: #111118; }
+    .tech-card-name { font-weight: 600; color: #fafafa; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .tech-card-desc { font-size: 10px; color: #52525b; display: none; }
+    .relevance-badge {
+      font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 3px;
+      text-transform: uppercase; letter-spacing: 0.5px; flex-shrink: 0;
+    }
+    .relevance-high { background: rgba(16,185,129,0.12); color: #10b981; }
+    .relevance-med { background: rgba(245,158,11,0.12); color: #f59e0b; }
+    .relevance-low { background: rgba(82,82,91,0.15); color: #52525b; }
+    .tech-group-label {
+      font-size: 10px; color: #52525b; text-transform: uppercase; letter-spacing: 1px;
+      padding: 6px 0 2px; font-weight: 600; border-bottom: 1px solid #1a1a24; margin-top: 4px;
+    }
+
+    /* ===== FRAMEWORK DETAILS ===== */
+    .fw-detail { margin-top: 4px; }
+    .fw-field { margin-bottom: 8px; }
+    .fw-field-label {
+      font-size: 11px; font-weight: 600; color: #06B6D4; margin-bottom: 3px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .fw-field-input {
+      width: 100%; padding: 7px 10px; background: #111118; border: 1px solid #27272a;
+      border-radius: 6px; color: #fafafa; font-size: 12px; outline: none;
+      transition: border-color 0.2s;
+    }
+    .fw-field-input:focus { border-color: #06B6D4; }
+    .fw-field-input::placeholder { color: #3a3a44; }
+    .btn-apply-fw {
+      width: 100%; padding: 9px 14px; background: rgba(6,182,212,0.12);
+      color: #06B6D4; border: 1px solid rgba(6,182,212,0.3); border-radius: 8px;
+      font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; margin-top: 8px;
+    }
+    .btn-apply-fw:hover { background: rgba(6,182,212,0.2); }
+
+    /* ===== HISTORY TAB ===== */
+    .history-layout {
+      display: flex; flex: 1; min-height: calc(100vh - 56px);
+    }
+    .history-list-panel {
+      width: 360px; min-width: 360px; border-right: 1px solid #27272a;
+      overflow-y: auto; padding: 20px;
+    }
+    .history-detail-panel {
+      flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 20px;
+    }
+    .history-item {
+      display: flex; gap: 12px; padding: 14px; border-radius: 8px;
+      cursor: pointer; transition: all 0.2s; border: 1px solid transparent; margin-bottom: 8px;
+    }
+    .history-item:hover { background: #0A0A0F; border-color: #27272a; }
+    .history-item.active { background: rgba(6,182,212,0.04); border-color: rgba(6,182,212,0.2); }
+    .history-dot {
+      width: 10px; height: 10px; border-radius: 50%; margin-top: 4px; flex-shrink: 0;
+    }
+    .history-content { flex: 1; min-width: 0; }
+    .history-time { font-size: 11px; color: #52525b; font-family: 'JetBrains Mono', monospace; }
+    .history-prompt { font-size: 13px; color: #fafafa; margin-top: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .history-scores {
+      display: flex; align-items: center; gap: 6px; margin-top: 6px; font-size: 12px;
+    }
+    .history-from { font-weight: 600; color: #f59e0b; }
+    .history-arrow { color: #52525b; }
+    .history-to { font-weight: 600; color: #10b981; }
+    .history-delta {
+      font-size: 11px; color: #10b981; font-weight: 600; padding: 1px 6px;
+      background: rgba(16,185,129,0.1); border-radius: 3px;
+    }
+
+    /* ===== TREND CHART ===== */
+    .trend-chart-wrap {
+      background: #0A0A0F; border: 1px solid #27272a; border-radius: 10px; padding: 20px;
+    }
+    .trend-chart-svg { width: 100%; }
+
+    /* ===== COMPARE TAB ===== */
+    .compare-layout {
+      display: flex; flex: 1; min-height: calc(100vh - 56px);
+    }
+    .compare-panel {
+      flex: 1; border-right: 1px solid #27272a; overflow-y: auto; padding: 20px;
+      display: flex; flex-direction: column; gap: 16px;
+    }
+    .compare-panel:last-child { border-right: none; }
+    .compare-header {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;
+    }
+    .compare-label { font-size: 13px; font-weight: 600; color: #fafafa; }
+    .compare-score-badge {
+      font-size: 14px; font-weight: 700; padding: 4px 12px; border-radius: 6px;
+    }
+    .blind-toggle {
+      display: flex; align-items: center; gap: 8px; margin-bottom: 16px;
+      padding: 10px 16px; background: #0A0A0F; border: 1px solid #27272a;
+      border-radius: 8px; justify-content: center;
+    }
+    .compare-winner {
+      text-align: center; padding: 20px; background: rgba(16,185,129,0.06);
+      border: 1px solid rgba(16,185,129,0.2); border-radius: 10px;
+    }
+    .compare-winner-title { font-size: 13px; color: #10b981; font-weight: 600; }
+    .compare-winner-label { font-size: 24px; font-weight: 700; color: #10b981; margin-top: 4px; }
+    .compare-winner-delta { font-size: 14px; color: #a1a1aa; margin-top: 4px; }
+    .compare-winner-delta span { color: #10b981; font-weight: 600; }
+    .compare-dim-diff {
+      display: flex; flex-direction: column; gap: 8px; margin-top: 12px;
+    }
+    .diff-row {
+      display: flex; align-items: center; gap: 8px; font-size: 12px;
+    }
+    .diff-label { width: 120px; color: #a1a1aa; }
+    .diff-a { width: 32px; text-align: right; font-family: 'JetBrains Mono', monospace; color: #f59e0b; font-weight: 600; }
+    .diff-bar { flex: 1; height: 6px; background: #1a1a24; border-radius: 3px; position: relative; overflow: hidden; }
+    .diff-bar-a { position: absolute; top: 0; left: 0; height: 100%; background: #f59e0b; border-radius: 3px; opacity: 0.7; }
+    .diff-bar-b { position: absolute; top: 0; left: 0; height: 100%; background: #06B6D4; border-radius: 3px; opacity: 0.7; }
+    .diff-b { width: 32px; font-family: 'JetBrains Mono', monospace; color: #06B6D4; font-weight: 600; }
+
+    /* ===== MODAL ===== */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 200;
+      display: none; align-items: center; justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+    .modal-overlay.show { display: flex; }
+    .modal-content {
+      background: #0A0A0F; border: 1px solid #27272a; border-radius: 12px;
+      padding: 24px; max-width: 560px; width: 90%; max-height: 80vh; overflow-y: auto;
+    }
+    .modal-title { font-size: 18px; font-weight: 700; color: #fafafa; margin-bottom: 4px; }
+    .modal-subtitle { font-size: 12px; color: #06B6D4; font-weight: 600; margin-bottom: 16px; }
+    .modal-desc { font-size: 13px; color: #a1a1aa; line-height: 1.7; margin-bottom: 16px; }
+    .modal-before-after { display: flex; flex-direction: column; gap: 12px; }
+    .modal-ba-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #52525b; margin-bottom: 4px; }
+    .modal-close {
+      position: absolute; top: 16px; right: 16px; background: none; border: none;
+      color: #52525b; font-size: 20px; cursor: pointer; padding: 4px;
+    }
+    .modal-close:hover { color: #fafafa; }
+
+    /* ===== ANIMATIONS ===== */
+    @keyframes scoreReveal {
+      from { stroke-dashoffset: 408; }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+    .animate-in { animation: fadeInUp 0.4s ease forwards; }
+    .analyzing .btn-primary {
+      background: linear-gradient(90deg, #06B6D4 25%, #22D3EE 50%, #06B6D4 75%);
+      background-size: 200% auto; animation: shimmer 1.5s linear infinite;
+    }
+
+    /* ===== TAB PANELS ===== */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: flex; }
+
+    /* ===== SCROLLBAR ===== */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #3a3a44; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1100px) {
+      .panel-right { display: none; }
+    }
+    @media (max-width: 800px) {
+      .compose-layout { flex-direction: column; }
+      .panel-left { width: 100%; min-width: unset; border-right: none; border-bottom: 1px solid #27272a; max-height: 40vh; }
+      .panel-center { width: 100%; }
+      .history-layout { flex-direction: column; }
+      .history-list-panel { width: 100%; min-width: unset; border-right: none; border-bottom: 1px solid #27272a; max-height: 35vh; }
+      .compare-layout { flex-direction: column; }
+      .compare-panel { border-right: none; border-bottom: 1px solid #27272a; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== HEADER BAR ===== -->
+  <header class="header">
+    <div class="header-left">
+      <span class="logo">P-MAS</span>
+      <span class="header-title-sep">/</span>
+      <span class="header-title">Prompt Studio</span>
+    </div>
+    <nav class="header-center" id="mainTabs">
+      <button class="tab active" data-tab="compose">Compose</button>
+      <button class="tab" data-tab="history">History</button>
+      <button class="tab" data-tab="compare">Compare</button>
+    </nav>
+    <div class="header-right">
+      <button class="icon-btn" id="themeToggle" aria-label="Toggle theme">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+      <button class="icon-btn" aria-label="Settings">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="page-wrap">
+
+    <!-- ==================== COMPOSE TAB ==================== -->
+    <div class="tab-panel active" id="tab-compose">
+      <div class="compose-layout">
+
+        <!-- ===== LEFT PANEL: Input & Controls ===== -->
+        <div class="panel-left">
+
+          <!-- A. Prompt Input -->
+          <div>
+            <div class="section-title">Prompt Input</div>
+            <textarea class="prompt-textarea" id="promptInput" placeholder="Enter your prompt here..." maxlength="2000">Write a landing page for my SaaS product</textarea>
+            <div class="char-count" id="charCount">0 / 2000</div>
+            <div class="btn-row">
+              <button class="btn-primary" id="analyzeBtn">Analyze</button>
+              <button class="btn-ghost" id="clearBtn">Clear</button>
+            </div>
+          </div>
+
+          <!-- B. Quick Framework Selector -->
+          <div>
+            <div class="section-title">Framework</div>
+            <div class="framework-select" id="frameworkSelect">
+              <button class="framework-dropdown-btn" id="fwDropdownBtn">
+                <span id="fwBtnText">Select Framework (optional)</span>
+                <span class="arrow">&#9660;</span>
+              </button>
+              <div class="framework-list" id="fwList">
+                <div class="framework-item" data-fw="RTF"><div class="framework-item-name">RTF</div><div class="framework-item-desc">Code gen, content writing, data extraction</div></div>
+                <div class="framework-item" data-fw="RISE"><div class="framework-item-name">RISE</div><div class="framework-item-desc">Step-by-step reasoning, educational content</div></div>
+                <div class="framework-item" data-fw="CARE"><div class="framework-item-name">CARE</div><div class="framework-item-desc">Customer support, empathetic responses</div></div>
+                <div class="framework-item" data-fw="STONE"><div class="framework-item-name">STONE</div><div class="framework-item-desc">Technical docs, structured analysis</div></div>
+                <div class="framework-item" data-fw="CREATE"><div class="framework-item-name">CREATE</div><div class="framework-item-desc">Creative writing, marketing content</div></div>
+                <div class="framework-item" data-fw="TRACE"><div class="framework-item-name">TRACE</div><div class="framework-item-desc">Debugging, audit trails, verification</div></div>
+                <div class="framework-item" data-fw="SCOPE"><div class="framework-item-name">SCOPE</div><div class="framework-item-desc">Project planning, scope definition</div></div>
+                <div class="framework-item" data-fw="PACKED"><div class="framework-item-name">PACKED</div><div class="framework-item-desc">Data-rich tasks, comprehensive outputs</div></div>
+                <div class="framework-item" data-fw="CO-STAR"><div class="framework-item-name">CO-STAR</div><div class="framework-item-desc">Complex tasks, multi-aspect prompts</div></div>
+                <div class="framework-item" data-fw="RAG"><div class="framework-item-name">RAG</div><div class="framework-item-desc">Retrieval augmented, knowledge-grounded</div></div>
+                <div class="framework-item" data-fw="CHAIN"><div class="framework-item-name">CHAIN</div><div class="framework-item-desc">Multi-step workflows, chaining prompts</div></div>
+              </div>
+            </div>
+            <div id="fwSelectedBadge" style="display:none" class="framework-selected-badge">
+              <span class="fw-name" id="fwBadgeName">RTF</span>
+              <span id="fwBadgeDesc">Code gen, content writing, data extraction</span>
+            </div>
+          </div>
+
+          <!-- C. Intent Detection -->
+          <div class="intent-section" id="intentSection" style="display:none;">
+            <div class="section-title">Intent Detection</div>
+            <div class="intent-row">
+              <span class="intent-label">Detected Intent</span>
+              <span class="intent-badge" id="intentBadge">Creative Writing</span>
+            </div>
+            <div class="intent-row">
+              <span class="intent-label">Confidence</span>
+              <span class="intent-confidence" id="intentConf">87%</span>
+            </div>
+            <div class="intent-row">
+              <span class="intent-label">Keywords</span>
+              <div class="intent-keywords" id="intentKeywords">
+                <span class="keyword-tag">landing page</span>
+                <span class="keyword-tag">SaaS</span>
+                <span class="keyword-tag">write</span>
+              </div>
+            </div>
+            <div class="intent-row">
+              <span class="intent-label">Recommended FW</span>
+              <span class="intent-value" style="color:#06B6D4;font-weight:600;" id="intentFW">CREATE</span>
+            </div>
+            <div class="intent-row">
+              <span class="intent-label">Recommended Tech</span>
+              <span class="intent-value" style="color:#10b981;font-weight:600;" id="intentTech">Role Assignment</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ===== CENTER PANEL: Analysis Results ===== -->
+        <div class="panel-center" id="centerPanel">
+
+          <!-- A. Score Display -->
+          <div class="card" id="scoreCard" style="display:none;">
+            <div class="section-title">Prompt Score</div>
+            <div class="score-display">
+              <div class="gauge-wrap">
+                <svg viewBox="0 0 160 160" width="160" height="160" id="scoreGauge">
+                  <circle cx="80" cy="80" r="65" fill="none" stroke="#1a1a24" stroke-width="10"/>
+                  <circle cx="80" cy="80" r="65" fill="none" stroke="#f59e0b" stroke-width="10"
+                    stroke-dasharray="408.4" stroke-dashoffset="408.4" stroke-linecap="round"
+                    transform="rotate(-90 80 80)" id="gaugeArc"/>
+                </svg>
+                <div class="gauge-center">
+                  <div class="gauge-grade" id="gaugeGrade" style="color:#f59e0b;">C</div>
+                  <div class="gauge-score" id="gaugeScore">52/100</div>
+                  <div class="gauge-label">Overall</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dimension Bars -->
+            <div class="dim-bars" id="dimBars">
+              <div class="dim-row">
+                <span class="dim-label">Specificity</span>
+                <div class="dim-bar-track"><div class="dim-bar-fill" data-score="35" style="background:#ef4444;"></div></div>
+                <span class="dim-score" style="color:#ef4444;">35</span>
+                <span class="dim-grade" style="background:rgba(239,68,68,0.15);color:#ef4444;">D</span>
+              </div>
+              <div class="dim-row">
+                <span class="dim-label">Clarity</span>
+                <div class="dim-bar-track"><div class="dim-bar-fill" data-score="55" style="background:#f97316;"></div></div>
+                <span class="dim-score" style="color:#f97316;">55</span>
+                <span class="dim-grade" style="background:rgba(249,115,22,0.15);color:#f97316;">C</span>
+              </div>
+              <div class="dim-row">
+                <span class="dim-label">Context</span>
+                <div class="dim-bar-track"><div class="dim-bar-fill" data-score="45" style="background:#f97316;"></div></div>
+                <span class="dim-score" style="color:#f97316;">45</span>
+                <span class="dim-grade" style="background:rgba(249,115,22,0.15);color:#f97316;">C</span>
+              </div>
+              <div class="dim-row">
+                <span class="dim-label">Completeness</span>
+                <div class="dim-bar-track"><div class="dim-bar-fill" data-score="70" style="background:#eab308;"></div></div>
+                <span class="dim-score" style="color:#eab308;">70</span>
+                <span class="dim-grade" style="background:rgba(234,179,8,0.15);color:#eab308;">B</span>
+              </div>
+              <div class="dim-row">
+                <span class="dim-label">Constraint Ctrl</span>
+                <div class="dim-bar-track"><div class="dim-bar-fill" data-score="30" style="background:#ef4444;"></div></div>
+                <span class="dim-score" style="color:#ef4444;">30</span>
+                <span class="dim-grade" style="background:rgba(239,68,68,0.15);color:#ef4444;">D</span>
+              </div>
+              <div class="dim-row">
+                <span class="dim-label">Actionability</span>
+                <div class="dim-bar-track"><div class="dim-bar-fill" data-score="65" style="background:#eab308;"></div></div>
+                <span class="dim-score" style="color:#eab308;">65</span>
+                <span class="dim-grade" style="background:rgba(234,179,8,0.15);color:#eab308;">B</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- B. Top 3 Improvements -->
+          <div class="card" id="improvementsCard" style="display:none;">
+            <div class="section-title">Top Improvements</div>
+            <div class="improvement-item">
+              <span class="improvement-rank">1</span>
+              <div class="improvement-content">
+                <div class="improvement-dim">Constraint Control <span class="improvement-score">30/100</span></div>
+                <div class="improvement-advice">Add negative constraints — specify what NOT to include</div>
+              </div>
+            </div>
+            <div class="improvement-item">
+              <span class="improvement-rank">2</span>
+              <div class="improvement-content">
+                <div class="improvement-dim">Specificity <span class="improvement-score">35/100</span></div>
+                <div class="improvement-advice">Replace "SaaS product" with specific product name and target audience</div>
+              </div>
+            </div>
+            <div class="improvement-item">
+              <span class="improvement-rank">3</span>
+              <div class="improvement-content">
+                <div class="improvement-dim">Context <span class="improvement-score">45/100</span></div>
+                <div class="improvement-advice">Add role assignment: "You are a conversion-focused copywriter"</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- C. Improved Prompt Preview -->
+          <div class="card" id="previewCard" style="display:none;">
+            <div class="section-title">Improved Prompt</div>
+            <div class="toggle-row">
+              <span class="toggle-label active" id="toggleLabelBefore">Before</span>
+              <label class="toggle-switch">
+                <input type="checkbox" id="beforeAfterToggle">
+                <span class="toggle-slider"></span>
+              </label>
+              <span class="toggle-label" id="toggleLabelAfter">After</span>
+            </div>
+            <div id="beforeView" class="prompt-before">Write a landing page for my SaaS product</div>
+            <div id="afterView" class="prompt-after" style="display:none;"><span class="highlight">You are a conversion-focused copywriter specializing in SaaS products.</span>
+
+<span class="highlight">Write a landing page for AcmeCRM, a B2B customer relationship management
+platform targeting sales teams at mid-market companies (50-500 employees).</span>
+
+Include: hero section with value prop, 3 feature cards, social proof section, CTA.
+<span class="neg">Do NOT include: pricing details, technical jargon, generic marketing speak.</span>
+
+<span class="highlight">Format: HTML with Tailwind CSS classes.
+Tone: Professional but approachable. Maximum 500 words.</span></div>
+            <div class="new-score-row" id="newScoreRow" style="display:none;">
+              <span class="new-score-grade">A</span>
+              <div class="new-score-detail">
+                <span class="new-score-num">84/100</span>
+                <div style="font-size:11px;color:#52525b;margin-top:2px;">Improved Score</div>
+              </div>
+              <span class="new-score-delta">+32</span>
+            </div>
+            <div class="applied-techniques" id="appliedTechniques" style="display:none;">
+              <span class="tech-badge">Role Assignment</span>
+              <span class="tech-badge">Negative Constraint</span>
+              <span class="tech-badge">Structured Output</span>
+            </div>
+          </div>
+
+          <!-- D. Pipeline Visualization -->
+          <div class="card" id="pipelineCard" style="display:none;">
+            <div class="section-title">Pipeline</div>
+            <div class="pipeline-flow">
+              <div class="pipeline-node completed"><span class="pip-icon">&#9998;</span> Input</div>
+              <span class="pipeline-arrow active">&#8594;</span>
+              <div class="pipeline-node completed"><span class="pip-icon">&#128269;</span> Intent Match</div>
+              <span class="pipeline-arrow active">&#8594;</span>
+              <div class="pipeline-node completed"><span class="pip-icon">&#9733;</span> Score</div>
+              <span class="pipeline-arrow active">&#8594;</span>
+              <div class="pipeline-node active"><span class="pip-icon">&#9889;</span> Improve</div>
+              <span class="pipeline-arrow">&#8594;</span>
+              <div class="pipeline-node"><span class="pip-icon">&#9733;</span> Re-score</div>
+              <span class="pipeline-arrow">&#8594;</span>
+              <div class="pipeline-node"><span class="pip-icon">&#9889;</span> Output</div>
+            </div>
+          </div>
+
+          <!-- Empty State -->
+          <div id="emptyState" class="card" style="text-align:center;padding:60px 20px;">
+            <div style="font-size:40px;margin-bottom:12px;">&#9997;&#65039;</div>
+            <div style="font-size:16px;font-weight:600;color:#fafafa;margin-bottom:8px;">Enter a prompt to analyze</div>
+            <div style="font-size:13px;color:#52525b;max-width:320px;margin:0 auto;">Type your prompt in the left panel and click <strong style="color:#06B6D4;">Analyze</strong> to see a detailed scoring breakdown with improvement suggestions.</div>
+          </div>
+
+        </div>
+
+        <!-- ===== RIGHT PANEL: Tips & Techniques ===== -->
+        <div class="panel-right">
+
+          <!-- A. Contextual Tips -->
+          <div>
+            <div class="section-title">Contextual Tips</div>
+            <div style="display:flex;flex-direction:column;gap:8px;" id="tipsList">
+              <div class="tip-item" data-tip="specificity">
+                <span class="tip-icon">&#128161;</span>
+                <div>
+                  <div>Your prompt lacks specificity</div>
+                  <div class="tip-apply">Click to apply Explicit Instruction</div>
+                </div>
+              </div>
+              <div class="tip-item" data-tip="role">
+                <span class="tip-icon">&#128100;</span>
+                <div>
+                  <div>Click to apply Role Assignment</div>
+                  <div class="tip-apply">Adds expert persona to your prompt</div>
+                </div>
+              </div>
+              <div class="tip-item" data-tip="format">
+                <span class="tip-icon">&#128196;</span>
+                <div>
+                  <div>Add output format specification</div>
+                  <div class="tip-apply">Click to apply Structured Output</div>
+                </div>
+              </div>
+              <div class="tip-item" data-tip="framework">
+                <span class="tip-icon">&#127919;</span>
+                <div>
+                  <div>Consider using CREATE framework</div>
+                  <div class="tip-apply">Best for creative writing prompts</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- B. Technique Browser -->
+          <div>
+            <div class="section-title">Techniques</div>
+            <input type="text" class="tech-search" id="techSearch" placeholder="Search techniques...">
+            <div class="tech-list" id="techList">
+              <div class="tech-group-label">Too Vague</div>
+              <div class="tech-card" data-tech="explicit-instruction"><span class="tech-card-name">Explicit Instruction</span><span class="relevance-badge relevance-med">Med</span></div>
+              <div class="tech-card" data-tech="precision-drill"><span class="tech-card-name">Precision Drill</span><span class="relevance-badge relevance-med">Med</span></div>
+              <div class="tech-card" data-tech="definition-lock"><span class="tech-card-name">Definition Lock</span><span class="relevance-badge relevance-low">Low</span></div>
+
+              <div class="tech-group-label">Better Reasoning</div>
+              <div class="tech-card" data-tech="chain-of-thought"><span class="tech-card-name">Chain of Thought</span><span class="relevance-badge relevance-low">Low</span></div>
+              <div class="tech-card" data-tech="plan-and-solve"><span class="tech-card-name">Plan and Solve</span><span class="relevance-badge relevance-low">Low</span></div>
+              <div class="tech-card" data-tech="least-to-most"><span class="tech-card-name">Least-to-Most</span><span class="relevance-badge relevance-low">Low</span></div>
+
+              <div class="tech-group-label">Control Output</div>
+              <div class="tech-card" data-tech="structured-output"><span class="tech-card-name">Structured Output</span><span class="relevance-badge relevance-high">High</span></div>
+              <div class="tech-card" data-tech="negative-constraint"><span class="tech-card-name">Negative Constraint</span><span class="relevance-badge relevance-high">High</span></div>
+              <div class="tech-card" data-tech="token-budget"><span class="tech-card-name">Token Budget</span><span class="relevance-badge relevance-med">Med</span></div>
+
+              <div class="tech-group-label">Domain Expertise</div>
+              <div class="tech-card" data-tech="role-assignment"><span class="tech-card-name">Role Assignment</span><span class="relevance-badge relevance-high">High</span></div>
+              <div class="tech-card" data-tech="few-shot-learning"><span class="tech-card-name">Few-Shot Learning</span><span class="relevance-badge relevance-med">Med</span></div>
+              <div class="tech-card" data-tech="analogical-reasoning"><span class="tech-card-name">Analogical Reasoning</span><span class="relevance-badge relevance-low">Low</span></div>
+
+              <div class="tech-group-label">Robustness</div>
+              <div class="tech-card" data-tech="self-consistency"><span class="tech-card-name">Self-Consistency</span><span class="relevance-badge relevance-low">Low</span></div>
+              <div class="tech-card" data-tech="assumption-challenge"><span class="tech-card-name">Assumption Challenge</span><span class="relevance-badge relevance-low">Low</span></div>
+              <div class="tech-card" data-tech="adversarial-reviewer"><span class="tech-card-name">Adversarial Reviewer</span><span class="relevance-badge relevance-low">Low</span></div>
+
+              <div class="tech-group-label">Multi-Step</div>
+              <div class="tech-card" data-tech="prompt-chaining"><span class="tech-card-name">Prompt Chaining</span><span class="relevance-badge relevance-low">Low</span></div>
+              <div class="tech-card" data-tech="meta-prompting"><span class="tech-card-name">Meta-Prompting</span><span class="relevance-badge relevance-low">Low</span></div>
+              <div class="tech-card" data-tech="tree-of-thought"><span class="tech-card-name">Tree of Thought</span><span class="relevance-badge relevance-low">Low</span></div>
+
+              <div class="tech-group-label">Structure</div>
+              <div class="tech-card" data-tech="delimiter-pattern"><span class="tech-card-name">Delimiter Pattern</span><span class="relevance-badge relevance-med">Med</span></div>
+              <div class="tech-card" data-tech="xml-tag-structure"><span class="tech-card-name">XML Tag Structure</span><span class="relevance-badge relevance-med">Med</span></div>
+            </div>
+          </div>
+
+          <!-- C. Framework Details -->
+          <div id="frameworkDetail">
+            <div class="section-title">Framework: CREATE</div>
+            <div class="fw-detail">
+              <div class="fw-field">
+                <div class="fw-field-label">C — Context</div>
+                <input class="fw-field-input" placeholder="You are a conversion-focused copywriter...">
+              </div>
+              <div class="fw-field">
+                <div class="fw-field-label">R — Request</div>
+                <input class="fw-field-input" placeholder="Write a landing page for AcmeCRM...">
+              </div>
+              <div class="fw-field">
+                <div class="fw-field-label">E — Explanation</div>
+                <input class="fw-field-input" placeholder="A B2B CRM platform for sales teams...">
+              </div>
+              <div class="fw-field">
+                <div class="fw-field-label">A — Action</div>
+                <input class="fw-field-input" placeholder="Include hero, features, social proof, CTA...">
+              </div>
+              <div class="fw-field">
+                <div class="fw-field-label">T — Tone</div>
+                <input class="fw-field-input" placeholder="Professional but approachable...">
+              </div>
+              <div class="fw-field">
+                <div class="fw-field-label">E — Extras</div>
+                <input class="fw-field-input" placeholder="HTML with Tailwind, max 500 words...">
+              </div>
+              <button class="btn-apply-fw" id="applyFrameworkBtn">Apply Framework</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== HISTORY TAB ==================== -->
+    <div class="tab-panel" id="tab-history">
+      <div class="history-layout">
+
+        <!-- Left: History List -->
+        <div class="history-list-panel">
+          <div class="section-title">Prompt History</div>
+          <div id="historyList">
+            <div class="history-item active" data-hist="0">
+              <span class="history-dot" style="background:#10b981;"></span>
+              <div class="history-content">
+                <div class="history-time">Today 14:32</div>
+                <div class="history-prompt">Write a landing page for my SaaS product</div>
+                <div class="history-scores">
+                  <span class="history-from">C</span>
+                  <span class="history-arrow">&#8594;</span>
+                  <span class="history-to">A</span>
+                  <span class="history-delta">+32</span>
+                </div>
+              </div>
+            </div>
+            <div class="history-item" data-hist="1">
+              <span class="history-dot" style="background:#06B6D4;"></span>
+              <div class="history-content">
+                <div class="history-time">Today 11:15</div>
+                <div class="history-prompt">Debug this React code</div>
+                <div class="history-scores">
+                  <span class="history-from">B</span>
+                  <span class="history-arrow">&#8594;</span>
+                  <span class="history-to">A</span>
+                  <span class="history-delta">+15</span>
+                </div>
+              </div>
+            </div>
+            <div class="history-item" data-hist="2">
+              <span class="history-dot" style="background:#f59e0b;"></span>
+              <div class="history-content">
+                <div class="history-time">Yesterday</div>
+                <div class="history-prompt">Analyze sales data</div>
+                <div class="history-scores">
+                  <span class="history-from">D</span>
+                  <span class="history-arrow">&#8594;</span>
+                  <span class="history-to">B</span>
+                  <span class="history-delta">+28</span>
+                </div>
+              </div>
+            </div>
+            <div class="history-item" data-hist="3">
+              <span class="history-dot" style="background:#f97316;"></span>
+              <div class="history-content">
+                <div class="history-time">2 days ago</div>
+                <div class="history-prompt">Create API docs</div>
+                <div class="history-scores">
+                  <span class="history-from">C</span>
+                  <span class="history-arrow">&#8594;</span>
+                  <span class="history-to">B</span>
+                  <span class="history-delta">+18</span>
+                </div>
+              </div>
+            </div>
+            <div class="history-item" data-hist="4">
+              <span class="history-dot" style="background:#06B6D4;"></span>
+              <div class="history-content">
+                <div class="history-time">3 days ago</div>
+                <div class="history-prompt">Design database schema</div>
+                <div class="history-scores">
+                  <span class="history-from">B</span>
+                  <span class="history-arrow">&#8594;</span>
+                  <span class="history-to">A</span>
+                  <span class="history-delta">+12</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Detail + Trend -->
+        <div class="history-detail-panel">
+          <div class="trend-chart-wrap">
+            <div class="section-title">Score Trend</div>
+            <svg class="trend-chart-svg" viewBox="0 0 600 200" preserveAspectRatio="xMidYMid meet" style="min-width:400px;">
+              <defs>
+                <linearGradient id="trendGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#06B6D4" stop-opacity="0.2"/>
+                  <stop offset="100%" stop-color="#06B6D4" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <!-- Grid -->
+              <line x1="40" y1="20" x2="580" y2="20" stroke="#1a1a24" stroke-width="1"/>
+              <line x1="40" y1="60" x2="580" y2="60" stroke="#1a1a24" stroke-width="1"/>
+              <line x1="40" y1="100" x2="580" y2="100" stroke="#1a1a24" stroke-width="1"/>
+              <line x1="40" y1="140" x2="580" y2="140" stroke="#1a1a24" stroke-width="1"/>
+              <line x1="40" y1="180" x2="580" y2="180" stroke="#27272a" stroke-width="1"/>
+              <!-- Y labels -->
+              <text x="30" y="24" fill="#52525b" font-size="10" text-anchor="end" font-family="'JetBrains Mono', monospace">100</text>
+              <text x="30" y="64" fill="#52525b" font-size="10" text-anchor="end" font-family="'JetBrains Mono', monospace">80</text>
+              <text x="30" y="104" fill="#52525b" font-size="10" text-anchor="end" font-family="'JetBrains Mono', monospace">60</text>
+              <text x="30" y="144" fill="#52525b" font-size="10" text-anchor="end" font-family="'JetBrains Mono', monospace">40</text>
+              <text x="30" y="184" fill="#52525b" font-size="10" text-anchor="end" font-family="'JetBrains Mono', monospace">20</text>
+              <!-- Area fill -->
+              <path d="M100,140 L220,110 L340,160 L460,130 L540,60 L540,180 L100,180 Z" fill="url(#trendGrad)"/>
+              <!-- Original scores line (dim) -->
+              <polyline fill="none" stroke="#52525b" stroke-width="1.5" stroke-dasharray="4 3" stroke-linecap="round" stroke-linejoin="round"
+                points="100,170 220,150 340,172 460,160 540,140"/>
+              <!-- Improved scores line -->
+              <polyline fill="none" stroke="#06B6D4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                points="100,140 220,110 340,160 460,130 540,60"/>
+              <!-- Data points -->
+              <circle cx="100" cy="140" r="4" fill="#06B6D4"/>
+              <circle cx="220" cy="110" r="4" fill="#06B6D4"/>
+              <circle cx="340" cy="160" r="4" fill="#f59e0b"/>
+              <circle cx="460" cy="130" r="4" fill="#f97316"/>
+              <circle cx="540" cy="60" r="4" fill="#10b981"/>
+              <!-- X labels -->
+              <text x="100" y="196" fill="#52525b" font-size="9" text-anchor="middle" font-family="'JetBrains Mono', monospace">3d ago</text>
+              <text x="220" y="196" fill="#52525b" font-size="9" text-anchor="middle" font-family="'JetBrains Mono', monospace">2d ago</text>
+              <text x="340" y="196" fill="#52525b" font-size="9" text-anchor="middle" font-family="'JetBrains Mono', monospace">Yest.</text>
+              <text x="460" y="196" fill="#52525b" font-size="9" text-anchor="middle" font-family="'JetBrains Mono', monospace">11:15</text>
+              <text x="540" y="196" fill="#52525b" font-size="9" text-anchor="middle" font-family="'JetBrains Mono', monospace">14:32</text>
+              <!-- Legend -->
+              <line x1="360" y1="12" x2="380" y2="12" stroke="#06B6D4" stroke-width="2"/>
+              <text x="385" y="16" fill="#a1a1aa" font-size="10">Improved</text>
+              <line x1="440" y1="12" x2="460" y2="12" stroke="#52525b" stroke-width="1.5" stroke-dasharray="4 3"/>
+              <text x="465" y="16" fill="#a1a1aa" font-size="10">Original</text>
+            </svg>
+          </div>
+
+          <!-- Selected History Detail -->
+          <div class="card" id="historyDetail">
+            <div class="section-title">Prompt Detail</div>
+            <div style="margin-bottom:16px;">
+              <div style="font-size:11px;color:#52525b;margin-bottom:4px;">Original Prompt</div>
+              <div style="font-size:13px;color:#fafafa;padding:12px;background:#111118;border-radius:6px;border:1px solid #27272a;line-height:1.6;font-family:'JetBrains Mono',monospace;">Write a landing page for my SaaS product</div>
+            </div>
+            <div style="margin-bottom:16px;">
+              <div style="font-size:11px;color:#52525b;margin-bottom:4px;">Improved Prompt</div>
+              <div style="font-size:13px;color:#fafafa;padding:12px;background:rgba(6,182,212,0.04);border-radius:6px;border:1px solid rgba(6,182,212,0.2);line-height:1.6;font-family:'JetBrains Mono',monospace;white-space:pre-wrap;">You are a conversion-focused copywriter specializing in SaaS products.
+
+Write a landing page for AcmeCRM, a B2B customer relationship management
+platform targeting sales teams at mid-market companies (50-500 employees).
+
+Include: hero section with value prop, 3 feature cards, social proof section, CTA.
+Do NOT include: pricing details, technical jargon, generic marketing speak.
+
+Format: HTML with Tailwind CSS classes.
+Tone: Professional but approachable. Maximum 500 words.</div>
+            </div>
+            <div style="display:flex;gap:16px;align-items:center;">
+              <div style="text-align:center;padding:12px 20px;background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:8px;">
+                <div style="font-size:24px;font-weight:700;color:#f59e0b;">C</div>
+                <div style="font-size:11px;color:#52525b;">Before</div>
+                <div style="font-size:13px;font-weight:600;color:#f59e0b;font-family:'JetBrains Mono',monospace;">52</div>
+              </div>
+              <div style="font-size:20px;color:#52525b;">&#8594;</div>
+              <div style="text-align:center;padding:12px 20px;background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.2);border-radius:8px;">
+                <div style="font-size:24px;font-weight:700;color:#10b981;">A</div>
+                <div style="font-size:11px;color:#52525b;">After</div>
+                <div style="font-size:13px;font-weight:600;color:#10b981;font-family:'JetBrains Mono',monospace;">84</div>
+              </div>
+              <div style="margin-left:auto;font-size:14px;color:#10b981;font-weight:700;padding:8px 16px;background:rgba(16,185,129,0.1);border-radius:6px;">+32 improvement</div>
+            </div>
+            <div style="margin-top:16px;">
+              <div style="font-size:11px;color:#52525b;margin-bottom:8px;">Techniques Applied</div>
+              <div class="applied-techniques">
+                <span class="tech-badge">Role Assignment</span>
+                <span class="tech-badge">Negative Constraint</span>
+                <span class="tech-badge">Structured Output</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ==================== COMPARE TAB ==================== -->
+    <div class="tab-panel" id="tab-compare">
+      <div class="compare-layout">
+
+        <!-- Left Prompt -->
+        <div class="compare-panel">
+          <div class="compare-header">
+            <span class="compare-label">Prompt A</span>
+            <span class="compare-score-badge" style="background:rgba(245,158,11,0.12);color:#f59e0b;">C — 52</span>
+          </div>
+          <textarea class="prompt-textarea" style="min-height:160px;" placeholder="Enter first prompt...">Write a landing page for my SaaS product</textarea>
+          <div class="card" style="margin-top:8px;">
+            <div style="font-size:11px;color:#52525b;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.8px;font-weight:600;">Dimension Scores</div>
+            <div class="dim-bars">
+              <div class="dim-row"><span class="dim-label" style="width:100px">Specificity</span><div class="dim-bar-track"><div class="dim-bar-fill" style="width:35%;background:#ef4444;"></div></div><span class="dim-score" style="color:#ef4444;">35</span></div>
+              <div class="dim-row"><span class="dim-label" style="width:100px">Clarity</span><div class="dim-bar-track"><div class="dim-bar-fill" style="width:55%;background:#f97316;"></div></div><span class="dim-score" style="color:#f97316;">55</span></div>
+              <div class="dim-row"><span class="dim-label" style="width:100px">Context</span><div class="dim-bar-track"><div class="dim-bar-fill" style="width:45%;background:#f97316;"></div></div><span class="dim-score" style="color:#f97316;">45</span></div>
+              <div class="dim-row"><span class="dim-label" style="width:100px">Completeness</span><div class="dim-bar-track"><div class="dim-bar-fill" style="width:70%;background:#eab308;"></div></div><span class="dim-score" style="color:#eab308;">70</span></div>
+              <div class="dim-row"><span class="dim-label" style="width:100px">Constraint</span><div class="dim-bar-track"><div class="dim-bar-fill" style="width:30%;background:#ef4444;"></div></div><span class="dim-score" style="color:#ef4444;">30</span></div>
+              <div class="dim-row"><span class="dim-label" style="width:100px">Actionability</span><div class="dim-bar-track"><div class="dim-bar-fill" style="width:65%;background:#eab308;"></div></div><span class="dim-score" style="color:#eab308;">65</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Center Divider / Winner -->
+        <div style="display:flex;flex-direction:column;align-items:center;padding:20px 8px;border-right:1px solid #27272a;border-left:1px solid #27272a;min-width:160px;justify-content:center;">
+          <div class="blind-toggle" style="flex-direction:column;padding:12px;">
+            <label class="toggle-switch" style="margin-bottom:6px;">
+              <input type="checkbox" id="blindModeToggle">
+              <span class="toggle-slider"></span>
+            </label>
+            <span style="font-size:10px;color:#52525b;text-align:center;line-height:1.3;">Blind<br>Mode</span>
+          </div>
+          <div class="compare-winner" style="margin-top:20px;">
+            <div class="compare-winner-title">Winner</div>
+            <div class="compare-winner-label">Prompt B</div>
+            <div class="compare-winner-delta"><span>+32</span> points better</div>
+          </div>
+          <div class="compare-dim-diff" style="width:100%;margin-top:20px;">
+            <div style="font-size:10px;color:#52525b;text-transform:uppercase;letter-spacing:0.8px;font-weight:600;margin-bottom:8px;text-align:center;">Dimension Delta</div>
+            <div class="diff-row"><span class="diff-label">Specificity</span><span class="diff-a">35</span><div class="diff-bar"><div class="diff-bar-b" style="width:85%"></div></div><span class="diff-b">85</span></div>
+            <div class="diff-row"><span class="diff-label">Clarity</span><span class="diff-a">55</span><div class="diff-bar"><div class="diff-bar-b" style="width:80%"></div></div><span class="diff-b">80</span></div>
+            <div class="diff-row"><span class="diff-label">Context</span><span class="diff-a">45</span><div class="diff-bar"><div class="diff-bar-b" style="width:78%"></div></div><span class="diff-b">78</span></div>
+            <div class="diff-row"><span class="diff-label">Complete</span><span class="diff-a">70</span><div class="diff-bar"><div class="diff-bar-b" style="width:88%"></div></div><span class="diff-b">88</span></div>
+            <div class="diff-row"><span class="diff-label">Constrain</span><span class="diff-a">30</span><div class="diff-bar"><div class="diff-bar-b" style="width:75%"></div></div><span class="diff-b">75</span></div>
+            <div class="diff-row"><span class="diff-label">Action</span><span class="diff-a">65</span><div class="diff-bar"><div class="diff-bar-b" style="width:90%"></div></div><span class="diff-b">90</span></div>
+          </div>
+        </div>
+
+        <!-- Right Prompt -->
+        <div class="compare-panel">
+          <div class="compare-header">
+            <span class="compare-label">Prompt B</span>
+            <span class="compare-score-badge" style="background:rgba(16,185,129,0.12);color:#10b981;">A — 84</span>
+          </div>
+          <textarea class="prompt-textarea" style="min-height:160px;" placeholder="Enter second prompt...">You are a conversion-focused copywriter specializing in SaaS products.
+
+Write a landing page for AcmeCRM, a B2B customer relationship management platform targeting sales teams at mid-market companies (50-500 employees).
+
+Include: hero section with value prop, 3 feature cards, social proof section, CTA.
+Do NOT include: pricing details, technical jargon, generic marketing speak.
+
+Format: HTML with Tailwind CSS classes.
+Tone: Professional but approachable. Maximum 500 words.</textarea>
+          <div class="card" style="margin-top:8px;">
+            <div style="font-size:11px;color:#52525b;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.8px;font-weight:600;">Dimension Scores</div>
+            <div class="dim-bars">
+              <div class="dim-row"><span class="dim-label" style="width:100px">Specificity</span><div class="dim-bar-track"><div class="dim-bar-fill" style="width:85%;background:#10b981;"></div></div><span class="dim-score" style="color:#10b981;">85</span></div>
+              <div class="dim-row"><span class="dim-label" style="width:100px">Clarity</span><div class="dim-bar-track"><div class="dim-bar-fill" style="width:80%;background:#10b981;"></div></div><span class="dim-score" style="color:#10b981;">80</span></div>
+              <div class="dim-row"><span class="dim-label" style="width:100px">Context</span><div class="dim-bar-track"><div class="dim-bar-fill" style="width:78%;background:#10b981;"></div></div><span class="dim-score" style="color:#10b981;">78</span></div>
+              <div class="dim-row"><span class="dim-label" style="width:100px">Completeness</span><div class="dim-bar-track"><div class="dim-bar-fill" style="width:88%;background:#10b981;"></div></div><span class="dim-score" style="color:#10b981;">88</span></div>
+              <div class="dim-row"><span class="dim-label" style="width:100px">Constraint</span><div class="dim-bar-track"><div class="dim-bar-fill" style="width:75%;background:#10b981;"></div></div><span class="dim-score" style="color:#10b981;">75</span></div>
+              <div class="dim-row"><span class="dim-label" style="width:100px">Actionability</span><div class="dim-bar-track"><div class="dim-bar-fill" style="width:90%;background:#10b981;"></div></div><span class="dim-score" style="color:#10b981;">90</span></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== TECHNIQUE MODAL ===== -->
+  <div class="modal-overlay" id="techModal">
+    <div class="modal-content" style="position:relative;">
+      <button class="modal-close" id="modalClose">&times;</button>
+      <div class="modal-title" id="modalTitle">Role Assignment</div>
+      <div class="modal-subtitle" id="modalSubtitle">Domain Expertise</div>
+      <div class="modal-desc" id="modalDesc">Assign a specific role or persona to the AI to anchor its expertise, tone, and perspective. This technique leverages domain specialization to produce more authoritative and contextually appropriate responses.</div>
+      <div class="modal-before-after">
+        <div>
+          <div class="modal-ba-label">Before</div>
+          <div class="prompt-before" id="modalBefore">Write a landing page for my SaaS product</div>
+        </div>
+        <div>
+          <div class="modal-ba-label">After</div>
+          <div class="prompt-after" id="modalAfter"><span class="highlight">You are a conversion-focused copywriter specializing in SaaS products.</span>
+
+Write a landing page for my SaaS product</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== JAVASCRIPT ===== -->
+  <script>
+    // ===== TAB SWITCHING =====
+    const tabs = document.querySelectorAll('#mainTabs .tab');
+    const panels = document.querySelectorAll('.tab-panel');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        panels.forEach(p => p.classList.remove('active'));
+        document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+      });
+    });
+
+    // ===== CHARACTER COUNT =====
+    const promptInput = document.getElementById('promptInput');
+    const charCount = document.getElementById('charCount');
+
+    function updateCharCount() {
+      charCount.textContent = promptInput.value.length + ' / 2000';
+    }
+    promptInput.addEventListener('input', updateCharCount);
+    updateCharCount();
+
+    // ===== CLEAR BUTTON =====
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      promptInput.value = '';
+      updateCharCount();
+      resetAnalysis();
+    });
+
+    // ===== FRAMEWORK DROPDOWN =====
+    const fwBtn = document.getElementById('fwDropdownBtn');
+    const fwList = document.getElementById('fwList');
+    const fwBtnText = document.getElementById('fwBtnText');
+    const fwBadge = document.getElementById('fwSelectedBadge');
+    const fwBadgeName = document.getElementById('fwBadgeName');
+    const fwBadgeDesc = document.getElementById('fwBadgeDesc');
+    let selectedFW = null;
+
+    fwBtn.addEventListener('click', () => {
+      fwBtn.classList.toggle('open');
+      fwList.classList.toggle('open');
+    });
+
+    document.querySelectorAll('.framework-item').forEach(item => {
+      item.addEventListener('click', () => {
+        document.querySelectorAll('.framework-item').forEach(i => i.classList.remove('selected'));
+        item.classList.add('selected');
+        selectedFW = item.dataset.fw;
+        fwBtnText.textContent = selectedFW;
+        fwBadgeName.textContent = selectedFW;
+        fwBadgeDesc.textContent = item.querySelector('.framework-item-desc').textContent;
+        fwBadge.style.display = 'inline-flex';
+        fwBtn.classList.remove('open');
+        fwList.classList.remove('open');
+        updateFrameworkDetail(selectedFW);
+      });
+    });
+
+    // Close dropdown on outside click
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('#frameworkSelect')) {
+        fwBtn.classList.remove('open');
+        fwList.classList.remove('open');
+      }
+    });
+
+    // ===== FRAMEWORK DETAIL UPDATE =====
+    const fwFields = {
+      'RTF': [
+        { l: 'R — Role', p: 'You are a...' },
+        { l: 'T — Task', p: 'Write / Analyze / Create...' },
+        { l: 'F — Format', p: 'Markdown, JSON, HTML...' }
+      ],
+      'RISE': [
+        { l: 'R — Role', p: 'Expert persona...' },
+        { l: 'I — Instructions', p: 'Step-by-step instructions...' },
+        { l: 'S — Suggestions', p: 'Tips and constraints...' },
+        { l: 'E — Examples', p: 'Input/output examples...' }
+      ],
+      'CARE': [
+        { l: 'C — Context', p: 'Background information...' },
+        { l: 'A — Action', p: 'What to do...' },
+        { l: 'R — Result', p: 'Expected output format...' },
+        { l: 'E — Example', p: 'Sample output...' }
+      ],
+      'STONE': [
+        { l: 'S — Setting', p: 'Environment/context...' },
+        { l: 'T — Task', p: 'The objective...' },
+        { l: 'O — Objective', p: 'Success criteria...' },
+        { l: 'N — Needs', p: 'Requirements...' },
+        { l: 'E — Evaluation', p: 'How to judge output...' }
+      ],
+      'CREATE': [
+        { l: 'C — Context', p: 'You are a conversion-focused copywriter...' },
+        { l: 'R — Request', p: 'Write a landing page for AcmeCRM...' },
+        { l: 'E — Explanation', p: 'A B2B CRM platform for sales teams...' },
+        { l: 'A — Action', p: 'Include hero, features, social proof, CTA...' },
+        { l: 'T — Tone', p: 'Professional but approachable...' },
+        { l: 'E — Extras', p: 'HTML with Tailwind, max 500 words...' }
+      ],
+      'TRACE': [
+        { l: 'T — Task', p: 'The debugging task...' },
+        { l: 'R — Request', p: 'Specific request...' },
+        { l: 'A — Action', p: 'What steps to take...' },
+        { l: 'C — Context', p: 'Code/environment info...' },
+        { l: 'E — Example', p: 'Expected behavior...' }
+      ],
+      'SCOPE': [
+        { l: 'S — Summary', p: 'High-level overview...' },
+        { l: 'C — Constraints', p: 'Limitations...' },
+        { l: 'O — Objectives', p: 'Goals...' },
+        { l: 'P — Plan', p: 'Approach...' },
+        { l: 'E — Evaluation', p: 'Success metrics...' }
+      ],
+      'PACKED': [
+        { l: 'P — Purpose', p: 'Goal statement...' },
+        { l: 'A — Audience', p: 'Target reader...' },
+        { l: 'C — Context', p: 'Background info...' },
+        { l: 'K — Key Info', p: 'Essential details...' },
+        { l: 'E — Expectations', p: 'Output requirements...' },
+        { l: 'D — Deliverables', p: 'What to produce...' }
+      ],
+      'CO-STAR': [
+        { l: 'C — Context', p: 'Background...' },
+        { l: 'O — Objective', p: 'Goal...' },
+        { l: 'S — Style', p: 'Writing style...' },
+        { l: 'T — Tone', p: 'Voice/mood...' },
+        { l: 'A — Audience', p: 'Target reader...' },
+        { l: 'R — Response', p: 'Output format...' }
+      ],
+      'RAG': [
+        { l: 'R — Reference', p: 'Source material...' },
+        { l: 'A — Ask', p: 'The question...' },
+        { l: 'G — Grounding', p: 'Citation requirements...' }
+      ],
+      'CHAIN': [
+        { l: 'C — Chain Order', p: 'Step sequence...' },
+        { l: 'H — Handle', p: 'Input processing...' },
+        { l: 'A — Action Per Step', p: 'Per-step instructions...' },
+        { l: 'I — Integration', p: 'How steps combine...' },
+        { l: 'N — Next Trigger', p: 'Transition criteria...' }
+      ]
+    };
+
+    function updateFrameworkDetail(fw) {
+      const container = document.getElementById('frameworkDetail');
+      const fields = fwFields[fw] || [];
+      let html = '<div class="section-title">Framework: ' + fw + '</div><div class="fw-detail">';
+      fields.forEach(f => {
+        html += '<div class="fw-field"><div class="fw-field-label">' + f.l + '</div>';
+        html += '<input class="fw-field-input" placeholder="' + f.p + '"></div>';
+      });
+      html += '<button class="btn-apply-fw" onclick="applyFrameworkAnimation()">Apply Framework</button></div>';
+      container.innerHTML = html;
+    }
+
+    // ===== ANALYZE BUTTON =====
+    const analyzeBtn = document.getElementById('analyzeBtn');
+
+    analyzeBtn.addEventListener('click', () => {
+      if (!promptInput.value.trim()) return;
+      analyzeBtn.parentElement.parentElement.classList.add('analyzing');
+      analyzeBtn.textContent = 'Analyzing...';
+      analyzeBtn.disabled = true;
+
+      setTimeout(() => {
+        analyzeBtn.parentElement.parentElement.classList.remove('analyzing');
+        analyzeBtn.textContent = 'Analyze';
+        analyzeBtn.disabled = false;
+        showAnalysis();
+      }, 1200);
+    });
+
+    function showAnalysis() {
+      document.getElementById('emptyState').style.display = 'none';
+      document.getElementById('scoreCard').style.display = 'block';
+      document.getElementById('improvementsCard').style.display = 'block';
+      document.getElementById('previewCard').style.display = 'block';
+      document.getElementById('pipelineCard').style.display = 'block';
+      document.getElementById('intentSection').style.display = 'block';
+
+      // Animate gauge
+      const arc = document.getElementById('gaugeArc');
+      const circumference = 2 * Math.PI * 65;
+      const targetOffset = circumference * (1 - 0.52);
+      arc.style.transition = 'stroke-dashoffset 1.2s ease';
+      arc.style.strokeDashoffset = targetOffset;
+
+      // Animate dimension bars
+      document.querySelectorAll('.dim-bar-fill[data-score]').forEach(bar => {
+        setTimeout(() => {
+          bar.style.width = bar.dataset.score + '%';
+        }, 300);
+      });
+    }
+
+    function resetAnalysis() {
+      document.getElementById('emptyState').style.display = 'block';
+      document.getElementById('scoreCard').style.display = 'none';
+      document.getElementById('improvementsCard').style.display = 'none';
+      document.getElementById('previewCard').style.display = 'none';
+      document.getElementById('pipelineCard').style.display = 'none';
+      document.getElementById('intentSection').style.display = 'none';
+
+      // Reset gauge
+      const arc = document.getElementById('gaugeArc');
+      arc.style.transition = 'none';
+      arc.style.strokeDashoffset = 408.4;
+
+      // Reset bars
+      document.querySelectorAll('.dim-bar-fill[data-score]').forEach(bar => {
+        bar.style.width = '0';
+      });
+    }
+
+    // ===== BEFORE/AFTER TOGGLE =====
+    const baToggle = document.getElementById('beforeAfterToggle');
+    const beforeView = document.getElementById('beforeView');
+    const afterView = document.getElementById('afterView');
+    const labelBefore = document.getElementById('toggleLabelBefore');
+    const labelAfter = document.getElementById('toggleLabelAfter');
+    const newScoreRow = document.getElementById('newScoreRow');
+    const appliedTechs = document.getElementById('appliedTechniques');
+
+    baToggle.addEventListener('change', () => {
+      const isAfter = baToggle.checked;
+      beforeView.style.display = isAfter ? 'none' : 'block';
+      afterView.style.display = isAfter ? 'block' : 'none';
+      labelBefore.classList.toggle('active', !isAfter);
+      labelAfter.classList.toggle('active', isAfter);
+      newScoreRow.style.display = isAfter ? 'flex' : 'none';
+      appliedTechs.style.display = isAfter ? 'flex' : 'none';
+    });
+
+    // ===== TECHNIQUE SEARCH =====
+    const techSearch = document.getElementById('techSearch');
+    const techList = document.getElementById('techList');
+
+    techSearch.addEventListener('input', () => {
+      const q = techSearch.value.toLowerCase();
+      document.querySelectorAll('.tech-card').forEach(card => {
+        const name = card.querySelector('.tech-card-name').textContent.toLowerCase();
+        card.style.display = name.includes(q) ? '' : 'none';
+      });
+      // Show/hide group labels based on visible cards
+      document.querySelectorAll('.tech-group-label').forEach(label => {
+        let next = label.nextElementSibling;
+        let anyVisible = false;
+        while (next && !next.classList.contains('tech-group-label')) {
+          if (next.style.display !== 'none') anyVisible = true;
+          next = next.nextElementSibling;
+        }
+        label.style.display = anyVisible ? '' : 'none';
+      });
+    });
+
+    // ===== TECHNIQUE MODAL =====
+    const techModal = document.getElementById('techModal');
+    const modalClose = document.getElementById('modalClose');
+
+    const techniqueData = {
+      'explicit-instruction': {
+        title: 'Explicit Instruction', group: 'Too Vague',
+        desc: 'Replace vague requests with direct, unambiguous instructions. State exactly what you want instead of implying it. This eliminates guesswork and reduces hallucination.',
+        before: 'Write about marketing strategies',
+        after: 'Write a 500-word comparison of inbound vs outbound marketing strategies for B2B SaaS companies with 50-200 employees. Include specific tactics, cost estimates, and expected ROI for each approach.'
+      },
+      'precision-drill': {
+        title: 'Precision Drill', group: 'Too Vague',
+        desc: 'Add quantifiable constraints and exact specifications. Numbers, ranges, and measurable criteria force precision.',
+        before: 'Analyze the data',
+        after: 'Analyze the Q3 sales data (attached CSV) and identify the top 5 products by revenue growth, excluding products with less than $10K in sales. Present results in a markdown table.'
+      },
+      'definition-lock': {
+        title: 'Definition Lock', group: 'Too Vague',
+        desc: 'Define key terms upfront to prevent interpretation drift. Lock down ambiguous words with precise definitions.',
+        before: 'Improve the user experience',
+        after: 'Improve the user experience, where "UX" means: task completion rate (target >90%), time-to-first-action (target <30s), and error rate (target <2%).'
+      },
+      'chain-of-thought': {
+        title: 'Chain of Thought', group: 'Better Reasoning',
+        desc: 'Ask the AI to reason step-by-step before giving its final answer. This dramatically improves accuracy on complex tasks.',
+        before: 'What is 15% of 847?',
+        after: 'What is 15% of 847? Think step by step: first calculate 10%, then 5%, then add them together.'
+      },
+      'plan-and-solve': {
+        title: 'Plan and Solve', group: 'Better Reasoning',
+        desc: 'First ask the AI to create a plan, then execute each step. Separates strategy from execution.',
+        before: 'Write a research paper',
+        after: 'First, create an outline for a research paper on transformer architectures. Then, for each section, write 200 words. Follow the outline strictly.'
+      },
+      'least-to-most': {
+        title: 'Least-to-Most', group: 'Better Reasoning',
+        desc: 'Decompose a complex problem into simpler sub-problems, solving from easiest to hardest, building on previous answers.',
+        before: 'Design a full authentication system',
+        after: '1. First, define the auth requirements. 2. Then, design the data model. 3. Then, specify the API endpoints. 4. Finally, write the implementation code.'
+      },
+      'structured-output': {
+        title: 'Structured Output', group: 'Control Output',
+        desc: 'Specify the exact format, structure, and schema of the expected output. Eliminates format ambiguity.',
+        before: 'List the features',
+        after: 'List the features in the following JSON format:\n{"features": [{"name": "...", "description": "...", "priority": "high|medium|low"}]}'
+      },
+      'negative-constraint': {
+        title: 'Negative Constraint', group: 'Control Output',
+        desc: 'Explicitly state what NOT to include. Negative constraints prevent common AI pitfalls like verbosity, hallucination, and unwanted tangents.',
+        before: 'Explain machine learning',
+        after: 'Explain machine learning in simple terms. Do NOT use mathematical formulas. Do NOT mention neural networks or deep learning. Do NOT exceed 200 words.'
+      },
+      'token-budget': {
+        title: 'Token Budget', group: 'Control Output',
+        desc: 'Set explicit length constraints. Word counts, character limits, or section sizes keep output focused.',
+        before: 'Write an article about AI safety',
+        after: 'Write an article about AI safety. Exactly 4 paragraphs. Each paragraph exactly 3 sentences. Total: 12 sentences maximum.'
+      },
+      'role-assignment': {
+        title: 'Role Assignment', group: 'Domain Expertise',
+        desc: 'Assign a specific role or persona to the AI to anchor its expertise, tone, and perspective. This technique leverages domain specialization to produce more authoritative and contextually appropriate responses.',
+        before: 'Write a landing page for my SaaS product',
+        after: 'You are a conversion-focused copywriter specializing in SaaS products.\n\nWrite a landing page for my SaaS product'
+      },
+      'few-shot-learning': {
+        title: 'Few-Shot Learning', group: 'Domain Expertise',
+        desc: 'Provide 2-3 examples of the desired input/output pattern. Examples teach the AI the exact format and style you expect.',
+        before: 'Classify the sentiment',
+        after: 'Classify the sentiment of each review:\n\nReview: "Great product!" → Positive\nReview: "Terrible experience" → Negative\nReview: "It was okay" → Neutral\n\nNow classify: "Absolutely love it!"'
+      },
+      'analogical-reasoning': {
+        title: 'Analogical Reasoning', group: 'Domain Expertise',
+        desc: 'Frame the problem by analogy to something the AI already handles well. Analogies transfer competence across domains.',
+        before: 'Design a caching system',
+        after: 'Design a caching system. Think of it like a library\'s reserve shelf: frequently requested books stay accessible, rarely used ones go to storage, and shelf space is limited.'
+      },
+      'self-consistency': {
+        title: 'Self-Consistency', group: 'Robustness',
+        desc: 'Ask the AI to generate multiple reasoning paths, then select the most consistent answer. Reduces random errors.',
+        before: 'Is 97 a prime number?',
+        after: 'Is 97 a prime number? Provide 3 different verification methods, then confirm the answer only if all methods agree.'
+      },
+      'assumption-challenge': {
+        title: 'Assumption Challenge', group: 'Robustness',
+        desc: 'Explicitly ask the AI to challenge its own assumptions. This catches biases and overlooked edge cases.',
+        before: 'Compare React and Vue',
+        after: 'Compare React and Vue. After your comparison, list 3 assumptions you made and challenge each one. Revise your conclusion if needed.'
+      },
+      'adversarial-reviewer': {
+        title: 'Adversarial Reviewer', group: 'Robustness',
+        desc: 'Include a built-in critic role. The AI generates content, then reviews it from an adversarial perspective before presenting the final version.',
+        before: 'Write a security policy',
+        after: 'Write a security policy. Then, act as a red-team security auditor and identify 3 weaknesses in your policy. Revise the policy to address each weakness.'
+      },
+      'prompt-chaining': {
+        title: 'Prompt Chaining', group: 'Multi-Step',
+        desc: 'Break complex tasks into a sequence of prompts where each output feeds into the next. Each step has a clear, focused purpose.',
+        before: 'Build a complete web app',
+        after: 'Step 1: Design the database schema\n→ Step 2: Write the API endpoints based on the schema\n→ Step 3: Create the React components based on the API\n→ Step 4: Write tests for each layer'
+      },
+      'meta-prompting': {
+        title: 'Meta-Prompting', group: 'Multi-Step',
+        desc: 'Ask the AI to generate or optimize a prompt before executing it. The AI becomes its own prompt engineer.',
+        before: 'Write a business plan',
+        after: 'Before writing the business plan, first generate the optimal prompt for writing a SaaS business plan. Then use that prompt to write the actual plan.'
+      },
+      'tree-of-thought': {
+        title: 'Tree of Thought', group: 'Multi-Step',
+        desc: 'Explore multiple reasoning branches simultaneously, evaluate each, and select the best path. Goes beyond linear chain-of-thought.',
+        before: 'Solve this optimization problem',
+        after: 'Solve this problem by exploring 3 different approaches simultaneously. Rate each approach (1-10) for feasibility and efficiency. Select the best approach and execute it fully.'
+      },
+      'delimiter-pattern': {
+        title: 'Delimiter Pattern', group: 'Structure',
+        desc: 'Use clear delimiters (```, ---, ###, <tags>) to separate distinct sections of your prompt. Prevents the AI from mixing instructions with content.',
+        before: 'Summarize this text and translate it to French: [long text]',
+        after: 'Summarize the text between ### delimiters, then translate the summary to French.\n\n###\n[long text]\n###'
+      },
+      'xml-tag-structure': {
+        title: 'XML Tag Structure', group: 'Structure',
+        desc: 'Use XML-style tags to create a structured, hierarchical prompt. Tags make the prompt self-documenting and easy to parse.',
+        before: 'Write a product description with features and pricing',
+        after: '<task>Write a product description</task>\n<context><product>AcmeCRM</product><audience>B2B sales teams</audience></context>\n<requirements>Include features and pricing</requirements>\n<format>Markdown with headers</format>'
+      }
+    };
+
+    document.querySelectorAll('.tech-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const tech = card.dataset.tech;
+        const data = techniqueData[tech];
+        if (!data) return;
+        document.getElementById('modalTitle').textContent = data.title;
+        document.getElementById('modalSubtitle').textContent = data.group;
+        document.getElementById('modalDesc').textContent = data.desc;
+        document.getElementById('modalBefore').textContent = data.before;
+        document.getElementById('modalAfter').innerHTML = data.after.replace(/\n/g, '<br>');
+        techModal.classList.add('show');
+      });
+    });
+
+    modalClose.addEventListener('click', () => techModal.classList.remove('show'));
+    techModal.addEventListener('click', (e) => {
+      if (e.target === techModal) techModal.classList.remove('show');
+    });
+
+    // ===== TIPS CLICK ANIMATION =====
+    document.querySelectorAll('.tip-item').forEach(tip => {
+      tip.addEventListener('click', () => {
+        tip.style.borderColor = '#06B6D4';
+        tip.style.background = 'rgba(6,182,212,0.08)';
+        const apply = tip.querySelector('.tip-apply');
+        const origText = apply.textContent;
+        apply.textContent = 'Applied!';
+        apply.style.color = '#10b981';
+        setTimeout(() => {
+          tip.style.borderColor = 'transparent';
+          tip.style.background = '#111118';
+          apply.textContent = origText;
+          apply.style.color = '#06B6D4';
+        }, 1500);
+      });
+    });
+
+    // ===== HISTORY ITEM SELECTION =====
+    document.querySelectorAll('.history-item').forEach(item => {
+      item.addEventListener('click', () => {
+        document.querySelectorAll('.history-item').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+      });
+    });
+
+    // ===== BLIND MODE TOGGLE =====
+    const blindToggle = document.getElementById('blindModeToggle');
+    blindToggle.addEventListener('change', () => {
+      const isBlind = blindToggle.checked;
+      document.querySelectorAll('.compare-score-badge').forEach(b => {
+        b.style.filter = isBlind ? 'blur(8px)' : 'none';
+      });
+    });
+
+    // ===== APPLY FRAMEWORK ANIMATION =====
+    function applyFrameworkAnimation() {
+      const btn = document.querySelector('.btn-apply-fw');
+      if (!btn) return;
+      const orig = btn.textContent;
+      btn.textContent = 'Framework Applied!';
+      btn.style.background = 'rgba(16,185,129,0.15)';
+      btn.style.color = '#10b981';
+      btn.style.borderColor = 'rgba(16,185,129,0.3)';
+      setTimeout(() => {
+        btn.textContent = orig;
+        btn.style.background = '';
+        btn.style.color = '';
+        btn.style.borderColor = '';
+      }, 2000);
+    }
+
+    // ===== THEME TOGGLE (visual indicator only) =====
+    const themeBtn = document.getElementById('themeToggle');
+    let isDark = true;
+    themeBtn.addEventListener('click', () => {
+      isDark = !isDark;
+      themeBtn.innerHTML = isDark
+        ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'
+        : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+    });
+
+    // ===== AUTO-ANALYZE ON LOAD (demo state) =====
+    // Uncomment below to auto-show analysis on page load:
+    // setTimeout(() => { showAnalysis(); }, 500);
+  </script>
+</body>
+</html>

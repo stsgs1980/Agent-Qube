@@ -1,0 +1,97 @@
+---
+name: memory-export
+id: ZAI-MEM-004
+version: 1.0
+compatibility: both
+description: "Export entries from ZCode memory system to JSON. Use when you need to backup memory or transfer knowledge between systems."
+trigger: export memory, backup memory, download memory, save memory to file
+related:
+  - STD-SKILL-001
+  - ZAI-MEM-001
+---
+
+
+# Skill: Memory Export v1.0
+
+
+> ID: ZAI-MEM-004
+> Version: 1.0
+> Last Updated: 2026-05
+
+Export entries from the ZCode memory system (ChromaDB) to JSON.
+
+## Hot Commands
+
+| Phrase | Action |
+|--------|--------|
+| export memory | Export all or filtered ChromaDB entries to JSON |
+| backup memory | Save a complete snapshot of stored memory to a file |
+| download memory | Export memory entries for transfer or offline analysis |
+| save memory to file | Write selected memory entries to a JSON output file |
+
+## Usage
+
+```bash
+python ~/.zcode/tools/memory_cli.py export [--type <type>] [--output <file>]
+```
+
+## Parameters
+
+| Parameter | Description |
+|-----------|-------------|
+| --type | Optional. Export only specific type |
+| --output | Optional. Save to file |
+
+## Entry Types
+
+- session
+- knowledge
+- pattern
+- project
+- template
+
+## Examples
+
+```bash
+# Export all entries to file
+python ~/.zcode/tools/memory_cli.py export --output backup.json
+
+# Export only knowledge
+python ~/.zcode/tools/memory_cli.py export --type knowledge --output knowledge.json
+
+# Print all to console
+python ~/.zcode/tools/memory_cli.py export
+```
+
+## Output Format
+
+```json
+{
+  "session": {
+    "ids": [...],
+    "documents": [...],
+    "metadatas": [...]
+  },
+  "knowledge": {
+    "ids": [...],
+    "documents": [...],
+    "metadatas": [...]
+  }
+}
+```
+
+## Use Cases
+
+- Backup memory before major changes
+- Transfer knowledge to another machine
+- Analyze stored information
+- Create snapshots
+
+## Related Skills
+
+- memory-store (ZAI-MEM-001): Store entries
+- memory-query (ZAI-MEM-002): Search entries
+- memory-delete (ZAI-MEM-003): Delete entries
+
+---
+Built with: Z.ai Agent Toolkit

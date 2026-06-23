@@ -1,0 +1,13 @@
+{
+  "eval_id": 1,
+  "eval_name": "improve-vague-prompt",
+  "prompt": "I have this prompt that I use for generating API documentation: 'Write API docs for my endpoint.' The AI keeps giving me generic documentation that doesn't match our API style. Can you help me improve it?",
+  "assertions": [
+    {"name": "scores_original_prompt", "description": "Provides a numerical score for the original prompt with specific grades per dimension"},
+    {"name": "identifies_weakest_dimensions", "description": "Identifies the 2-3 weakest dimensions with specific feedback on why they are weak"},
+    {"name": "recommends_framework", "description": "Recommends a specific prompting framework (e.g., RTF, SCOPE, TRACE) and explains why"},
+    {"name": "provides_improved_prompt", "description": "Provides a complete rewritten prompt that is clearly better structured"},
+    {"name": "shows_before_after_scores", "description": "Shows before and after scores to quantify the improvement"},
+    {"name": "names_techniques_applied", "description": "Explicitly names the prompting techniques applied (e.g., Role Assignment, Few-Shot, Negative Constraint)"}
+  ]
+}

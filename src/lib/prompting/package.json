@@ -1,0 +1,48 @@
+{
+  "name": "@stsgs/prompting",
+  "version": "0.1.0",
+  "description": "Complete prompting library for AI-assisted development — techniques, frameworks, scoring, benchmarking, orchestration, and resilience patterns.",
+  "author": "stsgs1980",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "module": "dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist/"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run clean && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stsgs1980/agent-qube.git",
+    "directory": "src/lib/prompting"
+  },
+  "keywords": [
+    "prompting",
+    "ai",
+    "llm",
+    "prompt-engineering",
+    "prompt-scoring",
+    "benchmark",
+    "resilience",
+    "circuit-breaker",
+    "retry",
+    "orchestration",
+    "agent"
+  ],
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

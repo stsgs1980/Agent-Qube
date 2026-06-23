@@ -1,0 +1,665 @@
+const {
+  Document, Packer, Paragraph, TextRun, Header, Footer, Table, TableRow, TableCell,
+  AlignmentType, HeadingLevel, PageNumber, BorderStyle, WidthType, ShadingType,
+  PageBreak, SectionType
+} = require("docx");
+const fs = require("fs");
+
+// ── Palette: DM-1 Deep Cyan (AI / Tech) ──
+const P = {
+  primary: "0A1628",
+  body: "1A2B40",
+  secondary: "6878A0",
+  accent: "37DCF2",
+  surface: "F4F8FC",
+  bg: "162235",
+  cover: {
+    titleColor: "FFFFFF",
+    subtitleColor: "B0B8C0",
+    metaColor: "90989F",
+    footerColor: "687078",
+  },
+  table: {
+    headerBg: "1B6B7A",
+    headerText: "FFFFFF",
+    accentLine: "1B6B7A",
+    innerLine: "C8DDE2",
+    surface: "EDF3F5",
+  },
+};
+const c = (hex) => hex.replace("#", "");
+
+// ── Cover: R1 (Pure Paragraph Left) ──
+function buildCoverR1() {
+  const NB = { style: BorderStyle.NONE, size: 0, color: "FFFFFF" };
+  const allNoBorders = {
+    top: NB, bottom: NB, left: NB, right: NB,
+    insideHorizontal: NB, insideVertical: NB,
+  };
+
+  return [
+    new Table({
+      width: { size: 100, type: WidthType.PERCENTAGE },
+      borders: allNoBorders,
+      rows: [
+        new TableRow({
+          height: { value: 16838, rule: "exact" },
+          children: [
+            new TableCell({
+              width: { size: 100, type: WidthType.PERCENTAGE },
+              borders: allNoBorders,
+              shading: { type: ShadingType.CLEAR, fill: c(P.bg) },
+              verticalAlign: "top",
+              children: [
+                new Paragraph({ spacing: { before: 4200 }, children: [] }),
+                new Paragraph({
+                  spacing: { before: 200, line: 920, lineRule: "atLeast" },
+                  children: [
+                    new TextRun({
+                      text: "Super Z + ",
+                      font: { ascii: "Calibri", eastAsia: "Microsoft YaHei" },
+                      size: 80, bold: true, color: c(P.cover.titleColor),
+                    }),
+                    new TextRun({
+                      text: "\u0421\u0443\u0431\u0430\u0433\u0435\u043d\u0442\u044b",
+                      font: { ascii: "Calibri", eastAsia: "Microsoft YaHei" },
+                      size: 80, bold: true, color: c(P.accent),
+                    }),
+                  ],
+                }),
+                new Paragraph({
+                  spacing: { before: 100, line: 560, lineRule: "atLeast" },
+                  children: [
+                    new TextRun({
+                      text: "\u0410\u0440\u0445\u0438\u0442\u0435\u043a\u0442\u0443\u0440\u0430 \u043c\u043d\u043e\u0433\u043e\u0430\u0433\u0435\u043d\u0442\u043d\u043e\u0439 \u0441\u0438\u0441\u0442\u0435\u043c\u044b \u0434\u043b\u044f AI-\u0430\u0441\u0441\u0438\u0441\u0442\u0435\u043d\u0442\u0430",
+                      font: { ascii: "Calibri", eastAsia: "Microsoft YaHei" },
+                      size: 32, color: c(P.cover.subtitleColor),
+                    }),
+                  ],
+                }),
+                new Paragraph({
+                  spacing: { before: 600 },
+                  border: {
+                    bottom: { style: BorderStyle.SINGLE, size: 6, color: c(P.accent), space: 8 },
+                  },
+                  indent: { left: 0, right: 6000 },
+                  children: [],
+                }),
+                new Paragraph({
+                  spacing: { before: 300, line: 400 },
+                  children: [
+                    new TextRun({
+                      text: "\u041e\u0431\u0440\u0430\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044c\u043d\u044b\u0439 \u0434\u043e\u043a\u0443\u043c\u0435\u043d\u0442  |  P-MAS v2  |  2026",
+                      font: { ascii: "Calibri", eastAsia: "Microsoft YaHei" },
+                      size: 22, color: c(P.cover.metaColor),
+                    }),
+                  ],
+                }),
+              ],
+            }),
+          ],
+        }),
+      ],
+    }),
+  ];
+}
+
+// ── Helper builders ──
+function heading1(text) {
+  return new Paragraph({
+    heading: HeadingLevel.HEADING_1,
+    spacing: { before: 480, after: 160 },
+    children: [
+      new TextRun({
+        text,
+        bold: true,
+        size: 32,
+        color: c(P.primary),
+        font: { ascii: "Calibri", eastAsia: "SimHei" },
+      }),
+    ],
+  });
+}
+
+function heading2(text) {
+  return new Paragraph({
+    heading: HeadingLevel.HEADING_2,
+    spacing: { before: 360, after: 120 },
+    children: [
+      new TextRun({
+        text,
+        bold: true,
+        size: 28,
+        color: c(P.primary),
+        font: { ascii: "Calibri", eastAsia: "SimHei" },
+      }),
+    ],
+  });
+}
+
+function body(text) {
+  return new Paragraph({
+    alignment: AlignmentType.JUSTIFIED,
+    indent: { firstLine: 480 },
+    spacing: { line: 312, after: 80 },
+    children: [
+      new TextRun({
+        text,
+        size: 24,
+        color: c(P.body),
+        font: { ascii: "Calibri", eastAsia: "Microsoft YaHei" },
+      }),
+    ],
+  });
+}
+
+function bodyNoIndent(text) {
+  return new Paragraph({
+    spacing: { line: 312, after: 80 },
+    children: [
+      new TextRun({
+        text,
+        size: 24,
+        color: c(P.body),
+        font: { ascii: "Calibri", eastAsia: "Microsoft YaHei" },
+      }),
+    ],
+  });
+}
+
+function codeBlock(lines) {
+  return lines.map((line) =>
+    new Paragraph({
+      spacing: { line: 260, after: 0 },
+      shading: { type: ShadingType.CLEAR, fill: "F0F4F8" },
+      indent: { left: 360 },
+      children: [
+        new TextRun({
+          text: line,
+          size: 20,
+          font: { ascii: "Consolas", eastAsia: "Consolas" },
+          color: "1A2B40",
+        }),
+      ],
+    })
+  );
+}
+
+function accentParagraph(text) {
+  return new Paragraph({
+    spacing: { line: 312, before: 120, after: 120 },
+    indent: { left: 360 },
+    border: {
+      left: { style: BorderStyle.SINGLE, size: 12, color: c(P.accent), space: 10 },
+    },
+    children: [
+      new TextRun({
+        text,
+        size: 24,
+        color: c(P.body),
+        font: { ascii: "Calibri", eastAsia: "Microsoft YaHei" },
+        italics: true,
+      }),
+    ],
+  });
+}
+
+function makeHeaderCell(text) {
+  return new TableCell({
+    shading: { type: ShadingType.CLEAR, fill: c(P.table.headerBg) },
+    margins: { top: 60, bottom: 60, left: 120, right: 120 },
+    children: [
+      new Paragraph({
+        children: [
+          new TextRun({
+            text,
+            bold: true,
+            size: 21,
+            color: c(P.table.headerText),
+            font: { ascii: "Calibri", eastAsia: "SimHei" },
+          }),
+        ],
+      }),
+    ],
+  });
+}
+
+function makeCell(text, isEven) {
+  return new TableCell({
+    shading: {
+      type: ShadingType.CLEAR,
+      fill: isEven ? c(P.table.surface) : "FFFFFF",
+    },
+    margins: { top: 60, bottom: 60, left: 120, right: 120 },
+    children: [
+      new Paragraph({
+        children: [
+          new TextRun({
+            text,
+            size: 21,
+            color: c(P.body),
+            font: { ascii: "Calibri", eastAsia: "Microsoft YaHei" },
+          }),
+        ],
+      }),
+    ],
+  });
+}
+
+function bulletItem(text) {
+  return new Paragraph({
+    spacing: { line: 312, after: 40 },
+    indent: { left: 720 },
+    children: [
+      new TextRun({ text: "\u2022  ", size: 24, color: c(P.accent), font: { ascii: "Calibri" } }),
+      new TextRun({
+        text,
+        size: 24,
+        color: c(P.body),
+        font: { ascii: "Calibri", eastAsia: "Microsoft YaHei" },
+      }),
+    ],
+  });
+}
+
+// ── Document content ──
+const coverSection = {
+  properties: {
+    page: {
+      margin: { top: 0, bottom: 0, left: 0, right: 0 },
+      size: { width: 11906, height: 16838 },
+    },
+  },
+  children: buildCoverR1(),
+};
+
+const bodyChildren = [
+  // ===== 1. Introduction =====
+  heading1("1. \u0412\u0432\u0435\u0434\u0435\u043d\u0438\u0435"),
+
+  body("Super Z \u2014 \u044d\u0442\u043e \u0433\u043b\u0430\u0432\u043d\u044b\u0439 AI-\u0430\u0441\u0441\u0438\u0441\u0442\u0435\u043d\u0442, \u043e\u0440\u043a\u0435\u0441\u0442\u0440\u0438\u0440\u0443\u044e\u0449\u0438\u0439 \u0440\u0430\u0431\u043e\u0442\u0443 \u0441\u043f\u0435\u0446\u0438\u0430\u043b\u0438\u0437\u0438\u0440\u043e\u0432\u0430\u043d\u043d\u044b\u0445 \u0441\u0443\u0431\u0430\u0433\u0435\u043d\u0442\u043e\u0432 \u0434\u043b\u044f \u0432\u044b\u043f\u043e\u043b\u043d\u0435\u043d\u0438\u044f \u0441\u043b\u043e\u0436\u043d\u044b\u0445 \u0437\u0430\u0434\u0430\u0447. \u0410\u0440\u0445\u0438\u0442\u0435\u043a\u0442\u0443\u0440\u0430 \u043f\u043e\u0441\u0442\u0440\u043e\u0435\u043d\u0430 \u043f\u043e \u043f\u0440\u0438\u043d\u0446\u0438\u043f\u0443 \u00ab\u043e\u0434\u0438\u043d \u043e\u0440\u043a\u0435\u0441\u0442\u0440\u0430\u0442\u043e\u0440 \u2014 \u043c\u043d\u043e\u0436\u0435\u0441\u0442\u0432\u043e \u0438\u0441\u043f\u043e\u043b\u043d\u0438\u0442\u0435\u043b\u0435\u0439\u00bb: Super Z \u043f\u0440\u0438\u043d\u0438\u043c\u0430\u0435\u0442 \u0440\u0435\u0448\u0435\u043d\u0438\u044f \u043e \u0434\u0435\u043b\u0435\u0433\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0438, \u0430 \u0441\u0443\u0431\u0430\u0433\u0435\u043d\u0442\u044b \u0432\u044b\u043f\u043e\u043b\u043d\u044f\u044e\u0442 \u043a\u043e\u043d\u043a\u0440\u0435\u0442\u043d\u0443\u044e \u0440\u0430\u0431\u043e\u0442\u0443 \u0438 \u0432\u043e\u0437\u0432\u0440\u0430\u0449\u0430\u044e\u0442 \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442."),
+
+  body("\u042d\u0442\u043e\u0442 \u0434\u043e\u043a\u0443\u043c\u0435\u043d\u0442 \u043e\u043f\u0438\u0441\u044b\u0432\u0430\u0435\u0442 \u0430\u0440\u0445\u0438\u0442\u0435\u043a\u0442\u0443\u0440\u0443, \u043f\u0440\u0438\u043d\u0446\u0438\u043f\u044b \u0440\u0430\u0431\u043e\u0442\u044b \u0438 \u043f\u0440\u0430\u043a\u0442\u0438\u0447\u0435\u0441\u043a\u0438\u0435 \u0441\u0446\u0435\u043d\u0430\u0440\u0438\u0438 \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u043d\u0438\u044f \u0441\u0438\u0441\u0442\u0435\u043c\u044b \u043c\u043d\u043e\u0433\u043e\u0430\u0433\u0435\u043d\u0442\u043d\u043e\u0439 \u043e\u0440\u043a\u0435\u0441\u0442\u0440\u0430\u0446\u0438\u0438 \u0432 \u0441\u0440\u0435\u0434\u0435 Z.ai."),
+
+  // ===== 2. Architecture =====
+  heading1("2. \u0410\u0440\u0445\u0438\u0442\u0435\u043a\u0442\u0443\u0440\u0430 \u0441\u0438\u0441\u0442\u0435\u043c\u044b"),
+
+  heading2("2.1 \u041e\u0431\u0449\u0430\u044f \u0441\u0445\u0435\u043c\u0430"),
+
+  body("\u0421\u0438\u0441\u0442\u0435\u043c\u0430 \u0441\u043e\u0441\u0442\u043e\u0438\u0442 \u0438\u0437 \u0434\u0432\u0443\u0445 \u0443\u0440\u043e\u0432\u043d\u0435\u0439: \u043e\u0440\u043a\u0435\u0441\u0442\u0440\u0430\u0442\u043e\u0440 (Super Z) \u0438 \u0438\u0441\u043f\u043e\u043b\u043d\u0438\u0442\u0435\u043b\u0438 (\u0441\u0443\u0431\u0430\u0433\u0435\u043d\u0442\u044b). \u041e\u0440\u043a\u0435\u0441\u0442\u0440\u0430\u0442\u043e\u0440 \u043f\u043e\u043b\u0443\u0447\u0430\u0435\u0442 \u0437\u0430\u043f\u0440\u043e\u0441 \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044f, \u0430\u043d\u0430\u043b\u0438\u0437\u0438\u0440\u0443\u0435\u0442 \u0435\u0433\u043e, \u043f\u043b\u0430\u043d\u0438\u0440\u0443\u0435\u0442 \u0437\u0430\u0434\u0430\u0447\u0438 \u0438 \u0440\u0435\u0448\u0430\u0435\u0442, \u0447\u0442\u043e \u0434\u0435\u043b\u0435\u0433\u0438\u0440\u043e\u0432\u0430\u0442\u044c, \u0430 \u0447\u0442\u043e \u0432\u044b\u043f\u043e\u043b\u043d\u0438\u0442\u044c \u0441\u0430\u043c\u043e\u0441\u0442\u043e\u044f\u0442\u0435\u043b\u044c\u043d\u043e."),
+
+  ...codeBlock([
+    "\u041f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044c",
+    "    \u2502",
+    "    \u251c\u2500\u2500 Super Z (\u041e\u0440\u043a\u0435\u0441\u0442\u0440\u0430\u0442\u043e\u0440)",
+    "    \u2502       \u2022 \u0427\u0438\u0442\u0430\u0435\u0442 \u0437\u0430\u043f\u0440\u043e\u0441",
+    "    \u2502       \u2022 \u041f\u043b\u0430\u043d\u0438\u0440\u0443\u0435\u0442 \u0437\u0430\u0434\u0430\u0447\u0438 (TodoWrite)",
+    "    \u2502       \u2022 \u0420\u0435\u0448\u0430\u0435\u0442 \u0447\u0442\u043e \u0434\u0435\u043b\u0435\u0433\u0438\u0440\u043e\u0432\u0430\u0442\u044c",
+    "    \u2502       \u2022 \u0421\u043e\u0431\u0438\u0440\u0430\u0435\u0442 \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442\u044b",
+    "    \u2502",
+    "    \u251c\u2500\u2500 Task tool (\u043f\u0430\u0440\u0430\u043b\u043b\u0435\u043b\u044c\u043d\u044b\u0439 \u0437\u0430\u043f\u0443\u0441\u043a)",
+    "    \u2502     \u2502",
+    "    \u2502     \u251c\u2500\u2500 General-Purpose  \u2014 \u0441\u043b\u043e\u0436\u043d\u044b\u0435 multi-step \u0437\u0430\u0434\u0430\u0447\u0438",
+    "    \u2502     \u251c\u2500\u2500 Explore          \u2014 \u0431\u044b\u0441\u0442\u0440\u044b\u0439 \u043f\u043e\u0438\u0441\u043a \u043f\u043e \u043a\u043e\u0434\u043e\u0432\u043e\u0439 \u0431\u0430\u0437\u0435",
+    "    \u2502     \u251c\u2500\u2500 Plan             \u2014 \u0430\u0440\u0445\u0438\u0442\u0435\u043a\u0442\u0443\u0440\u043d\u043e\u0435 \u043f\u0440\u043e\u0435\u043a\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435",
+    "    \u2502     \u251c\u2500\u2500 Full-Stack-Dev   \u2014 Next.js + React + Prisma",
+    "    \u2502     \u2514\u2500\u2500 Frontend-Styling \u2014 CSS, \u0430\u043d\u0438\u043c\u0430\u0446\u0438\u0438, responsive",
+  ]),
+
+  heading2("2.2 \u041f\u0440\u0438\u043d\u0446\u0438\u043f \u0434\u0435\u043b\u0435\u0433\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f"),
+
+  body("\u041e\u0440\u043a\u0435\u0441\u0442\u0440\u0430\u0442\u043e\u0440 \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u0435\u0442 \u043f\u0440\u0430\u0432\u0438\u043b\u043e \u00ab\u043f\u043e\u0440\u043e\u0433 \u0441\u043b\u043e\u0436\u043d\u043e\u0441\u0442\u0438\u00bb: \u0435\u0441\u043b\u0438 \u0437\u0430\u0434\u0430\u0447\u0443 \u043c\u043e\u0436\u043d\u043e \u0440\u0435\u0448\u0438\u0442\u044c \u0437\u0430 1\u20132 \u043f\u043e\u043f\u044b\u0442\u043a\u0438 \u043f\u0440\u044f\u043c\u044b\u043c \u0432\u044b\u0437\u043e\u0432\u043e\u043c \u0438\u043d\u0441\u0442\u0440\u0443\u043c\u0435\u043d\u0442\u0430 (Read, Glob, Grep, Edit), Super Z \u0434\u0435\u043b\u0430\u0435\u0442 \u044d\u0442\u043e \u0441\u0430\u043c. \u0415\u0441\u043b\u0438 \u043d\u0443\u0436\u0435\u043d \u043c\u043d\u043e\u0433\u043e\u0448\u0430\u0433\u043e\u0432\u044b\u0439 \u043f\u043e\u0438\u0441\u043a \u0438\u043b\u0438 \u0441\u043b\u043e\u0436\u043d\u0430\u044f \u0437\u0430\u0434\u0430\u0447\u0430 \u2014 \u0434\u0435\u043b\u0435\u0433\u0438\u0440\u0443\u0435\u0442 \u0441\u0443\u0431\u0430\u0433\u0435\u043d\u0442\u0443."),
+
+  accentParagraph("\u041f\u0440\u0430\u0432\u0438\u043b\u043e: \u0435\u0441\u043b\u0438 \u043c\u043e\u0433\u0443 \u043d\u0430\u0439\u0442\u0438 \u043e\u0442\u0432\u0435\u0442 \u0437\u0430 1\u20132 \u043f\u043e\u043f\u044b\u0442\u043a\u0438 \u2192 \u0434\u0435\u043b\u0430\u044e \u0441\u0430\u043c. \u0415\u0441\u043b\u0438 \u043d\u0443\u0436\u0435\u043d \u043c\u043d\u043e\u0433\u043e\u0448\u0430\u0433\u043e\u0432\u044b\u0439 \u043f\u043e\u0438\u0441\u043a \u2192 \u0434\u0435\u043b\u0435\u0433\u0438\u0440\u0443\u044e \u0441\u0443\u0431\u0430\u0433\u0435\u043d\u0442\u0443."),
+
+  // ===== 3. Subagent Types =====
+  heading1("3. \u0422\u0438\u043f\u044b \u0441\u0443\u0431\u0430\u0433\u0435\u043d\u0442\u043e\u0432"),
+
+  body("\u041a\u0430\u0436\u0434\u044b\u0439 \u0441\u0443\u0431\u0430\u0433\u0435\u043d\u0442 \u0441\u043f\u0435\u0446\u0438\u0430\u043b\u0438\u0437\u0438\u0440\u043e\u0432\u0430\u043d \u043d\u0430 \u043e\u043f\u0440\u0435\u0434\u0435\u043b\u0451\u043d\u043d\u043e\u043c \u0442\u0438\u043f\u0435 \u0437\u0430\u0434\u0430\u0447. \u0412\u0441\u0435 \u0441\u0443\u0431\u0430\u0433\u0435\u043d\u0442\u044b \u0438\u043c\u0435\u044e\u0442 \u0434\u043e\u0441\u0442\u0443\u043f \u043a\u043e \u0432\u0441\u0435\u043c \u0438\u043d\u0441\u0442\u0440\u0443\u043c\u0435\u043d\u0442\u0430\u043c, \u043d\u043e \u0438\u0445 system prompt \u043e\u043f\u0442\u0438\u043c\u0438\u0437\u0438\u0440\u043e\u0432\u0430\u043d \u043f\u043e\u0434 \u043a\u043e\u043d\u043a\u0440\u0435\u0442\u043d\u044b\u0439 \u0441\u0446\u0435\u043d\u0430\u0440\u0438\u0439."),
+
+  new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    borders: {
+      top: { style: BorderStyle.SINGLE, size: 2, color: c(P.table.accentLine) },
+      bottom: { style: BorderStyle.SINGLE, size: 2, color: c(P.table.accentLine) },
+      left: { style: BorderStyle.NONE },
+      right: { style: BorderStyle.NONE },
+      insideHorizontal: { style: BorderStyle.SINGLE, size: 1, color: c(P.table.innerLine) },
+      insideVertical: { style: BorderStyle.NONE },
+    },
+    rows: [
+      new TableRow({
+        tableHeader: true,
+        children: [
+          makeHeaderCell("\u0421\u0443\u0431\u0430\u0433\u0435\u043d\u0442"),
+          makeHeaderCell("\u041d\u0430\u0437\u043d\u0430\u0447\u0435\u043d\u0438\u0435"),
+          makeHeaderCell("\u041a\u043e\u0433\u0434\u0430 \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c"),
+        ],
+      }),
+      new TableRow({
+        children: [
+          makeCell("General-Purpose", true),
+          makeCell("\u0421\u043b\u043e\u0436\u043d\u044b\u0435 multi-step \u0437\u0430\u0434\u0430\u0447\u0438, \u043f\u043e\u0438\u0441\u043a \u043a\u043e\u0434\u0430, web fetch", true),
+          makeCell("\u041d\u0435\u043e\u0434\u043d\u043e\u0437\u043d\u0430\u0447\u043d\u044b\u0439 \u043f\u043e\u0438\u0441\u043a, \u043c\u043d\u043e\u0433\u043e \u0432\u0430\u0440\u0438\u0430\u043d\u0442\u043e\u0432", true),
+        ],
+      }),
+      new TableRow({
+        children: [
+          makeCell("Explore", false),
+          makeCell("\u0411\u044b\u0441\u0442\u0440\u044b\u0439 \u043f\u043e\u0438\u0441\u043a \u0444\u0430\u0439\u043b\u043e\u0432 \u0438 \u043a\u043e\u0434\u0430", false),
+          makeCell("\u041d\u0443\u0436\u043d\u043e \u043d\u0430\u0439\u0442\u0438 \u0444\u0430\u0439\u043b\u044b \u043f\u043e \u043f\u0430\u0442\u0442\u0435\u0440\u043d\u0443 \u0438\u043b\u0438 \u043a\u043b\u044e\u0447\u0435\u0432\u043e\u0435 \u0441\u043b\u043e\u0432\u043e", false),
+        ],
+      }),
+      new TableRow({
+        children: [
+          makeCell("Plan", true),
+          makeCell("\u0410\u0440\u0445\u0438\u0442\u0435\u043a\u0442\u0443\u0440\u043d\u043e\u0435 \u043f\u0440\u043e\u0435\u043a\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435 \u0438 \u043f\u043b\u0430\u043d\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435", true),
+          makeCell("\u041d\u0443\u0436\u0435\u043d \u043f\u043b\u0430\u043d \u0440\u0435\u0430\u043b\u0438\u0437\u0430\u0446\u0438\u0438 \u0441 \u0443\u0447\u0451\u0442\u043e\u043c trade-offs", true),
+        ],
+      }),
+      new TableRow({
+        children: [
+          makeCell("Full-Stack-Dev", false),
+          makeCell("\u041f\u043e\u043b\u043d\u044b\u0439 Next.js \u0441\u0442\u0435\u043a: React + API + Prisma", false),
+          makeCell("\u0421\u043e\u0437\u0434\u0430\u043d\u0438\u0435 \u0432\u0435\u0431-\u043f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u0439, \u043a\u043e\u043c\u043f\u043e\u043d\u0435\u043d\u0442\u044b, API", false),
+        ],
+      }),
+      new TableRow({
+        children: [
+          makeCell("Frontend-Styling", true),
+          makeCell("CSS, \u0430\u043d\u0438\u043c\u0430\u0446\u0438\u0438, responsive, UI/UX", true),
+          makeCell("\u0421\u0442\u0438\u043b\u0438\u0437\u0430\u0446\u0438\u044f, \u0430\u0434\u0430\u043f\u0442\u0438\u0432\u043d\u043e\u0441\u0442\u044c, \u0432\u0438\u0437\u0443\u0430\u043b\u044c\u043d\u044b\u0439 \u043f\u043e\u043b\u0438\u0448", true),
+        ],
+      }),
+    ],
+  }),
+
+  // ===== 4. Key Principles =====
+  heading1("4. \u041a\u043b\u044e\u0447\u0435\u0432\u044b\u0435 \u043f\u0440\u0438\u043d\u0446\u0438\u043f\u044b"),
+
+  heading2("4.1 \u041f\u0430\u0440\u0430\u043b\u043b\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u044c"),
+
+  body("\u0421\u0443\u0431\u0430\u0433\u0435\u043d\u0442\u044b \u043c\u043e\u0433\u0443\u0442 \u0437\u0430\u043f\u0443\u0441\u043a\u0430\u0442\u044c\u0441\u044f \u043e\u0434\u043d\u043e\u0432\u0440\u0435\u043c\u0435\u043d\u043d\u043e. Super Z \u043e\u0442\u043f\u0440\u0430\u0432\u043b\u044f\u0435\u0442 \u043d\u0435\u0441\u043a\u043e\u043b\u044c\u043a\u043e \u0432\u044b\u0437\u043e\u0432\u043e\u0432 Task tool \u0432 \u043e\u0434\u043d\u043e\u043c \u0441\u043e\u043e\u0431\u0449\u0435\u043d\u0438\u0438, \u0438 \u043e\u043d\u0438 \u0432\u044b\u043f\u043e\u043b\u043d\u044f\u044e\u0442\u0441\u044f \u043f\u0430\u0440\u0430\u043b\u043b\u0435\u043b\u044c\u043d\u043e. \u042d\u0442\u043e \u043a\u0440\u0438\u0442\u0438\u0447\u0435\u0441\u043a\u0438 \u0432\u0430\u0436\u043d\u043e \u0434\u043b\u044f \u043f\u0440\u043e\u0438\u0437\u0432\u043e\u0434\u0438\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u0438: \u043d\u0430\u043f\u0440\u0438\u043c\u0435\u0440, \u043f\u043e\u0438\u0441\u043a \u043a\u043e\u0434\u0430 \u0438 \u043f\u043e\u0438\u0441\u043a \u0434\u043e\u043a\u0443\u043c\u0435\u043d\u0442\u0430\u0446\u0438\u0438 \u043c\u043e\u0433\u0443\u0442 \u0438\u0434\u0442\u0438 \u043e\u0434\u043d\u043e\u0432\u0440\u0435\u043c\u0435\u043d\u043d\u043e."),
+
+  ...codeBlock([
+    "// \u041f\u0430\u0440\u0430\u043b\u043b\u0435\u043b\u044c\u043d\u044b\u0439 \u0437\u0430\u043f\u0443\u0441\u043a \u0432 \u043e\u0434\u043d\u043e\u043c \u0441\u043e\u043e\u0431\u0449\u0435\u043d\u0438\u0438:",
+    "Task(subagent_type='Explore', prompt='\u041d\u0430\u0439\u0434\u0438 \u0432\u0441\u0435 API routes')",
+    "Task(subagent_type='Explore', prompt='\u041d\u0430\u0439\u0434\u0438 \u0432\u0441\u0435 \u043a\u043e\u043c\u043f\u043e\u043d\u0435\u043d\u0442\u044b \u0441 useEffect')",
+    "// \u041e\u0431\u0430 \u0440\u0430\u0431\u043e\u0442\u0430\u044e\u0442 \u043e\u0434\u043d\u043e\u0432\u0440\u0435\u043c\u0435\u043d\u043d\u043e, \u0432\u043e\u0437\u0432\u0440\u0430\u0449\u0430\u044e\u0442 \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442",
+  ]),
+
+  heading2("4.2 Stateless (\u0431\u0435\u0437 \u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u044f)"),
+
+  body("\u041a\u0430\u0436\u0434\u044b\u0439 \u0441\u0443\u0431\u0430\u0433\u0435\u043d\u0442 \u043f\u043e\u043b\u043d\u043e\u0441\u0442\u044c\u044e stateless: \u043e\u043d \u043f\u043e\u043b\u0443\u0447\u0430\u0435\u0442 \u0437\u0430\u0434\u0430\u0447\u0443, \u0432\u044b\u043f\u043e\u043b\u043d\u044f\u0435\u0442 \u0435\u0451 \u0438 \u0432\u043e\u0437\u0432\u0440\u0430\u0449\u0430\u0435\u0442 \u043e\u0434\u0438\u043d \u0444\u0438\u043d\u0430\u043b\u044c\u043d\u044b\u0439 \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442. \u041d\u0435\u043b\u044c\u0437\u044f \u043e\u0442\u043f\u0440\u0430\u0432\u0438\u0442\u044c \u0441\u0443\u0431\u0430\u0433\u0435\u043d\u0442\u0443 \u0434\u043e\u043f\u043e\u043b\u043d\u0438\u0442\u0435\u043b\u044c\u043d\u043e\u0435 \u0441\u043e\u043e\u0431\u0449\u0435\u043d\u0438\u0435 \u0438\u043b\u0438 \u043f\u0440\u043e\u0434\u043e\u043b\u0436\u0438\u0442\u044c \u0434\u0438\u0430\u043b\u043e\u0433. \u041f\u043e\u044d\u0442\u043e\u043c\u0443 prompt \u0434\u043b\u044f \u0441\u0443\u0431\u0430\u0433\u0435\u043d\u0442\u0430 \u0434\u043e\u043b\u0436\u0435\u043d \u0441\u043e\u0434\u0435\u0440\u0436\u0430\u0442\u044c \u0432\u0441\u044e \u043d\u0435\u043e\u0431\u0445\u043e\u0434\u0438\u043c\u0443\u044e \u0438\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u044e."),
+
+  accentParagraph("\u0421\u0443\u0431\u0430\u0433\u0435\u043d\u0442 \u2014 \u044d\u0442\u043e \u043e\u0434\u043d\u043e\u043d\u0430\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u043d\u044b\u0439 \u0432\u044b\u0437\u043e\u0432: \u0437\u0430\u0434\u0430\u0447\u0430 \u2192 \u0432\u044b\u043f\u043e\u043b\u043d\u0435\u043d\u0438\u0435 \u2192 \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442. \u041d\u0435\u0442 \u043f\u0430\u043c\u044f\u0442\u0438 \u043c\u0435\u0436\u0434\u0443 \u0432\u044b\u0437\u043e\u0432\u0430\u043c\u0438."),
+
+  heading2("4.3 \u041e\u0440\u043a\u0435\u0441\u0442\u0440\u0430\u0446\u0438\u044f"),
+
+  body("Super Z \u2014 \u044d\u0442\u043e \u0435\u0434\u0438\u043d\u0441\u0442\u0432\u0435\u043d\u043d\u044b\u0439 \u043e\u0440\u043a\u0435\u0441\u0442\u0440\u0430\u0442\u043e\u0440. \u041e\u043d \u043e\u043f\u0440\u0435\u0434\u0435\u043b\u044f\u0435\u0442 \u0447\u0442\u043e \u0434\u0435\u043b\u0435\u0433\u0438\u0440\u043e\u0432\u0430\u0442\u044c, \u043a\u0430\u043a\u043e\u0439 \u0442\u0438\u043f \u0441\u0443\u0431\u0430\u0433\u0435\u043d\u0442\u0430 \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c, \u0432 \u043a\u0430\u043a\u043e\u043c \u043f\u043e\u0440\u044f\u0434\u043a\u0435 \u0432\u044b\u043f\u043e\u043b\u043d\u044f\u0442\u044c \u0437\u0430\u0434\u0430\u0447\u0438 \u0438 \u043a\u0430\u043a \u0441\u043e\u0431\u0438\u0440\u0430\u0442\u044c \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442\u044b \u0432 \u0435\u0434\u0438\u043d\u044b\u0439 \u043e\u0442\u0432\u0435\u0442 \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044e. \u0421\u0443\u0431\u0430\u0433\u0435\u043d\u0442\u044b \u043d\u0435 \u043c\u043e\u0433\u0443\u0442 \u043e\u0431\u0449\u0430\u0442\u044c\u0441\u044f \u043c\u0435\u0436\u0434\u0443 \u0441\u043e\u0431\u043e\u0439 \u043d\u0430\u043f\u0440\u044f\u043c\u0443\u044e."),
+
+  bulletItem("\u0427\u0442\u043e \u0434\u0435\u043b\u0435\u0433\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0441\u0443\u0431\u0430\u0433\u0435\u043d\u0442\u0443, \u0430 \u0447\u0442\u043e \u0441\u0434\u0435\u043b\u0430\u0442\u044c \u0441\u0430\u043c\u043e\u043c\u0443"),
+  bulletItem("\u041a\u0430\u043a\u043e\u0439 \u0442\u0438\u043f \u0441\u0443\u0431\u0430\u0433\u0435\u043d\u0442\u0430 \u043f\u043e\u0434\u0445\u043e\u0434\u0438\u0442 \u0434\u043b\u044f \u0437\u0430\u0434\u0430\u0447\u0438"),
+  bulletItem("\u041f\u043e\u0440\u044f\u0434\u043e\u043a \u0432\u044b\u043f\u043e\u043b\u043d\u0435\u043d\u0438\u044f: \u043f\u043e\u0441\u043b\u0435\u0434\u043e\u0432\u0430\u0442\u0435\u043b\u044c\u043d\u043e \u0438\u043b\u0438 \u043f\u0430\u0440\u0430\u043b\u043b\u0435\u043b\u044c\u043d\u043e"),
+  bulletItem("\u041a\u0430\u043a \u043e\u0431\u044a\u0435\u0434\u0438\u043d\u0438\u0442\u044c \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442\u044b \u0432 \u0435\u0434\u0438\u043d\u044b\u0439 \u043e\u0442\u0432\u0435\u0442"),
+
+  heading2("4.4 Worklog (\u043e\u0431\u0449\u0438\u0439 \u0436\u0443\u0440\u043d\u0430\u043b)"),
+
+  body("\u0412\u0441\u0435 \u0441\u0443\u0431\u0430\u0433\u0435\u043d\u0442\u044b \u043f\u0438\u0448\u0443\u0442 \u0432 \u043e\u0431\u0449\u0438\u0439 \u0444\u0430\u0439\u043b worklog.md. \u041a\u0430\u0436\u0434\u0430\u044f \u0437\u0430\u043f\u0438\u0441\u044c \u0441\u043e\u0434\u0435\u0440\u0436\u0438\u0442 Task ID, \u0438\u043c\u044f \u0430\u0433\u0435\u043d\u0442\u0430, \u043e\u043f\u0438\u0441\u0430\u043d\u0438\u0435 \u0437\u0430\u0434\u0430\u0447\u0438, \u043b\u043e\u0433 \u0440\u0430\u0431\u043e\u0442\u044b \u0438 \u0438\u0442\u043e\u0433\u0438. \u042d\u0442\u043e \u043e\u0431\u0435\u0441\u043f\u0435\u0447\u0438\u0432\u0430\u0435\u0442 \u043f\u0440\u043e\u0437\u0440\u0430\u0447\u043d\u043e\u0441\u0442\u044c \u0438 \u043f\u043e\u0437\u0432\u043e\u043b\u044f\u0435\u0442 \u043e\u0442\u0441\u043b\u0435\u0436\u0438\u0432\u0430\u0442\u044c \u043f\u0440\u043e\u0433\u0440\u0435\u0441\u0441."),
+
+  ...codeBlock([
+    "---",
+    "Task ID: 2-a",
+    "Agent: Explore",
+    "Task: \u041d\u0430\u0439\u0442\u0438 \u0432\u0441\u0435 \u043a\u043e\u043c\u043f\u043e\u043d\u0435\u043d\u0442\u044b \u0441 hardcoded colors",
+    "",
+    "Work Log:",
+    "- \u041d\u0430\u0439\u0434\u0435\u043d\u043e 3 \u0444\u0430\u0439\u043b\u0430 \u0441 \u0436\u0451\u0441\u0442\u043a\u043e \u0437\u0430\u043a\u043e\u0434\u0438\u0440\u043e\u0432\u0430\u043d\u043d\u044b\u043c\u0438 \u0446\u0432\u0435\u0442\u0430\u043c\u0438...",
+    "",
+    "Stage Summary:",
+    "- 3 \u043d\u0430\u0440\u0443\u0448\u0435\u043d\u0438\u044f \u0438\u0434\u0435\u043d\u0442\u0438\u0444\u0438\u0446\u0438\u0440\u043e\u0432\u0430\u043d\u043e",
+  ]),
+
+  // ===== 5. Communication Protocol =====
+  heading1("5. \u041f\u0440\u043e\u0442\u043e\u043a\u043e\u043b \u0432\u0437\u0430\u0438\u043c\u043e\u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044f"),
+
+  heading2("5.1 Task tool API"),
+
+  body("\u0415\u0434\u0438\u043d\u0441\u0442\u0432\u0435\u043d\u043d\u044b\u0439 \u0441\u043f\u043e\u0441\u043e\u0431 \u0437\u0430\u043f\u0443\u0441\u043a\u0430 \u0441\u0443\u0431\u0430\u0433\u0435\u043d\u0442\u0430 \u2014 \u0447\u0435\u0440\u0435\u0437 Task tool. \u041f\u0430\u0440\u0430\u043c\u0435\u0442\u0440\u044b \u0432\u044b\u0437\u043e\u0432\u0430:"),
+
+  new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    borders: {
+      top: { style: BorderStyle.SINGLE, size: 2, color: c(P.table.accentLine) },
+      bottom: { style: BorderStyle.SINGLE, size: 2, color: c(P.table.accentLine) },
+      left: { style: BorderStyle.NONE },
+      right: { style: BorderStyle.NONE },
+      insideHorizontal: { style: BorderStyle.SINGLE, size: 1, color: c(P.table.innerLine) },
+      insideVertical: { style: BorderStyle.NONE },
+    },
+    rows: [
+      new TableRow({
+        tableHeader: true,
+        children: [
+          makeHeaderCell("\u041f\u0430\u0440\u0430\u043c\u0435\u0442\u0440"),
+          makeHeaderCell("\u0422\u0438\u043f"),
+          makeHeaderCell("\u041e\u043f\u0438\u0441\u0430\u043d\u0438\u0435"),
+        ],
+      }),
+      new TableRow({ children: [makeCell("subagent_type", true), makeCell("string", true), makeCell("\u0422\u0438\u043f \u0441\u0443\u0431\u0430\u0433\u0435\u043d\u0442\u0430 (general-purpose, explore, plan, full-stack-developer, frontend-styling-expert)", true)] }),
+      new TableRow({ children: [makeCell("prompt", false), makeCell("string", false), makeCell("\u041f\u043e\u043b\u043d\u043e\u0435 \u043e\u043f\u0438\u0441\u0430\u043d\u0438\u0435 \u0437\u0430\u0434\u0430\u0447\u0438 \u0441 \u043a\u043e\u043d\u0442\u0435\u043a\u0441\u0442\u043e\u043c", false)] }),
+      new TableRow({ children: [makeCell("description", true), makeCell("string", true), makeCell("\u041a\u0440\u0430\u0442\u043a\u043e\u0435 \u043e\u043f\u0438\u0441\u0430\u043d\u0438\u0435 (3\u20135 \u0441\u043b\u043e\u0432) \u0434\u043b\u044f \u043b\u043e\u0433\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f", true)] }),
+      new TableRow({ children: [makeCell("model", false), makeCell("enum", false), makeCell("\u041e\u043f\u0446\u0438\u043e\u043d\u0430\u043b\u044c\u043d\u043e: sonnet, opus, haiku (\u043f\u043e \u0443\u043c\u043e\u043b\u0447\u0430\u043d\u0438\u044e \u043d\u0430\u0441\u043b\u0435\u0434\u0443\u0435\u0442\u0441\u044f)", false)] }),
+    ],
+  }),
+
+  heading2("5.2 \u0426\u0438\u043a\u043b \u0436\u0438\u0437\u043d\u0438 \u0437\u0430\u0434\u0430\u0447\u0438"),
+
+  ...codeBlock([
+    "1. Super Z \u0441\u043e\u0437\u0434\u0430\u0451\u0442 prompt \u0441 \u043f\u043e\u043b\u043d\u044b\u043c \u043a\u043e\u043d\u0442\u0435\u043a\u0441\u0442\u043e\u043c",
+    "2. Task tool \u0437\u0430\u043f\u0443\u0441\u043a\u0430\u0435\u0442 \u0441\u0443\u0431\u0430\u0433\u0435\u043d\u0442 \u0432 \u043e\u0442\u0434\u0435\u043b\u044c\u043d\u043e\u043c \u043f\u0440\u043e\u0446\u0435\u0441\u0441\u0435",
+    "3. \u0421\u0443\u0431\u0430\u0433\u0435\u043d\u0442 \u0430\u0432\u0442\u043e\u043d\u043e\u043c\u043d\u043e \u0432\u044b\u043f\u043e\u043b\u043d\u044f\u0435\u0442 \u0437\u0430\u0434\u0430\u0447\u0443 (\u0438\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u044f \u043b\u044e\u0431\u044b\u0435 \u0438\u043d\u0441\u0442\u0440\u0443\u043c\u0435\u043d\u0442\u044b)",
+    "4. \u0421\u0443\u0431\u0430\u0433\u0435\u043d\u0442 \u0432\u043e\u0437\u0432\u0440\u0430\u0449\u0430\u0435\u0442 \u043e\u0434\u0438\u043d \u0444\u0438\u043d\u0430\u043b\u044c\u043d\u044b\u0439 \u043e\u0442\u0447\u0451\u0442",
+    "5. Super Z \u043f\u043e\u043b\u0443\u0447\u0430\u0435\u0442 \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442 \u0438 \u0438\u043d\u0442\u0435\u0433\u0440\u0438\u0440\u0443\u0435\u0442 \u0435\u0433\u043e",
+  ]),
+
+  // ===== 6. Skills System =====
+  heading1("6. \u0421\u0438\u0441\u0442\u0435\u043c\u0430 Skills"),
+
+  body("Skills \u2014 \u044d\u0442\u043e \u0441\u043f\u0435\u0446\u0438\u0430\u043b\u0438\u0437\u0438\u0440\u043e\u0432\u0430\u043d\u043d\u044b\u0435 \u043d\u0430\u0432\u044b\u043a\u0438, \u043a\u043e\u0442\u043e\u0440\u044b\u0435 \u0440\u0430\u0441\u0448\u0438\u0440\u044f\u044e\u0442 \u0432\u043e\u0437\u043c\u043e\u0436\u043d\u043e\u0441\u0442\u0438 Super Z. \u041a\u0430\u0436\u0434\u044b\u0439 skill \u043e\u043f\u0440\u0435\u0434\u0435\u043b\u0451\u043d \u0432 \u0444\u0430\u0439\u043b\u0435 SKILL.md \u0438 \u0430\u043a\u0442\u0438\u0432\u0438\u0440\u0443\u0435\u0442\u0441\u044f \u0430\u0432\u0442\u043e\u043c\u0430\u0442\u0438\u0447\u0435\u0441\u043a\u0438 \u043f\u043e \u0442\u0440\u0438\u0433\u0433\u0435\u0440\u043d\u044b\u043c \u0441\u043b\u043e\u0432\u0430\u043c."),
+
+  heading2("6.1 \u0410\u0440\u0445\u0438\u0442\u0435\u043a\u0442\u0443\u0440\u0430 Skill"),
+
+  body("\u041a\u0430\u0436\u0434\u044b\u0439 skill \u0441\u043e\u0441\u0442\u043e\u0438\u0442 \u0438\u0437 YAML-\u0444\u0440\u043e\u043d\u0442\u043c\u0430\u0442\u0442\u0435\u0440\u0430 (\u0441 name + description \u0441 \u0442\u0440\u0438\u0433\u0433\u0435\u0440\u0430\u043c\u0438) \u0438 Markdown-\u0442\u0435\u043b\u0430 \u0441 \u0438\u043d\u0441\u0442\u0440\u0443\u043a\u0446\u0438\u044f\u043c\u0438. \u041f\u0440\u0438\u043c\u0435\u0440 \u0441\u0442\u0440\u0443\u043a\u0442\u0443\u0440\u044b:"),
+
+  ...codeBlock([
+    "---",
+    "name: prompt-engineering",
+    "description: >",
+    "  TRIGGER WORDS (English): prompt, system prompt, CoT, RTF...",
+    "  TRIGGER WORDS (Russian): \u043f\u0440\u043e\u043c\u043f\u0442, \u0441\u0438\u0441\u0442\u0435\u043c\u043d\u044b\u0439 \u043f\u0440\u043e\u043c\u043f\u0442...",
+    "  TRIGGER PHRASES: \"my prompt sucks\", \"\u043f\u043e\u043c\u043e\u0433\u0438 \u0441 \u043f\u0440\u043e\u043c\u043f\u0442\u043e\u043c\"...",
+    "  ACTIVATE WHEN: user mentions prompt quality...",
+    "  DO NOT ACTIVATE FOR: general coding questions...",
+    "---",
+    "",
+    "# Prompt Engineering Skill",
+    "...(\u0438\u043d\u0441\u0442\u0440\u0443\u043a\u0446\u0438\u0438, \u0442\u0435\u0445\u043d\u0438\u043a\u0438, \u043f\u0440\u0438\u043c\u0435\u0440\u044b)",
+  ]),
+
+  heading2("6.2 \u041a\u0430\u0442\u0435\u0433\u043e\u0440\u0438\u0438 Skills"),
+
+  new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    borders: {
+      top: { style: BorderStyle.SINGLE, size: 2, color: c(P.table.accentLine) },
+      bottom: { style: BorderStyle.SINGLE, size: 2, color: c(P.table.accentLine) },
+      left: { style: BorderStyle.NONE },
+      right: { style: BorderStyle.NONE },
+      insideHorizontal: { style: BorderStyle.SINGLE, size: 1, color: c(P.table.innerLine) },
+      insideVertical: { style: BorderStyle.NONE },
+    },
+    rows: [
+      new TableRow({
+        tableHeader: true,
+        children: [
+          makeHeaderCell("\u041a\u0430\u0442\u0435\u0433\u043e\u0440\u0438\u044f"),
+          makeHeaderCell("\u041f\u0440\u0438\u043c\u0435\u0440\u044b Skills"),
+          makeHeaderCell("\u041d\u0430\u0437\u043d\u0430\u0447\u0435\u043d\u0438\u0435"),
+        ],
+      }),
+      new TableRow({ children: [makeCell("AI & Media", true), makeCell("LLM, VLM, ASR, TTS, Image-Gen, Video-Gen", true), makeCell("\u041e\u0431\u0440\u0430\u0431\u043e\u0442\u043a\u0430 \u0442\u0435\u043a\u0441\u0442\u0430, \u0438\u0437\u043e\u0431\u0440\u0430\u0436\u0435\u043d\u0438\u0439, \u0430\u0443\u0434\u0438\u043e", true)] }),
+      new TableRow({ children: [makeCell("General", false), makeCell("Web-Search, Web-Reader", false), makeCell("\u041f\u043e\u0438\u0441\u043a \u0438 \u0447\u0442\u0435\u043d\u0438\u0435 \u0432\u0435\u0431-\u043a\u043e\u043d\u0442\u0435\u043d\u0442\u0430", false)] }),
+      new TableRow({ children: [makeCell("Documents", true), makeCell("DOCX, PPTX, XLSX, PDF", true), makeCell("\u0421\u043e\u0437\u0434\u0430\u043d\u0438\u0435 \u0438 \u0440\u0435\u0434\u0430\u043a\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435 \u0434\u043e\u043a\u0443\u043c\u0435\u043d\u0442\u043e\u0432", true)] }),
+      new TableRow({ children: [makeCell("Development", false), makeCell("Full-Stack-Dev, Frontend-Styling, Anti-Monolith", false), makeCell("\u0420\u0430\u0437\u0440\u0430\u0431\u043e\u0442\u043a\u0430 \u0438 \u0430\u0440\u0445\u0438\u0442\u0435\u043a\u0442\u0443\u0440\u0430", false)] }),
+      new TableRow({ children: [makeCell("DevOps", true), makeCell("Dev-Watchdog, Health-Check, API-Retry", true), makeCell("\u041c\u043e\u043d\u0438\u0442\u043e\u0440\u0438\u043d\u0433 \u0438 \u043d\u0430\u0434\u0451\u0436\u043d\u043e\u0441\u0442\u044c", true)] }),
+      new TableRow({ children: [makeCell("Security", false), makeCell("Sanitize-Validate, Skill-Vetter, Git-Safe-Ops", false), makeCell("\u0411\u0435\u0437\u043e\u043f\u0430\u0441\u043d\u043e\u0441\u0442\u044c \u0438 \u0432\u0430\u043b\u0438\u0434\u0430\u0446\u0438\u044f", false)] }),
+    ],
+  }),
+
+  // ===== 7. Practical Scenarios =====
+  heading1("7. \u041f\u0440\u0430\u043a\u0442\u0438\u0447\u0435\u0441\u043a\u0438\u0435 \u0441\u0446\u0435\u043d\u0430\u0440\u0438\u0438"),
+
+  heading2("7.1 \u0421\u043e\u0437\u0434\u0430\u043d\u0438\u0435 Skill"),
+
+  body("\u041f\u0440\u0438 \u0441\u043e\u0437\u0434\u0430\u043d\u0438\u0438 prompt-engineering skill Super Z \u0434\u0435\u0439\u0441\u0442\u0432\u043e\u0432\u0430\u043b \u043f\u043e \u0441\u043b\u0435\u0434\u0443\u044e\u0449\u0435\u043c\u0443 \u043f\u043b\u0430\u043d\u0443:"),
+
+  bulletItem("\u0421\u0430\u043c: \u0441\u043f\u043b\u0430\u043d\u0438\u0440\u043e\u0432\u0430\u043b \u0437\u0430\u0434\u0430\u0447\u0438 \u0447\u0435\u0440\u0435\u0437 TodoWrite"),
+  bulletItem("\u0421\u0443\u0431\u0430\u0433\u0435\u043d\u0442 Explore: \u043d\u0430\u0448\u0451\u043b \u0441\u0442\u0440\u0443\u043a\u0442\u0443\u0440\u0443 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u044e\u0449\u0438\u0445 skills"),
+  bulletItem("\u0421\u0430\u043c: \u043d\u0430\u043f\u0438\u0441\u0430\u043b SKILL.md (\u043e\u0441\u043d\u043e\u0432\u043d\u043e\u0439 \u0430\u0440\u0442\u0435\u0444\u0430\u043a\u0442)"),
+  bulletItem("\u0421\u0443\u0431\u0430\u0433\u0435\u043d\u0442 General-Purpose: \u0437\u0430\u043f\u0443\u0441\u0442\u0438\u043b \u0431\u0435\u043d\u0447\u043c\u0430\u0440\u043a (eval)"),
+  bulletItem("\u0421\u0430\u043c: \u0441\u043e\u0431\u0440\u0430\u043b \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442\u044b \u0438 \u043f\u0440\u0435\u0434\u0441\u0442\u0430\u0432\u0438\u043b \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044e"),
+
+  heading2("7.2 \u0418\u0442\u0435\u0440\u0430\u0446\u0438\u043e\u043d\u043d\u043e\u0435 \u0443\u043b\u0443\u0447\u0448\u0435\u043d\u0438\u0435 Skill"),
+
+  body("Skill \u043f\u0440\u043e\u0448\u0451\u043b 3 \u0438\u0442\u0435\u0440\u0430\u0446\u0438\u0438 \u0443\u043b\u0443\u0447\u0448\u0435\u043d\u0438\u044f \u043d\u0430 \u043e\u0441\u043d\u043e\u0432\u0435 \u043e\u0446\u0435\u043d\u043a\u0438 \u043f\u043e 6-\u043c\u0435\u0440\u043d\u043e\u0439 \u0448\u043a\u0430\u043b\u0435. \u041d\u0430 \u043a\u0430\u0436\u0434\u043e\u0439 \u0438\u0442\u0435\u0440\u0430\u0446\u0438\u0438 Super Z \u0430\u043d\u0430\u043b\u0438\u0437\u0438\u0440\u043e\u0432\u0430\u043b \u0441\u043b\u0430\u0431\u044b\u0435 \u043c\u0435\u0441\u0442\u0430, \u0434\u043e\u0431\u0430\u0432\u043b\u044f\u043b \u043f\u0440\u0438\u043c\u0435\u0440\u044b, \u0447\u0435\u043a\u043b\u0438\u0441\u0442\u044b \u0438 \u043e\u0433\u0440\u0430\u043d\u0438\u0447\u0435\u043d\u0438\u044f. \u0420\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442: A- (88) \u2192 S- (94) \u2192 S (95+)."),
+
+  new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    borders: {
+      top: { style: BorderStyle.SINGLE, size: 2, color: c(P.table.accentLine) },
+      bottom: { style: BorderStyle.SINGLE, size: 2, color: c(P.table.accentLine) },
+      left: { style: BorderStyle.NONE },
+      right: { style: BorderStyle.NONE },
+      insideHorizontal: { style: BorderStyle.SINGLE, size: 1, color: c(P.table.innerLine) },
+      insideVertical: { style: BorderStyle.NONE },
+    },
+    rows: [
+      new TableRow({
+        tableHeader: true,
+        children: [
+          makeHeaderCell("\u0418\u0442\u0435\u0440\u0430\u0446\u0438\u044f"),
+          makeHeaderCell("\u041e\u0446\u0435\u043d\u043a\u0430"),
+          makeHeaderCell("\u041a\u043b\u044e\u0447\u0435\u0432\u044b\u0435 \u0443\u043b\u0443\u0447\u0448\u0435\u043d\u0438\u044f"),
+        ],
+      }),
+      new TableRow({ children: [makeCell("1", true), makeCell("A- (88/100)", true), makeCell("10 before/after \u043f\u0440\u0438\u043c\u0435\u0440\u043e\u0432, Error Handling \u0442\u0430\u0431\u043b\u0438\u0446\u0430, Done criteria, 5 Hard Constraints", true)] }),
+      new TableRow({ children: [makeCell("2", false), makeCell("S- (94/100)", false), makeCell("\u041d\u0443\u043c\u0435\u0440\u0430\u0446\u0438\u044f Hard Constraints, User-Facing \u0447\u0435\u043a\u043b\u0438\u0441\u0442, Multi-agent \u043f\u0440\u0438\u043c\u0435\u0440", false)] }),
+      new TableRow({ children: [makeCell("3", true), makeCell("S (95+/100)", true), makeCell("\u0422\u0440\u0438\u0433\u0433\u0435\u0440\u043d\u044b\u0435 \u0441\u043b\u043e\u0432\u0430 EN/RU, \u0430\u043d\u0442\u0438-\u0442\u0440\u0438\u0433\u0433\u0435\u0440\u044b, Decision Tree", true)] }),
+    ],
+  }),
+
+  // ===== 8. When NOT to use =====
+  heading1("8. \u041a\u043e\u0433\u0434\u0430 \u041d\u0415 \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c \u0441\u0443\u0431\u0430\u0433\u0435\u043d\u0442\u043e\u0432"),
+
+  body("\u0414\u0435\u043b\u0435\u0433\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435 \u043d\u0435 \u0432\u0441\u0435\u0433\u0434\u0430 \u043e\u043f\u0440\u0430\u0432\u0434\u0430\u043d\u043e. \u041f\u0440\u044f\u043c\u044b\u0435 \u0432\u044b\u0437\u043e\u0432\u044b \u0438\u043d\u0441\u0442\u0440\u0443\u043c\u0435\u043d\u0442\u043e\u0432 \u0431\u044b\u0441\u0442\u0440\u0435\u0435 \u0438 \u044d\u043d\u0435\u0440\u0433\u0435\u0442\u0438\u0447\u0435\u0441\u043a\u0438 \u044d\u0444\u0444\u0435\u043a\u0442\u0438\u0432\u043d\u0435\u0435, \u043a\u043e\u0433\u0434\u0430 \u0437\u0430\u0434\u0430\u0447\u0430 \u043f\u0440\u043e\u0441\u0442\u0430\u044f:"),
+
+  new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    borders: {
+      top: { style: BorderStyle.SINGLE, size: 2, color: c(P.table.accentLine) },
+      bottom: { style: BorderStyle.SINGLE, size: 2, color: c(P.table.accentLine) },
+      left: { style: BorderStyle.NONE },
+      right: { style: BorderStyle.NONE },
+      insideHorizontal: { style: BorderStyle.SINGLE, size: 1, color: c(P.table.innerLine) },
+      insideVertical: { style: BorderStyle.NONE },
+    },
+    rows: [
+      new TableRow({
+        tableHeader: true,
+        children: [
+          makeHeaderCell("\u0417\u0430\u0434\u0430\u0447\u0430"),
+          makeHeaderCell("\u0418\u043d\u0441\u0442\u0440\u0443\u043c\u0435\u043d\u0442"),
+          makeHeaderCell("\u041f\u0440\u0438\u0447\u0438\u043d\u0430"),
+        ],
+      }),
+      new TableRow({ children: [makeCell("\u041f\u043e\u0438\u0441\u043a \u0444\u0430\u0439\u043b\u0430 \u043f\u043e \u043f\u0430\u0442\u0442\u0435\u0440\u043d\u0443", true), makeCell("Glob", true), makeCell("1 \u0432\u044b\u0437\u043e\u0432, \u043c\u0433\u043d\u043e\u0432\u0435\u043d\u043d\u044b\u0439 \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442", true)] }),
+      new TableRow({ children: [makeCell("\u041f\u043e\u0438\u0441\u043a \u043a\u043b\u044e\u0447\u0435\u0432\u043e\u0433\u043e \u0441\u043b\u043e\u0432\u0430", false), makeCell("Grep", false), makeCell("\u041f\u0440\u044f\u043c\u043e\u0439 \u043f\u043e\u0438\u0441\u043a, \u0431\u0435\u0437 \u043e\u0440\u043a\u0435\u0441\u0442\u0440\u0430\u0446\u0438\u0438", false)] }),
+      new TableRow({ children: [makeCell("\u0427\u0442\u0435\u043d\u0438\u0435 \u043a\u043e\u043d\u043a\u0440\u0435\u0442\u043d\u043e\u0433\u043e \u0444\u0430\u0439\u043b\u0430", true), makeCell("Read", true), makeCell("\u0418\u0437\u0432\u0435\u0441\u0442\u0435\u043d \u043f\u0443\u0442\u044c, \u043d\u0435 \u043d\u0443\u0436\u0435\u043d \u043f\u043e\u0438\u0441\u043a", true)] }),
+      new TableRow({ children: [makeCell("\u041f\u0440\u043e\u0441\u0442\u043e\u0435 \u0440\u0435\u0434\u0430\u043a\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435", false), makeCell("Edit", false), makeCell("\u0418\u0437\u0432\u0435\u0441\u0442\u043d\u044b old_string \u0438 new_string", false)] }),
+    ],
+  }),
+
+  // ===== 9. Summary =====
+  heading1("9. \u0418\u0442\u043e\u0433\u0438"),
+
+  body("\u0410\u0440\u0445\u0438\u0442\u0435\u043a\u0442\u0443\u0440\u0430 Super Z + \u0421\u0443\u0431\u0430\u0433\u0435\u043d\u0442\u044b \u043f\u043e\u0441\u0442\u0440\u043e\u0435\u043d\u0430 \u043d\u0430 \u043f\u0440\u0438\u043d\u0446\u0438\u043f\u0430\u0445 \u043e\u0440\u043a\u0435\u0441\u0442\u0440\u0430\u0446\u0438\u0438, stateless-\u0432\u0437\u0430\u0438\u043c\u043e\u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044f \u0438 \u043f\u0430\u0440\u0430\u043b\u043b\u0435\u043b\u044c\u043d\u043e\u0433\u043e \u0438\u0441\u043f\u043e\u043b\u043d\u0435\u043d\u0438\u044f. \u041a\u043b\u044e\u0447\u0435\u0432\u044b\u0435 \u043f\u0440\u0435\u0438\u043c\u0443\u0449\u0435\u0441\u0442\u0432\u0430:"),
+
+  bulletItem("\u0421\u043f\u0435\u0446\u0438\u0430\u043b\u0438\u0437\u0430\u0446\u0438\u044f: \u043a\u0430\u0436\u0434\u044b\u0439 \u0441\u0443\u0431\u0430\u0433\u0435\u043d\u0442 \u043e\u043f\u0442\u0438\u043c\u0438\u0437\u0438\u0440\u043e\u0432\u0430\u043d \u043f\u043e\u0434 \u0441\u0432\u043e\u0439 \u0442\u0438\u043f \u0437\u0430\u0434\u0430\u0447"),
+  bulletItem("\u041f\u0430\u0440\u0430\u043b\u043b\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u044c: \u043d\u0435\u0441\u043a\u043e\u043b\u044c\u043a\u043e \u0437\u0430\u0434\u0430\u0447 \u0432\u044b\u043f\u043e\u043b\u043d\u044f\u044e\u0442\u0441\u044f \u043e\u0434\u043d\u043e\u0432\u0440\u0435\u043c\u0435\u043d\u043d\u043e"),
+  bulletItem("\u041f\u0440\u043e\u0437\u0440\u0430\u0447\u043d\u043e\u0441\u0442\u044c: \u043e\u0431\u0449\u0438\u0439 worklog \u043e\u0431\u0435\u0441\u043f\u0435\u0447\u0438\u0432\u0430\u0435\u0442 \u0442\u0440\u0430\u0441\u0441\u0438\u0440\u043e\u0432\u043a\u0443"),
+  bulletItem("\u0420\u0430\u0441\u0448\u0438\u0440\u044f\u0435\u043c\u043e\u0441\u0442\u044c: Skills \u0441\u0438\u0441\u0442\u0435\u043c\u0430 \u0434\u043e\u0431\u0430\u0432\u043b\u044f\u0435\u0442 \u043d\u043e\u0432\u044b\u0435 \u0432\u043e\u0437\u043c\u043e\u0436\u043d\u043e\u0441\u0442\u0438 \u0431\u0435\u0437 \u0438\u0437\u043c\u0435\u043d\u0435\u043d\u0438\u044f \u044f\u0434\u0440\u0430"),
+  bulletItem("\u041d\u0430\u0434\u0451\u0436\u043d\u043e\u0441\u0442\u044c: stateless-\u0430\u0440\u0445\u0438\u0442\u0435\u043a\u0442\u0443\u0440\u0430 \u0438\u0441\u043a\u043b\u044e\u0447\u0430\u0435\u0442 \u0443\u0442\u0435\u0447\u043a\u0438 \u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u044f"),
+];
+
+const bodySection = {
+  properties: {
+    page: {
+      size: { width: 11906, height: 16838 },
+      margin: { top: 1440, bottom: 1440, left: 1701, right: 1417 },
+      pageNumbers: { start: 1 },
+    },
+  },
+  footers: {
+    default: new Footer({
+      children: [
+        new Paragraph({
+          alignment: AlignmentType.CENTER,
+          children: [
+            new TextRun({ children: [PageNumber.CURRENT], size: 18, color: c(P.secondary) }),
+          ],
+        }),
+      ],
+    }),
+  },
+  children: bodyChildren,
+};
+
+const doc = new Document({
+  styles: {
+    default: {
+      document: {
+        run: {
+          font: { ascii: "Calibri", eastAsia: "Microsoft YaHei" },
+          size: 24,
+          color: c(P.body),
+        },
+        paragraph: {
+          spacing: { line: 312 },
+        },
+      },
+      heading1: {
+        run: {
+          font: { ascii: "Calibri", eastAsia: "SimHei" },
+          size: 32,
+          bold: true,
+          color: c(P.primary),
+        },
+      },
+      heading2: {
+        run: {
+          font: { ascii: "Calibri", eastAsia: "SimHei" },
+          size: 28,
+          bold: true,
+          color: c(P.primary),
+        },
+      },
+    },
+  },
+  sections: [coverSection, bodySection],
+});
+
+Packer.toBuffer(doc).then((buf) => {
+  fs.writeFileSync("/home/z/my-project/docs/generated/Super-Z-Subagents.docx", buf);
+  console.log("Document generated: /home/z/my-project/docs/generated/Super-Z-Subagents.docx");
+});

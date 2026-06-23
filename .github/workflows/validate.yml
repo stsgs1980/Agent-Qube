@@ -1,0 +1,108 @@
+name: Toolkit Validation
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check required files exist
+        run: |
+          echo "Checking structure..."
+          MISSING=0
+          for f in \
+            AGENT_RULES.md \
+            PROJECT_CONFIG.md \
+            README.md \
+            skills/git-safe-ops/SKILL.md \
+            skills/dev-watchdog/SKILL.md \
+            docs/instructions/onboarding-protocol.md \
+            docs/instructions/git-workflow-rules.md \
+            docs/instructions/language-rule.md \
+            docs/instructions/diagnostic-disclosure.md \
+            docs/instructions/writing-plans.md \
+            docs/standards/README_TEMPLATE.md \
+            docs/standards/UNICODE_POLICY.md \
+            docs/standards/MARKDOWN_STANDARD.md \
+            docs/standards/REPRODUCIBILITY-STANDARD.md \
+            docs/templates/WORKLOG.md \
+            docs/templates/TASK_TEMPLATE.md \
+            docs/templates/README_WORKLOG.md
+          do
+            if [ ! -f "$f" ]; then
+              echo "MISSING: $f"
+              MISSING=1
+            else
+              echo "OK: $f"
+            fi
+          done
+          exit $MISSING
+
+      - name: Check for emoji in skills and instructions
+        run: |
+          echo "Checking for emoji (U+1F000+)..."
+          ERRORS=0
+          for f in skills/**/*.md docs/instructions/*.md; do
+            if [ -f "$f" ]; then
+              if rg -l '[\x{1F000}-\x{1FFFF}]' "$f" 2>/dev/null; then
+                echo "EMOJI FOUND in $f"
+                ERRORS=1
+              fi
+            fi
+          done
+          if [ $ERRORS -eq 0 ]; then
+            echo "No emoji found -- OK"
+          fi
+          exit $ERRORS
+
+      - name: Check Stack Signature in core files
+        run: |
+          echo "Checking Stack Signature footer..."
+          ERRORS=0
+          for f in AGENT_RULES.md README.md; do
+            if [ -f "$f" ]; then
+              if ! grep -q "Built with:" "$f"; then
+                echo "NO FOOTER: $f"
+                ERRORS=1
+              else
+                echo "OK: $f"
+              fi
+            fi
+          done
+          exit $ERRORS
+
+      - name: Check no trailing whitespace
+        run: |
+          echo "Checking trailing whitespace in text files..."
+          if grep -rn ' $' \
+            --include='*.md' --include='*.py' --include='*.js' --include='*.ts' --include='*.tsx' \
+            --include='*.yml' --include='*.yaml' --include='*.json' --include='*.css' \
+            --include='*.xsd' --include='*.tex' --include='*.sty' \
+            skills/ docs/instructions/ docs/standards/ docs/templates/ \
+            AGENT_RULES.md README.md PROJECT_CONFIG.md 2>/dev/null; then
+            echo "Found trailing whitespace"
+            exit 1
+          fi
+          echo "OK"
+
+      - name: Check no tabs (spaces only)
+        run: |
+          echo "Checking for tabs in text files..."
+          if grep -Pn '\t' \
+            --include='*.md' --include='*.py' --include='*.js' --include='*.ts' --include='*.tsx' \
+            --include='*.yml' --include='*.yaml' --include='*.json' --include='*.css' \
+            --include='*.xsd' --include='*.tex' --include='*.sty' \
+            skills/ docs/instructions/ docs/standards/ docs/templates/ \
+            AGENT_RULES.md README.md PROJECT_CONFIG.md 2>/dev/null; then
+            echo "Found tabs (use spaces only)"
+            exit 1
+          fi
+          echo "OK"

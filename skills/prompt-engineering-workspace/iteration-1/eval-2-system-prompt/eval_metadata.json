@@ -1,0 +1,15 @@
+{
+  "eval_id": 2,
+  "eval_name": "system-prompt-design",
+  "prompt": "I'm building a customer support chatbot for a SaaS product. I need a system prompt that makes it helpful but prevents it from making up features or giving refunds. Can you design one?",
+  "assertions": [
+    {"name": "has_identity_layer", "description": "Defines who the AI is with role, domain, tone, and audience"},
+    {"name": "has_context_layer", "description": "Describes the environment, tools, and knowledge sources available"},
+    {"name": "has_constraints_layer", "description": "Contains numbered hard rules including feature fabrication and refund prohibitions"},
+    {"name": "has_output_format", "description": "Specifies how the AI should format its responses"},
+    {"name": "covers_refund_paraphrases", "description": "The refund constraint covers paraphrases like credit, compensation, making it right"},
+    {"name": "includes_edge_cases", "description": "Handles edge cases like social engineering or ambiguous refund requests"},
+    {"name": "has_behavioral_guidance", "description": "Provides tone mapping or behavioral guidelines for different customer emotions"},
+    {"name": "uses_named_technique", "description": "Explicitly names prompting techniques used (Definition Lock, Delimiter Pattern, etc.)"}
+  ]
+}

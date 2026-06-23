@@ -1,0 +1,13 @@
+{
+  "eval_id": 1,
+  "eval_name": "improve-vague-prompt",
+  "configuration": "with_skill",
+  "expectations": [
+    {"text": "Provides a numerical score for the original prompt with specific grades per dimension", "passed": true, "evidence": "Shows F (22/100) with per-dimension scores: Specificity 10/F, Clarity 25/F, Context 10/F, Completeness 15/F, Constraint Control 40/D, Actionability 30/F"},
+    {"text": "Identifies the 2-3 weakest dimensions with specific feedback on why they are weak", "passed": true, "evidence": "Identifies Specificity (10), Context (10), Completeness (15) as top 3 weakest with detailed feedback"},
+    {"text": "Recommends a specific prompting framework (e.g., RTF, SCOPE, TRACE) and explains why", "passed": true, "evidence": "Recommends SCOPE framework and explains: 'it forces specificity and context upfront, which are the two weakest dimensions'"},
+    {"text": "Provides a complete rewritten prompt that is clearly better structured", "passed": true, "evidence": "Provides a full improved prompt with role assignment, endpoint details, required sections, style requirements, DO NOT list, and few-shot example"},
+    {"text": "Shows before and after scores to quantify the improvement", "passed": true, "evidence": "Before: F (22/100) -> After: A (86/100), with full re-score breakdown showing each dimension improvement"},
+    {"text": "Explicitly names the prompting techniques applied (e.g., Role Assignment, Few-Shot, Negative Constraint)", "passed": true, "evidence": "Names 6 techniques: Explicit Instruction, Role Assignment, Structured Output, Few-Shot Learning, Negative Constraint, SCOPE Framework"}
+  ]
+}

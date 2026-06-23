@@ -1,0 +1,13 @@
+{
+  "eval_id": 1,
+  "eval_name": "improve-vague-prompt",
+  "configuration": "without_skill",
+  "expectations": [
+    {"text": "Provides a numerical score for the original prompt with specific grades per dimension", "passed": false, "evidence": "No numerical scoring or grading system used. Provides qualitative analysis only."},
+    {"text": "Identifies the 2-3 weakest dimensions with specific feedback on why they are weak", "passed": true, "evidence": "Identifies 6 issues in table format: no endpoint details, no style guide, no format spec, no examples, no tone/voice, no structural requirements"},
+    {"text": "Recommends a specific prompting framework (e.g., RTF, SCOPE, TRACE) and explains why", "passed": false, "evidence": "No named framework recommended. Uses general prompt engineering concepts but doesn't reference RTF, SCOPE, or any formal framework."},
+    {"text": "Provides a complete rewritten prompt that is clearly better structured", "passed": true, "evidence": "Provides a comprehensive improved prompt with role, endpoint details, style guide, reference example, and error documentation"},
+    {"text": "Shows before and after scores to quantify the improvement", "passed": false, "evidence": "No before/after scoring. Only qualitative analysis."},
+    {"text": "Explicitly names the prompting techniques applied (e.g., Role Assignment, Few-Shot, Negative Constraint)", "passed": true, "evidence": "Names techniques in table: Role assignment, Structured input, Constraint specification, Few-shot prompting, Completeness constraint, Style enforcement, Emphasis directive"}
+  ]
+}

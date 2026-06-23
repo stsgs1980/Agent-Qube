@@ -1,0 +1,104 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lint-and-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check file structure
+        run: |
+          echo "Checking required files..."
+          MISSING=0
+          # Core files
+          for f in AGENT_RULES.md PROJECT_CONFIG.md README.md; do
+            if [ ! -f "$f" ]; then
+              echo "MISSING: $f"
+              MISSING=1
+            else
+              echo "OK: $f"
+            fi
+          done
+          # Skills
+          for f in skills/git-safe-ops/SKILL.md skills/dev-watchdog/SKILL.md; do
+            if [ ! -f "$f" ]; then
+              echo "MISSING: $f"
+              MISSING=1
+            else
+              echo "OK: $f"
+            fi
+          done
+          # Instructions
+          for f in docs/instructions/onboarding-protocol.md docs/instructions/git-workflow-rules.md docs/instructions/language-rule.md docs/instructions/diagnostic-disclosure.md docs/instructions/writing-plans.md; do
+            if [ ! -f "$f" ]; then
+              echo "MISSING: $f"
+              MISSING=1
+            else
+              echo "OK: $f"
+            fi
+          done
+          # Standards (no language suffixes, no versions)
+          for f in docs/standards/MARKDOWN_STANDARD.md docs/standards/UNICODE_POLICY.md docs/standards/README_TEMPLATE.md docs/standards/REPRODUCIBILITY-STANDARD.md docs/standards/IMPLEMENTATION_ORDER.md docs/standards/STANDARD_ID_SYSTEM.md docs/standards/CODE_EXAMPLES_GUIDE.md docs/standards/FRONTEND_STANDARD.md docs/standards/GITHUB_STANDARD.md docs/standards/WCAG_2.1_AA_STANDARD.md docs/standards/TESTING_STANDARD.md docs/standards/ERROR_HANDLING_STANDARD.md docs/standards/SECURITY_STANDARD.md; do
+            if [ ! -f "$f" ]; then
+              echo "MISSING: $f"
+              MISSING=1
+            else
+              echo "OK: $f"
+            fi
+          done
+          # Templates (Group A)
+          for f in docs/templates/WORKLOG.md docs/templates/TASK_TEMPLATE.md docs/templates/README_WORKLOG.md; do
+            if [ ! -f "$f" ]; then
+              echo "MISSING: $f"
+              MISSING=1
+            else
+              echo "OK: $f"
+            fi
+          done
+          exit $MISSING
+
+      - name: Unicode check (no emoji in .md)
+        run: |
+          echo "Checking for emoji in markdown files..."
+          FAIL=0
+          for f in $(find . -name '*.md' -not -path './.git/*' -not -path './node_modules/*'); do
+            if rg -l '[\x{1F000}-\x{1FFFF}]' "$f" 2>/dev/null; then
+              echo "FOUND emoji in: $f"
+              FAIL=1
+            fi
+          done
+          if [ $FAIL -eq 0 ]; then
+            echo "No emoji found -- OK"
+          fi
+          exit $FAIL
+
+      - name: Check Stack Signature in key files
+        run: |
+          echo "Checking Stack Signature in AGENT_RULES.md and README.md..."
+          FAIL=0
+          for f in AGENT_RULES.md README.md; do
+            if ! grep -q 'Built with:' "$f"; then
+              echo "NO Stack Signature in: $f"
+              FAIL=1
+            else
+              echo "OK: $f"
+            fi
+          done
+          exit $FAIL
+
+      - name: Check YAML syntax (workflows)
+        run: |
+          for f in .github/workflows/*.yml; do
+            if command -v python3 &>/dev/null; then
+              python3 -c "import yaml; yaml.safe_load(open('$f'))"
+              echo "YAML syntax OK: $f"
+            fi
+          done

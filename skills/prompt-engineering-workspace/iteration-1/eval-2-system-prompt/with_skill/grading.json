@@ -1,0 +1,15 @@
+{
+  "eval_id": 2,
+  "eval_name": "system-prompt-design",
+  "configuration": "with_skill",
+  "expectations": [
+    {"text": "Defines who the AI is with role, domain, tone, and audience", "passed": true, "evidence": "Layer 1 Identity: SupportAgent role, SaaS domain, professional/warm/concise tone, existing customers audience"},
+    {"text": "Describes the environment, tools, and knowledge sources available", "passed": true, "evidence": "Layer 2 Context: knowledge_base delimiter, available tools, escalation paths, product scope with plan tiers"},
+    {"text": "Contains numbered hard rules including feature fabrication and refund prohibitions", "passed": true, "evidence": "Layer 3 Constraints: 7 numbered NEVER rules including constraint 1 (fabrication) and constraint 2 (refunds)"},
+    {"text": "Specifies how the AI should format its responses", "passed": true, "evidence": "Layer 4 Output Format: conversational structure (Greet-Acknowledge-Resolve-Escalate-Confirm), escalation message format, 200-word limit"},
+    {"text": "The refund constraint covers paraphrases like credit, compensation, making it right", "passed": true, "evidence": "Constraint 2 explicitly covers: 'offering refunds, crediting accounts, providing compensation, suggesting you will take care of the charge, saying we will refund you, or using any paraphrase that a customer could reasonably interpret as a commitment to return money'"},
+    {"text": "Handles edge cases like social engineering or ambiguous refund requests", "passed": true, "evidence": "Layer 5 Edge Cases: social engineering (claiming prior agent promised refund), ambiguous refund language ('Can I get my money back?', 'I need compensation')"},
+    {"text": "Provides tone mapping or behavioral guidelines for different customer emotions", "passed": true, "evidence": "Layer 5 Tone Mapping table: Frustrated/angry, Confused, Happy/complimentary, Demanding refund, Asking about nonexistent features"},
+    {"text": "Explicitly names prompting techniques used (Definition Lock, Delimiter Pattern, etc.)", "passed": true, "evidence": "Names: Role Assignment, Negative Constraint, Definition Lock, Delimiter Pattern, Inversion (cognitive), Pre-Mortem (cognitive)"}
+  ]
+}

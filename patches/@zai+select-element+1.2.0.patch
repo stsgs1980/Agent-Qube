@@ -1,0 +1,820 @@
+--- a/DetailsPopover.tsx
++++ b/DetailsPopover.tsx
+@@ -1,12 +1,11 @@
+ 'use client';
+ 
+-import { useState, useCallback, useEffect, useRef } from 'react';
++import { useState, useCallback, useEffect } from 'react';
+ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+ import { GH, cleanStyle } from './gh-theme';
+-import { getXPath, getReactComponentName } from './dom-utils';
+ import type { ElementInfo, SnippetData } from './types';
+ 
+-// ── Inject required CSS once (@keyframes + custom scrollbar) ──
++// -- Inject required CSS once (@keyframes + custom scrollbar) --
+ const STYLE_ID = 'se-styles';
+ const SE_CSS = `
+ @keyframes se-panel-in {
+@@ -29,7 +28,7 @@
+   document.head.appendChild(style);
+ }
+ 
+-// ── Fallback-safe clipboard ──
++// -- Fallback-safe clipboard --
+ 
+ function fallbackCopy(text: string) {
+   const ta = document.createElement('textarea');
+@@ -53,7 +52,7 @@
+   }
+ }
+ 
+-// ── Reusable micro-components ──
++// -- Reusable micro-components --
+ 
+ interface CopyButtonProps {
+   text: string;
+@@ -118,93 +117,152 @@
+   );
+ }
+ 
+-// ── Copy Format Dropdown (XPath / outerHTML / React name) ──
++// -- AI Signature generator --
++// Compact one-line signature optimized for AI/LLM consumption.
++// Format: <tag.keyClass> text:"..."|"..." class:"..." bg:"..." color:"..."
++
++const GENERIC_CLASSES = new Set([
++  // layout primitives
++  'flex', 'grid', 'block', 'inline', 'inline-flex', 'inline-block', 'hidden',
++  'items-center', 'items-start', 'items-end', 'items-stretch',
++  'justify-center', 'justify-between', 'justify-start', 'justify-end', 'justify-around',
++  'flex-row', 'flex-col', 'flex-wrap', 'flex-nowrap', 'flex-1', 'flex-auto',
++  'flex-shrink-0', 'flex-shrink', 'flex-grow', 'flex-none',
++  'w-full', 'w-auto', 'h-full', 'h-auto',
++  // spacing (too common to be identifying)
++  'relative', 'absolute', 'fixed', 'static', 'sticky',
++  'overflow-hidden', 'overflow-auto', 'overflow-visible', 'overflow-scroll',
++  'overflow-x-auto', 'overflow-y-auto', 'overflow-x-hidden', 'overflow-y-hidden',
++  // typography defaults
++  'font-sans', 'font-mono', 'font-serif',
++  'font-thin', 'font-light', 'font-normal', 'font-medium', 'font-semibold', 'font-bold', 'font-extrabold',
++  'text-left', 'text-center', 'text-right', 'text-justify',
++  'text-xs', 'text-sm', 'text-base', 'text-lg', 'text-xl', 'text-2xl', 'text-3xl',
++  'uppercase', 'lowercase', 'capitalize', 'normal-case',
++  'truncate', 'break-all', 'break-words', 'break-normal',
++  'whitespace-nowrap', 'whitespace-pre', 'whitespace-normal',
++  // rounded defaults
++  'rounded', 'rounded-sm', 'rounded-md', 'rounded-lg', 'rounded-xl', 'rounded-full',
++  // transitions / cursor / select
++  'transition', 'transition-all', 'transition-colors', 'transition-opacity',
++  'duration-200', 'duration-300', 'duration-500',
++  'cursor-pointer', 'cursor-default', 'cursor-not-allowed',
++  'select-none', 'select-text', 'select-all',
++  // commonly stacked
++  'min-w-0', 'max-w-full',
++]);
++
++function pickKeyClass(classesStr: string): string {
++  if (!classesStr) return '';
++  const classes = classesStr.split(/\s+/).filter(Boolean);
++  for (const c of classes) {
++    if (GENERIC_CLASSES.has(c)) continue;
++    // Prefer classes with arbitrary values (text-[10px], w-[220px], text-[#06B6D4])
++    if (c.includes('[')) return c;
++    // Or classes with hex colors
++    if (c.includes('#')) return c;
++    // Or "non-standard" named classes (not in generic list, has dash + word)
++    if (c.length > 3 && !/^(p|m)(t|b|l|r|x|y)?-\d+$/.test(c) && !/^(gap|space)-(x|y)?-\d+$/.test(c)) {
++      // Skip pure numeric padding/margin like p-4, m-2, gap-3
++      if (/^(p|m)(t|b|l|r|x|y)?-\d+(\.\d+)?$/.test(c)) continue;
++      if (/^gap-(x|y)?-\d+$/.test(c)) continue;
++      if (/^space-(x|y)?-\d+$/.test(c)) continue;
++      if (/^w-\d+$/.test(c)) continue;
++      if (/^h-\d+$/.test(c)) continue;
++      return c;
++    }
++  }
++  return '';
++}
++
++function extractTexts(el: HTMLElement): string[] {
++  const texts: string[] = [];
++  const walk = (node: Node) => {
++    if (node.nodeType === Node.TEXT_NODE) {
++      const t = (node.textContent || '').trim();
++      if (t && t.length < 200) texts.push(t);
++    } else if (node.nodeType === Node.ELEMENT_NODE) {
++      const e = node as HTMLElement;
++      // Skip script/style/svg
++      const tag = e.tagName.toLowerCase();
++      if (['script', 'style', 'svg', 'path', 'defs', 'lineargradient', 'stop', 'polyline', 'rect', 'circle'].includes(tag)) return;
++      if (e.childNodes.length === 0) {
++        const t = (e.textContent || '').trim();
++        if (t && t.length < 200) texts.push(t);
++      } else {
++        for (const child of Array.from(e.childNodes)) walk(child);
++      }
++    }
++  };
++  walk(el);
++  // Dedupe and limit
++  return Array.from(new Set(texts)).slice(0, 6);
++}
+ 
+-function CopyFormatDropdown({ elementInfo }: { elementInfo: ElementInfo }) {
+-  const [open, setOpen] = useState(false);
+-  const ref = useRef<HTMLDivElement>(null);
+-
+-  useEffect(() => {
+-    if (!open) return;
+-    const handler = (e: MouseEvent) => {
+-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+-    };
+-    document.addEventListener('mousedown', handler);
+-    return () => document.removeEventListener('mousedown', handler);
+-  }, [open]);
+-
+-  const reactName = elementInfo.el ? getReactComponentName(elementInfo.el) : null;
+-  const xpath = elementInfo.el ? getXPath(elementInfo.el) : '';
+-
+-  const items: { label: string; value: string }[] = [
+-    { label: 'XPath', value: xpath },
+-    { label: 'outerHTML', value: elementInfo.outerHTML },
+-  ];
+-  if (reactName) {
+-    items.unshift({ label: 'React', value: reactName });
++function pickMeaningfulStyles(el: HTMLElement): Record<string, string> {
++  const styleAttr = el.getAttribute('style');
++  if (!styleAttr) return {};
++  const out: Record<string, string> = {};
++  // Parse inline style attribute (more reliable than computed styles)
++  for (const decl of styleAttr.split(';')) {
++    const idx = decl.indexOf(':');
++    if (idx < 0) continue;
++    const prop = decl.slice(0, idx).trim();
++    const val = decl.slice(idx + 1).trim();
++    if (!prop || !val) continue;
++    const p = prop.toLowerCase();
++    // Keep only meaningful properties
++    if (
++      p === 'background' ||
++      p === 'background-color' ||
++      p === 'color' ||
++      p === 'border' ||
++      p === 'border-color' ||
++      p === 'border-top' ||
++      p === 'border-bottom' ||
++      p === 'border-left' ||
++      p === 'border-right' ||
++      p === 'box-shadow' ||
++      p === 'opacity' ||
++      p === 'position'
++    ) {
++      // Normalize: collapse spaces, keep rgba(...) intact
++      const norm = val.replace(/\s+/g, ' ').trim();
++      out[p] = norm;
++    }
+   }
++  return out;
++}
+ 
+-  if (items.length === 0) return null;
++function generateAiSignature(info: ElementInfo): string {
++  const parts: string[] = [];
+ 
+-  return (
+-    <div ref={ref} className="relative" style={{ zIndex: 100 }}>
+-      <button
+-        onClick={(e) => { e.stopPropagation(); setOpen(v => !v); }}
+-        className="px-1.5 py-0.5 rounded transition-colors cursor-pointer"
+-        style={{
+-          fontSize: '10px',
+-          fontFamily: GH.fontMono,
+-          color: GH.textMuted,
+-          background: open ? GH.border : 'transparent',
+-          border: `1px solid ${GH.border}`,
+-        }}
+-        onMouseEnter={(e) => { (e.target as HTMLElement).style.color = GH.text; }}
+-        onMouseLeave={(e) => { (e.target as HTMLElement).style.color = open ? GH.text : GH.textMuted; }}
+-        title="Copy as..."
+-      >
+-        ...
+-      </button>
+-      {open && (
+-        <div
+-          className="absolute right-0 top-full mt-1 rounded-md overflow-hidden"
+-          style={{
+-            background: GH.headerBg,
+-            border: `1px solid ${GH.border}`,
+-            boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+-            minWidth: '160px',
+-          }}
+-        >
+-          {items.map((item) => (
+-            <button
+-              key={item.label}
+-              onClick={(e) => {
+-                e.stopPropagation();
+-                safeCopy(item.value);
+-                setOpen(false);
+-              }}
+-              className="w-full text-left px-3 py-2 transition-colors cursor-pointer flex items-center justify-between gap-3"
+-              style={{
+-                fontFamily: GH.fontMono,
+-                fontSize: '11px',
+-                color: GH.text,
+-                borderBottom: `1px solid ${GH.border}`,
+-              }}
+-              onMouseEnter={(e) => { (e.target as HTMLElement).style.background = GH.border; }}
+-              onMouseLeave={(e) => { (e.target as HTMLElement).style.background = 'transparent'; }}
+-            >
+-              <span style={{ color: GH.accent }}>{item.label}</span>
+-              <span className="truncate" style={{ color: GH.textMuted, maxWidth: '100px', fontSize: '10px' }}>
+-                {item.value.length > 30 ? item.value.slice(0, 30) + '...' : item.value}
+-              </span>
+-            </button>
+-          ))}
+-        </div>
+-      )}
+-    </div>
+-  );
++  // 1. Tag + key class
++  const keyClass = pickKeyClass(info.classes);
++  const idSuffix = info.id ? `#${info.id}` : '';
++  parts.push(`<${info.tag}${keyClass ? '.' + keyClass : ''}${idSuffix}>`);
++
++  // 2. Visible texts (direct + immediate children, deduped)
++  const texts = extractTexts(info.el);
++  if (texts.length > 0) {
++    parts.push(`text:"${texts.join('|')}"`);
++  }
++
++  // 3. Full class list (for grep matching)
++  if (info.classes) {
++    parts.push(`class:"${info.classes}"`);
++  }
++
++  // 4. Meaningful inline styles only
++  const styles = pickMeaningfulStyles(info.el);
++  for (const [k, v] of Object.entries(styles)) {
++    parts.push(`${k}:"${v}"`);
++  }
++
++  return parts.join(' ');
+ }
+ 
+-// ── Main component ──
++// -- Main component --
+ 
+ interface DetailsPopoverProps {
+   elementInfo: ElementInfo;
+@@ -228,12 +286,11 @@
+   // Inject styles on first render
+   useEffect(injectStyles, []);
+ 
+-  // Header copy button: copies source path if available, otherwise CSS path
+-  const headerCopyText = elementInfo.source
+-    ? `${elementInfo.source.file}:${elementInfo.source.line}`
+-    : elementInfo.cssPath;
+-
+-  const headerCopyTitle = elementInfo.source ? 'Copy source path' : 'Copy CSS path';
++  // Header copy button: copies AI Signature (the killer feature of this panel)
++  // -- AI Signature is the compact signature optimized for pasting into AI chat.
++  // -- Source path and CSS path remain available via their own CopyField rows below.
++  const headerCopyText = generateAiSignature(elementInfo);
++  const headerCopyTitle = 'Copy AI Signature';
+ 
+   // Local copies of source fields to avoid TS18047 inside guarded blocks
+   const sourceFile = elementInfo.source?.file ?? '';
+@@ -259,13 +316,13 @@
+       }}
+       onClick={(e) => e.stopPropagation()}
+     >
+-      {/* ── Header ── */}
++      {/* -- Header -- */}
+       <div
+         onMouseDown={onDragStart}
+         className="flex items-center justify-between px-4 py-3 select-none"
+         style={{ background: GH.headerBg, borderBottom: `1px solid ${GH.border}`, cursor: 'grab' }}
+       >
+-        <div className="flex items-center gap-2 min-w-0">
++        <div className="flex items-center gap-2 min-w-0 flex-1">
+           <svg width="10" height="10" viewBox="0 0 10 10" className="flex-shrink-0" style={{ color: GH.textMuted }} aria-hidden="true">
+             <circle cx="3" cy="3" r="1.2" fill="currentColor"/><circle cx="7" cy="3" r="1.2" fill="currentColor"/>
+             <circle cx="3" cy="7" r="1.2" fill="currentColor"/><circle cx="7" cy="7" r="1.2" fill="currentColor"/>
+@@ -276,10 +333,24 @@
+           >
+             &lt;/&gt;
+           </span>
+-          <span className="text-[13px] font-medium truncate" style={{ color: GH.text }}>
+-            {elementInfo.tag}
+-            {elementInfo.id && <span style={{ color: GH.accent }}>#{elementInfo.id}</span>}
+-          </span>
++          <div className="min-w-0 flex-1">
++            <div className="text-[13px] font-medium truncate" style={{ color: GH.text }}>
++              {elementInfo.tag}
++              {elementInfo.id && <span style={{ color: GH.accent }}>#{elementInfo.id}</span>}
++            </div>
++            {elementInfo.source && (
++              <div
++                className="text-[10px] truncate cursor-pointer"
++                style={{ fontFamily: GH.fontMono, color: GH.textMuted }}
++                title={`${sourceFile}:${sourceLine} (click to copy)`}
++                onClick={(e) => { e.stopPropagation(); copyToClipboard(`${sourceFile}:${sourceLine}`); }}
++                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = GH.accent; }}
++                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = GH.textMuted; }}
++              >
++                {sourceFile}<span style={{ color: GH.accent }}>:{sourceLine}</span>
++              </div>
++            )}
++          </div>
+         </div>
+         <div className="flex items-center gap-0.5 flex-shrink-0">
+           <button
+@@ -306,29 +377,17 @@
+         </div>
+       </div>
+ 
+-      {/* ── Scrollable content ── */}
++      {/* -- Scrollable content -- */}
+       <div className="overflow-y-auto se-custom-scrollbar" style={{ maxHeight: 'calc(100vh - 120px)' }}>
+ 
+-        {/* Source */}
+-        {elementInfo.source && (
+-          <div className="px-4 py-3" style={{ background: GH.canvasSubtle, borderBottom: `1px solid ${GH.border}` }}>
+-            <div className="flex items-center justify-between mb-1">
+-              <div className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: GH.accent }}>Source</div>
+-              <CopyButton text={`${sourceFile}:${sourceLine}`} />
+-            </div>
+-            <div
+-              className="cursor-pointer break-all transition-colors"
+-              style={{ fontFamily: GH.fontMono, fontSize: '12px', color: GH.text }}
+-              onClick={(e) => { e.stopPropagation(); copyToClipboard(`${sourceFile}:${sourceLine}`); }}
+-              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = GH.accent; }}
+-              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = GH.text; }}
+-              title="Click to copy"
+-            >
+-              {sourceFile}
+-              <span style={{ color: GH.accent }}>:{sourceLine}</span>
+-            </div>
+-          </div>
+-        )}
++        {/* AI Signature -- top-priority field for AI/LLM consumption */}
++        {(() => {
++          const signature = generateAiSignature(elementInfo);
++          if (!signature) return null;
++          // Uses the standard CopyField layout (same as Classes/Text/CSS Path)
++          // for full visual consistency with the rest of the panel.
++          return <CopyField label="AI Signature" value={signature} mono maxLen={1000} />;
++        })()}
+ 
+         {/* Classes */}
+         {elementInfo.classes && <CopyField label="Classes" value={elementInfo.classes} mono />}
+@@ -336,35 +395,10 @@
+         {/* Text */}
+         {elementInfo.text && <CopyField label="Text" value={elementInfo.text} />}
+ 
+-        {/* CSS Path + Copy formats dropdown */}
+-        {elementInfo.cssPath && (
+-          <div className="px-4 py-3" style={{ borderBottom: `1px solid ${GH.border}` }}>
+-            <div className="flex items-center justify-between mb-1">
+-              <div className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: GH.text }}>CSS Path</div>
+-              <div className="flex items-center gap-1.5">
+-                <CopyFormatDropdown elementInfo={elementInfo} />
+-                <CopyButton text={elementInfo.cssPath} color={GH.accent} />
+-              </div>
+-            </div>
+-            <div
+-              className="rounded-md px-2.5 py-1.5 break-all cursor-pointer transition-colors"
+-              style={{
+-                fontFamily: GH.fontMono,
+-                fontSize: '11px',
+-                color: GH.text,
+-                background: GH.canvasSubtle,
+-              }}
+-              onClick={(e) => { e.stopPropagation(); safeCopy(elementInfo.cssPath); }}
+-              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = '#1c2128'; }}
+-              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = GH.canvasSubtle; }}
+-              title="Click to copy"
+-            >
+-              {elementInfo.cssPath.length > 300 ? elementInfo.cssPath.slice(0, 300) + '...' : elementInfo.cssPath}
+-            </div>
+-          </div>
+-        )}
++        {/* CSS Path */}
++        {elementInfo.cssPath && <CopyField label="CSS Path" value={elementInfo.cssPath} mono />}
+ 
+-        {/* HTML — syntax highlighted */}
++        {/* HTML -- syntax highlighted */}
+         <div className="px-4 py-3" style={{ borderBottom: `1px solid ${GH.border}` }}>
+           <div className="flex items-center justify-between mb-1">
+             <div className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: GH.text }}>HTML</div>
+--- a/InspectorFab.tsx
++++ b/InspectorFab.tsx
+@@ -5,9 +5,15 @@
+ 
+ const FAB_SIZE = 44;
+ const EDGE_PAD = 8;
+-const INIT_BOTTOM = 24;
+-const INIT_RIGHT = 24;
++const INIT_BOTTOM = 30;
++const INIT_RIGHT = 30;
+ const DEAD_ZONE = 3;
++const LOUPE_GAP = 8; // gap between main FAB and loupe FAB
++const LOUPE_SIZE = 100; // diameter of magnifier circle
++const LOUPE_ZOOM = 2;          // default zoom (3x was too aggressive — lost context)
++const LOUPE_ZOOM_MIN = 1.5;
++const LOUPE_ZOOM_MAX = 5;
++const LOUPE_ZOOM_STEP = 0.5;
+ 
+ interface InspectorFabProps {
+   active: boolean;
+@@ -22,6 +28,15 @@
+   const dragRef = useRef<{ startX: number; startY: number; origX: number; origY: number } | null>(null);
+   const isDraggingRef = useRef(false);
+ 
++  // -- Loupe state (only relevant when inspector active) --
++  const [loupe, setLoupe] = useState(false);
++  const [loupeSnapshot, setLoupeSnapshot] = useState<{ url: string; w: number; h: number } | null>(null);
++  const loupeRef = useRef<HTMLDivElement | null>(null);
++  const zoomRef = useRef(LOUPE_ZOOM);       // mutable zoom (read inside rAF handler)
++  const [zoomDisplay, setZoomDisplay] = useState(LOUPE_ZOOM);  // for the "2x" badge
++  const [hintVisible, setHintVisible] = useState(false);
++  const cursorRef = useRef({ x: 0, y: 0 }); // last cursor pos (for wheel-zoom refresh)
++
+   // Initialize position once on mount
+   useEffect(() => {
+     setPos({
+@@ -30,6 +45,166 @@
+     });
+   }, []);
+ 
++  // Turn loupe off when inspector closes
++  useEffect(() => { if (!active) setLoupe(false); }, [active]);
++
++  // Loupe effect: "live" magnifier via cloned body + CSS transform scale.
++  // No screenshot = no html2canvas limitations (lab()/oklch() all work natively).
++  // The clone is positioned under the loupe circle, scaled by current zoom, and
++  // shifted so the point under the cursor appears at the loupe center.
++  // Smoothness: rAF-throttled mousemove (no jank on fast motion).
++  // Zoom: mouse wheel changes zoom in [1.5x .. 5x] range (default 2x).
++  useEffect(() => {
++    if (!loupe) { setLoupeSnapshot(null); return; }
++
++    // Reset zoom to default each time loupe activates.
++    zoomRef.current = LOUPE_ZOOM;
++    setZoomDisplay(LOUPE_ZOOM);
++
++    // Build a live clone of the page body.
++    const clone = document.body.cloneNode(true) as HTMLElement;
++    // Strip inspector artifacts from the clone (loupe, FAB, popover, highlight).
++    clone.querySelectorAll('[data-se-loupe], [data-se-loupe-fab], [data-se-fab], [data-se-panel], [data-se-highlight]').forEach(n => n.remove());
++    // Remove scripts (don't want them executing inside the clone).
++    clone.querySelectorAll('script').forEach(n => n.remove());
++
++    // CRITICAL: do NOT delete aside/header/nav/fixed/sticky elements.
++    // Previously we did, which shifted the clone's layout (sidebar removed →
++    // content jumps left by ~280px) → coordinates no longer matched the real
++    // page → user sees element X in the loupe but clicks element Y. That was
++    // the "screenshot feeling".
++    // Instead: convert position:fixed/sticky → absolute (the wrapper is fixed
++    // full-viewport, so absolute top/left = same screen coords) and reset
++    // z-index so they don't stack above content inside the clone.
++    const MARKER = 'data-se-clone-fix';
++    const fixedOrig: HTMLElement[] = [];
++    document.querySelectorAll('[class*="fixed"], [class*="sticky"]').forEach(el => {
++      const cs = window.getComputedStyle(el);
++      if (cs.position === 'fixed' || cs.position === 'sticky') {
++        el.setAttribute(MARKER, String(fixedOrig.length));
++        fixedOrig.push(el as HTMLElement);
++      }
++    });
++    fixedOrig.forEach((orig, i) => {
++      const cl = clone.querySelector(`[${MARKER}="${i}"]`) as HTMLElement | null;
++      if (cl) {
++        cl.style.position = 'absolute';
++        cl.style.zIndex = 'auto';
++        cl.removeAttribute(MARKER);
++      }
++      orig.removeAttribute(MARKER);
++    });
++
++    // Mark clone so we can clean it up.
++    clone.setAttribute('data-se-loupe-clone', '');
++
++    // The wrapper sits behind the loupe circle, sized to the viewport.
++    // transform-origin = 0 0; scale = current zoom; translate follows cursor.
++    const wrapper = document.createElement('div');
++    wrapper.setAttribute('data-se-loupe-clone-wrap', '');
++    wrapper.style.cssText = `
++      position: fixed;
++      top: 0; left: 0;
++      width: ${window.innerWidth}px;
++      height: ${window.innerHeight}px;
++      pointer-events: none;
++      z-index: 99998;
++      transform-origin: 0 0;
++      overflow: hidden;
++    `;
++    // Override clone body styles: keep margin/padding as-is so coordinates match
++    // the real page (resetting them shifts content). Only disable transform,
++    // transitions, animations, and make background transparent so the loupe
++    // doesn't double-render body background.
++    clone.style.position = 'absolute';
++    clone.style.top = '0';
++    clone.style.left = '0';
++    clone.style.transform = 'none';
++    clone.style.transition = 'none';
++    clone.style.animation = 'none';
++    clone.style.background = 'transparent';
++    clone.style.minHeight = window.innerHeight + 'px';
++    clone.style.width = window.innerWidth + 'px';
++    wrapper.appendChild(clone);
++    document.body.appendChild(wrapper);
++
++    setLoupeSnapshot({ url: '__live__', w: window.innerWidth, h: window.innerHeight });
++
++    // Show hint briefly on activation so user learns the controls.
++    setHintVisible(true);
++    const hintTimer = window.setTimeout(() => setHintVisible(false), 2400);
++
++    // Apply transform: scale by current zoom, translate so the point under the
++    // cursor (in document coords, i.e. viewport + scroll) lands at loupe center.
++    // Math: cursor (cx,cy) in viewport. In document coords = (cx+sx, cy+sy).
++    // In clone (= body, document coords), that point is also (cx+sx, cy+sy).
++    // After scale(z) origin 0 0 → (z*(cx+sx), z*(cy+sy)).
++    // Want it at loupe center = (cx, cy) screen. So translate by
++    //   tx = cx - z*(cx+sx), ty = cy - z*(cy+sy).
++    // Scroll compensation is essential: without it, a scrolled page shows the
++    // wrong element under the loupe center (another source of "screenshot feeling").
++    const applyTransform = (cx: number, cy: number) => {
++      const el = loupeRef.current;
++      const z = zoomRef.current;
++      const sx = window.scrollX;
++      const sy = window.scrollY;
++      if (el) {
++        el.style.left = (cx - LOUPE_SIZE / 2) + 'px';
++        el.style.top = (cy - LOUPE_SIZE / 2) + 'px';
++      }
++      const tx = cx - z * (cx + sx);
++      const ty = cy - z * (cy + sy);
++      // Order matters: translate FIRST (in unscaled coords), then scale.
++      // If we write `scale(z) translate(tx)`, translate is applied in scaled
++      // coords (matrix e = z*tx), which breaks the math — the loupe ends up
++      // showing a different point than the cursor. `translate() scale()` keeps
++      // translate in unscaled coords (matrix e = tx), matching the formula above.
++      wrapper.style.transform = `translate(${tx}px, ${ty}px) scale(${z})`;
++    };
++
++    // rAF-throttled mousemove: prevents janky/dizzy updates on fast motion.
++    // Without this, the loupe jumps on every mousemove event (can be 60+/sec).
++    let rafId: number | null = null;
++    const onMove = (e: MouseEvent) => {
++      cursorRef.current = { x: e.clientX, y: e.clientY };
++      if (rafId !== null) return;
++      rafId = requestAnimationFrame(() => {
++        rafId = null;
++        applyTransform(cursorRef.current.x, cursorRef.current.y);
++      });
++    };
++
++    // Wheel = zoom in/out (1.5x .. 5x). preventDefault stops page scroll while loupe is on.
++    const onWheel = (e: WheelEvent) => {
++      e.preventDefault();
++      const delta = e.deltaY < 0 ? LOUPE_ZOOM_STEP : -LOUPE_ZOOM_STEP;
++      const next = Math.max(LOUPE_ZOOM_MIN, Math.min(LOUPE_ZOOM_MAX, zoomRef.current + delta));
++      if (next !== zoomRef.current) {
++        zoomRef.current = next;
++        setZoomDisplay(next);
++        // Re-apply immediately so zoom feels responsive (don't wait for next mousemove).
++        applyTransform(cursorRef.current.x, cursorRef.current.y);
++      }
++    };
++
++    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setLoupe(false); };
++    const onClick = () => setLoupe(false);
++    window.addEventListener('mousemove', onMove);
++    window.addEventListener('wheel', onWheel, { passive: false });
++    window.addEventListener('keydown', onKey);
++    document.addEventListener('click', onClick, true);
++    return () => {
++      window.clearTimeout(hintTimer);
++      if (rafId !== null) cancelAnimationFrame(rafId);
++      window.removeEventListener('mousemove', onMove);
++      window.removeEventListener('wheel', onWheel);
++      window.removeEventListener('keydown', onKey);
++      document.removeEventListener('click', onClick, true);
++      // Remove the cloned wrapper.
++      wrapper.remove();
++    };
++  }, [loupe]);
++
+   const onDragStart = useCallback((e: React.MouseEvent) => {
+     e.preventDefault();
+     setPressed(true);
+@@ -64,21 +239,6 @@
+     onToggle();
+   }, [onToggle]);
+ 
+-  const tooltipStyle: React.CSSProperties = {
+-    background: GH.headerBg,
+-    border: `1px solid ${GH.border}`,
+-    borderRadius: GH.radius,
+-    boxShadow: '0 4px 12px rgba(0,0,0,0.4)',
+-    color: GH.textSec,
+-    fontSize: '12px',
+-    padding: '6px 12px',
+-    fontFamily: GH.fontSans,
+-    pointerEvents: 'none',
+-    opacity: active ? 1 : 0,
+-    transform: active ? 'translateY(0)' : 'translateY(8px)',
+-    transition: 'opacity 0.15s ease, transform 0.15s ease',
+-  };
+-
+   const scale = pressed ? 0.94 : hovered ? 1.08 : 1;
+ 
+   return (
+@@ -123,17 +283,91 @@
+         )}
+       </button>
+ 
+-      <div
+-        className="fixed z-[90] whitespace-nowrap"
+-        style={{
+-          ...tooltipStyle,
+-          top: pos.y + FAB_SIZE + 8,
+-          left: pos.x + (FAB_SIZE / 2),
+-          transform: active ? 'translateX(-50%) translateY(0)' : 'translateX(-50%) translateY(8px)',
+-        }}
+-      >
+-        Click an element to inspect
+-      </div>
++      {/* -- Loupe FAB: visible only when inspector active, sits to the left of main FAB -- */}
++      {active && (
++        <button
++          data-se-loupe-fab
++          onClick={(e) => { e.stopPropagation(); setLoupe(v => !v); }}
++          onMouseEnter={() => setHovered(true)}
++          onMouseLeave={() => setHovered(false)}
++          className="fixed z-[90] flex items-center justify-center cursor-pointer focus:outline-none"
++          style={{
++            top: pos.y,
++            left: pos.x - FAB_SIZE - LOUPE_GAP,
++            width: FAB_SIZE,
++            height: FAB_SIZE,
++            borderRadius: '12px',
++            border: `1px solid ${loupe ? GH.accent : GH.border}`,
++            background: loupe ? GH.accentMuted : GH.headerBg,
++            color: loupe ? '#fff' : GH.text,
++            boxShadow: loupe
++              ? '0 4px 16px rgba(31,111,235,0.35)'
++              : '0 4px 12px rgba(0,0,0,0.4)',
++            fontFamily: GH.fontSans,
++            transition: 'all 0.2s ease',
++            transform: `scale(${pressed ? 0.94 : hovered ? 1.08 : 1})`,
++          }}
++          aria-label={loupe ? 'Turn off magnifier' : 'Turn on magnifier'}
++          title={loupe ? 'Magnifier ON · scroll = zoom · Esc = off' : 'Magnifier (scroll to zoom, click to inspect)'}
++        >
++          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
++            <circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /><path d="M11 8v6" /><path d="M8 11h6" />
++          </svg>
++        </button>
++      )}
++
++      {/* -- Pixel loupe overlay: follows cursor, zoom adjustable via wheel -- */}
++      {loupe && loupeSnapshot && (
++        <div
++          ref={loupeRef}
++          data-se-loupe=""
++          className="fixed pointer-events-none"
++          style={{
++            width: LOUPE_SIZE + 'px',
++            height: LOUPE_SIZE + 'px',
++            borderRadius: '50%',
++            border: `2px solid ${GH.accent}`,
++            boxShadow: '0 0 0 4px rgba(0,0,0,0.55), 0 4px 14px rgba(0,0,0,0.7)',
++            overflow: 'hidden',
++            zIndex: 99999,
++            left: '-200px',
++            top: '-200px',
++            background: 'transparent',
++          }}
++        >
++          {/* Crosshair: center dot + thin lines, clearly marks "click target = center" */}
++          <div style={{ position: 'absolute', left: '50%', top: '50%', width: '24px', height: '1px', background: GH.accent, transform: 'translate(-50%, -50%)', opacity: 0.9, zIndex: 2 }} />
++          <div style={{ position: 'absolute', left: '50%', top: '50%', width: '1px', height: '24px', background: GH.accent, transform: 'translate(-50%, -50%)', opacity: 0.9, zIndex: 2 }} />
++          <div style={{ position: 'absolute', left: '50%', top: '50%', width: '4px', height: '4px', borderRadius: '50%', background: GH.accent, transform: 'translate(-50%, -50%)', opacity: 1, zIndex: 3, boxShadow: '0 0 0 1px rgba(0,0,0,0.6)' }} />
++
++          {/* Zoom indicator badge (top-left of circle) */}
++          <div style={{
++            position: 'absolute', top: '8px', left: '10px',
++            fontSize: '11px', fontWeight: 600, fontFamily: GH.fontMono,
++            color: '#fff', background: 'rgba(0,0,0,0.7)',
++            padding: '1px 6px', borderRadius: '6px',
++            zIndex: 4,
++          }}>
++            {zoomDisplay}x
++          </div>
++
++          {/* Hint (bottom of circle, fades out after ~2.4s) */}
++          <div style={{
++            position: 'absolute', bottom: '8px', left: '50%',
++            transform: 'translateX(-50%)',
++            fontSize: '9px', fontWeight: 500, fontFamily: GH.fontSans,
++            color: '#fff', background: 'rgba(0,0,0,0.75)',
++            padding: '2px 8px', borderRadius: '6px',
++            whiteSpace: 'nowrap',
++            opacity: hintVisible ? 1 : 0,
++            transition: 'opacity 0.4s ease',
++            zIndex: 4,
++          }}>
++            scroll: zoom · click: inspect
++          </div>
++        </div>
++      )}
++
+     </>
+   );
+ }
+--- a/use-element-inspector.ts
++++ b/use-element-inspector.ts
+@@ -13,8 +13,6 @@
+   const [elementInfo, setElementInfo] = useState<ElementInfo | null>(null);
+   const [panelPos, setPanelPos] = useState({ x: 0, y: 0 });
+   const [highlightBox, setHighlightBox] = useState<DOMRect | null>(null);
+-  const [hoveredTag, setHoveredTag] = useState<string | null>(null);
+-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+   const [snippet, setSnippet] = useState<SnippetData | null>(null);
+   const [snippetLoading, setSnippetLoading] = useState(false);
+   const fabRef = useRef<HTMLButtonElement>(null);
+@@ -68,6 +66,8 @@
+     const cs = window.getComputedStyle(el);
+     if (
+       el.closest('[data-se-fab]') ||
++      el.closest('[data-se-loupe-fab]') ||
++      el.closest('[data-se-loupe]') ||
+       el.closest('[data-se-panel]') ||
+       el.closest('[data-se-highlight]')
+     ) {
+@@ -124,23 +124,23 @@
+     const target = e.target as HTMLElement;
+     if (
+       target.closest('[data-se-fab]') ||
++      target.closest('[data-se-loupe-fab]') ||
++      target.closest('[data-se-loupe]') ||
+       target.closest('[data-se-panel]') ||
+       target.closest('[data-se-highlight]')
+     ) {
+       setHighlightBox(null);
+-      setHoveredTag(null);
+       return;
+     }
+-    const rect = target.getBoundingClientRect();
+-    setHighlightBox(rect);
+-    setHoveredTag(target.tagName.toLowerCase());
+-    setMousePos({ x: e.clientX, y: e.clientY });
++    setHighlightBox(target.getBoundingClientRect());
+   }, []);
+ 
+   const handleClick = useCallback((e: MouseEvent) => {
+     const target = e.target as HTMLElement;
+     if (
+       target.closest('[data-se-fab]') ||
++      target.closest('[data-se-loupe-fab]') ||
++      target.closest('[data-se-loupe]') ||
+       target.closest('[data-se-panel]') ||
+       target.closest('[data-se-highlight]')
+     ) {
+@@ -171,7 +171,6 @@
+ 
+   const handleScroll = useCallback(() => {
+     setHighlightBox(null);
+-    setHoveredTag(null);
+   }, []);
+ 
+   // ── Attach / detach listeners ──
+@@ -198,7 +197,6 @@
+         setElementInfo(null);
+         setHighlightBox(null);
+         setSnippet(null);
+-        setHoveredTag(null);
+       }
+     };
+     window.addEventListener('keydown', handler);
+@@ -213,7 +211,6 @@
+         setElementInfo(null);
+         setHighlightBox(null);
+         setSnippet(null);
+-        setHoveredTag(null);
+       }
+       return next;
+     });
+@@ -254,8 +251,6 @@
+     elementInfo,
+     panelPos,
+     highlightBox,
+-    hoveredTag,
+-    mousePos,
+     snippet,
+     snippetLoading,
+     fabRef,

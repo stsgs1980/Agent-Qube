@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>P-MAS v2 — Agent Detail: Architect</title>
+<style>
+  /* ============ RESET & BASE ============ */
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  html, body { height:100%; }
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #000000;
+    color: #fafafa;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+  ::-webkit-scrollbar { width:5px; }
+  ::-webkit-scrollbar-track { background:#0A0A0F; }
+  ::-webkit-scrollbar-thumb { background:#27272a; border-radius:3px; }
+
+  /* ============ LAYOUT ============ */
+  .app { display:flex; flex-direction:column; height:100vh; }
+
+  /* ============ HEADER BAR ============ */
+  .header {
+    height:56px; min-height:56px;
+    display:flex; align-items:center;
+    padding:0 20px; gap:12px;
+    background:#0A0A0F;
+    border-bottom:1px solid #27272a;
+    z-index:20;
+  }
+  .header-left { display:flex; align-items:center; gap:10px; flex:1; }
+  .back-btn {
+    width:32px; height:32px; border-radius:6px; border:1px solid #27272a;
+    background:transparent; color:#a1a1aa; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; font-size:16px;
+    transition: all .15s;
+  }
+  .back-btn:hover { border-color:#06B6D4; color:#06B6D4; }
+  .header-title { font-size:15px; font-weight:600; }
+  .header-right { display:flex; align-items:center; gap:8px; }
+  .hdr-btn {
+    height:30px; padding:0 14px; border-radius:6px;
+    border:1px solid #27272a; background:transparent; color:#a1a1aa;
+    cursor:pointer; font-size:12px; font-weight:500; transition:all .15s;
+    display:flex; align-items:center; gap:6px;
+  }
+  .hdr-btn:hover { border-color:#52525b; color:#fafafa; }
+  .hdr-btn.danger { border-color:#ef444450; color:#ef4444; }
+  .hdr-btn.danger:hover { border-color:#ef4444; background:#ef444410; }
+  .hdr-btn.primary { border-color:#06B6D4; color:#06B6D4; }
+  .hdr-btn.primary:hover { background:#06B6D418; }
+  .more-btn {
+    width:32px; height:32px; border-radius:6px; border:1px solid #27272a;
+    background:transparent; color:#a1a1aa; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    font-size:18px; font-weight:700; transition:all .15s;
+  }
+  .more-btn:hover { border-color:#52525b; color:#fafafa; }
+
+  /* ============ HERO SECTION ============ */
+  .hero {
+    min-height:200px;
+    background: linear-gradient(180deg, #0A0A0F 0%, #000000 100%);
+    border-bottom:1px solid #27272a;
+    display:flex; align-items:center; justify-content:center;
+    padding:28px 32px;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::before {
+    content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+    background: radial-gradient(ellipse at 50% 20%, #67E8F908 0%, transparent 70%);
+    pointer-events:none;
+  }
+  .hero-content {
+    display:flex; flex-direction:column; align-items:center; gap:12px;
+    position:relative; z-index:1;
+  }
+  .hero-top { display:flex; align-items:flex-start; gap:24px; }
+  .avatar-wrap { position:relative; }
+  .avatar {
+    width:80px; height:80px; border-radius:50%;
+    border:3px solid #67E8F9;
+    background:#111118;
+    display:flex; align-items:center; justify-content:center;
+    font-size:32px; font-weight:700; color:#67E8F9;
+    position:relative;
+  }
+  .status-dot {
+    position:absolute; bottom:4px; right:4px;
+    width:14px; height:14px; border-radius:50%;
+    background:#10b981; border:3px solid #000;
+    z-index:2;
+  }
+  .status-dot.pulse { animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 #10b98160; }
+    50% { box-shadow: 0 0 0 6px #10b98100; }
+  }
+  .hero-info { display:flex; flex-direction:column; gap:6px; padding-top:4px; }
+  .hero-name { font-size:28px; font-weight:700; letter-spacing:-0.5px; }
+  .hero-subtitle { font-size:13px; color:#a1a1aa; }
+  .hero-subtitle .lead-badge {
+    display:inline-block; padding:1px 8px; border-radius:8px;
+    font-size:10px; font-weight:600; background:#67E8F920; color:#67E8F9;
+    margin-right:4px;
+  }
+  .stat-pills { display:flex; gap:8px; margin-top:4px; }
+  .stat-pill {
+    display:flex; align-items:center; gap:6px;
+    padding:4px 12px; border-radius:16px;
+    background:#111118; border:1px solid #27272a;
+    font-size:11px;
+  }
+  .stat-pill .sp-label { color:#a1a1aa; }
+  .stat-pill .sp-value { color:#fafafa; font-weight:600; }
+  .hero-actions { display:flex; gap:8px; margin-left:auto; padding-top:4px; }
+  .hero-edit-btn {
+    height:32px; padding:0 16px; border-radius:6px;
+    border:1px solid #27272a; background:transparent; color:#a1a1aa;
+    cursor:pointer; font-size:12px; font-weight:500; transition:all .15s;
+    display:flex; align-items:center; gap:5px;
+  }
+  .hero-edit-btn:hover { border-color:#52525b; color:#fafafa; }
+  .hero-del-btn {
+    height:32px; padding:0 16px; border-radius:6px;
+    border:1px solid #ef444440; background:transparent; color:#ef4444;
+    cursor:pointer; font-size:12px; font-weight:500; transition:all .15s;
+    display:flex; align-items:center; gap:5px;
+  }
+  .hero-del-btn:hover { border-color:#ef4444; background:#ef444410; }
+
+  /* ============ MAIN CONTENT ============ */
+  .main-content {
+    flex:1; display:flex; gap:0; overflow:hidden;
+  }
+  .col-left {
+    width:65%; overflow-y:auto; padding:20px 24px;
+    border-right:1px solid #27272a;
+  }
+  .col-right {
+    width:35%; overflow-y:auto; padding:20px 24px;
+  }
+
+  /* ============ CARDS ============ */
+  .card {
+    background:#0A0A0F; border:1px solid #27272a;
+    border-radius:10px; padding:16px; margin-bottom:16px;
+  }
+  .card-header {
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom:12px;
+  }
+  .card-title {
+    font-size:12px; font-weight:600; text-transform:uppercase;
+    letter-spacing:1px; color:#52525b;
+  }
+  .card-action {
+    font-size:11px; color:#06B6D4; cursor:pointer; background:none; border:none;
+    transition:color .15s;
+  }
+  .card-action:hover { text-decoration:underline; }
+
+  /* ============ OVERVIEW CARD ============ */
+  .overview-desc { font-size:13px; color:#a1a1aa; line-height:1.6; margin-bottom:12px; }
+  .overview-tags { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px; }
+  .tag {
+    padding:3px 10px; border-radius:12px; font-size:11px; font-weight:500;
+    background:#111118; border:1px solid #27272a; color:#a1a1aa;
+    cursor:default;
+  }
+  .overview-meta { display:flex; gap:20px; font-size:11px; color:#52525b; }
+  .overview-meta span { display:flex; align-items:center; gap:4px; }
+
+  /* ============ COGNITIVE FORMULA ============ */
+  .formula-active {
+    display:flex; align-items:center; gap:10px;
+    padding:10px 14px; border-radius:8px;
+    background:#111118; border:1px solid #27272a;
+    margin-bottom:10px;
+  }
+  .formula-badge {
+    padding:2px 10px; border-radius:8px; font-size:11px; font-weight:600;
+    background:#10b98120; color:#10b981; white-space:nowrap;
+  }
+  .formula-name { font-size:14px; font-weight:600; color:#fafafa; }
+  .formula-desc { font-size:12px; color:#a1a1aa; margin-bottom:12px; padding-left:4px; }
+  .formula-perf { display:flex; gap:16px; margin-bottom:12px; }
+  .fp-item { display:flex; flex-direction:column; gap:2px; }
+  .fp-label { font-size:10px; color:#52525b; text-transform:uppercase; letter-spacing:.5px; }
+  .fp-value { font-size:14px; font-weight:600; color:#fafafa; }
+  .formula-compatible { margin-bottom:12px; }
+  .fc-item {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:8px 12px; border-radius:6px;
+    background:#111118; border:1px solid #1a1a22;
+    margin-bottom:6px; font-size:12px;
+  }
+  .fc-name { color:#a1a1aa; }
+  .fc-switch {
+    padding:3px 10px; border-radius:4px; font-size:10px; font-weight:600;
+    background:transparent; border:1px solid #06B6D4; color:#06B6D4;
+    cursor:pointer; transition:all .15s; text-transform:uppercase;
+  }
+  .fc-switch:hover { background:#06B6D418; }
+  .change-formula-btn {
+    width:100%; height:32px; border-radius:6px;
+    border:1px solid #27272a; background:transparent; color:#a1a1aa;
+    cursor:pointer; font-size:12px; font-weight:500; transition:all .15s;
+  }
+  .change-formula-btn:hover { border-color:#06B6D4; color:#06B6D4; }
+
+  /* ============ CONNECTIONS ============ */
+  .conn-section-label { font-size:11px; color:#52525b; margin-bottom:6px; font-weight:500; }
+  .conn-item {
+    display:flex; align-items:center; gap:8px;
+    padding:7px 10px; border-radius:6px;
+    background:#111118; margin-bottom:4px;
+    cursor:pointer; transition:background .15s;
+  }
+  .conn-item:hover { background:#1a1a22; }
+  .conn-arrow { font-size:14px; color:#52525b; flex-shrink:0; }
+  .conn-agent { font-size:12px; font-weight:500; color:#fafafa; }
+  .conn-agent:hover { color:#06B6D4; }
+  .conn-type-badge {
+    padding:1px 7px; border-radius:4px; font-size:9px; font-weight:600;
+    text-transform:uppercase; letter-spacing:.3px;
+  }
+  .conn-type-badge.command { background:#8b5cf620; color:#8b5cf6; }
+  .conn-type-badge.sync { background:#06B6D420; color:#06B6D4; }
+  .conn-desc { font-size:11px; color:#52525b; margin-left:auto; white-space:nowrap; }
+  .add-conn-btn {
+    width:100%; height:30px; border-radius:6px;
+    border:1px dashed #27272a; background:transparent; color:#52525b;
+    cursor:pointer; font-size:11px; transition:all .15s; margin-top:8px;
+  }
+  .add-conn-btn:hover { border-color:#06B6D4; color:#06B6D4; }
+
+  /* ============ TASKS ============ */
+  .tasks-header { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+  .tasks-count { font-size:10px; color:#52525b; padding:1px 7px; border-radius:8px; background:#111118; }
+  .task-item {
+    padding:9px 10px; border-radius:6px;
+    background:#111118; margin-bottom:4px;
+    cursor:pointer; transition:background .15s;
+    border:1px solid transparent;
+  }
+  .task-item:hover { background:#1a1a22; border-color:#27272a; }
+  .task-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:3px; }
+  .task-name { font-size:12px; color:#fafafa; font-weight:500; }
+  .task-status-badge {
+    padding:1px 8px; border-radius:8px; font-size:9px; font-weight:600;
+    text-transform:uppercase; letter-spacing:.3px;
+  }
+  .task-status-badge.in-progress { background:#06B6D420; color:#06B6D4; }
+  .task-status-badge.pending { background:#f59e0b20; color:#f59e0b; }
+  .task-status-badge.completed { background:#10b98120; color:#10b981; }
+  .task-status-badge.failed { background:#ef444420; color:#ef4444; }
+  .task-meta { display:flex; align-items:center; gap:10px; font-size:10px; color:#52525b; }
+  .task-priority { font-weight:600; }
+  .task-priority.high { color:#ef4444; }
+  .task-priority.medium { color:#f59e0b; }
+  .task-priority.low { color:#52525b; }
+  .task-subtasks { display:none; padding-top:6px; margin-top:6px; border-top:1px solid #1a1a22; }
+  .task-item.expanded .task-subtasks { display:block; }
+  .subtask-item { font-size:11px; color:#a1a1aa; padding:3px 0 3px 16px; display:flex; align-items:center; gap:6px; }
+  .subtask-check { width:12px; height:12px; border-radius:3px; border:1px solid #27272a; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:8px; }
+  .subtask-check.done { background:#10b981; border-color:#10b981; color:#000; }
+  .tasks-completed-label { font-size:11px; color:#52525b; margin:12px 0 6px; padding-top:8px; border-top:1px solid #1a1a22; }
+  .task-completed { opacity:0.6; }
+  .task-completed .task-name { color:#a1a1aa; }
+  .task-footer { display:flex; gap:8px; margin-top:10px; }
+  .task-footer-btn {
+    flex:1; height:30px; border-radius:6px;
+    border:1px solid #27272a; background:transparent; color:#a1a1aa;
+    cursor:pointer; font-size:11px; font-weight:500; transition:all .15s;
+  }
+  .task-footer-btn:hover { border-color:#52525b; color:#fafafa; }
+  .task-footer-btn.primary { border-color:#06B6D4; color:#06B6D4; }
+  .task-footer-btn.primary:hover { background:#06B6D418; }
+
+  /* ============ EXECUTION HISTORY ============ */
+  .exec-chart-wrap {
+    height:80px; margin-bottom:12px;
+    background:#111118; border-radius:6px;
+    position:relative; overflow:hidden;
+  }
+  .exec-chart-wrap svg { width:100%; height:100%; }
+  .exec-item {
+    display:flex; align-items:center; gap:10px;
+    padding:6px 0; border-bottom:1px solid #1a1a22;
+    font-size:12px;
+  }
+  .exec-item:last-child { border-bottom:none; }
+  .exec-time { color:#52525b; font-size:11px; min-width:50px; font-variant-numeric:tabular-nums; }
+  .exec-task { flex:1; color:#a1a1aa; }
+  .exec-status { font-size:10px; font-weight:600; }
+  .exec-status.success { color:#10b981; }
+  .exec-status.failed { color:#ef4444; }
+  .exec-duration { color:#52525b; font-size:11px; min-width:36px; text-align:right; }
+
+  /* ============ RIGHT COLUMN ============ */
+
+  /* Agent Configuration */
+  .config-row {
+    display:flex; justify-content:space-between; align-items:center;
+    padding:5px 0; font-size:12px; border-bottom:1px solid #1a1a22;
+  }
+  .config-row:last-child { border-bottom:none; }
+  .config-label { color:#a1a1aa; }
+  .config-value { color:#fafafa; font-weight:500; }
+  .config-value.mono { font-family:'SF Mono', 'Fira Code', monospace; font-size:11px; }
+  .edit-config-btn {
+    width:100%; height:30px; border-radius:6px;
+    border:1px solid #27272a; background:transparent; color:#a1a1aa;
+    cursor:pointer; font-size:11px; font-weight:500; transition:all .15s; margin-top:10px;
+  }
+  .edit-config-btn:hover { border-color:#06B6D4; color:#06B6D4; }
+
+  /* Performance Metrics */
+  .perf-chart-wrap {
+    display:flex; align-items:center; gap:16px;
+    padding:8px 0;
+  }
+  .perf-radar { flex-shrink:0; }
+  .perf-overall {
+    display:flex; flex-direction:column; align-items:center; gap:4px;
+  }
+  .perf-score { font-size:40px; font-weight:700; color:#fafafa; line-height:1; }
+  .perf-score-max { font-size:14px; color:#52525b; }
+  .perf-score-label { font-size:10px; color:#52525b; text-transform:uppercase; letter-spacing:1px; }
+
+  /* Activity Timeline */
+  .timeline { position:relative; padding-left:16px; }
+  .timeline::before {
+    content:''; position:absolute; left:5px; top:4px; bottom:4px;
+    width:1px; background:#27272a;
+  }
+  .tl-item {
+    position:relative; padding:4px 0 4px 16px; font-size:12px;
+    cursor:pointer; transition:color .15s;
+  }
+  .tl-item::before {
+    content:''; position:absolute; left:-11px; top:10px;
+    width:7px; height:7px; border-radius:50%;
+    background:#27272a; border:2px solid #0A0A0F;
+  }
+  .tl-item.tl-active::before { background:#10b981; }
+  .tl-item.tl-error::before { background:#ef4444; }
+  .tl-item.tl-info::before { background:#06B6D4; }
+  .tl-time { font-size:10px; color:#52525b; font-variant-numeric:tabular-nums; }
+  .tl-text { color:#a1a1aa; margin-top:1px; }
+  .tl-item:hover .tl-text { color:#fafafa; }
+  .tl-detail { display:none; font-size:11px; color:#52525b; margin-top:3px; padding-left:0; }
+  .tl-item.expanded .tl-detail { display:block; }
+
+  /* Logs */
+  .logs-toggle {
+    display:flex; align-items:center; justify-content:space-between;
+    cursor:pointer; user-select:none;
+  }
+  .logs-toggle .lt-arrow { transition:transform .2s; font-size:10px; color:#52525b; }
+  .logs-toggle.open .lt-arrow { transform:rotate(90deg); }
+  .log-entries { display:none; margin-top:10px; }
+  .log-entries.show { display:block; }
+  .log-line {
+    font-family:'SF Mono','Fira Code','Cascadia Code',monospace;
+    font-size:11px; line-height:1.7; padding:1px 0;
+  }
+  .log-ts { color:#52525b; }
+  .log-level-info { color:#06B6D4; }
+  .log-level-error { color:#ef4444; }
+  .log-level-warn { color:#f59e0b; }
+  .log-msg { color:#a1a1aa; }
+  .view-logs-btn {
+    width:100%; height:28px; border-radius:6px;
+    border:1px solid #27272a; background:transparent; color:#a1a1aa;
+    cursor:pointer; font-size:11px; transition:all .15s; margin-top:8px;
+  }
+  .view-logs-btn:hover { border-color:#06B6D4; color:#06B6D4; }
+
+  /* ============ EDIT MODE OVERLAY ============ */
+  .edit-overlay {
+    position:fixed; top:0; left:0; width:100%; height:100%;
+    background:rgba(0,0,0,.5); z-index:50; display:none;
+    align-items:center; justify-content:center;
+  }
+  .edit-overlay.show { display:flex; }
+  .edit-panel {
+    width:680px; max-height:85vh; background:#111118;
+    border:1px solid #27272a; border-radius:12px;
+    overflow-y:auto;
+  }
+  .edit-header {
+    padding:16px 20px; border-bottom:1px solid #27272a;
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  .edit-header h2 { font-size:16px; font-weight:600; }
+  .edit-close {
+    width:28px; height:28px; border-radius:6px; border:none;
+    background:transparent; color:#a1a1aa; cursor:pointer;
+    font-size:18px; display:flex; align-items:center; justify-content:center;
+  }
+  .edit-close:hover { color:#fafafa; }
+  .edit-body { padding:20px; }
+  .edit-field { margin-bottom:16px; }
+  .edit-field label {
+    display:block; font-size:11px; color:#a1a1aa; margin-bottom:4px;
+    text-transform:uppercase; letter-spacing:.5px;
+  }
+  .edit-field input, .edit-field select {
+    width:100%; height:36px; border-radius:6px;
+    background:#0A0A0F; border:1px solid #27272a;
+    color:#fafafa; padding:0 10px; font-size:13px;
+    outline:none; transition:border-color .15s;
+  }
+  .edit-field input:focus, .edit-field select:focus { border-color:#06B6D4; }
+  .edit-field textarea {
+    width:100%; height:80px; border-radius:6px;
+    background:#0A0A0F; border:1px solid #27272a;
+    color:#fafafa; padding:8px 10px; font-size:13px;
+    outline:none; resize:vertical; transition:border-color .15s;
+    font-family:system-ui, sans-serif;
+  }
+  .edit-field textarea:focus { border-color:#06B6D4; }
+  .edit-row { display:flex; gap:12px; }
+  .edit-row .edit-field { flex:1; }
+  .edit-footer {
+    padding:14px 20px; border-top:1px solid #27272a;
+    display:flex; justify-content:flex-end; gap:8px;
+  }
+  .edit-btn {
+    padding:8px 20px; border-radius:6px; font-size:12px;
+    cursor:pointer; font-weight:500; transition:all .15s;
+  }
+  .edit-btn.cancel { background:transparent; border:1px solid #27272a; color:#a1a1aa; }
+  .edit-btn.cancel:hover { border-color:#52525b; color:#fafafa; }
+  .edit-btn.save { background:#06B6D4; border:1px solid #06B6D4; color:#000; }
+  .edit-btn.save:hover { background:#0891b2; }
+
+  /* ============ CONFIRM DIALOG ============ */
+  .confirm-overlay {
+    position:fixed; top:0; left:0; width:100%; height:100%;
+    background:rgba(0,0,0,.6); z-index:60; display:none;
+    align-items:center; justify-content:center;
+  }
+  .confirm-overlay.show { display:flex; }
+  .confirm-box {
+    width:360px; background:#111118; border:1px solid #27272a;
+    border-radius:10px; padding:20px;
+  }
+  .confirm-title { font-size:15px; font-weight:600; margin-bottom:8px; }
+  .confirm-msg { font-size:13px; color:#a1a1aa; margin-bottom:16px; }
+  .confirm-actions { display:flex; justify-content:flex-end; gap:8px; }
+
+  /* ============ CHART TOOLTIP ============ */
+  .chart-tooltip {
+    position:absolute; background:#111118; border:1px solid #27272a;
+    border-radius:6px; padding:6px 10px; font-size:11px;
+    pointer-events:none; z-index:30; display:none;
+    box-shadow:0 4px 12px rgba(0,0,0,.5);
+  }
+  .chart-tooltip .ct-label { color:#a1a1aa; }
+  .chart-tooltip .ct-value { color:#fafafa; font-weight:600; }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width:1100px) {
+    .main-content { flex-direction:column; }
+    .col-left, .col-right { width:100%; border-right:none; }
+    .col-left { border-bottom:1px solid #27272a; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ============ HEADER BAR ============ -->
+  <div class="header">
+    <div class="header-left">
+      <button class="back-btn" title="Back to Hierarchy" onclick="goBack()">&#8592;</button>
+      <span class="header-title">Agent Profile</span>
+    </div>
+    <div class="header-right">
+      <button class="hdr-btn primary" onclick="toggleEditMode()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        Edit
+      </button>
+      <button class="hdr-btn danger" onclick="confirmDelete()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+        Delete
+      </button>
+      <button class="more-btn" title="More options">&#8230;</button>
+    </div>
+  </div>
+
+  <!-- ============ HERO SECTION ============ -->
+  <div class="hero">
+    <div class="hero-top">
+      <div class="avatar-wrap">
+        <div class="avatar">A</div>
+        <div class="status-dot pulse"></div>
+      </div>
+      <div class="hero-info">
+        <div class="hero-name">Architect</div>
+        <div class="hero-subtitle">
+          <span class="lead-badge">Lead Agent</span>
+          Strategy Group
+        </div>
+        <div class="stat-pills">
+          <div class="stat-pill"><span class="sp-label">Tasks Completed</span><span class="sp-value">47</span></div>
+          <div class="stat-pill"><span class="sp-label">Avg Response</span><span class="sp-value">0.8s</span></div>
+          <div class="stat-pill"><span class="sp-label">Uptime</span><span class="sp-value">99.2%</span></div>
+          <div class="stat-pill"><span class="sp-label">Score</span><span class="sp-value">94/100</span></div>
+        </div>
+      </div>
+      <div class="hero-actions">
+        <button class="hero-edit-btn" onclick="toggleEditMode()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          Edit
+        </button>
+        <button class="hero-del-btn" onclick="confirmDelete()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MAIN CONTENT ============ -->
+  <div class="main-content">
+    <div class="col-left">
+
+      <!-- A. Overview Card -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Overview</span>
+        </div>
+        <div class="overview-desc">Strategic planning and system architecture design. Coordinates high-level decisions across all agent groups.</div>
+        <div class="overview-tags">
+          <span class="tag">planning</span>
+          <span class="tag">architecture</span>
+          <span class="tag">coordination</span>
+          <span class="tag">strategy</span>
+        </div>
+        <div class="overview-meta">
+          <span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#52525b" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Created: 2025-06-01
+          </span>
+          <span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#52525b" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Last Active: 2 minutes ago
+          </span>
+        </div>
+      </div>
+
+      <!-- B. Cognitive Formula Section -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Cognitive Formula</span>
+        </div>
+        <div class="formula-active">
+          <span class="formula-badge">Active</span>
+          <span class="formula-name">ToT (Tree of Thought)</span>
+        </div>
+        <div class="formula-desc">Explores multiple reasoning paths and selects the most promising</div>
+        <div class="formula-perf">
+          <div class="fp-item">
+            <span class="fp-label">Accuracy</span>
+            <span class="fp-value">91%</span>
+          </div>
+          <div class="fp-item">
+            <span class="fp-label">Latency</span>
+            <span class="fp-value">1.2s avg</span>
+          </div>
+          <div class="fp-item">
+            <span class="fp-label">Token Usage</span>
+            <span class="fp-value">847 avg</span>
+          </div>
+        </div>
+        <div class="formula-compatible">
+          <div style="font-size:11px;color:#52525b;margin-bottom:6px;">Compatible Formulas</div>
+          <div class="fc-item">
+            <span class="fc-name">CoVe (Chain of Verification)</span>
+            <button class="fc-switch" onclick="confirmSwitchFormula('CoVe')">Switch</button>
+          </div>
+          <div class="fc-item">
+            <span class="fc-name">GoT (Graph of Thought)</span>
+            <button class="fc-switch" onclick="confirmSwitchFormula('GoT')">Switch</button>
+          </div>
+        </div>
+        <button class="change-formula-btn" onclick="toggleEditMode()">Change Formula</button>
+      </div>
+
+      <!-- C. Connections Section -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Connections</span>
+          <button class="card-action">Manage</button>
+        </div>
+        <div class="conn-section-label">Outgoing (3)</div>
+        <div class="conn-item" onclick="navigateAgent('Analyst')">
+          <span class="conn-arrow">&#8594;</span>
+          <span class="conn-agent">Analyst</span>
+          <span class="conn-type-badge command">Command</span>
+          <span class="conn-desc">Delegates analysis tasks</span>
+        </div>
+        <div class="conn-item" onclick="navigateAgent('Coordinator')">
+          <span class="conn-arrow">&#8594;</span>
+          <span class="conn-agent">Coordinator</span>
+          <span class="conn-type-badge command">Command</span>
+          <span class="conn-desc">Sends strategic directives</span>
+        </div>
+        <div class="conn-item" onclick="navigateAgent('Visionary')">
+          <span class="conn-arrow">&#8594;</span>
+          <span class="conn-agent">Visionary</span>
+          <span class="conn-type-badge sync">Sync</span>
+          <span class="conn-desc">Syncs strategic vision</span>
+        </div>
+        <div class="conn-section-label" style="margin-top:10px;">Incoming (1)</div>
+        <div class="conn-item" onclick="navigateAgent('System Orchestrator')">
+          <span class="conn-arrow">&#8592;</span>
+          <span class="conn-agent">System Orchestrator</span>
+          <span class="conn-type-badge command">Command</span>
+          <span class="conn-desc">Receives system directives</span>
+        </div>
+        <button class="add-conn-btn">+ Add Connection</button>
+      </div>
+
+      <!-- D. Tasks Section -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Tasks</span>
+        </div>
+        <div class="tasks-header">
+          <span style="font-size:11px;color:#a1a1aa;">Active Tasks</span>
+          <span class="tasks-count">3</span>
+        </div>
+        <div class="task-item" onclick="toggleTaskExpand(this)">
+          <div class="task-top">
+            <span class="task-name">Review Q3 strategy alignment</span>
+            <span class="task-status-badge in-progress">In Progress</span>
+          </div>
+          <div class="task-meta">
+            <span class="task-priority high">High Priority</span>
+            <span>Started 2h ago</span>
+          </div>
+          <div class="task-subtasks">
+            <div class="subtask-item"><span class="subtask-check done">&#10003;</span> Gather Q3 metrics</div>
+            <div class="subtask-item"><span class="subtask-check done">&#10003;</span> Compare with Q2 baseline</div>
+            <div class="subtask-item"><span class="subtask-check"></span> Draft alignment report</div>
+          </div>
+        </div>
+        <div class="task-item" onclick="toggleTaskExpand(this)">
+          <div class="task-top">
+            <span class="task-name">Design agent communication protocol</span>
+            <span class="task-status-badge pending">Pending</span>
+          </div>
+          <div class="task-meta">
+            <span class="task-priority medium">Medium Priority</span>
+            <span>Queued</span>
+          </div>
+          <div class="task-subtasks">
+            <div class="subtask-item"><span class="subtask-check"></span> Research existing protocols</div>
+            <div class="subtask-item"><span class="subtask-check"></span> Define message schema</div>
+          </div>
+        </div>
+        <div class="task-item" onclick="toggleTaskExpand(this)">
+          <div class="task-top">
+            <span class="task-name">Coordinate deployment plan</span>
+            <span class="task-status-badge in-progress">In Progress</span>
+          </div>
+          <div class="task-meta">
+            <span class="task-priority high">High Priority</span>
+            <span>Started 4h ago</span>
+          </div>
+          <div class="task-subtasks">
+            <div class="subtask-item"><span class="subtask-check done">&#10003;</span> Identify deployment targets</div>
+            <div class="subtask-item"><span class="subtask-check"></span> Schedule rollout phases</div>
+          </div>
+        </div>
+
+        <div class="tasks-completed-label">Completed (recent)</div>
+        <div class="task-item task-completed" onclick="toggleTaskExpand(this)">
+          <div class="task-top">
+            <span class="task-name">Validate architecture decisions</span>
+            <span class="task-status-badge completed">Completed</span>
+          </div>
+          <div class="task-meta"><span>2h ago</span></div>
+        </div>
+        <div class="task-item task-completed" onclick="toggleTaskExpand(this)">
+          <div class="task-top">
+            <span class="task-name">Plan sprint retrospective</span>
+            <span class="task-status-badge completed">Completed</span>
+          </div>
+          <div class="task-meta"><span>1d ago</span></div>
+        </div>
+        <div class="task-item task-completed" onclick="toggleTaskExpand(this)">
+          <div class="task-top">
+            <span class="task-name">Update system roadmap</span>
+            <span class="task-status-badge completed">Completed</span>
+          </div>
+          <div class="task-meta"><span>3d ago</span></div>
+        </div>
+
+        <div class="task-footer">
+          <button class="task-footer-btn">View All Tasks</button>
+          <button class="task-footer-btn primary">Assign New Task</button>
+        </div>
+      </div>
+
+      <!-- E. Execution History -->
+      <div class="card" style="position:relative;">
+        <div class="card-header">
+          <span class="card-title">Execution History</span>
+          <span style="font-size:11px;color:#52525b;">Last 7 days</span>
+        </div>
+        <div class="exec-chart-wrap" id="execChartWrap">
+          <svg id="execChart" viewBox="0 0 400 80" preserveAspectRatio="none"></svg>
+        </div>
+        <div class="chart-tooltip" id="chartTooltip">
+          <div class="ct-label" id="ctLabel"></div>
+          <div class="ct-value" id="ctValue"></div>
+        </div>
+        <div id="execList">
+          <div class="exec-item">
+            <span class="exec-time">14:32</span>
+            <span class="exec-task">Strategy review</span>
+            <span class="exec-status success">Success</span>
+            <span class="exec-duration">1.2s</span>
+          </div>
+          <div class="exec-item">
+            <span class="exec-time">13:15</span>
+            <span class="exec-task">Architecture decision</span>
+            <span class="exec-status success">Success</span>
+            <span class="exec-duration">0.8s</span>
+          </div>
+          <div class="exec-item">
+            <span class="exec-time">11:40</span>
+            <span class="exec-task">Team coordination</span>
+            <span class="exec-status success">Success</span>
+            <span class="exec-duration">1.5s</span>
+          </div>
+          <div class="exec-item">
+            <span class="exec-time">10:05</span>
+            <span class="exec-task">Plan revision</span>
+            <span class="exec-status failed">Failed</span>
+            <span class="exec-duration" style="color:#ef4444;">2.1s</span>
+          </div>
+          <div class="exec-item">
+            <span class="exec-time">Yesterday</span>
+            <span class="exec-task">Sprint planning</span>
+            <span class="exec-status success">Success</span>
+            <span class="exec-duration">0.9s</span>
+          </div>
+        </div>
+        <button class="change-formula-btn" style="margin-top:10px;">View Full History</button>
+      </div>
+
+    </div><!-- col-left -->
+
+    <div class="col-right">
+
+      <!-- A. Agent Configuration -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Configuration</span>
+        </div>
+        <div class="config-row"><span class="config-label">Layer</span><span class="config-value">L1 (Strategy)</span></div>
+        <div class="config-row"><span class="config-label">Role</span><span class="config-value">Lead</span></div>
+        <div class="config-row"><span class="config-label">Group</span><span class="config-value" style="color:#67E8F9;">Strategy</span></div>
+        <div class="config-row"><span class="config-label">Parent</span><span class="config-value">System Orchestrator</span></div>
+        <div class="config-row"><span class="config-label">Twin</span><span class="config-value" style="color:#52525b;">(none)</span></div>
+        <div class="config-row"><span class="config-label">Max Concurrent Tasks</span><span class="config-value mono">5</span></div>
+        <div class="config-row"><span class="config-label">Timeout</span><span class="config-value mono">300s</span></div>
+        <div class="config-row"><span class="config-label">Retry Policy</span><span class="config-value mono">2 attempts, 30s delay</span></div>
+        <button class="edit-config-btn" onclick="toggleEditMode()">Edit Config</button>
+      </div>
+
+      <!-- B. Performance Metrics -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Performance Metrics</span>
+        </div>
+        <div class="perf-chart-wrap">
+          <div class="perf-radar">
+            <svg id="radarChart" width="180" height="180" viewBox="0 0 180 180"></svg>
+          </div>
+          <div class="perf-overall">
+            <div class="perf-score">94</div>
+            <div class="perf-score-max">/100</div>
+            <div class="perf-score-label">Overall Score</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- C. Activity Timeline -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Activity Timeline</span>
+        </div>
+        <div class="timeline">
+          <div class="tl-item tl-active" onclick="toggleTimeline(this)">
+            <div class="tl-time">14:32</div>
+            <div class="tl-text">Completed strategy review</div>
+            <div class="tl-detail">Reviewed Q3 alignment with all groups. 3 action items generated.</div>
+          </div>
+          <div class="tl-item tl-info" onclick="toggleTimeline(this)">
+            <div class="tl-time">14:28</div>
+            <div class="tl-text">Started coordination with Tactics</div>
+            <div class="tl-detail">Initiated sync with Coordinator for deployment planning.</div>
+          </div>
+          <div class="tl-item tl-active" onclick="toggleTimeline(this)">
+            <div class="tl-time">13:15</div>
+            <div class="tl-text">Architecture decision finalized</div>
+            <div class="tl-detail">Approved microservice decomposition pattern for v2.</div>
+          </div>
+          <div class="tl-item tl-info" onclick="toggleTimeline(this)">
+            <div class="tl-time">12:00</div>
+            <div class="tl-text">Synced with Visionary</div>
+            <div class="tl-detail">Aligned on long-term roadmap priorities.</div>
+          </div>
+          <div class="tl-item tl-active" onclick="toggleTimeline(this)">
+            <div class="tl-time">11:40</div>
+            <div class="tl-text">Team coordination completed</div>
+            <div class="tl-detail">5 agents coordinated for sprint planning.</div>
+          </div>
+          <div class="tl-item tl-error" onclick="toggleTimeline(this)">
+            <div class="tl-time">10:05</div>
+            <div class="tl-text">Plan revision failed (retry scheduled)</div>
+            <div class="tl-detail">Timeout exceeded at 2.1s. Retry scheduled in 30s with backoff.</div>
+          </div>
+          <div class="tl-item tl-info" onclick="toggleTimeline(this)">
+            <div class="tl-time">09:30</div>
+            <div class="tl-text">Daily strategy review started</div>
+            <div class="tl-detail">Automated daily review of active strategic initiatives.</div>
+          </div>
+          <div class="tl-item tl-active" onclick="toggleTimeline(this)">
+            <div class="tl-time">Yesterday</div>
+            <div class="tl-text">Sprint planning completed</div>
+            <div class="tl-detail">Completed sprint 14 planning. 8 stories committed.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- D. Logs (collapsible) -->
+      <div class="card">
+        <div class="logs-toggle" id="logsToggle" onclick="toggleLogs()">
+          <span class="card-title">Logs</span>
+          <span class="lt-arrow">&#9654;</span>
+        </div>
+        <div class="log-entries" id="logEntries">
+          <div class="log-line"><span class="log-ts">[14:32:01]</span> <span class="log-level-info">INFO</span>  <span class="log-msg">Strategy review completed successfully</span></div>
+          <div class="log-line"><span class="log-ts">[14:28:15]</span> <span class="log-level-info">INFO</span>  <span class="log-msg">Initiating coordination with Tactics group</span></div>
+          <div class="log-line"><span class="log-ts">[10:05:22]</span> <span class="log-level-error">ERROR</span> <span class="log-msg">Plan revision failed: timeout exceeded</span></div>
+          <div class="log-line"><span class="log-ts">[10:05:52]</span> <span class="log-level-info">INFO</span>  <span class="log-msg">Retry scheduled in 30s</span></div>
+          <div class="log-line"><span class="log-ts">[09:30:00]</span> <span class="log-level-info">INFO</span>  <span class="log-msg">Daily strategy review started</span></div>
+          <button class="view-logs-btn">View Full Logs</button>
+        </div>
+      </div>
+
+    </div><!-- col-right -->
+  </div><!-- main-content -->
+
+</div><!-- app -->
+
+<!-- ============ EDIT MODE OVERLAY ============ -->
+<div class="edit-overlay" id="editOverlay">
+  <div class="edit-panel">
+    <div class="edit-header">
+      <h2>Edit Agent: Architect</h2>
+      <button class="edit-close" onclick="toggleEditMode()">&times;</button>
+    </div>
+    <div class="edit-body">
+      <div class="edit-field">
+        <label>Agent Name</label>
+        <input type="text" value="Architect">
+      </div>
+      <div class="edit-field">
+        <label>Description</label>
+        <textarea>Strategic planning and system architecture design. Coordinates high-level decisions across all agent groups.</textarea>
+      </div>
+      <div class="edit-row">
+        <div class="edit-field">
+          <label>Role Group</label>
+          <select>
+            <option>Strategy</option>
+            <option>Tactics</option>
+            <option>Control</option>
+            <option>Execution</option>
+            <option>Memory</option>
+            <option>Monitoring</option>
+            <option>Communication</option>
+            <option>Learning</option>
+          </select>
+        </div>
+        <div class="edit-field">
+          <label>Layer</label>
+          <select>
+            <option>L0 - System</option>
+            <option selected>L1 - Strategy</option>
+            <option>L2 - Tactics / Control</option>
+            <option>L3 - Execution / Memory</option>
+            <option>L4 - Monitor / Comm / Learn</option>
+          </select>
+        </div>
+      </div>
+      <div class="edit-field">
+        <label>Cognitive Formula</label>
+        <select>
+          <option selected>ToT (Tree of Thought)</option>
+          <option>CoVe (Chain of Verification)</option>
+          <option>GoT (Graph of Thought)</option>
+          <option>CoT (Chain of Thought)</option>
+          <option>ReAct</option>
+          <option>Reflexion</option>
+          <option>Self-Refine</option>
+        </select>
+      </div>
+      <div class="edit-field">
+        <label>Tags (comma separated)</label>
+        <input type="text" value="planning, architecture, coordination, strategy">
+      </div>
+      <div class="edit-row">
+        <div class="edit-field">
+          <label>Max Concurrent Tasks</label>
+          <input type="number" value="5" min="1" max="20">
+        </div>
+        <div class="edit-field">
+          <label>Timeout (seconds)</label>
+          <input type="number" value="300" min="10" max="3600">
+        </div>
+      </div>
+      <div class="edit-row">
+        <div class="edit-field">
+          <label>Retry Attempts</label>
+          <input type="number" value="2" min="0" max="5">
+        </div>
+        <div class="edit-field">
+          <label>Retry Delay (seconds)</label>
+          <input type="number" value="30" min="5" max="300">
+        </div>
+      </div>
+      <div class="edit-field">
+        <label>Connections</label>
+        <div style="background:#0A0A0F;border:1px solid #27272a;border-radius:6px;padding:10px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0;font-size:12px;">
+            <span style="color:#a1a1aa;">&#8594; Analyst (Command)</span>
+            <button style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:11px;">Remove</button>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0;font-size:12px;">
+            <span style="color:#a1a1aa;">&#8594; Coordinator (Command)</span>
+            <button style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:11px;">Remove</button>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0;font-size:12px;">
+            <span style="color:#a1a1aa;">&#8594; Visionary (Sync)</span>
+            <button style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:11px;">Remove</button>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0;font-size:12px;">
+            <span style="color:#a1a1aa;">&#8592; System Orchestrator (Command)</span>
+            <button style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:11px;">Remove</button>
+          </div>
+          <button style="margin-top:6px;padding:4px 12px;border-radius:4px;border:1px dashed #27272a;background:transparent;color:#52525b;cursor:pointer;font-size:11px;">+ Add Connection</button>
+        </div>
+      </div>
+    </div>
+    <div class="edit-footer">
+      <button class="edit-btn cancel" onclick="toggleEditMode()">Cancel</button>
+      <button class="edit-btn save" onclick="saveEdit()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ CONFIRM DIALOG ============ -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <div class="confirm-title" id="confirmTitle">Confirm Action</div>
+    <div class="confirm-msg" id="confirmMsg">Are you sure?</div>
+    <div class="confirm-actions">
+      <button class="edit-btn cancel" onclick="closeConfirm()">Cancel</button>
+      <button class="edit-btn save" id="confirmAction" onclick="closeConfirm()">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============ EXECUTION AREA CHART ============
+(function() {
+  const data = [
+    { day:'Mon', value:5 },
+    { day:'Tue', value:8 },
+    { day:'Wed', value:12 },
+    { day:'Thu', value:7 },
+    { day:'Fri', value:15 },
+    { day:'Sat', value:10 },
+    { day:'Sun', value:6 }
+  ];
+  const svg = document.getElementById('execChart');
+  const W = 400, H = 80, padX = 30, padY = 10;
+  const maxVal = Math.max(...data.map(d => d.value));
+  const stepX = (W - padX * 2) / (data.length - 1);
+
+  // Grid lines
+  for (let i = 0; i <= 3; i++) {
+    const y = padY + (H - padY * 2) * i / 3;
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', padX); line.setAttribute('x2', W - padX);
+    line.setAttribute('y1', y); line.setAttribute('y2', y);
+    line.setAttribute('stroke', '#1a1a22'); line.setAttribute('stroke-width', '1');
+    svg.appendChild(line);
+  }
+
+  // Area
+  let areaPath = `M ${padX} ${H - padY}`;
+  data.forEach((d, i) => {
+    const x = padX + i * stepX;
+    const y = H - padY - (d.value / maxVal) * (H - padY * 2);
+    areaPath += ` L ${x} ${y}`;
+  });
+  areaPath += ` L ${padX + (data.length - 1) * stepX} ${H - padY} Z`;
+  const area = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  area.setAttribute('d', areaPath);
+  area.setAttribute('fill', 'url(#areaGrad)');
+  area.setAttribute('stroke', 'none');
+  svg.appendChild(area);
+
+  // Line
+  let linePath = '';
+  data.forEach((d, i) => {
+    const x = padX + i * stepX;
+    const y = H - padY - (d.value / maxVal) * (H - padY * 2);
+    linePath += (i === 0 ? 'M' : ' L') + ` ${x} ${y}`;
+  });
+  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  path.setAttribute('d', linePath);
+  path.setAttribute('fill', 'none');
+  path.setAttribute('stroke', '#06B6D4');
+  path.setAttribute('stroke-width', '2');
+  svg.appendChild(path);
+
+  // Gradient def
+  const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+  const grad = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+  grad.id = 'areaGrad'; grad.setAttribute('x1','0'); grad.setAttribute('y1','0');
+  grad.setAttribute('x2','0'); grad.setAttribute('y2','1');
+  const stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+  stop1.setAttribute('offset','0%'); stop1.setAttribute('stop-color','#06B6D4'); stop1.setAttribute('stop-opacity','0.3');
+  const stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+  stop2.setAttribute('offset','100%'); stop2.setAttribute('stop-color','#06B6D4'); stop2.setAttribute('stop-opacity','0.02');
+  grad.appendChild(stop1); grad.appendChild(stop2);
+  defs.appendChild(grad); svg.insertBefore(defs, svg.firstChild);
+
+  // Dots + hover areas
+  data.forEach((d, i) => {
+    const x = padX + i * stepX;
+    const y = H - padY - (d.value / maxVal) * (H - padY * 2);
+
+    const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    dot.setAttribute('cx', x); dot.setAttribute('cy', y);
+    dot.setAttribute('r', '3'); dot.setAttribute('fill', '#06B6D4');
+    dot.setAttribute('stroke', '#0A0A0F'); dot.setAttribute('stroke-width', '2');
+    dot.style.cursor = 'pointer';
+    dot.addEventListener('mouseenter', (e) => showChartTip(e, d.day, d.value + ' executions'));
+    dot.addEventListener('mouseleave', hideChartTip);
+    svg.appendChild(dot);
+
+    // Invisible hover area
+    const hitArea = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    hitArea.setAttribute('x', x - stepX/2); hitArea.setAttribute('y', 0);
+    hitArea.setAttribute('width', stepX); hitArea.setAttribute('height', H);
+    hitArea.setAttribute('fill', 'transparent'); hitArea.style.cursor = 'pointer';
+    hitArea.addEventListener('mouseenter', (e) => showChartTip(e, d.day, d.value + ' executions'));
+    hitArea.addEventListener('mouseleave', hideChartTip);
+    svg.appendChild(hitArea);
+  });
+
+  // Day labels
+  data.forEach((d, i) => {
+    const x = padX + i * stepX;
+    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    text.setAttribute('x', x); text.setAttribute('y', H - 1);
+    text.setAttribute('text-anchor', 'middle');
+    text.setAttribute('fill', '#52525b'); text.setAttribute('font-size', '9');
+    text.textContent = d.day;
+    svg.appendChild(text);
+  });
+})();
+
+function showChartTip(e, label, value) {
+  const tip = document.getElementById('chartTooltip');
+  document.getElementById('ctLabel').textContent = label;
+  document.getElementById('ctValue').textContent = value;
+  const rect = document.getElementById('execChartWrap').getBoundingClientRect();
+  tip.style.left = (e.clientX - rect.left + 10) + 'px';
+  tip.style.top = (e.clientY - rect.top - 30) + 'px';
+  tip.style.display = 'block';
+}
+function hideChartTip() {
+  document.getElementById('chartTooltip').style.display = 'none';
+}
+
+// ============ RADAR CHART ============
+(function() {
+  const svg = document.getElementById('radarChart');
+  const cx = 90, cy = 90, r = 65;
+  const metrics = [
+    { label:'Accuracy', value:91 },
+    { label:'Speed', value:88 },
+    { label:'Reliability', value:95 },
+    { label:'Efficiency', value:82 },
+    { label:'Adaptability', value:78 },
+    { label:'Collaboration', value:90 }
+  ];
+  const n = metrics.length;
+  const angleStep = (2 * Math.PI) / n;
+  const startAngle = -Math.PI / 2;
+
+  // Grid rings
+  [0.25, 0.5, 0.75, 1].forEach(scale => {
+    let ring = '';
+    for (let i = 0; i <= n; i++) {
+      const a = startAngle + i * angleStep;
+      const x = cx + r * scale * Math.cos(a);
+      const y = cy + r * scale * Math.sin(a);
+      ring += (i === 0 ? 'M' : ' L') + ` ${x} ${y}`;
+    }
+    ring += ' Z';
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', ring);
+    path.setAttribute('fill', 'none');
+    path.setAttribute('stroke', '#1a1a22');
+    path.setAttribute('stroke-width', '1');
+    svg.appendChild(path);
+  });
+
+  // Axes
+  for (let i = 0; i < n; i++) {
+    const a = startAngle + i * angleStep;
+    const x = cx + r * Math.cos(a);
+    const y = cy + r * Math.sin(a);
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', cx); line.setAttribute('y1', cy);
+    line.setAttribute('x2', x); line.setAttribute('y2', y);
+    line.setAttribute('stroke', '#1a1a22'); line.setAttribute('stroke-width', '1');
+    svg.appendChild(line);
+  }
+
+  // Data polygon
+  let dataPath = '';
+  metrics.forEach((m, i) => {
+    const a = startAngle + i * angleStep;
+    const scale = m.value / 100;
+    const x = cx + r * scale * Math.cos(a);
+    const y = cy + r * scale * Math.sin(a);
+    dataPath += (i === 0 ? 'M' : ' L') + ` ${x} ${y}`;
+  });
+  dataPath += ' Z';
+
+  const dataFill = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  dataFill.setAttribute('d', dataPath);
+  dataFill.setAttribute('fill', '#06B6D418');
+  dataFill.setAttribute('stroke', '#06B6D4');
+  dataFill.setAttribute('stroke-width', '2');
+  svg.appendChild(dataFill);
+
+  // Data dots + labels
+  metrics.forEach((m, i) => {
+    const a = startAngle + i * angleStep;
+    const scale = m.value / 100;
+    const x = cx + r * scale * Math.cos(a);
+    const y = cy + r * scale * Math.sin(a);
+
+    const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    dot.setAttribute('cx', x); dot.setAttribute('cy', y);
+    dot.setAttribute('r', '4'); dot.setAttribute('fill', '#06B6D4');
+    dot.setAttribute('stroke', '#0A0A0F'); dot.setAttribute('stroke-width', '2');
+    dot.style.cursor = 'pointer';
+
+    // Tooltip on hover
+    const label = m.label;
+    const val = m.value;
+    dot.addEventListener('mouseenter', function(e) {
+      showRadarTip(e, label, val);
+    });
+    dot.addEventListener('mouseleave', function() {
+      document.getElementById('chartTooltip').style.display = 'none';
+    });
+    svg.appendChild(dot);
+
+    // Axis label
+    const lx = cx + (r + 16) * Math.cos(a);
+    const ly = cy + (r + 16) * Math.sin(a);
+    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    text.setAttribute('x', lx); text.setAttribute('y', ly);
+    text.setAttribute('text-anchor', 'middle');
+    text.setAttribute('dominant-baseline', 'central');
+    text.setAttribute('fill', '#52525b'); text.setAttribute('font-size', '9');
+    text.textContent = m.label;
+    svg.appendChild(text);
+  });
+})();
+
+function showRadarTip(e, label, value) {
+  const tip = document.getElementById('chartTooltip');
+  document.getElementById('ctLabel').textContent = label;
+  document.getElementById('ctValue').textContent = value + '/100';
+  tip.style.left = (e.pageX + 10) + 'px';
+  tip.style.top = (e.pageY - 30) + 'px';
+  tip.style.display = 'block';
+}
+
+// ============ INTERACTIVITY ============
+
+// Back button
+function goBack() {
+  if (document.referrer) {
+    window.history.back();
+  } else {
+    alert('Navigate back to Hierarchy view');
+  }
+}
+
+// Edit mode toggle
+function toggleEditMode() {
+  const overlay = document.getElementById('editOverlay');
+  overlay.classList.toggle('show');
+}
+
+// Save edit (mock)
+function saveEdit() {
+  toggleEditMode();
+  // Brief visual feedback
+  document.querySelector('.hero-name').style.transition = 'color .3s';
+  document.querySelector('.hero-name').style.color = '#06B6D4';
+  setTimeout(() => {
+    document.querySelector('.hero-name').style.color = '#fafafa';
+  }, 800);
+}
+
+// Delete confirmation
+function confirmDelete() {
+  document.getElementById('confirmTitle').textContent = 'Delete Agent';
+  document.getElementById('confirmMsg').textContent = 'Are you sure you want to delete Architect? This action cannot be undone.';
+  document.getElementById('confirmOverlay').classList.add('show');
+}
+
+// Formula switch confirmation
+function confirmSwitchFormula(name) {
+  document.getElementById('confirmTitle').textContent = 'Switch Cognitive Formula';
+  document.getElementById('confirmMsg').textContent = 'Switch the active formula for Architect from ToT to ' + name + '? This may affect performance.';
+  document.getElementById('confirmOverlay').classList.add('show');
+}
+
+function closeConfirm() {
+  document.getElementById('confirmOverlay').classList.remove('show');
+}
+
+// Navigate to connected agent
+function navigateAgent(name) {
+  alert('Navigate to agent: ' + name);
+}
+
+// Task expand/collapse
+function toggleTaskExpand(el) {
+  el.classList.toggle('expanded');
+}
+
+// Timeline expand/collapse
+function toggleTimeline(el) {
+  el.classList.toggle('expanded');
+}
+
+// Logs toggle
+function toggleLogs() {
+  const toggle = document.getElementById('logsToggle');
+  const entries = document.getElementById('logEntries');
+  toggle.classList.toggle('open');
+  entries.classList.toggle('show');
+}
+
+// Close edit overlay on Escape
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    document.getElementById('editOverlay').classList.remove('show');
+    document.getElementById('confirmOverlay').classList.remove('show');
+  }
+});
+
+// Close edit overlay on background click
+document.getElementById('editOverlay').addEventListener('click', function(e) {
+  if (e.target === this) this.classList.remove('show');
+});
+document.getElementById('confirmOverlay').addEventListener('click', function(e) {
+  if (e.target === this) this.classList.remove('show');
+});
+</script>
+</body>
+</html>
