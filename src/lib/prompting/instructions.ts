@@ -24,6 +24,9 @@ import { AI_RULES } from './instructions-ai-rules'
 /** All behavioral instructions (6 entries). */
 export const INSTRUCTIONS: InstructionEntry[] = [...BEHAVIORAL, ...BEHAVIORAL_EXTRA]
 
+/** Re-export AI_RULES for barrel consumers. */
+export { AI_RULES }
+
 // ─── Public API ──────────────────────────────────────────────
 
 /** All instructions (behavioral + architectural). */
