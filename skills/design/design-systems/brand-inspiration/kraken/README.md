@@ -1,1 +1,5 @@
-# Kraken Inspired Design SystemDesign system details have been moved to: https://getdesign.md/kraken/design-mdYou can also view previews, dark mode examples, and download options on getdesign.md.
+# Kraken Inspired Design System
+
+Design system details have been moved to: https://getdesign.md/kraken/design-md
+
+You can also view previews, dark mode examples, and download options on getdesign.md.

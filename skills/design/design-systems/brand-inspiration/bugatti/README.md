@@ -1,1 +1,5 @@
-# Bugatti Inspired Design SystemDesign system details have been moved to: https://getdesign.md/bugatti/design-mdYou can also view previews, dark mode examples, and download options on getdesign.md.
+# Bugatti Inspired Design System
+
+Design system details have been moved to: https://getdesign.md/bugatti/design-md
+
+You can also view previews, dark mode examples, and download options on getdesign.md.

@@ -1,1 +1,5 @@
-# Lamborghini Inspired Design SystemDesign system details have been moved to: https://getdesign.md/lamborghini/design-mdYou can also view previews, dark mode examples, and download options on getdesign.md.
+# Lamborghini Inspired Design System
+
+Design system details have been moved to: https://getdesign.md/lamborghini/design-md
+
+You can also view previews, dark mode examples, and download options on getdesign.md.

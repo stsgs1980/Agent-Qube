@@ -1,1 +1,5 @@
-# Wise Inspired Design SystemDesign system details have been moved to: https://getdesign.md/wise/design-mdYou can also view previews, dark mode examples, and download options on getdesign.md.
+# Wise Inspired Design System
+
+Design system details have been moved to: https://getdesign.md/wise/design-md
+
+You can also view previews, dark mode examples, and download options on getdesign.md.

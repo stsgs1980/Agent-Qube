@@ -1,1 +1,5 @@
-# Binance Inspired Design SystemDesign system details have been moved to: https://getdesign.md/binance/design-mdYou can also view previews, dark mode examples, and download options on getdesign.md.
+# Binance Inspired Design System
+
+Design system details have been moved to: https://getdesign.md/binance/design-md
+
+You can also view previews, dark mode examples, and download options on getdesign.md.

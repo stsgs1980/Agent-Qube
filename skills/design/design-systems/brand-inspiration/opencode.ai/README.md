@@ -1,1 +1,5 @@
-# OpenCode AI Inspired Design SystemDesign system details have been moved to: https://getdesign.md/opencode.ai/design-mdYou can also view previews, dark mode examples, and download options on getdesign.md.
+# OpenCode AI Inspired Design System
+
+Design system details have been moved to: https://getdesign.md/opencode.ai/design-md
+
+You can also view previews, dark mode examples, and download options on getdesign.md.

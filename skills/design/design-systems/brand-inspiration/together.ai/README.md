@@ -1,1 +1,5 @@
-# Together AI Inspired Design SystemDesign system details have been moved to: https://getdesign.md/together.ai/design-mdYou can also view previews, dark mode examples, and download options on getdesign.md.
+# Together AI Inspired Design System
+
+Design system details have been moved to: https://getdesign.md/together.ai/design-md
+
+You can also view previews, dark mode examples, and download options on getdesign.md.

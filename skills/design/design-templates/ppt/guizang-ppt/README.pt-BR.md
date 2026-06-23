@@ -1,1 +1,121 @@
-# agazine eb  · kill de  estilo revista eletrônica em web 🌏 **nglish version .en.md](./.en.md)** 🌏 **中文版 .md](./.md)**ma skill do laude ode / laude gent kills](https//agentskills.io/) para gerar **s  em arquivo único com swipe horizontal**.  tom visual é "**revista eletrônica × tinta digital**" — como se a *onocle* tivesse colado código. estilada por 歸藏](https//x.com/op) em palestras presenciais como "mpresa de uma pessoa só a organização dobrada pela " e "ma nova forma de trabalhar" cada armadilha que ele já pisou virou linha em `checklist.md`.!emonstração do agazine eb ](https//github.com/user-attachments/assets/dca-c-e--eabae)## esultado- 🖋 **ítulo grande em serifa + corpo sem serifa + metadados monoespaçados**, divisão tipográfica em três níveis- 🌊 **ackground eb com fluido / dispersão**, presente na hero, contido nas páginas internas- 📐 **wipe horizontal** teclado ← → / scroll / swipe touch / dots inferiores /  para o índice- 🎨 ** paletas predefinidas** inta lássica / zul-Índigo orcelana / inta loresta / apel raft / una- 🧩 ** layouts de página** capa de abertura, abertura de capítulo, manchete de dado, texto-à-esquerda imagem-à-direita, grade de imagens, pipeline, página de mistério/pergunta, citação grande, comparação efore/fter, mistura texto+imagem- 📄 ** de arquivo único** sem build, sem servidor, abre direto no navegador## uando encaixa / quando não encaixa**✅ oa escolha** palestras presenciais / conversas internas de mercado / sessões privadas / lançamentos de produtos de  / demo day / discursos com forte estilo pessoal**❌ á escolha** tabelões de dados / material de treinamento (densidade de informação insuficiente) / edição colaborativa multi-usuário ( estático)## nstalação### orma  mande o texto abaixo direto para a  (recomendado) e ajude a instalar a skill `guizang-ppt-skill` do laude ode. iga estes passos . aranta que o diretório `~/.claude/skills/` existe (crie se não existir) . ode `git clone https//github.com/op/guizang-ppt-skill.git ~/.claude/skills/magazine-web-ppt` . erifique `ls ~/.claude/skills/magazine-web-ppt/` deve mostrar `.md`, `assets/` e `references/` . e avise quando estiver instalado depois disso, quando eu disser "faça um  estilo revista" ou similar, essa skill é disparadaole esse texto no laude ode / ursor / qualquer agente de  com permissão de shell, e ele faz a instalação automaticamente.### orma  linha de comando manual```bashgit clone https//github.com/op/guizang-ppt-skill.git ~/.claude/skills/magazine-web-ppt```### omo dispararepois de instalada, o laude ode descobre e chama a skill automaticamente na conversa. alavras-chave de gatilho- "me faça um  estilo revista"- "gere um horizontal swipe deck"- "editorial magazine style presentation"- "slides de palestra estilo electronic ink"## luxo de uso skill é um workflow estruturado de  passos o laude conduz. **sclarecimento de requisitos** — checklist de  perguntas audiência, duração, material, imagens, tema, restrições rígidas. **ópia do template** — `assets/template.html` → diretório do projeto, ajuste `title`, troque a paleta. **reenchimento de conteúdo** — escolha entre os  esqueletos de layout, cole, edite o copy (com pré-checagem de classes + planejamento de ritmo das paletas antes). **utoavaliação** — confronto com `references/checklist.md` questões  precisam passar todas. **review** — abre direto no navegador. **teração** — ajusta tamanho de fonte / altura / espaçamento via inline styleetalhes em `.md`](./.md).## strutura de diretórios```magazine-web-ppt/├── .md              ← kill 主文件工作流、原则、常见错误├── .md             ← 本文件├── assets/│   └── template.html     ← 完整可运行的种子 ( + eb + 翻页  全配好)└── references/    ├── components.md     ← 组件手册(字体、色、网格、图标、callout、stat、pipeline)    ├── layouts.md        ←  种页面布局骨架(可直接粘贴)    ├── themes.md         ←  套主题色预设(只能选不能自定义)    └── checklist.md      ← 质量检查清单( /  /  /  分级)```## aletas predefinidasscolha uma em `references/themes.md` — **valores hex personalizados não são permitidos** preservar a estética importa mais do que dar liberdade.| aleta | enário ideal ||--------|---------------|| 🖋 inta lássica | efault genérico, lançamento comercial, quando estiver na dúvida || 🌊 zul-Índigo orcelana | ecnologia / pesquisa /  / lançamentos técnicos || 🌿 inta loresta | atureza / sustentabilidade / cultura / não-ficção || 🍂 apel raft | ostálgico / humanidades / literatura / revistas independentes || 🌙 una | rte / design / criativo / galeria |ara trocar a paleta basta substituir as  linhas de variáveis dentro do `root{}` no início do `template.html` todo o resto do  usa `var(--...)`.## rincípios centrais de design. **ontenção acima de fogos** — o background eb só vaza na página hero. **strutura acima de decoração** — informação nasce de tamanho de fonte + contraste tipográfico + grid e respiro, não de sombras nem cards flutuantes. **magem é cidadã de primeira classe** — corte só pelo rodapé topo e laterais ficam íntegros. ** ritmo vem das hero** — alternar hero / não-hero é o que evita cansar a vista. **ermos uniformes** — kills permanece kills, sem misturar tradução en-zh## eferências visuais- iagramação da revista *onocle*](https//monocle.com)- "hin arness, at kills" do arry an ()- érie de s de palestras presenciais do 歸藏## ontribuindougs, problemas de tipografia, pedidos de novos layouts — abra ssue ou . ara mudanças, prefira- dicionar classes em `template.html` para que `layouts.md` não use classes indefinidas- egistrar pegadinhas em `checklist.md` no nível  /  /  /  correspondente- evar nova paleta para `themes.md` e indicar o cenário em que ela cabe## icença ©  op](https//github.com/op)
+# Magazine Web PPT · Skill de PPT estilo revista eletrônica em web
+
+> 🌏 **English version: [README.en.md](./README.en.md)**
+> 🌏 **中文版: [README.md](./README.md)**
+
+Uma skill do [Claude Code / Claude Agent Skills](https://agentskills.io/) para gerar **PPTs HTML em arquivo único com swipe horizontal**. O tom visual é "**revista eletrônica × tinta digital**" — como se a *Monocle* tivesse colado código.
+
+> Destilada por [歸藏](https://x.com/op7418) em palestras presenciais como "Empresa de uma pessoa só: a organização dobrada pela IA" e "Uma nova forma de trabalhar"; cada armadilha que ele já pisou virou linha em `checklist.md`.
+
+![Demonstração do Magazine Web PPT](https://github.com/user-attachments/assets/5dc316a2-401c-4e37-9123-ea081b6ae470)
+
+## Resultado
+
+- 🖋 **Título grande em serifa + corpo sem serifa + metadados monoespaçados**, divisão tipográfica em três níveis
+- 🌊 **Background WebGL com fluido / dispersão**, presente na hero, contido nas páginas internas
+- 📐 **Swipe horizontal**: teclado ← → / scroll / swipe touch / dots inferiores / ESC para o índice
+- 🎨 **5 paletas predefinidas**: Tinta Clássica / Azul-Índigo Porcelana / Tinta Floresta / Papel Kraft / Duna
+- 🧩 **10 layouts de página**: capa de abertura, abertura de capítulo, manchete de dado, texto-à-esquerda imagem-à-direita, grade de imagens, pipeline, página de mistério/pergunta, citação grande, comparação Before/After, mistura texto+imagem
+- 📄 **HTML de arquivo único**: sem build, sem servidor, abre direto no navegador
+
+## Quando encaixa / quando não encaixa
+
+**✅ Boa escolha**: palestras presenciais / conversas internas de mercado / sessões privadas / lançamentos de produtos de IA / demo day / discursos com forte estilo pessoal
+
+**❌ Má escolha**: tabelões de dados / material de treinamento (densidade de informação insuficiente) / edição colaborativa multi-usuário (HTML estático)
+
+## Instalação
+
+### Forma 1: mande o texto abaixo direto para a IA (recomendado)
+
+> Me ajude a instalar a skill `guizang-ppt-skill` do Claude Code. Siga estes passos:
+>
+> 1. Garanta que o diretório `~/.claude/skills/` existe (crie se não existir)
+> 2. Rode `git clone https://github.com/op7418/guizang-ppt-skill.git ~/.claude/skills/magazine-web-ppt`
+> 3. Verifique: `ls ~/.claude/skills/magazine-web-ppt/` deve mostrar `SKILL.md`, `assets/` e `references/`
+> 4. Me avise quando estiver instalado; depois disso, quando eu disser "faça um PPT estilo revista" ou similar, essa skill é disparada
+
+Cole esse texto no Claude Code / Cursor / qualquer agente de IA com permissão de shell, e ele faz a instalação automaticamente.
+
+### Forma 2: linha de comando manual
+
+```bash
+git clone https://github.com/op7418/guizang-ppt-skill.git ~/.claude/skills/magazine-web-ppt
+```
+
+### Como disparar
+
+Depois de instalada, o Claude Code descobre e chama a skill automaticamente na conversa. Palavras-chave de gatilho:
+
+- "me faça um PPT estilo revista"
+- "gere um horizontal swipe deck"
+- "editorial magazine style presentation"
+- "slides de palestra estilo electronic ink"
+
+## Fluxo de uso
+
+A skill é um workflow estruturado de 6 passos; o Claude conduz:
+
+1. **Esclarecimento de requisitos** — checklist de 6 perguntas: audiência, duração, material, imagens, tema, restrições rígidas
+2. **Cópia do template** — `assets/template.html` → diretório do projeto, ajuste `<title>`, troque a paleta
+3. **Preenchimento de conteúdo** — escolha entre os 10 esqueletos de layout, cole, edite o copy (com pré-checagem de classes + planejamento de ritmo das paletas antes)
+4. **Autoavaliação** — confronto com `references/checklist.md`; questões P0 precisam passar todas
+5. **Preview** — abre direto no navegador
+6. **Iteração** — ajusta tamanho de fonte / altura / espaçamento via inline style
+
+Detalhes em [`SKILL.md`](./SKILL.md).
+
+## Estrutura de diretórios
+
+```
+magazine-web-ppt/
+├── SKILL.md              ← Skill 主文件:工作流、原则、常见错误
+├── README.md             ← 本文件
+├── assets/
+│   └── template.html     ← 完整可运行的种子 HTML(CSS + WebGL + 翻页 JS 全配好)
+└── references/
+    ├── components.md     ← 组件手册(字体、色、网格、图标、callout、stat、pipeline)
+    ├── layouts.md        ← 10 种页面布局骨架(可直接粘贴)
+    ├── themes.md         ← 5 套主题色预设(只能选不能自定义)
+    └── checklist.md      ← 质量检查清单(P0 / P1 / P2 / P3 分级)
+```
+
+## Paletas predefinidas
+
+Escolha uma em `references/themes.md` — **valores hex personalizados não são permitidos**; preservar a estética importa mais do que dar liberdade.
+
+| Paleta | Cenário ideal |
+|--------|---------------|
+| 🖋 Tinta Clássica | Default genérico, lançamento comercial, quando estiver na dúvida |
+| 🌊 Azul-Índigo Porcelana | Tecnologia / pesquisa / IA / lançamentos técnicos |
+| 🌿 Tinta Floresta | Natureza / sustentabilidade / cultura / não-ficção |
+| 🍂 Papel Kraft | Nostálgico / humanidades / literatura / revistas independentes |
+| 🌙 Duna | Arte / design / criativo / galeria |
+
+Para trocar a paleta basta substituir as 6 linhas de variáveis dentro do `:root{}` no início do `template.html`; todo o resto do CSS usa `var(--...)`.
+
+## Princípios centrais de design
+
+1. **Contenção acima de fogos** — o background WebGL só vaza na página hero
+2. **Estrutura acima de decoração** — informação nasce de tamanho de fonte + contraste tipográfico + grid e respiro, não de sombras nem cards flutuantes
+3. **Imagem é cidadã de primeira classe** — corte só pelo rodapé; topo e laterais ficam íntegros
+4. **O ritmo vem das hero** — alternar hero / não-hero é o que evita cansar a vista
+5. **Termos uniformes** — Skills permanece Skills, sem misturar tradução en-zh
+
+## Referências visuais
+
+- Diagramação da revista [*Monocle*](https://monocle.com)
+- "Thin Harness, Fat Skills" do Garry Tan (YC)
+- Série de PPTs de palestras presenciais do 歸藏
+
+## Contribuindo
+
+Bugs, problemas de tipografia, pedidos de novos layouts — abra Issue ou PR. Para mudanças, prefira:
+
+- Adicionar classes em `template.html` para que `layouts.md` não use classes indefinidas
+- Registrar pegadinhas em `checklist.md` no nível P0 / P1 / P2 / P3 correspondente
+- Levar nova paleta para `themes.md` e indicar o cenário em que ela cabe
+
+## Licença
+
+MIT © 2026 [op7418](https://github.com/op7418)

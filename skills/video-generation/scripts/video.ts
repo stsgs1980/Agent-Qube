@@ -32,7 +32,7 @@ async function create() {
  * Example: Image-to-Video Generation using base64
  * IMPORTANT: Using base64-encoded image data is STRONGLY RECOMMENDED over URLs
  * for better reliability and to avoid network-related issues.
- *
+ * 
  * CRITICAL: Always match the MIME type to your actual image format.
  */
 async function createFromImage(imagePath: string) {
@@ -44,7 +44,7 @@ async function createFromImage(imagePath: string) {
 
     // Read image file and convert to base64
     const imageBuffer = fs.readFileSync(imagePath);
-
+    
     // Detect MIME type from file extension
     const imageExt = imagePath.split('.').pop()?.toLowerCase() || '';
     const mimeTypeMap: Record<string, string> = {
@@ -56,7 +56,7 @@ async function createFromImage(imagePath: string) {
       'bmp': 'image/bmp'
     };
     const mimeType = mimeTypeMap[imageExt] || 'image/jpeg';  // Default to JPEG if unknown
-
+    
     const base64Image = `data:${mimeType};base64,${imageBuffer.toString('base64')}`;
 
     console.log(`Image format detected: ${mimeType}`);
@@ -88,7 +88,7 @@ async function query(zai: any, taskId: string) {
   try {
     // 首次查询
     let result = await zai.async.result.query(taskId);
-
+    
     if (result.task_status === 'SUCCESS') {
       // 如果任务立即完成，直接返回结果
       console.log("\nTask completed immediately, fetching result...");
@@ -121,12 +121,12 @@ async function main() {
   try {
     // Method 1: Text-to-Video (default)
     const { zai, task } = await create();
-
+    
     // Method 2: Image-to-Video with base64 (RECOMMENDED for image input)
     // Uncomment the lines below and comment out the lines above to use image-to-video
     // Make sure to provide a valid image path
     // const { zai, task } = await createFromImage('./path/to/your/image.jpg');
-
+    
     await query(zai, task.id);
   } catch (err: any) {
     console.error("Video generation failed:", err?.message || err);
@@ -142,10 +142,10 @@ function displayResult(result: any) {
 
   if (result.task_status === 'SUCCESS') {
     // 尝试从多种可能的字段中获取视频URL
-    const videoUrl =
-      result.video_result?.[0]?.url ||
-      result.video_url ||
-      result.url ||
+    const videoUrl = 
+      result.video_result?.[0]?.url || 
+      result.video_url || 
+      result.url || 
       result.video;
 
     if (videoUrl) {
