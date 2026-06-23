@@ -2850,3 +2850,37 @@ cd /home/z/my-project
 Lesson: ALWAYS run `git push` before ending a session that produced meaningful work. Unpushed commits are at risk of loss if sandbox dies overnight. The git-safety skill's session-end checklist (`git add -A && git commit && git push`) is mandatory.
 Lesson: For patch-package-based modifications, the patch file IS the source of truth — node_modules edits are ephemeral. Keep patch in git, keep apply script in git, keep postinstall hook in package.json. This trio survives any sandbox reset.
 Lesson: worklog.md is not just a journal — when it contains a RECOVERY GUIDE section, it becomes a self-documenting artifact that lets any future agent restore the full session work from `git clone` alone.
+
+---
+Task ID: 3
+Agent: Main Agent
+Task: ESLint anti-monolith rules + file decomposition
+
+Work Log:
+- Analyzed ESLint config: found zero architectural rules (no max-lines, no complexity, no max-depth)
+- Added 7 anti-monolith rules to eslint.config.mjs (all warn, not error):
+  max-lines: 350 (lib) / 300 (app+components), max-lines-per-function: 60/50,
+  complexity: 15, max-depth: 4, max-params: 5, max-nested-callbacks: 3
+- Excluded shadcn/ui (src/components/ui/**) from size rules
+- Ran eslint: found 374 warnings across 6 rule categories
+- Fixed max-lines (6 files → 0):
+  api/stats/route.ts: 388→10 lines (delegated to existing computeStats())
+  api/workflows/seed/route.ts: 357→163 (extracted WORKFLOW_DEFS const)
+  prompting/core/techniques.ts: 394→33 (split into techniques-clarity.ts + techniques-advanced.ts)
+  prompting/evaluation/benchmark.ts: 428→84 (split into checks-1.ts + checks-2.ts)
+  prompting/instructions.ts: 569→74 (wired to existing data files)
+  components/ui/sidebar.tsx: exempted (shadcn/ui auto-generated)
+- Fixed max-depth (7 → 0):
+  api/hierarchy/route.ts: extracted addSyncEdges() helper
+  use-prompt-analysis.ts: extracted applyLlmStepOverrides() helper
+  intent-templates.ts: extracted scoreKeywords() helper
+- Fixed max-nested-callbacks (5 → 0):
+  agent-performance.tsx, top-performers-card.tsx: extracted makeUpdater() factory
+  use-hierarchy-data.ts: extracted named socket handlers
+- Remaining 282 warnings (max-lines-per-function: 115, complexity: 37) left for opportunistic refactoring
+
+Stage Summary:
+- 3 target rule categories reduced to 0 warnings
+- 16 files changed, 1018 insertions, 2098 deletions (net -1080 lines)
+- Created: techniques-clarity.ts, techniques-advanced.ts, checks-1.ts, checks-2.ts
+- No behavioral changes — all refactoring is structural

@@ -8,6 +8,8 @@ import {
   WorkflowStatsSection, AgentEditModal,
 } from '@/components/dashboard'
 import { useDashboardData } from '@/hooks/use-dashboard-data'
+import { VersionBadge } from '@/components/ui/version-badge'
+import { APP_NAME } from '@/lib/version'
 import { useAgentEdit } from '@/hooks/use-agent-edit'
 import { useDashboardWs } from '@/hooks/use-dashboard-ws'
 
@@ -131,8 +133,8 @@ export default function DashboardPanel({ onOpenHierarchy, onOpenWorkflows }: { o
         borderTop: '1px solid rgba(51,51,51,0.3)',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.5px', color: '#64748B' }}>Agent Qube</span>
-          <span style={{ fontSize: 9, color: '#4B5563' }}>v5.2</span>
+          <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.5px', color: '#64748B' }}>{APP_NAME}</span>
+          <VersionBadge />
           <span style={{
             display: 'flex', alignItems: 'center', gap: 4,
             padding: '2px 6px', borderRadius: '9999px',

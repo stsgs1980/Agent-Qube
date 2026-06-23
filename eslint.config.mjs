@@ -2,9 +2,37 @@ import nextCoreWebVitals from "eslint-config-next/core-web-vitals";
 import nextTypescript from "eslint-config-next/typescript";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
+import { readFileSync } from "fs";
+import { resolve } from "path";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+
+// ─── Version sync check ─────────────────────────────────────────────────────
+// Ensures src/lib/version.ts APP_VERSION matches package.json "version".
+
+function readPkgVersion() {
+  try {
+    const raw = readFileSync(resolve(__dirname, 'package.json'), 'utf-8');
+    return JSON.parse(raw).version;
+  } catch {
+    return null;
+  }
+}
+
+function readSrcVersion() {
+  try {
+    const raw = readFileSync(resolve(__dirname, 'src/lib/version.ts'), 'utf-8');
+    const m = raw.match(/APP_VERSION\s*=\s*['"]([^'"]+)['"]/);
+    return m ? m[1] : null;
+  } catch {
+    return null;
+  }
+}
+
+const pkgVersion = readPkgVersion();
+const srcVersion = readSrcVersion();
+const versionsMatch = pkgVersion && srcVersion && pkgVersion === srcVersion;
 
 // ─── Architectural guards ─────────────────────────────────────────────────────
 // All set to "warn" so they surface in CI without breaking the build.
@@ -101,6 +129,34 @@ const eslintConfig = [
       // Functions in components: 50 lines
       "max-lines-per-function": ["warn", { max: 50, skipBlankLines: true, skipComments: true }],
     },
+  },
+
+  // ─── Custom plugin: no-stale-version ──────────────────────────────────────
+  {
+    plugins: {
+      'version-check': {
+        rules: {
+          'no-stale-version': {
+            meta: { type: 'problem', docs: { description: 'Ensure package.json version matches src/lib/version.ts' } },
+            create(context) {
+              if (versionsMatch) return {}
+              return {
+                Program() {
+                  context.report({
+                    loc: { line: 1, column: 0 },
+                    message: `Version mismatch: package.json="${pkgVersion}" vs version.ts="${srcVersion}". Run: npm version patch`,
+                  })
+                },
+              }
+            },
+          },
+        },
+      },
+    },
+    rules: {
+      'version-check/no-stale-version': versionsMatch ? 'off' : 'warn',
+    },
+    files: ['src/lib/version.ts'],
   },
 
   {
