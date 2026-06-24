@@ -32,9 +32,18 @@ function FeaturePalette({ tokens, state, actions, setShowPalette }: { tokens: an
         <div style={{ display: 'flex', alignItems: 'center', gap: spacing.md, padding: `${spacing.base}px ${spacing.xl}px`, borderBottom: `1px solid ${tokens.borderSubtle}` }}>
           <Sparkles style={{ width: 20, height: 20, color: tokens.accentAI }} />
           <input autoFocus type="text" value={state.prompt} onChange={e => actions.setPrompt(e.target.value)}
-            onKeyDown={e => { if (e.key === 'Enter' && state.prompt.trim()) { actions.submitCurrent(); setShowPalette(false) } if (e.key === 'Escape') setShowPalette(false) }}
+            onKeyDown={e => {
+              if (e.key === 'Enter' && state.prompt.trim()) {
+                actions.submitCurrent()
+                setShowPalette(false)
+              }
+              if (e.key === 'Escape') setShowPalette(false)
+            }}
             placeholder="Describe what you want to build..." style={{ flex: 1, background: 'transparent', fontSize: fontSize.lg, outline: 'none', color: tokens.textPrimary, fontFamily: tokens.fontFamilyBody }} />
-          <button onClick={() => { if (state.prompt.trim()) { actions.submitCurrent(); setShowPalette(false) } }} style={{ padding: `${spacing.sm}px ${spacing.md}px`, borderRadius: radius.lg, background: tokens.accentPrimary, color: tokens.textOnAccent, fontWeight: fontWeight.bold, fontSize: fontSize.md, fontFamily: tokens.fontFamilyBody, border: 'none', cursor: 'pointer' }}>Go</button>
+          <button onClick={() => { if (state.prompt.trim()) {
+              actions.submitCurrent()
+              setShowPalette(false)
+            } }} style={{ padding: `${spacing.sm}px ${spacing.md}px`, borderRadius: radius.lg, background: tokens.accentPrimary, color: tokens.textOnAccent, fontWeight: fontWeight.bold, fontSize: fontSize.md, fontFamily: tokens.fontFamilyBody, border: 'none', cursor: 'pointer' }}>Go</button>
         </div>
         <div style={{ padding: `${spacing.md}px ${spacing.xl}px`, maxHeight: 256, overflowY: 'auto' }}>
           <div style={{ fontSize: fontSize.xs, fontWeight: fontWeight.bold, textTransform: 'uppercase', letterSpacing: '0.12em', color: tokens.textDim, marginBottom: spacing.sm, fontFamily: tokens.fontFamilyMono }}>Suggestions</div>
@@ -117,7 +126,10 @@ export function VariantAICanvas({ recipes }: { recipes: LayoutRecipe[] }) {
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); setShowPalette(true) }
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault()
+        setShowPalette(true)
+      }
       if (e.key === 'Escape') setShowPalette(false)
     }
     window.addEventListener('keydown', handler)

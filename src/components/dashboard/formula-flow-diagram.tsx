@@ -49,7 +49,11 @@ export function FormulaFlowDiagram() {
         <Workflow className="w-3.5 h-3.5 text-cyan-400" />Formula Flow Diagram
       </h3>
       <svg viewBox="0 0 440 370" className="w-full max-w-2xl mx-auto" style={{ minHeight: '280px' }}>
-        {EDGES.map((edge, i) => { const f = nodeMap[edge.from]; const t = nodeMap[edge.to]; return f && t ? <EdgeArrow key={i} from={f} to={t} /> : null })}
+        {EDGES.map((edge, i) => {
+          const f = nodeMap[edge.from];
+          const t = nodeMap[edge.to];
+          return f && t ? <EdgeArrow key={i} from={f} to={t} /> : null;
+        } )}
         {NODES.map(node => (
           <g key={node.id}>
             <circle cx={node.x} cy={node.y} r={nodeRadius + 3} fill={`${node.color}10`} stroke={node.color} strokeWidth="0.3" strokeOpacity="0.2" />

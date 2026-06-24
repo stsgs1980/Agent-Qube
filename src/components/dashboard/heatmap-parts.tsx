@@ -22,7 +22,12 @@ export function HeatmapCell({ count, rowIdx, colIdx, maxVal }: {
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           transform: isDiagonal ? 'rotate(45deg) scale(0.72)' : 'none',
           transition: 'transform 0.15s, box-shadow 0.15s', cursor: count > 0 ? 'pointer' : 'default' }}
-        onMouseEnter={(e) => { if (count > 0) { e.currentTarget.style.transform = isDiagonal ? 'rotate(45deg) scale(0.82)' : 'scale(1.15)'; e.currentTarget.style.boxShadow = `0 0 12px rgba(${rgb}, 0.3)` } }}
+        onMouseEnter={(e) => {
+          if (count > 0) {
+            e.currentTarget.style.transform = isDiagonal ? 'rotate(45deg) scale(0.82)' : 'scale(1.15)'
+            e.currentTarget.style.boxShadow = `0 0 12px rgba(${rgb}, 0.3)`
+          }
+        }}
         onMouseLeave={(e) => { e.currentTarget.style.transform = isDiagonal ? 'rotate(45deg) scale(0.72)' : 'scale(1)'; e.currentTarget.style.boxShadow = 'none' }}>
         {count > 0 && (
           <span style={{ fontSize: 9, fontWeight: 700,

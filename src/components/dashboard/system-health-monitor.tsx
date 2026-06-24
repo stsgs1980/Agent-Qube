@@ -8,9 +8,21 @@ function useMetricAnimation() {
   const [widths, setWidths] = useState([0, 0, 0])
   useEffect(() => {
     const timers = [
-      setTimeout(() => setWidths(prev => { const n = [...prev]; n[0] = 34; return n }), 100),
-      setTimeout(() => setWidths(prev => { const n = [...prev]; n[1] = 67; return n }), 200),
-      setTimeout(() => setWidths(prev => { const n = [...prev]; n[2] = 23; return n }), 300),
+      setTimeout(() => setWidths(prev => {
+        const n = [...prev];
+        n[0] = 34;
+        return n;
+      } ), 100),
+      setTimeout(() => setWidths(prev => {
+        const n = [...prev]
+        n[1] = 67
+        return n
+      }), 200),
+      setTimeout(() => setWidths(prev => {
+        const n = [...prev]
+        n[2] = 23
+        return n
+      }), 300),
     ]
     return () => timers.forEach(clearTimeout)
   }, [])

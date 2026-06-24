@@ -8,9 +8,21 @@ function useBarAnimation() {
   const [widths, setWidths] = useState([0, 0, 0])
   useEffect(() => {
     const t = [
-      setTimeout(() => setWidths(p => { const n = [...p]; n[0] = 34; return n }), 100),
-      setTimeout(() => setWidths(p => { const n = [...p]; n[1] = 67; return n }), 200),
-      setTimeout(() => setWidths(p => { const n = [...p]; n[2] = 23; return n }), 300),
+      setTimeout(() => setWidths(p => {
+        const n = [...p];
+        n[0] = 34;
+        return n;
+      } ), 100),
+      setTimeout(() => setWidths(p => {
+        const n = [...p]
+        n[1] = 67
+        return n
+      }), 200),
+      setTimeout(() => setWidths(p => {
+        const n = [...p]
+        n[2] = 23
+        return n
+      }), 300),
     ]
     return () => t.forEach(clearTimeout)
   }, [])

@@ -56,8 +56,14 @@ export function useDashboardData() {
 
   fetchStatsRef.current = fetchStats
   const refreshTime = () => setLastUpdated(new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }))
-  useEffect(() => { fetchStats(); refreshTime() }, [fetchStats])
-  const handleRefresh = useCallback(() => { fetchStats(); refreshTime() }, [fetchStats])
+  useEffect(() => {
+    fetchStats()
+    refreshTime()
+  }, [fetchStats])
+  const handleRefresh = useCallback(() => {
+    fetchStats()
+    refreshTime()
+  }, [fetchStats])
 
   return { statsData, workflowsData, loading, lastUpdated, ...buildDashboardValues(statsData), fetchStatsRef, handleRefresh }
 }

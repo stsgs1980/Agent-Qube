@@ -34,7 +34,10 @@ export function NodeContextMenu({ contextMenu, agent, onClose, onViewDetails, on
   if (!contextMenu.visible || !agent) return null
   const config = ROLE_CONFIG[agent.roleGroup] || ROLE_CONFIG['\u0418\u0441\u043f\u043e\u043b\u043d\u0435\u043d\u0438\u0435']
   const hasChildren = (agent.children && agent.children.length > 0) || false
-  const handleAction = (fn: () => void) => () => { fn(); onClose() }
+  const handleAction = (fn: () => void) => () => {
+    fn()
+    onClose()
+  }
 
   return (
     <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }} transition={{ duration: 0.12 }}

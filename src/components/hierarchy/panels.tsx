@@ -52,7 +52,10 @@ export function DetailPanel({ agent, allAgents, open, onToggle, onClose, onAgent
     onSuccess: () => { setEditMode(false); mutations.setShowDeleteConfirm(false) },
   })
 
-  useEffect(() => { setEditMode(false); mutations.setShowDeleteConfirm(false) }, [agent?.id, mutations.setShowDeleteConfirm])
+  useEffect(() => {
+    setEditMode(false)
+    mutations.setShowDeleteConfirm(false)
+  }, [agent?.id, mutations.setShowDeleteConfirm])
 
   if (!open) return <DetailPanelCollapsed agent={agent} onToggle={onToggle} />
   if (!agent) return <DetailPanelEmpty onToggle={onToggle} />

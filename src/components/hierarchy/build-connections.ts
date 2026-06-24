@@ -25,7 +25,10 @@ function buildTwinConns(agents: AgentData[], addConn: (id: string, from: string,
   for (const agent of agents) {
     if (agent.twinId) {
       const key = [agent.id, agent.twinId].sort().join('-')
-      if (!twinSeen.has(key)) { twinSeen.add(key); addConn(`twin-${key}`, agent.id, agent.twinId!, 'twin', 1) }
+      if (!twinSeen.has(key)) {
+        twinSeen.add(key)
+        addConn(`twin-${key}`, agent.id, agent.twinId!, 'twin', 1)
+      }
     }
   }
 }

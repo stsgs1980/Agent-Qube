@@ -119,7 +119,10 @@ export async function executeSteps(
     const stepExec = stepExecutions[i]
     const agent = resolvedAgentId ? agentMap.get(resolvedAgentId) : null
 
-    if (!resolvedAgentId) { await markSkipped(stepExec); continue }
+    if (!resolvedAgentId) {
+      await markSkipped(stepExec)
+      continue
+    }
 
     const fromAgentId = i === 0 ? 'system' : (resolvedSteps[i - 1].resolvedAgentId || 'system')
     await markRunningAndCreateRequest({ stepExec, step, previousOutput, fromAgentId, resolvedAgentId, stepOrder: i, total: resolvedSteps.length })

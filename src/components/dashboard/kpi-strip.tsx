@@ -42,7 +42,10 @@ function KPICard({ kpi, mounted, idx }: {
 export function KPIStrip({ quickStats }: { quickStats?: typeof QUICK_STATS }) {
   const stats = quickStats || QUICK_STATS
   const [mounted, setMounted] = useState(false)
-  useEffect(() => { const t = setTimeout(() => setMounted(true), 50); return () => clearTimeout(t) }, [])
+  useEffect(() => {
+    const t = setTimeout(() => setMounted(true), 50)
+    return () => clearTimeout(t)
+  }, [])
 
   const kpis = [
     { label: 'Total Agents', value: String(stats[0]?.numericValue ?? '26'), color: '#06B6D4', change: '+2 this week', changeColor: '#22D3EE', sparkData: [22, 23, 24, 24, 25, 26], icon: '⬡' },

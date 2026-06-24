@@ -32,7 +32,10 @@ export function PromptComparison({ currentPrompt, historyPrompts }: {
   const handleCompare = () => {
     if (!selected) return
     setComparing(true)
-    setTimeout(() => { setResult(blindCompare(currentPrompt, selected.prompt)); setComparing(false) }, 0)
+    setTimeout(() => {
+      setResult(blindCompare(currentPrompt, selected.prompt))
+      setComparing(false)
+    }, 0)
   }
 
   return (

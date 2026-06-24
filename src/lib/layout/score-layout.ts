@@ -54,12 +54,24 @@ export const goalPreferences: Record<string, { prefer: string[]; avoid: string[]
 function scoreGoalMatch(recipe: LayoutRecipe, input: LayoutAdviceInput): { score: number; reasons: string[] } {
   let score = 0
   const reasons: string[] = []
-  if (recipe.bestFor.includes(input.goal)) { score += WEIGHTS.goalMatch; reasons.push(`Optimized for ${input.goal}`) }
-  if (recipe.conflicts.includes(input.goal)) { score += WEIGHTS.goalConflict; reasons.push(`Conflicts with ${input.goal}`) }
+  if (recipe.bestFor.includes(input.goal)) {
+    score += WEIGHTS.goalMatch
+    reasons.push(`Optimized for ${input.goal}`)
+  }
+  if (recipe.conflicts.includes(input.goal)) {
+    score += WEIGHTS.goalConflict
+    reasons.push(`Conflicts with ${input.goal}`)
+  }
   const prefs = goalPreferences[input.goal]
   if (prefs) {
-    if (prefs.prefer.includes(recipe.structure)) { score += 8; reasons.push(`Popular for ${input.goal}`) }
-    if (prefs.avoid.includes(recipe.structure)) { score -= 5; reasons.push(`Rarely used for ${input.goal}`) }
+    if (prefs.prefer.includes(recipe.structure)) {
+      score += 8
+      reasons.push(`Popular for ${input.goal}`)
+    }
+    if (prefs.avoid.includes(recipe.structure)) {
+      score -= 5
+      reasons.push(`Rarely used for ${input.goal}`)
+    }
   }
   return { score, reasons }
 }

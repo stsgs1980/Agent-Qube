@@ -65,7 +65,11 @@ export function HierarchyControls({ viewMode, setViewMode, showLayers, setShowLa
         <ViewModeButtons viewMode={viewMode} setViewMode={setViewMode} />
         <div style={{ width: 1, height: 16, background: 'rgba(51,51,51,0.25)', margin: '0 4px' }} />
         <button onClick={() => setShowLayers(!showLayers)} style={{ padding: '3px 8px', borderRadius: 4, fontSize: 9, fontWeight: 600, background: showLayers ? 'rgba(6,182,212,0.06)' : 'transparent', border: showLayers ? '1px solid rgba(6,182,212,0.15)' : '1px solid transparent', color: showLayers ? '#06B6D4' : '#555', cursor: 'pointer', textTransform: 'uppercase', letterSpacing: 0.5, display: 'flex', alignItems: 'center', gap: 3 }} title="Toggle layer labels"><Layers size={9} />Layers</button>
-        <button onClick={() => { const m = viewMode; setViewMode('grid'); setTimeout(() => setViewMode(m), 50) }} style={{ padding: '3px 8px', borderRadius: 4, fontSize: 9, fontWeight: 600, background: 'transparent', border: '1px solid transparent', color: '#555', cursor: 'pointer', textTransform: 'uppercase', letterSpacing: 0.5, display: 'flex', alignItems: 'center', gap: 3 }} title="Re-layout"><ArrowUpDown size={9} />Layout</button>
+        <button onClick={() => {
+          const m = viewMode
+          setViewMode('grid')
+          setTimeout(() => setViewMode(m), 50)
+        }} style={{ padding: '3px 8px', borderRadius: 4, fontSize: 9, fontWeight: 600, background: 'transparent', border: '1px solid transparent', color: '#555', cursor: 'pointer', textTransform: 'uppercase', letterSpacing: 0.5, display: 'flex', alignItems: 'center', gap: 3 }} title="Re-layout"><ArrowUpDown size={9} />Layout</button>
         <div style={{ width: 1, height: 16, background: 'rgba(51,51,51,0.25)', margin: '0 4px' }} />
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
         <div style={{ width: 1, height: 16, background: 'rgba(51,51,51,0.25)', margin: '0 4px' }} />

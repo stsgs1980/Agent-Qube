@@ -28,8 +28,14 @@ async function saveWorkflow(
 ) {
   const { name, description, triggerType, tagsStr, steps } = params
   const { setSaving, onCreated, onClose } = callbacks
-  if (!name.trim()) { toast.error('Workflow name is required'); return }
-  if (steps.some(s => !s.name.trim())) { toast.error('All steps must have a name'); return }
+  if (!name.trim()) {
+    toast.error('Workflow name is required')
+    return
+  }
+  if (steps.some(s => !s.name.trim())) {
+    toast.error('All steps must have a name')
+    return
+  }
   setSaving(true)
   try {
     const res = await fetchWithRetry('/api/workflows', {
@@ -58,8 +64,15 @@ export function useWorkflowCreate(onCreated: () => void, onClose: () => void) {
   const [saving, setSaving] = useState(false)
 
   const addStep = () => setSteps([...steps, { name: '', roleGroup: ROLE_GROUP_OPTIONS[0], action: 'process', timeout: 300 }])
-  const removeStep = (index: number) => { if (steps.length <= 1) return; setSteps(steps.filter((_, i) => i !== index)) }
-  const updateStep = (index: number, field: string, value: any) => { const u = [...steps]; u[index] = { ...u[index], [field]: value }; setSteps(u) }
+  const removeStep = (index: number) => {
+    if (steps.length <= 1) return
+    setSteps(steps.filter((_, i) => i !== index))
+  }
+  const updateStep = (index: number, field: string, value: any) => {
+    const u = [...steps]
+    u[index] = { ...u[index], [field]: value }
+    setSteps(u)
+  }
   const handleSave = () => saveWorkflow({ name, description, triggerType, tagsStr, steps }, { setSaving, onCreated, onClose })
 
   return {

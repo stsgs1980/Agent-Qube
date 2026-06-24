@@ -30,6 +30,19 @@ function ChartStats({ peaks, avgVal, currentVal }: { peaks: { v: number; i: numb
   )
 }
 
+function AreaGradient() {
+  return (
+    <defs>
+      <linearGradient id="areaGradMain" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stopColor="rgba(6,182,212,0.2)">
+          <animate attributeName="stop-color" values="rgba(6,182,212,0.2);rgba(6,182,212,0.12);rgba(6,182,212,0.2)" dur="3s" repeatCount="indefinite" />
+        </stop>
+        <stop offset="100%" stopColor="rgba(6,182,212,0.01)" />
+      </linearGradient>
+    </defs>
+  )
+}
+
 function ChartSVG({ data, animated, minVal, maxVal, range }: { data: number[]; animated: boolean; minVal: number; maxVal: number; range: number }) {
   const plotW = CHART_W - PAD_X - 10
   const plotH = CHART_H - PAD_Y * 2
@@ -42,14 +55,7 @@ function ChartSVG({ data, animated, minVal, maxVal, range }: { data: number[]; a
 
   return (
     <svg viewBox={`0 0 ${CHART_W} ${CHART_H}`} preserveAspectRatio="xMinYMin meet" style={{ width: '100%', height: 'auto', display: 'block' }}>
-      <defs>
-        <linearGradient id="areaGradMain" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="rgba(6,182,212,0.2)">
-            <animate attributeName="stop-color" values="rgba(6,182,212,0.2);rgba(6,182,212,0.12);rgba(6,182,212,0.2)" dur="3s" repeatCount="indefinite" />
-          </stop>
-          <stop offset="100%" stopColor="rgba(6,182,212,0.01)" />
-        </linearGradient>
-      </defs>
+      <AreaGradient />
       {GRID_LEVELS.map((level, i) => {
         const y = PAD_Y + plotH * (1 - level)
         return (
@@ -85,7 +91,10 @@ function ChartSVG({ data, animated, minVal, maxVal, range }: { data: number[]; a
 
 export function NetworkActivityChart({ data: activityData }: { data?: number[] }) {
   const [animated, setAnimated] = useState(false)
-  useEffect(() => { const t = setTimeout(() => setAnimated(true), 300); return () => clearTimeout(t) }, [])
+  useEffect(() => {
+    const t = setTimeout(() => setAnimated(true), 300)
+    return () => clearTimeout(t)
+  }, [])
 
   const data = activityData || NETWORK_ACTIVITY_DATA
   const minVal = Math.min(...data)

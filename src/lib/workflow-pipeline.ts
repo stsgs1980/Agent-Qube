@@ -61,11 +61,12 @@ function isSimFeedbackReject(step: ResolvedStep['step'], output: any): boolean {
 
 // ─── Step result recording ──────────────────────────────
 
-async function recordSimStepResult(stepExec: any, stepOutput: any, step: ResolvedStep['step'], fromAgentId: string, resolved: ResolvedStep[], i: number) {
+async function recordSimStepResult(params: { stepExec: any; stepOutput: any; step: ResolvedStep['step']; fromAgentId: string; resolved: ResolvedStep[]; index: number }) {
+  const { stepExec, stepOutput, step, fromAgentId, resolved, index } = params
   if (isSimFeedbackReject(step, stepOutput)) {
-    await recordFeedback(stepExec, stepOutput, step, fromAgentId, resolved[i - 1]?.resolvedAgentId || null)
+    await recordFeedback(stepExec, stepOutput, step, fromAgentId, resolved[index - 1]?.resolvedAgentId || null)
   } else {
-    const toAgentId = i < resolved.length - 1 ? (resolved[i + 1]?.resolvedAgentId || 'system') : 'system'
+    const toAgentId = index < resolved.length - 1 ? (resolved[index + 1]?.resolvedAgentId || 'system') : 'system'
     await recordCompletion(stepExec, stepOutput, fromAgentId, toAgentId, step)
   }
 }
@@ -94,7 +95,7 @@ export async function runSimulatedPipeline(
     await recordStepStart({ stepExec, step, previousOutput, fromAgentId, index: i, total: resolved.length, toAgentId: resolvedAgentId })
 
     const stepOutput = simulateStep(step, previousOutput, agent, taskContext)
-    await recordSimStepResult(stepExec, stepOutput, step, fromAgentId, resolved, i)
+    await recordSimStepResult({ stepExec, stepOutput: step, fromAgentId, resolved, index: i })
 
     taskContext._history.push({
       step: step.name, agent: agent?.name || 'unknown', action: step.action,
@@ -115,12 +116,13 @@ export interface LLMStepResult {
   finalError: string | null
 }
 
-async function executeLLMStep(
-  step: ResolvedStep['step'], previousOutput: Record<string, unknown>,
-  taskContext: Record<string, unknown>, agent: AgentRecord,
-  callStepLLM: (step: ResolvedStep['step'], prev: Record<string, unknown>, hist: unknown[], agent: AgentRecord) => Promise<Record<string, unknown>>,
-  stepExec: any,
-): Promise<Record<string, unknown> | 'FAILED'> {
+async function executeLLMStep(params: {
+  step: ResolvedStep['step']; previousOutput: Record<string, unknown>;
+  taskContext: Record<string, unknown>; agent: AgentRecord;
+  callStepLLM: (step: ResolvedStep['step'], prev: Record<string, unknown>, hist: unknown[], agent: AgentRecord) => Promise<Record<string, unknown>>;
+  stepExec: any;
+}): Promise<Record<string, unknown> | 'FAILED'> {
+  const { step, previousOutput, taskContext, agent, callStepLLM, stepExec } = params
   try {
     return await callStepLLM(step, previousOutput, taskContext._history as unknown[], agent)
   } catch (err) {
@@ -134,7 +136,8 @@ async function executeLLMStep(
   }
 }
 
-async function recordLLMStepResult(stepExec: any, typedOutput: any, step: ResolvedStep['step'], agentId: string, fromAgentId: string, resolved: ResolvedStep[], stepIndex: number) {
+async function recordLLMStepResult(params: { stepExec: any; typedOutput: any; step: ResolvedStep['step']; agentId: string; fromAgentId: string; resolved: ResolvedStep[]; stepIndex: number }) {
+  const { stepExec, typedOutput, step, agentId, fromAgentId, resolved, stepIndex } = params
   if (isFeedbackReject(step, typedOutput)) {
     await recordFeedback(stepExec, typedOutput, step, agentId, fromAgentId)
     const fallbackIdx = resolved.findIndex(r => r.step.id === step.fallbackStepId)
@@ -169,12 +172,12 @@ export async function runLLMPipeline(
     const fromAgentId = stepIndex === 0 ? 'system' : (resolved[stepIndex - 1].agentId || 'system')
     await recordStepStart({ stepExec, step, previousOutput, fromAgentId, index: stepIndex, total: resolved.length, toAgentId: agentId })
 
-    const stepOutput = await executeLLMStep(step, previousOutput, taskContext, agent, callStepLLM, stepExec)
+    const stepOutput = await executeLLMStep({ step, previousOutput, taskContext, agent, callStepLLM, stepExec })
     if (stepOutput === 'FAILED') break
 
     const typedOutput = stepOutput as Record<string, unknown>
     const feedback = isFeedbackReject(step, typedOutput)
-    stepIndex = await recordLLMStepResult(stepExec, typedOutput, step, agentId, fromAgentId, resolved, stepIndex)
+    stepIndex = await recordLLMStepResult({ stepExec, typedOutput, step, agentId, fromAgentId, resolved, stepIndex })
 
     taskContext._history.push({
       step: step.name, agent: agent.name, action: step.action,

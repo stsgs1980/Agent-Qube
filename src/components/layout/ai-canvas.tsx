@@ -57,7 +57,12 @@ function CommandPalette({ tokens, prompt, setPrompt, parsed, setParsed, setSubmi
         <div style={{ padding: `${spacing.md}px ${spacing.xl}px`, maxHeight: 256, overflowY: 'auto' }}>
           <div style={{ fontSize: fontSize.xs, fontWeight: fontWeight.bold, textTransform: 'uppercase', letterSpacing: '0.12em', color: tokens.textDim, marginBottom: spacing.sm, fontFamily: tokens.fontFamilyMono }}>Suggestions</div>
           {PROMPT_EXAMPLES.map((ex, i) => (
-            <button key={i} onClick={() => { setPrompt(ex); setParsed(parsePrompt(ex)); setSubmitted(true); closePalette() }} style={{ width: '100%', textAlign: 'left', padding: `${spacing.sm}px ${spacing.md}px`, fontSize: fontSize.md, fontFamily: tokens.fontFamilyBody, color: tokens.textMuted, background: 'transparent', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: spacing.sm, borderRadius: radius.md, transition: 'background 0.15s', minHeight: 44 }}>
+            <button key={i} onClick={() => {
+              setPrompt(ex);
+              setParsed(parsePrompt(ex));
+              setSubmitted(true);
+              closePalette();
+            } } style={{ width: '100%', textAlign: 'left', padding: `${spacing.sm}px ${spacing.md}px`, fontSize: fontSize.md, fontFamily: tokens.fontFamilyBody, color: tokens.textMuted, background: 'transparent', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: spacing.sm, borderRadius: radius.md, transition: 'background 0.15s', minHeight: 44 }}>
               <ArrowRight style={{ width: 12, height: 12, color: tokens.accentPrimary }} /> {ex}
             </button>
           ))}

@@ -50,7 +50,10 @@ function scoreKeywords(lower: string, keywordMap: Record<string, string[]>): Rec
 function topKey(scores: Record<string, number>): string {
   let best = '', max = 0
   for (const [k, s] of Object.entries(scores)) {
-    if (s > max) { max = s; best = k }
+    if (s > max) {
+      max = s
+      best = k
+    }
   }
   return best
 }

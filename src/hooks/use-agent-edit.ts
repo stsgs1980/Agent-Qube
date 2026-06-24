@@ -36,14 +36,20 @@ export function useAgentEdit(statsData: any, onRefresh: () => void) {
 
   const handleEditSave = useCallback(async () => {
     setEditSaving(true)
-    try { await handleAgentSave(editingAgent, editForm, onRefresh); setEditingAgent(null) }
+    try {
+      await handleAgentSave(editingAgent, editForm, onRefresh)
+      setEditingAgent(null)
+    }
     catch { toast.error('Failed to update agent') }
     finally { setEditSaving(false) }
   }, [editingAgent, editForm, onRefresh])
 
   const handleEditDelete = useCallback(async () => {
     setEditDeleting(true)
-    try { await handleAgentDelete(editingAgent, onRefresh); setEditingAgent(null) }
+    try {
+      await handleAgentDelete(editingAgent, onRefresh)
+      setEditingAgent(null)
+    }
     catch { toast.error('Failed to delete agent') }
     finally { setEditDeleting(false) }
   }, [editingAgent, onRefresh])

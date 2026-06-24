@@ -32,10 +32,16 @@ export async function runWorkflowApi(workflowId: string): Promise<ExecutionData 
 export async function viewHistoryApi(workflowId: string, execId: string): Promise<ExecutionData | null> {
   try {
     const res = await fetchWithRetry(`/api/workflows/${workflowId}`)
-    if (!res.ok) { toast.error('Execution not found'); return null }
+    if (!res.ok) {
+      toast.error('Execution not found')
+      return null
+    }
     const data = await res.json()
     const execution = data.workflow?.executions?.find((e: any) => e.id === execId)
-    if (!execution) { toast.error('Execution not found'); return null }
+    if (!execution) {
+      toast.error('Execution not found')
+      return null
+    }
     return {
       ...execution,
       steps: execution.steps?.map((s: any) => ({
@@ -50,7 +56,10 @@ export async function viewHistoryApi(workflowId: string, execId: string): Promis
 
 export async function deleteWorkflowApi(workflowId: string): Promise<boolean> {
   const res = await fetchWithRetry(`/api/workflows/${workflowId}`, { method: 'DELETE' })
-  if (res.ok) { toast.success('Workflow deleted'); return true }
+  if (res.ok) {
+    toast.success('Workflow deleted')
+    return true
+  }
   const err = await res.json()
   toast.error(err.error || 'Failed to delete')
   return false
@@ -58,7 +67,10 @@ export async function deleteWorkflowApi(workflowId: string): Promise<boolean> {
 
 export async function seedWorkflowsApi(): Promise<boolean> {
   const res = await fetchWithRetry('/api/workflows/seed', { method: 'POST' })
-  if (res.ok) { toast.success('Demo workflows seeded'); return true }
+  if (res.ok) {
+    toast.success('Demo workflows seeded')
+    return true
+  }
   const err = await res.json()
   toast.error(err.error || 'Failed to seed')
   return false

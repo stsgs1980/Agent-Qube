@@ -16,7 +16,9 @@ function MiniMapSVG({ agents, positions, connections, scale, mapW, mapH, vpW, vp
         return <circle key={group} cx={mapW / 2} cy={mapH / 2} r={radius} fill="none" stroke={cfg.color} strokeWidth={0.15} strokeOpacity={0.12} strokeDasharray="2 4" />
       })}
       {connections.map(conn => {
-        const from = positions[conn.from]; const to = positions[conn.to]; if (!from || !to) return null
+const from = positions[conn.from];
+        const to = positions[conn.to];
+        if (!from || !to) return null;
         return <line key={conn.id} x1={from.x * scale} y1={from.y * scale} x2={to.x * scale} y2={to.y * scale} stroke={EDGE_CONFIG[conn.type].color} strokeWidth={0.15} strokeOpacity={0.15} strokeDasharray={conn.type === 'sync' ? '1 2' : conn.type === 'twin' ? '2 1' : undefined} />
       })}
       {agents.map(agent => {

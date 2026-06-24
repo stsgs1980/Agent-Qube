@@ -63,7 +63,10 @@ export function useHierarchyData(reactFlowInstanceRef: MutableRefObject<any>) {
     socket.on('agent:created', handlers.handleCreated)
     socket.on('agent:updated', handlers.handleUpdated)
     socket.on('agent:deleted', handlers.handleDeleted)
-    return () => { socket.disconnect(); socketRef.current = null }
+    return () => {
+      socket.disconnect()
+      socketRef.current = null
+    }
   }, [])
 
   useEffect(() => {

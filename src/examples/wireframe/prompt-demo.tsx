@@ -89,7 +89,10 @@ export function WireframePromptDemo({ recipes }: { recipes: LayoutRecipe[] }) {
   const best = ranked[0] ?? null
   const top5 = ranked.slice(0, 5)
 
-  const handleSubmit = () => { if (!prompt.trim()) return; setParsed(parsePrompt(prompt)) }
+  const handleSubmit = () => {
+    if (!prompt.trim()) return
+    setParsed(parsePrompt(prompt))
+  }
 
   return (
     <div className="p-6 max-w-4xl mx-auto">

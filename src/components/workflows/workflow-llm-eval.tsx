@@ -30,6 +30,30 @@ export function hasLLMEval(outputData: string): boolean {
   return typeof parsed.score === 'number' || typeof parsed.verdict === 'string'
 }
 
+function EvalIssueList({ issues }: { issues: string[] }) {
+  return (
+    <div className="space-y-1">
+      {issues.map((issue, i) => (
+        <div key={i} className="flex items-start gap-1.5 text-[9px]" style={{ color: '#F87171' }}>
+          <AlertTriangle size={8} className="flex-shrink-0 mt-0.5" /> {issue}
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function EvalSuggestionList({ suggestions }: { suggestions: string[] }) {
+  return (
+    <div className="space-y-1">
+      {suggestions.map((s, i) => (
+        <div key={i} className="flex items-start gap-1.5 text-[9px]" style={{ color: '#60A5FA' }}>
+          <Lightbulb size={8} className="flex-shrink-0 mt-0.5" /> {s}
+        </div>
+      ))}
+    </div>
+  )
+}
+
 export function LLMEvalDisplay({ outputData }: { outputData: string }) {
   const data = safeJsonParse(outputData) as LLMEvalData
   if (typeof data.score !== 'number' && !data.verdict) return null
@@ -63,24 +87,8 @@ export function LLMEvalDisplay({ outputData }: { outputData: string }) {
       {data.summary && (
         <p className="text-[9px] leading-relaxed" style={{ color: '#B0B0B0' }}>{data.summary}</p>
       )}
-      {Array.isArray(data.issues) && data.issues.length > 0 && (
-        <div className="space-y-1">
-          {data.issues.map((issue, i) => (
-            <div key={i} className="flex items-start gap-1.5 text-[9px]" style={{ color: '#F87171' }}>
-              <AlertTriangle size={8} className="flex-shrink-0 mt-0.5" /> {issue}
-            </div>
-          ))}
-        </div>
-      )}
-      {Array.isArray(data.suggestions) && data.suggestions.length > 0 && (
-        <div className="space-y-1">
-          {data.suggestions.map((s, i) => (
-            <div key={i} className="flex items-start gap-1.5 text-[9px]" style={{ color: '#60A5FA' }}>
-              <Lightbulb size={8} className="flex-shrink-0 mt-0.5" /> {s}
-            </div>
-          ))}
-        </div>
-      )}
+      {Array.isArray(data.issues) && data.issues.length > 0 && <EvalIssueList issues={data.issues} />}
+      {Array.isArray(data.suggestions) && data.suggestions.length > 0 && <EvalSuggestionList suggestions={data.suggestions} />}
     </div>
   )
 }

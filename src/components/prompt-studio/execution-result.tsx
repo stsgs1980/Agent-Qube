@@ -17,7 +17,8 @@ interface StepEval {
 }
 
 function parseEval(data: string): StepEval | null {
-  try { return JSON.parse(data) } catch { return null }
+  try { return JSON.parse(data) }
+  catch { return null }
 }
 
 function getScoreColor(score: number | undefined): string {
@@ -81,6 +82,39 @@ function ScoreCircle({ score }: { score: number }) {
   )
 }
 
+function StepBadges({ eval_, step, scoreColor, issueCount }: { eval_: StepEval | null; step: StepResult; scoreColor: string; issueCount: number }) {
+  return (
+    <>
+      {eval_?.score !== undefined && step.status === 'completed' && (
+        <span className="text-xs font-bold px-2 py-0.5 rounded" style={{ background: `rgba(${hexToRgb(scoreColor)},0.12)`, color: scoreColor }}>{eval_.score}</span>
+      )}
+      {issueCount > 0 && (
+        <span className="flex items-center gap-1 text-xs px-2 py-0.5 rounded" style={{ background: 'rgba(239,68,68,0.08)', color: '#EF4444' }}>
+          <AlertTriangle size={10} />{issueCount}
+        </span>
+      )}
+      {eval_?.verdict && step.status === 'completed' && <VerdictBadge verdict={eval_.verdict} />}
+    </>
+  )
+}
+
+function StepExpandedContent({ step, eval_ }: { step: StepResult; eval_: StepEval | null }) {
+  return (
+    <div className="px-4 pb-4 space-y-3 border-t" style={{ borderColor: 'rgba(51,51,51,0.2)' }}>
+      {step.status === 'completed' && eval_ ? (
+        <EvalDetail eval_={eval_} rawData={step.outputData} />
+      ) : step.status === 'skipped' ? (
+        <p className="text-xs py-2" style={{ color: '#64748B' }}>Skipped — no available agent for this step</p>
+      ) : (
+        <RawDataBlock data={step.outputData} />
+      )}
+      {step.error && (
+        <div className="px-3 py-2 rounded-lg text-xs" style={{ background: 'rgba(239,68,68,0.08)', color: '#EF4444', border: '1px solid rgba(239,68,68,0.2)' }}>Error: {step.error}</div>
+      )}
+    </div>
+  )
+}
+
 // ─── Eval Step Row ─────────────────────────────────────────
 
 function EvalStepRow({ step, index }: { step: StepResult; index: number }) {
@@ -99,33 +133,12 @@ function EvalStepRow({ step, index }: { step: StepResult; index: number }) {
         <StepStatusIcon status={step.status} />
         <span className="text-xs font-semibold" style={{ color: '#94A3B8' }}>{index + 1}</span>
         <span className="text-sm font-medium text-white flex-1">{step.name}</span>
-        {eval_?.score !== undefined && step.status === 'completed' && (
-          <span className="text-xs font-bold px-2 py-0.5 rounded" style={{ background: `rgba(${hexToRgb(scoreColor)},0.12)`, color: scoreColor }}>{eval_.score}</span>
-        )}
-        {issueCount > 0 && (
-          <span className="flex items-center gap-1 text-xs px-2 py-0.5 rounded" style={{ background: 'rgba(239,68,68,0.08)', color: '#EF4444' }}>
-            <AlertTriangle size={10} />{issueCount}
-          </span>
-        )}
-        {eval_?.verdict && step.status === 'completed' && <VerdictBadge verdict={eval_.verdict} />}
+        <StepBadges eval_={eval_} step={step} scoreColor={scoreColor} issueCount={issueCount} />
         <span className="text-xs font-medium" style={{ color: '#64748B' }}>{step.agentName}</span>
         {duration && <span className="text-xs font-mono" style={{ color: '#475569' }}>{duration}</span>}
         {expanded ? <ChevronDown size={14} style={{ color: '#475569' }} /> : <ChevronRight size={14} style={{ color: '#475569' }} />}
       </button>
-      {expanded && (
-        <div className="px-4 pb-4 space-y-3 border-t" style={{ borderColor: 'rgba(51,51,51,0.2)' }}>
-          {step.status === 'completed' && eval_ ? (
-            <EvalDetail eval_={eval_} rawData={step.outputData} />
-          ) : step.status === 'skipped' ? (
-            <p className="text-xs py-2" style={{ color: '#64748B' }}>Skipped — no available agent for this step</p>
-          ) : (
-            <RawDataBlock data={step.outputData} />
-          )}
-          {step.error && (
-            <div className="px-3 py-2 rounded-lg text-xs" style={{ background: 'rgba(239,68,68,0.08)', color: '#EF4444', border: '1px solid rgba(239,68,68,0.2)' }}>Error: {step.error}</div>
-          )}
-        </div>
-      )}
+      {expanded && <StepExpandedContent step={step} eval_={eval_} />}
     </div>
   )
 }
@@ -203,7 +216,11 @@ function RawDataBlock({ data }: { data: string }) {
   const [copied, setCopied] = useState(false)
 
   const handleCopy = useCallback(async () => {
-    try { await navigator.clipboard.writeText(data); setCopied(true); setTimeout(() => setCopied(false), 1500) } catch { /* ignore */ }
+    try {
+      await navigator.clipboard.writeText(data)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 1500)
+    } catch { /* ignore */ }
   }, [data])
 
   return (
@@ -296,7 +313,8 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 }
 
 function formatJson(data: string): string {
-  try { return JSON.stringify(JSON.parse(data), null, 2) } catch { return data }
+  try { return JSON.stringify(JSON.parse(data), null, 2) }
+  catch { return data }
 }
 
 function hexToRgb(hex: string): string {

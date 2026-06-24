@@ -30,9 +30,34 @@ function HierarchyContent({ agents, setAgents, connections, wsConnected, fetchAg
         <GroupSidebar agents={agents} activeFilter={st.activeFilter} onFilterChange={st.setActiveFilter} selectedAgentId={st.selectedAgentId} onSelectAgent={st.handleSidebarSelect} />
         <HierarchyCanvas nodes={nodes} edges={edges} onNodesChange={onNodesChange} onEdgesChange={onEdgesChange} onNodeClick={st.onNodeClick} onPaneClick={st.onPaneClick} reactFlowInstanceRef={reactFlowInstanceRef} reactFlowWrapper={reactFlowWrapper} viewMode={st.viewMode} showLayers={st.showLayers} agents={agents} layerPositions={layerPositions} />
         {st.fitMode && !st.detailPanelOpen ? (
-          <button onClick={() => { st.setDetailPanelOpen(true); st.setFitMode(false) }} title="Open detail panel" style={{ position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)', width: 24, height: 48, borderRadius: 6, border: '1px solid rgba(51,51,51,0.4)', background: 'rgba(10,10,10,0.9)', color: '#555', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 20, transition: 'color 0.15s, border-color 0.15s' }} onMouseEnter={e => { e.currentTarget.style.color = '#06B6D4'; e.currentTarget.style.borderColor = 'rgba(6,182,212,0.3)' }} onMouseLeave={e => { e.currentTarget.style.color = '#555'; e.currentTarget.style.borderColor = 'rgba(51,51,51,0.4)' }}><ChevronLeft size={12} /></button>
+          <button onClick={() => {
+            st.setDetailPanelOpen(true)
+            st.setFitMode(false)
+          }}
+          title="Open detail panel"
+          style={{ position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)', width: 24, height: 48, borderRadius: 6, border: '1px solid rgba(51,51,51,0.4)', background: 'rgba(10,10,10,0.9)', color: '#555', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 20, transition: 'color 0.15s, border-color 0.15s' }}
+          onMouseEnter={e => {
+            e.currentTarget.style.color = '#06B6D4'
+            e.currentTarget.style.borderColor = 'rgba(6,182,212,0.3)'
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.color = '#555'
+            e.currentTarget.style.borderColor = 'rgba(51,51,51,0.4)'
+          }}
+        ><ChevronLeft size={12} /></button>
         ) : (
-          <DetailPanel agent={selectedAgent} allAgents={agents} open={st.detailPanelOpen} onToggle={() => st.setDetailPanelOpen(prev => { const n = !prev; if (n) st.setFitMode(false); return n })} onClose={() => st.setSelectedAgentId(null)} onAgentUpdated={(u: AgentData) => setAgents(prev => prev.map(a => a.id === u.id ? u : a))} onAgentDeleted={(id: string) => { setAgents(prev => prev.filter(a => a.id !== id)); st.setSelectedAgentId(null) }} />
+          <DetailPanel agent={selectedAgent} allAgents={agents} open={st.detailPanelOpen}
+            onToggle={() => st.setDetailPanelOpen(prev => {
+              const n = !prev
+              if (n) st.setFitMode(false)
+              return n
+            })}
+            onClose={() => st.setSelectedAgentId(null)}
+            onAgentUpdated={(u: AgentData) => setAgents(prev => prev.map(a => a.id === u.id ? u : a))}
+            onAgentDeleted={(id: string) => {
+              setAgents(prev => prev.filter(a => a.id !== id))
+              st.setSelectedAgentId(null)
+            }} />
         )}
       </div>
       <KPIStrip agents={agents} />
@@ -71,12 +96,28 @@ export default function AgentHierarchy({ onBack }: { onBack?: () => void }) {
 
   const layerPositions = useMemo(() => {
     const ly: Record<number, { minY: number; maxY: number }> = {}
-    for (const a of agents) { const cfg = ROLE_CONFIG[a.roleGroup]; if (!cfg) continue; const pos = positions[a.id]; if (!pos) continue; if (!ly[cfg.level]) ly[cfg.level] = { minY: pos.y, maxY: pos.y + 58 }; else { ly[cfg.level].minY = Math.min(ly[cfg.level].minY, pos.y); ly[cfg.level].maxY = Math.max(ly[cfg.level].maxY, pos.y + 58) } }
+    for (const a of agents) {
+      const cfg = ROLE_CONFIG[a.roleGroup]
+      if (!cfg) continue
+      const pos = positions[a.id]
+      if (!pos) continue
+      if (!ly[cfg.level]) {
+        ly[cfg.level] = { minY: pos.y, maxY: pos.y + 58 }
+      } else {
+        ly[cfg.level].minY = Math.min(ly[cfg.level].minY, pos.y)
+        ly[cfg.level].maxY = Math.max(ly[cfg.level].maxY, pos.y + 58)
+      }
+    }
     return ly
   }, [agents, positions])
 
   const selectedAgent = useMemo(() => agents.find(a => a.id === st.selectedAgentId) || null, [agents, st.selectedAgentId])
-  useEffect(() => { if (st.fitMode && reactFlowInstanceRef.current) { const t = setTimeout(() => reactFlowInstanceRef.current?.fitView({ padding: 0.15, duration: 500 }), 400); return () => clearTimeout(t) } }, [agents.length, st.fitMode])
+  useEffect(() => {
+    if (st.fitMode && reactFlowInstanceRef.current) {
+      const t = setTimeout(() => reactFlowInstanceRef.current?.fitView({ padding: 0.15, duration: 500 }), 400)
+      return () => clearTimeout(t)
+    }
+  }, [agents.length, st.fitMode])
 
   if (loading) return <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#000', color: '#555', fontSize: 14, gap: 8 }}><RefreshCw size={16} color="#555" className="animate-spin" />Loading hierarchy...</div>
 

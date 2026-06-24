@@ -49,7 +49,11 @@ export function useWorkflowData(): UseWorkflowDataReturn {
       toast.error('Execution failed')
       return null
     } finally {
-      setRunningIds(prev => { const n = new Set(prev); n.delete(workflowId); return n })
+      setRunningIds(prev => {
+        const n = new Set(prev);
+        n.delete(workflowId);
+        return n;
+      } )
     }
   }, [fetchWorkflows])
 

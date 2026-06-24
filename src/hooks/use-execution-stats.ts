@@ -59,7 +59,10 @@ export function useExecutionStats() {
   const fetchStats = useCallback(async () => {
     try {
       const res = await fetch('/api/agents/execution-stats')
-      if (res.ok) { const data = await res.json(); setStats(data.agentStats || {}) }
+      if (res.ok) {
+        const data = await res.json()
+        setStats(data.agentStats || {})
+      }
     } catch (err) {
       console.error('[useExecutionStats] fetch failed:', err)
     } finally {

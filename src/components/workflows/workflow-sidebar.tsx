@@ -10,6 +10,16 @@ import {
 } from './workflow-types'
 import { SidebarSection } from './workflow-sidebar-section'
 
+function SidebarToggle({ sidebarOpen, setSidebarOpen }: { sidebarOpen: boolean; setSidebarOpen: (v: boolean) => void }) {
+  return (
+    <button onClick={() => setSidebarOpen(!sidebarOpen)}
+      className="absolute top-1/2 -translate-y-1/2 z-20 w-5 h-8 rounded-r-md flex items-center justify-center transition-all duration-200 hover:scale-110"
+      style={{ right: -20, background: '#0D0D0D', border: '1px solid rgba(51,51,51,0.4)', borderLeft: 'none' }}>
+      {sidebarOpen ? <ChevronLeft size={10} style={{ color: '#06B6D4' }} /> : <ChevronRight size={10} style={{ color: '#06B6D4' }} />}
+    </button>
+  )
+}
+
 export function WorkflowSidebar({
   sidebarOpen, setSidebarOpen, pipelineStats, workflows,
   filterStatus, setFilterStatus, filterTrigger, setFilterTrigger,
@@ -42,11 +52,7 @@ export function WorkflowSidebar({
         `}
         style={{ background: '#0D0D0D', borderRight: '1px solid rgba(51,51,51,0.3)' }}
       >
-        <button onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="absolute top-1/2 -translate-y-1/2 z-20 w-5 h-8 rounded-r-md flex items-center justify-center transition-all duration-200 hover:scale-110"
-          style={{ right: -20, background: '#0D0D0D', border: '1px solid rgba(51,51,51,0.4)', borderLeft: 'none' }}>
-          {sidebarOpen ? <ChevronLeft size={10} style={{ color: '#06B6D4' }} /> : <ChevronRight size={10} style={{ color: '#06B6D4' }} />}
-        </button>
+        <SidebarToggle sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         <div className="flex-1 overflow-y-auto pt-2 pb-4" style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(255,255,255,0.1) transparent' }}>
           {sidebarOpen ? <SidebarOpenContent pipelineStats={pipelineStats} workflows={workflows} filterStatus={filterStatus} setFilterStatus={setFilterStatus} filterTrigger={filterTrigger} setFilterTrigger={setFilterTrigger} seeding={seeding} onSeed={onSeed} /> : (
             <div className="flex flex-col items-center gap-3 pt-2">

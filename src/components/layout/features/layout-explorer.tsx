@@ -21,6 +21,29 @@ function getCategoryColor(category: string): string {
     : '#10B981'
 }
 
+function ViewModeButtons({ tokens, viewMode, setViewMode }: { tokens: any; viewMode: string; setViewMode: (v: any) => void }) {
+  const viewModes: { key: any; label: string; Icon: any }[] = [
+    { key: 'grid' as const, label: 'Grid', Icon: Grid3X3 },
+    { key: 'list' as const, label: 'List', Icon: List },
+  ]
+  return (
+    <div style={{ display: 'flex', gap: 0 }}>
+      {viewModes.map((vm, i, arr) => (
+        <button key={vm.key} onClick={() => setViewMode(vm.key)} style={{
+          fontSize: fontSize.md, fontWeight: fontWeight.semibold, fontFamily: tokens.fontFamilyBody, padding: '10px 20px',
+          border: `1px solid ${viewMode === vm.key ? tokens.accentPrimary : tokens.borderDefault}`,
+          background: viewMode === vm.key ? tokens.accentPrimary : tokens.bgBase,
+          color: viewMode === vm.key ? tokens.textOnAccent : tokens.textSecondary,
+          cursor: 'pointer', transition: 'all 0.15s', display: 'flex', alignItems: 'center', gap: 8,
+          borderRadius: i === 0 ? '8px 0 0 8px' : '0 8px 8px 0',
+        }}>
+          <vm.Icon style={{ width: 16, height: 16 }} />{vm.label}
+        </button>
+      ))}
+    </div>
+  )
+}
+
 function ExplorerTopBar({ tokens, viewTab, setViewTab, selectedCategory, input, viewMode, setViewMode, onBack, onOpenHierarchy }: {
   tokens: any; viewTab: ViewTab; setViewTab: (v: ViewTab) => void;
   selectedCategory: string | null; input: any; viewMode: string; setViewMode: (v: any) => void
@@ -31,10 +54,6 @@ function ExplorerTopBar({ tokens, viewTab, setViewTab, selectedCategory, input, 
     { key: 'code', label: 'Code', Icon: Code2 },
     { key: 'docs', label: 'Docs', Icon: FileCode },
     { key: 'playground', label: 'Playground', Icon: Play },
-  ]
-  const viewModes: { key: any; label: string; Icon: any }[] = [
-    { key: 'grid' as const, label: 'Grid', Icon: Grid3X3 },
-    { key: 'list' as const, label: 'List', Icon: List },
   ]
   return (
     <>
@@ -62,20 +81,7 @@ function ExplorerTopBar({ tokens, viewTab, setViewTab, selectedCategory, input, 
           <div style={{ fontSize: fontSize['2xl'], fontWeight: fontWeight.bold, fontFamily: tokens.fontFamilyDisplay }}>{selectedCategory ? (categoryMeta[selectedCategory]?.label ?? selectedCategory) : 'Layouts'} — All Recipes</div>
           <div style={{ fontSize: fontSize.lg, fontFamily: tokens.fontFamilyBody, color: tokens.textSecondary, marginTop: 6 }}>Ranked for &quot;{GOALS.find(g => g.value === input.goal)?.label ?? input.goal}&quot;</div>
         </div>
-        <div style={{ display: 'flex', gap: 0 }}>
-          {viewModes.map((vm, i, arr) => (
-            <button key={vm.key} onClick={() => setViewMode(vm.key)} style={{
-              fontSize: fontSize.md, fontWeight: fontWeight.semibold, fontFamily: tokens.fontFamilyBody, padding: '10px 20px',
-              border: `1px solid ${viewMode === vm.key ? tokens.accentPrimary : tokens.borderDefault}`,
-              background: viewMode === vm.key ? tokens.accentPrimary : tokens.bgBase,
-              color: viewMode === vm.key ? tokens.textOnAccent : tokens.textSecondary,
-              cursor: 'pointer', transition: 'all 0.15s', display: 'flex', alignItems: 'center', gap: 8,
-              borderRadius: i === 0 ? '8px 0 0 8px' : '0 8px 8px 0',
-            }}>
-              <vm.Icon style={{ width: 16, height: 16 }} />{vm.label}
-            </button>
-          ))}
-        </div>
+        <ViewModeButtons tokens={tokens} viewMode={viewMode} setViewMode={setViewMode} />
       </div>
     </>
   )
@@ -105,6 +111,30 @@ function GridCard({ r, best, tokens, selectedRecipe, setSelectedRecipe }: { r: a
 
 // ─── Layout Explorer ─────────────────────────────────────────
 
+function ListRow({ r, best, selectedRecipe, setSelectedRecipe, tokens }: { r: any; best: any; selectedRecipe: string | null; setSelectedRecipe: (s: string | null) => void; tokens: any }) {
+  const isBest = r.structure === best?.structure
+  const isSelected = r.structure === selectedRecipe
+  return (
+    <div key={r.structure} onClick={() => setSelectedRecipe(isSelected ? null : r.structure)}
+      style={{ display: 'flex', alignItems: 'center', gap: 20, padding: '12px 20px', border: `1px solid ${isSelected ? tokens.cardSelected : isBest ? `${tokens.accentPrimary}30` : 'transparent'}`, borderRadius: tokens.cornerRadius, background: isSelected ? `${tokens.accentPrimary}08` : isBest ? `${tokens.accentPrimary}04` : 'transparent', cursor: 'pointer', transition: 'all 0.15s' }}>
+      <div style={{ width: 72, height: 52, borderRadius: 6, background: tokens.bgDeep, border: `1px solid ${tokens.borderSubtle}`, flexShrink: 0, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ width: '84%', height: '84%' }}><GridPreview recipe={r.recipe} compact /></div>
+      </div>
+      <div style={{ flex: 1, minWidth: 0, display: 'flex', alignItems: 'center', gap: 12 }}>
+        <div style={{ minWidth: 0, flex: 1 }}>
+          <div style={{ fontSize: fontSize.lg, fontWeight: fontWeight.semibold, fontFamily: tokens.fontFamilyBody, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: 8 }}>
+            {r.recipe.name}
+            {isBest && <span style={{ fontSize: fontSize.xs, fontWeight: fontWeight.bold, fontFamily: tokens.fontFamilyMono, padding: '2px 8px', borderRadius: 4, background: `${tokens.accentPrimary}20`, color: tokens.accentPrimary, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Best</span>}
+          </div>
+          <div style={{ fontSize: fontSize.base, fontFamily: tokens.fontFamilyMono, color: tokens.textMuted, marginTop: 2 }}>{r.recipe.regions.length} regions · gap: {r.recipe.gap}</div>
+        </div>
+        <div style={{ fontSize: fontSize.sm, fontWeight: fontWeight.bold, fontFamily: tokens.fontFamilyMono, padding: '3px 10px', borderRadius: 4, textTransform: 'uppercase', letterSpacing: '0.5px', background: `${getCategoryColor(r.recipe.category)}15`, color: getCategoryColor(r.recipe.category), flexShrink: 0 }}>{categoryMeta[r.recipe.category]?.label ?? r.recipe.category}</div>
+        <ScoreGauge score={r.score} size={32} />
+      </div>
+    </div>
+  )
+}
+
 export function VariantLayoutExplorer({ recipes }: { recipes: LayoutRecipe[] }) {
   const { tokens } = useLayoutTheme()
   const { selectedCategory, activeLayer, viewMode, setSelectedCategory, setActiveLayer, setViewMode } = useExplorerFilters()
@@ -132,29 +162,9 @@ export function VariantLayoutExplorer({ recipes }: { recipes: LayoutRecipe[] }) 
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 2, marginBottom: 32 }}>
-              {filtered.map(r => {
-                const isBest = r.structure === best?.structure
-                const isSelected = r.structure === selectedRecipe
-                return (
-                  <div key={r.structure} onClick={() => setSelectedRecipe(isSelected ? null : r.structure)}
-                    style={{ display: 'flex', alignItems: 'center', gap: 20, padding: '12px 20px', border: `1px solid ${isSelected ? tokens.cardSelected : isBest ? `${tokens.accentPrimary}30` : 'transparent'}`, borderRadius: tokens.cornerRadius, background: isSelected ? `${tokens.accentPrimary}08` : isBest ? `${tokens.accentPrimary}04` : 'transparent', cursor: 'pointer', transition: 'all 0.15s' }}>
-                    <div style={{ width: 72, height: 52, borderRadius: 6, background: tokens.bgDeep, border: `1px solid ${tokens.borderSubtle}`, flexShrink: 0, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <div style={{ width: '84%', height: '84%' }}><GridPreview recipe={r.recipe} compact /></div>
-                    </div>
-                    <div style={{ flex: 1, minWidth: 0, display: 'flex', alignItems: 'center', gap: 12 }}>
-                      <div style={{ minWidth: 0, flex: 1 }}>
-                        <div style={{ fontSize: fontSize.lg, fontWeight: fontWeight.semibold, fontFamily: tokens.fontFamilyBody, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: 8 }}>
-                          {r.recipe.name}
-                          {isBest && <span style={{ fontSize: fontSize.xs, fontWeight: fontWeight.bold, fontFamily: tokens.fontFamilyMono, padding: '2px 8px', borderRadius: 4, background: `${tokens.accentPrimary}20`, color: tokens.accentPrimary, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Best</span>}
-                        </div>
-                        <div style={{ fontSize: fontSize.base, fontFamily: tokens.fontFamilyMono, color: tokens.textMuted, marginTop: 2 }}>{r.recipe.regions.length} regions · gap: {r.recipe.gap}</div>
-                      </div>
-                      <div style={{ fontSize: fontSize.sm, fontWeight: fontWeight.bold, fontFamily: tokens.fontFamilyMono, padding: '3px 10px', borderRadius: 4, textTransform: 'uppercase', letterSpacing: '0.5px', background: `${getCategoryColor(r.recipe.category)}15`, color: getCategoryColor(r.recipe.category), flexShrink: 0 }}>{categoryMeta[r.recipe.category]?.label ?? r.recipe.category}</div>
-                      <ScoreGauge score={r.score} size={32} />
-                    </div>
-                  </div>
-                )
-              })}
+              {filtered.map(r => (
+                <ListRow key={r.structure} r={r} best={best} tokens={tokens} selectedRecipe={selectedRecipe} setSelectedRecipe={setSelectedRecipe} />
+              ))}
             </div>
           )}
         </div>

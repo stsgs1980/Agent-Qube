@@ -5,15 +5,31 @@ import { type Node } from '@xyflow/react'
 import { EDGE_CONFIG, type EdgeType, type ViewMode } from '@/components/hierarchy/types'
 import { createKeyboardHandler } from './use-hierarchy-state-helpers'
 
+function useEdgeToggle() {
+  const [visibleEdgeTypes, setVisibleEdgeTypes] = useState<Set<EdgeType>>(
+    new Set(Object.entries(EDGE_CONFIG).filter(([, v]) => v.defaultVisible).map(([k]) => k as EdgeType)),
+  )
+  const toggleEdgeType = useCallback((type: EdgeType) => {
+    setVisibleEdgeTypes(prev => {
+      const next = new Set(prev)
+      if (next.has(type)) {
+        next.delete(type)
+      } else {
+        next.add(type)
+      }
+      return next
+    })
+  }, [])
+  return { visibleEdgeTypes, toggleEdgeType }
+}
+
 export function useHierarchyState(reactFlowInstanceRef: MutableRefObject<any>) {
   const [selectedAgentId, setSelectedAgentId] = useState<string | null>(null)
   const [detailPanelOpen, setDetailPanelOpen] = useState(false)
   const [fitMode, setFitMode] = useState(true)
   const [activeFilter, setActiveFilter] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
-  const [visibleEdgeTypes, setVisibleEdgeTypes] = useState<Set<EdgeType>>(
-    new Set(Object.entries(EDGE_CONFIG).filter(([, v]) => v.defaultVisible).map(([k]) => k as EdgeType)),
-  )
+  const { visibleEdgeTypes, toggleEdgeType } = useEdgeToggle()
   const [viewMode, setViewMode] = useState<ViewMode>('hierarchy')
   const [showLayers, setShowLayers] = useState(true)
   const [showAddAgent, setShowAddAgent] = useState(false)
@@ -39,11 +55,11 @@ export function useHierarchyState(reactFlowInstanceRef: MutableRefObject<any>) {
   }, [selectedAgentId, reactFlowInstanceRef])
 
   const handleFitView = useCallback(() => {
-    setFitMode(prev => { const next = !prev; if (next) setDetailPanelOpen(false); return next })
-  }, [])
-
-  const toggleEdgeType = useCallback((type: EdgeType) => {
-    setVisibleEdgeTypes(prev => { const next = new Set(prev); if (next.has(type)) { next.delete(type) } else { next.add(type) } return next })
+    setFitMode(prev => {
+      const next = !prev;
+      if (next) setDetailPanelOpen(false);
+      return next;
+    } )
   }, [])
 
   useEffect(() => {

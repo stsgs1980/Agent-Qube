@@ -49,7 +49,10 @@ export function GridCodeBlock({ recipe }: { recipe: LayoutRecipe }) {
   const cssCode = generateGridCSS(recipe)
 
   const handleCopy = useCallback(() => {
-    navigator.clipboard.writeText(cssCode).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000) })
+    navigator.clipboard.writeText(cssCode).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    })
   }, [cssCode])
 
   const handleDownload = useCallback(() => {

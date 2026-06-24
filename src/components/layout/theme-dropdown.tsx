@@ -20,7 +20,10 @@ function ThemeDropdownFooter({ tokens }: { tokens: any }) {
 
 export function ThemeDropdown({ preset, onSelect, onClose }: { preset: string; onSelect: (id: string) => void; onClose: () => void }) {
   const { tokens } = useLayoutTheme()
- const handleSelect = (id: string) => { onSelect(id); onClose() }
+ const handleSelect = (id: string) => {
+    onSelect(id)
+    onClose()
+  }
   return (
     <div role="listbox" aria-label="Theme selector" style={{ position: 'absolute', top: '100%', right: 0, marginTop: 6, width: 260, background: tokens.bgBase, border: `1px solid ${tokens.borderDefault}`, borderRadius: tokens.cornerRadius, overflow: 'hidden', boxShadow: tokens.cardShadow, zIndex: 50 }}>
       <div style={{ padding: `${spacing.sm}px ${spacing.md}px`, borderBottom: `1px solid ${tokens.borderSubtle}`, display: 'flex', alignItems: 'center', gap: 6 }}>

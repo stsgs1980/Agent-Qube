@@ -27,8 +27,32 @@ function CardActions({ workflow, running, onRun, onToggle, onDelete }: { workflo
       <button onClick={(e) => { e.stopPropagation(); onToggle() }}
         className="w-7 h-7 rounded-md flex items-center justify-center transition-all duration-200 hover:scale-110"
         style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(51,51,51,0.4)' }} title="View pipeline">
-        <Eye size={11} style={{ color: onToggle ? '#06B6D4' : '#64748B' }} />
+        <Eye size={11} style={{ color: '#06B6D4' }} />
       </button>
+    </div>
+  )
+}
+
+function WorkflowTags({ tags }: { tags: string[] }) {
+  if (tags.length === 0) return null
+  return (
+    <div className="flex flex-wrap gap-1.5 mt-3">
+      {tags.map((tag) => (
+        <span key={tag} className="text-[7px] px-1.5 py-0.5 rounded font-medium"
+          style={{ background: 'rgba(6,182,212,0.08)', color: '#0891B2', border: '1px solid rgba(6,182,212,0.1)' }}>{tag}</span>
+      ))}
+    </div>
+  )
+}
+
+function ExpandedExecutions({ isExpanded, workflow, onViewHistory }: { isExpanded: boolean; workflow: WorkflowData; onViewHistory: (workflowId: string, execId: string) => void }) {
+  if (!isExpanded) return null
+  return (
+    <div className="mt-4 pt-3" style={{ borderTop: '1px solid rgba(51,51,51,0.3)' }}>
+      <h4 className="text-white font-semibold text-[10px] mb-2 flex items-center gap-1.5">
+        <Clock size={10} style={{ color: '#64748B' }} /> Recent Executions
+      </h4>
+      <ExecutionHistory executions={workflow.recentExecutions} workflowId={workflow.id} onViewDetails={onViewHistory} />
     </div>
   )
 }
@@ -91,22 +115,8 @@ export function WorkflowCard({
         </div>
         <CardStats workflow={workflow} />
         <MiniPipeline steps={workflow.steps} />
-        {workflow.tags.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 mt-3">
-            {workflow.tags.map((tag) => (
-              <span key={tag} className="text-[7px] px-1.5 py-0.5 rounded font-medium"
-                style={{ background: 'rgba(6,182,212,0.08)', color: '#0891B2', border: '1px solid rgba(6,182,212,0.1)' }}>{tag}</span>
-            ))}
-          </div>
-        )}
-        {isExpanded && (
-          <div className="mt-4 pt-3" style={{ borderTop: '1px solid rgba(51,51,51,0.3)' }}>
-            <h4 className="text-white font-semibold text-[10px] mb-2 flex items-center gap-1.5">
-              <Clock size={10} style={{ color: '#64748B' }} /> Recent Executions
-            </h4>
-            <ExecutionHistory executions={workflow.recentExecutions} workflowId={workflow.id} onViewDetails={onViewHistory} />
-          </div>
-        )}
+        <WorkflowTags tags={workflow.tags} />
+        <ExpandedExecutions isExpanded={isExpanded} workflow={workflow} onViewHistory={onViewHistory} />
       </div>
       {isExpanded && <ExpandedPipelineView workflow={workflow} onRun={onRun} running={running} />}
     </div>

@@ -11,7 +11,10 @@ function FlowParticles({ pathRef, particlesRef, color, isPulsing }: { pathRef: R
     const update = () => {
       const path = pathRef.current; if (!path) return
       const totalLen = path.getTotalLength()
-      setPoints(particlesRef.current.map(p => { const pt = path.getPointAtLength(p.progress * totalLen); return { x: pt.x, y: pt.y } }))
+      setPoints(particlesRef.current.map(p => {
+        const pt = path.getPointAtLength(p.progress * totalLen)
+        return { x: pt.x, y: pt.y }
+      }))
       requestAnimationFrame(update)
     }
     const raf = requestAnimationFrame(update)
@@ -91,7 +94,13 @@ export function ConnectionLine({ x1, y1, x2, y2, color, type, strength = 1, hove
   }, [type])
 
   useEffect(() => {
-    const animate = () => { for (const p of particlesRef.current) { p.progress += p.speed; if (p.progress > 1) p.progress -= 1 } animationRef.current = requestAnimationFrame(animate) }
+    const animate = () => {
+      for (const p of particlesRef.current) {
+        p.progress += p.speed
+        if (p.progress > 1) p.progress -= 1
+      }
+      animationRef.current = requestAnimationFrame(animate)
+    }
     animationRef.current = requestAnimationFrame(animate)
     return () => cancelAnimationFrame(animationRef.current)
   }, [])

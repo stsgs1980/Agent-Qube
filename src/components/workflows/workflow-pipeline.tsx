@@ -79,7 +79,11 @@ function FullPageContent({ data, state, onRun, onViewHistory, onBack, onOpenHier
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <h2 className="text-white font-semibold text-sm flex items-center gap-2"><span className="w-1 h-4 rounded-full" style={{ background: '#06B6D4' }} /><Workflow size={14} style={{ color: '#06B6D4' }} />Workflows<span className="text-[10px] px-1.5 py-0.5 rounded-md font-medium" style={{ background: 'rgba(6,182,212,0.12)', color: '#06B6D4' }}>{state.filteredWorkflows.length}</span></h2>
-                {(state.filterStatus || state.filterTrigger || state.searchQuery) && <button onClick={() => { state.setFilterStatus(null); state.setFilterTrigger(null); state.setSearchQuery('') }} className="flex items-center gap-1 px-2 py-1 rounded-md text-[8px] transition-all duration-200 hover:scale-105" style={{ background: 'rgba(234,179,8,0.1)', border: '1px solid rgba(234,179,8,0.2)', color: '#EAB308' }}><X size={8} />Clear filters</button>}
+                {(state.filterStatus || state.filterTrigger || state.searchQuery) && <button onClick={() => {
+                  state.setFilterStatus(null);
+                  state.setFilterTrigger(null);
+                  state.setSearchQuery('');
+                } } className="flex items-center gap-1 px-2 py-1 rounded-md text-[8px] transition-all duration-200 hover:scale-105" style={{ background: 'rgba(234,179,8,0.1)', border: '1px solid rgba(234,179,8,0.2)', color: '#EAB308' }}><X size={8} />Clear filters</button>}
               </div>
               <button onClick={() => state.setShowCreateDialog(true)} className="flex items-center gap-1.5 px-3 py-2 rounded-md text-[10px] font-bold transition-all duration-200 hover:scale-105" style={{ background: 'rgba(6,182,212,0.15)', border: '1px solid rgba(6,182,212,0.3)', color: '#06B6D4' }}><Plus size={10} />New Workflow</button>
             </div>

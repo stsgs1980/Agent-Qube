@@ -25,6 +25,23 @@ export function MiniPipeline({ steps }: { steps: WorkflowStep[] }) {
   )
 }
 
+function StepMeta({ step, actionColor }: { step: WorkflowStep; actionColor: string }) {
+  return (
+    <>
+      {step.roleGroup && (
+        <span className="text-[7px] px-1 py-0.5 rounded font-medium"
+          style={{ background: `${actionColor}15`, color: actionColor }}>
+          {step.roleGroup}
+        </span>
+      )}
+      <div className="flex items-center gap-0.5">
+        <Timer size={7} style={{ color: '#64748B' }} />
+        <span className="text-[7px]" style={{ color: '#64748B' }}>{step.timeout}s</span>
+      </div>
+    </>
+  )
+}
+
 export function PipelineStepNode({
   step, execStatus, isAnimating, isHighlighted, onClick,
 }: {
@@ -61,16 +78,7 @@ export function PipelineStepNode({
         style={{ color: isHighlighted ? statusColor : '#B0B0B0' }}>
         {step.name}
       </span>
-      {step.roleGroup && (
-        <span className="text-[7px] px-1 py-0.5 rounded font-medium"
-          style={{ background: `${actionColor}15`, color: actionColor }}>
-          {step.roleGroup}
-        </span>
-      )}
-      <div className="flex items-center gap-0.5">
-        <Timer size={7} style={{ color: '#64748B' }} />
-        <span className="text-[7px]" style={{ color: '#64748B' }}>{step.timeout}s</span>
-      </div>
+      <StepMeta step={step} actionColor={actionColor} />
       {execStatus && (
         <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{
           background: STATUS_COLORS[execStatus], boxShadow: `0 0 4px ${STATUS_COLORS[execStatus]}44`,

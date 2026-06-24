@@ -8,8 +8,16 @@ function CollapsedToggle({ onToggle }: { onToggle: () => void }) {
   return (
     <button onClick={onToggle} title="Show detail panel"
       style={{ width: 28, height: 28, borderRadius: 6, border: '1px solid rgba(51,51,51,0.4)', background: 'rgba(255,255,255,0.03)', color: '#64748B', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'color 0.15s, border-color 0.15s, background 0.15s' }}
-      onMouseEnter={e => { e.currentTarget.style.color = '#06B6D4'; e.currentTarget.style.borderColor = 'rgba(6,182,212,0.3)'; e.currentTarget.style.background = 'rgba(6,182,212,0.06)' }}
-      onMouseLeave={e => { e.currentTarget.style.color = '#64748B'; e.currentTarget.style.borderColor = 'rgba(51,51,51,0.4)'; e.currentTarget.style.background = 'rgba(255,255,255,0.03)' }}>
+      onMouseEnter={e => {
+        e.currentTarget.style.color = '#06B6D4';
+        e.currentTarget.style.borderColor = 'rgba(6,182,212,0.3)';
+        e.currentTarget.style.background = 'rgba(6,182,212,0.06)';
+      } }
+      onMouseLeave={e => {
+        e.currentTarget.style.color = '#64748B'
+        e.currentTarget.style.borderColor = 'rgba(51,51,51,0.4)'
+        e.currentTarget.style.background = 'rgba(255,255,255,0.03)'
+      }}>
       <PanelRightOpen size={14} />
     </button>
   )

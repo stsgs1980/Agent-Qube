@@ -78,6 +78,18 @@ function GoalFilter({ g, isActive, tokens, onSelect }: { g: any; isActive: boole
   )
 }
 
+function SidebarHeader({ tokens, recipeCount }: { tokens: any; recipeCount: number }) {
+  return (
+    <div style={{ padding: '28px 28px 20px', borderBottom: `1px solid ${tokens.sidebarBorder}` }}>
+      <div style={{ fontSize: fontSize.xl, fontWeight: fontWeight.black, color: tokens.textPrimary, fontFamily: tokens.fontFamilyDisplay, display: 'flex', alignItems: 'center', gap: 10 }}>
+        <div style={{ width: 10, height: 10, borderRadius: '50%', background: tokens.accentPrimary }} />
+        @stsgs/ui
+      </div>
+      <div style={{ fontSize: fontSize.base, color: tokens.sidebarMuted, marginTop: 6, fontFamily: tokens.fontFamilyBody }}>v1.0.0 · {recipeCount} layouts</div>
+    </div>
+  )
+}
+
 export function ExplorerSidebar({
   recipeCount, selectedCategory, onCategoryChange,
   activeLayer, onLayerChange, input, onGoalSelect, catCounts,
@@ -92,13 +104,7 @@ export function ExplorerSidebar({
       borderRight: `1px solid ${tokens.sidebarBorder}`,
       transition: 'background 0.3s',
     }}>
-      <div style={{ padding: '28px 28px 20px', borderBottom: `1px solid ${tokens.sidebarBorder}` }}>
-        <div style={{ fontSize: fontSize.xl, fontWeight: fontWeight.black, color: tokens.textPrimary, fontFamily: tokens.fontFamilyDisplay, display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{ width: 10, height: 10, borderRadius: '50%', background: tokens.accentPrimary }} />
-          @stsgs/ui
-        </div>
-        <div style={{ fontSize: fontSize.base, color: tokens.sidebarMuted, marginTop: 6, fontFamily: tokens.fontFamilyBody }}>v1.0.0 · {recipeCount} layouts</div>
-      </div>
+      <SidebarHeader tokens={tokens} recipeCount={recipeCount} />
 
       <div style={{ margin: '16px 20px', padding: '10px 16px', background: `${tokens.sidebarBorder}`, border: `1px solid ${tokens.sidebarBorder}`, borderRadius: tokens.cornerRadius, fontSize: fontSize.md, color: tokens.sidebarMuted, fontFamily: tokens.fontFamilyBody, display: 'flex', alignItems: 'center', gap: 10 }}>
         <Search style={{ width: 16, height: 16 }} />

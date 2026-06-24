@@ -74,7 +74,11 @@ export function AgentCreationDialog({ onCreated }: { onCreated: () => void }) {
       const res = await fetchWithRetry('/api/agents', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: name.trim(), role: role.trim(), roleGroup, status, formula, skills: skills.trim(), description: `${role.trim()} agent`, avatar: 'brain' }) })
       if (!res.ok) throw new Error('Failed to create agent')
       toast.success(`Agent ${name.trim()} created successfully`)
-      setName(''); setRole(''); setSkillsStr(''); setOpen(false); onCreated()
+setName('');
+      setRole('');
+      setSkillsStr('');
+      setOpen(false);
+      onCreated();
     } catch { toast.error('Failed to create agent') } finally { setSubmitting(false) }
   }, [name, role, roleGroup, status, formula, skills, onCreated])
 

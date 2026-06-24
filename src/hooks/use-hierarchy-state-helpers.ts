@@ -9,7 +9,10 @@ export function createKeyboardHandler(
   return (e: KeyboardEvent) => {
     const target = e.target as HTMLElement
     if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') return
-    if (e.key === 'Escape') { setSelectedAgentId(null); return }
+    if (e.key === 'Escape') {
+      setSelectedAgentId(null)
+      return
+    }
     if (e.key >= '1' && e.key <= '8') {
       const index = parseInt(e.key) - 1
       if (index < ROLE_ORDER.length) {
@@ -18,6 +21,9 @@ export function createKeyboardHandler(
       }
       return
     }
-    if (e.key === '9') { setActiveFilter(null); return }
+    if (e.key === '9') {
+      setActiveFilter(null)
+      return
+    }
   }
 }
