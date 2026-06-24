@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react'
 import {
-  DashboardHeader, DashboardSidebar,
+  DashboardHeader, DashboardSidebar, AgentEditModal,
 } from '@/components/dashboard'
 import { useDashboardData } from '@/hooks/use-dashboard-data'
 import { useAgentEdit } from '@/hooks/use-agent-edit'
