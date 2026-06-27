@@ -43,7 +43,6 @@
         "@tanstack/react-table": "^8.21.3",
         "@types/dagre": "^0.7.54",
         "@xyflow/react": "^12.10.2",
-        "@zai/select-element": "github:stsgs1980/SelectElement",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "cmdk": "^1.1.1",
@@ -807,8 +806,6 @@
     "@xyflow/react": ["@xyflow/react@12.11.1", "", { "dependencies": { "@xyflow/system": "0.0.78", "classcat": "^5.0.3", "zustand": "^4.4.0" }, "peerDependencies": { "@types/react": ">=17", "@types/react-dom": ">=17", "react": ">=17", "react-dom": ">=17" }, "optionalPeers": ["@types/react", "@types/react-dom"] }, "sha512-L+zBoLGSXham0MnlY8QqjfR7/C5JNw0zxkaey5aZ5XmCgJBAdH4+WRIu8CR40d3l/BdU635V6YbhBK1jMo8/6Q=="],
 
     "@xyflow/system": ["@xyflow/system@0.0.78", "", { "dependencies": { "@types/d3-drag": "^3.0.7", "@types/d3-interpolate": "^3.0.4", "@types/d3-selection": "^3.0.10", "@types/d3-transition": "^3.0.8", "@types/d3-zoom": "^3.0.8", "d3-drag": "^3.0.0", "d3-interpolate": "^3.0.1", "d3-selection": "^3.0.0", "d3-zoom": "^3.0.0" } }, "sha512-lY0z2qP33fUhTva9Vaxrk0lqZta2pkbxB1trHAx1omnJqRtPvDlAQYV2r5fhS6AdpkulYmbNW0svy+A4/t4B/g=="],
-
-    "@zai/select-element": ["@zai/select-element@github:stsgs1980/SelectElement#4ad1c45", { "peerDependencies": { "react": ">=18.0.0", "react-dom": ">=18.0.0" } }, "stsgs1980-SelectElement-4ad1c45", "sha512-LELunVa/vb8U8ngCQvXDvNPeM6/Ymi31njRXs/eGYBdwfffBb7XQODI5WRgu6cmqla8muBTjQfKZaLJCpUpEFQ=="],
 
     "acorn": ["acorn@8.17.0", "", { "bin": { "acorn": "bin/acorn" } }, "sha512-xRQbDb9BnwDafYNn6Vwl839DYVjqXYb1XVGtWAZ1kcDc6iwAL4hg3B1dZlRiuENFeO2H53gFG3in621AdERVAg=="],
 
