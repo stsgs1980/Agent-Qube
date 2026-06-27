@@ -1,4 +1,9 @@
-<!DOCTYPE html>
+#!/usr/bin/env python3
+"""Generate showcase.html for Agent Qube - pure ASCII, real UI recreation."""
+
+import math
+
+HTML = r"""<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -884,4 +889,19 @@ body { font-family: var(--font); background: var(--bg); color: var(--txt); overf
 })();
 </script>
 </body>
-</html>
+</html>"""
+
+# Write output
+with open('/home/z/my-project/download/showcase.html', 'w') as f:
+    f.write(HTML)
+
+# Verify no non-ASCII
+data = open('/home/z/my-project/download/showcase.html', 'r').read()
+non_ascii = [c for c in data if ord(c) > 127]
+print(f'File size: {len(data)} bytes, {data.count(chr(10))} lines')
+print(f'Non-ASCII chars: {len(non_ascii)}')
+if non_ascii:
+    for i, c in enumerate(non_ascii[:5]):
+        idx = data.index(c)
+        line = data[:idx].count('\n') + 1
+        print(f'  Line {line}: U+{ord(c):04X}')
