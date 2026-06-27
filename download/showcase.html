@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Agent Command Center — Showcase</title>
+<title>Agent Command Center -- Showcase</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -36,12 +36,12 @@ body {
   line-height: 1.6;
 }
 
-/* ── Scrollbar ── */
+/* -- Scrollbar -- */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--cyan-dim); border-radius: 3px; }
 
-/* ── Hero ── */
+/* -- Hero -- */
 .hero {
   position: relative;
   min-height: 100vh;
@@ -156,7 +156,7 @@ body {
 }
 .scroll-hint svg { display: block; margin: 8px auto 0; }
 
-/* ── Stats Bar ── */
+/* -- Stats Bar -- */
 .stats-bar {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -195,7 +195,7 @@ body {
   margin-top: 6px;
 }
 
-/* ── Section Common ── */
+/* -- Section Common -- */
 .section {
   max-width: 1200px;
   margin: 0 auto;
@@ -222,7 +222,7 @@ body {
   line-height: 1.7;
 }
 
-/* ── Page Showcase Cards ── */
+/* -- Page Showcase Cards -- */
 .showcase-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -290,7 +290,7 @@ body {
 .feat-icon.cyan { background: var(--cyan-dim); color: var(--cyan); }
 .feat-icon.purple { background: var(--purple-dim); color: var(--purple); }
 
-/* ── Interactive Demo ── */
+/* -- Interactive Demo -- */
 .demo-section {
   background: linear-gradient(180deg, var(--bg) 0%, rgba(6,182,212,0.03) 50%, var(--bg) 100%);
   border-top: 1px solid var(--border);
@@ -303,17 +303,56 @@ body {
   padding: 0 1.5rem;
   text-align: center;
 }
-#demo-canvas {
+.demo-wrapper {
+  position: relative;
   width: 100%;
-  height: 450px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--bg-card);
+  height: 550px;
   margin-top: 2rem;
-  cursor: grab;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border);
   transition: border-color 0.3s;
+  perspective: 1200px;
 }
-#demo-canvas:hover { border-color: var(--border-hover); }
+.demo-wrapper:hover { border-color: var(--border-hover); }
+#demo-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+}
+.demo-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 40%, rgba(5,5,5,0.7) 100%);
+  z-index: 2;
+}
+.demo-scanlines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.03) 2px,
+    rgba(0,0,0,0.03) 4px
+  );
+  z-index: 3;
+}
+.demo-depth-label {
+  position: absolute;
+  bottom: 12px;
+  right: 16px;
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  color: rgba(6,182,212,0.3);
+  letter-spacing: 2px;
+  z-index: 4;
+  pointer-events: none;
+}
 .demo-hint {
   font-family: var(--mono);
   font-size: 0.7rem;
@@ -322,7 +361,7 @@ body {
   letter-spacing: 1px;
 }
 
-/* ── Tech Stack ── */
+/* -- Tech Stack -- */
 .tech-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -356,7 +395,7 @@ body {
   margin-top: 2px;
 }
 
-/* ── Footer ── */
+/* -- Footer -- */
 .footer {
   text-align: center;
   padding: 3rem 1.5rem;
@@ -366,7 +405,7 @@ body {
   font-family: var(--mono);
 }
 
-/* ── Scroll Animations ── */
+/* -- Scroll Animations -- */
 .reveal {
   opacity: 0;
   transform: translateY(40px);
@@ -380,13 +419,13 @@ body {
 .reveal-delay-2 { transition-delay: 0.3s; }
 .reveal-delay-3 { transition-delay: 0.45s; }
 
-/* ── 3D Tilt on cards ── */
+/* -- 3D Tilt on cards -- */
 .tilt-card {
   transform-style: preserve-3d;
   transition: transform 0.15s ease-out;
 }
 
-/* ── Responsive ── */
+/* -- Responsive -- */
 @media (max-width: 768px) {
   .stats-bar { grid-template-columns: repeat(2, 1fr); margin-top: -2rem; }
   .stat-item:first-child { border-radius: var(--radius) 0 0 0; }
@@ -397,19 +436,19 @@ body {
     grid-template-columns: 1fr;
     direction: ltr;
   }
-  #demo-canvas { height: 300px; }
+  .demo-wrapper { height: 350px; }
 }
 </style>
 </head>
 <body>
 
-<!-- ═══════════ HERO ═══════════ -->
+<!-- =========== HERO =========== -->
 <section class="hero">
   <canvas id="hero-canvas"></canvas>
   <div class="hero-content">
     <div class="hero-badge"><span class="dot"></span> System Online</div>
     <h1>Agent Command<br>Center<span class="cursor-blink"></span></h1>
-    <p class="hero-sub">Unified platform for managing AI agent hierarchies, orchestrating workflows, and engineering prompts — in real time.</p>
+    <p class="hero-sub">Unified platform for managing AI agent hierarchies, orchestrating workflows, and engineering prompts -- in real time.</p>
     <a href="#dashboard" class="hero-cta">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
       Explore the System
@@ -421,7 +460,7 @@ body {
   </div>
 </section>
 
-<!-- ═══════════ STATS ═══════════ -->
+<!-- =========== STATS =========== -->
 <div class="stats-bar reveal">
   <div class="stat-item">
     <div class="stat-number" data-target="12">0</div>
@@ -441,13 +480,13 @@ body {
   </div>
 </div>
 
-<!-- ═══════════ DASHBOARD ═══════════ -->
+<!-- =========== DASHBOARD =========== -->
 <section class="section" id="dashboard">
   <div class="showcase-row">
     <div class="reveal">
       <div class="section-label">// 01</div>
       <h2 class="section-title">Dashboard</h2>
-      <p class="section-desc">Central command view — monitor agent health, track execution metrics, and manage the entire fleet from a single pane of glass.</p>
+      <p class="section-desc">Central command view -- monitor agent health, track execution metrics, and manage the entire fleet from a single pane of glass.</p>
       <ul class="showcase-features" style="margin-top:1.5rem">
         <li><span class="feat-icon cyan">&#9672;</span> Real-time WebSocket health monitoring</li>
         <li><span class="feat-icon purple">&#9672;</span> Animated KPI strip with live counters</li>
@@ -466,13 +505,13 @@ body {
   </div>
 </section>
 
-<!-- ═══════════ HIERARCHY ═══════════ -->
+<!-- =========== HIERARCHY =========== -->
 <section class="section" id="hierarchy">
   <div class="showcase-row reverse">
     <div class="reveal">
       <div class="section-label">// 02</div>
       <h2 class="section-title">Agent Hierarchy</h2>
-      <p class="section-desc">Interactive 2D graph visualization of your agent topology — explore connections, inspect roles, and navigate multi-tier architectures with drag, zoom, and minimap.</p>
+      <p class="section-desc">Interactive 2D graph visualization of your agent topology -- explore connections, inspect roles, and navigate multi-tier architectures with drag, zoom, and minimap.</p>
       <ul class="showcase-features" style="margin-top:1.5rem">
         <li><span class="feat-icon cyan">&#9672;</span> React Flow canvas with dagre / radial / grid layouts</li>
         <li><span class="feat-icon purple">&#9672;</span> 3 role tiers: Orchestrator, Manager, Worker</li>
@@ -491,26 +530,31 @@ body {
   </div>
 </section>
 
-<!-- ═══════════ INTERACTIVE DEMO ═══════════ -->
+<!-- =========== INTERACTIVE DEMO =========== -->
 <section class="demo-section" id="demo">
   <div class="demo-container">
     <div class="reveal">
       <div class="section-label">// Live Demo</div>
       <h2 class="section-title">Interactive Agent Graph</h2>
-      <p class="section-desc" style="margin:0 auto">Hover over nodes to see connections. Drag to reposition. A miniature version of the Hierarchy canvas — running entirely in your browser.</p>
+      <p class="section-desc" style="margin:0 auto">Hover over nodes to see connections. Drag to reposition. A miniature version of the Hierarchy canvas -- running entirely in your browser.</p>
     </div>
-    <canvas id="demo-canvas" class="reveal reveal-delay-1"></canvas>
-    <div class="demo-hint reveal reveal-delay-2">HOVER NODES &bull; DRAG TO REPOSITION &bull; DOUBLE-CLICK TO RESET</div>
+    <div class="demo-wrapper reveal reveal-delay-1">
+      <canvas id="demo-canvas"></canvas>
+      <div class="demo-vignette"></div>
+      <div class="demo-scanlines"></div>
+      <div class="demo-depth-label">DEPTH LAYERS: 4</div>
+    </div>
+    <div class="demo-hint reveal reveal-delay-2">HOVER NODES &middot; DRAG TO REPOSITION &middot; DOUBLE-CLICK TO RESET &middot; MOUSE = PARALLAX</div>
   </div>
 </section>
 
-<!-- ═══════════ WORKFLOWS ═══════════ -->
+<!-- =========== WORKFLOWS =========== -->
 <section class="section" id="workflows">
   <div class="showcase-row">
     <div class="reveal">
       <div class="section-label">// 03</div>
       <h2 class="section-title">Workflow Engine</h2>
-      <p class="section-desc">Design, execute, and analyze multi-step agent workflows — from simple chains to complex branching pipelines with LLM evaluation built in.</p>
+      <p class="section-desc">Design, execute, and analyze multi-step agent workflows -- from simple chains to complex branching pipelines with LLM evaluation built in.</p>
       <ul class="showcase-features" style="margin-top:1.5rem">
         <li><span class="feat-icon cyan">&#9672;</span> Visual pipeline editor with step reordering</li>
         <li><span class="feat-icon purple">&#9672;</span> Real-time execution with message streaming</li>
@@ -529,7 +573,7 @@ body {
   </div>
 </section>
 
-<!-- ═══════════ TECH STACK ═══════════ -->
+<!-- =========== TECH STACK =========== -->
 <section class="section" id="tech">
   <div class="reveal" style="text-align:center">
     <div class="section-label">// Built With</div>
@@ -547,15 +591,15 @@ body {
   </div>
 </section>
 
-<!-- ═══════════ FOOTER ═══════════ -->
+<!-- =========== FOOTER =========== -->
 <footer class="footer">
   Agent Command Center &bull; Built with Next.js, React Flow &amp; AI &bull; 2025
 </footer>
 
 <script>
-// ═══════════════════════════════════════════════
+// ===============================================
 // 1. PARTICLE FIELD (Hero Canvas)
-// ═══════════════════════════════════════════════
+// ===============================================
 (function() {
   const canvas = document.getElementById('hero-canvas');
   const ctx = canvas.getContext('2d');
@@ -620,9 +664,9 @@ body {
   draw();
 })();
 
-// ═══════════════════════════════════════════════
+// ===============================================
 // 2. ANIMATED COUNTERS
-// ═══════════════════════════════════════════════
+// ===============================================
 (function() {
   const counters = document.querySelectorAll('.stat-number[data-target]');
   let started = false;
@@ -649,9 +693,9 @@ body {
   animateCounters();
 })();
 
-// ═══════════════════════════════════════════════
+// ===============================================
 // 3. SCROLL REVEAL (Intersection Observer)
-// ═══════════════════════════════════════════════
+// ===============================================
 (function() {
   const obs = new IntersectionObserver((entries) => {
     entries.forEach(e => {
@@ -664,9 +708,9 @@ body {
   document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 })();
 
-// ═══════════════════════════════════════════════
+// ===============================================
 // 4. 3D TILT on visual cards
-// ═══════════════════════════════════════════════
+// ===============================================
 (function() {
   document.querySelectorAll('.tilt-card').forEach(card => {
     card.addEventListener('mousemove', e => {
@@ -681,9 +725,9 @@ body {
   });
 })();
 
-// ═══════════════════════════════════════════════
+// ===============================================
 // 5. INTERACTIVE DEMO HIERARCHY (Canvas)
-// ═══════════════════════════════════════════════
+// ===============================================
 (function() {
   const canvas = document.getElementById('demo-canvas');
   const ctx = canvas.getContext('2d');
