@@ -36,3 +36,4 @@ download/*.xlsx
 # Cascade guard backups
 cascade-state.json.bak
 skills/sp-*
+standards/
