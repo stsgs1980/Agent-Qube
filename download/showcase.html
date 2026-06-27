@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent Command Center — Showcase</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #050505;
+  --bg-card: #0a0a0a;
+  --bg-card-hover: #0f0f0f;
+  --cyan: #06B6D4;
+  --cyan-dim: rgba(6,182,212,0.15);
+  --cyan-glow: rgba(6,182,212,0.4);
+  --purple: #8B5CF6;
+  --purple-dim: rgba(139,92,246,0.15);
+  --text: #e4e4e7;
+  --text-dim: #71717a;
+  --border: rgba(63,63,70,0.4);
+  --border-hover: rgba(6,182,212,0.3);
+  --radius: 12px;
+  --font: 'Inter', -apple-system, sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--cyan-dim); border-radius: 3px; }
+
+/* ── Hero ── */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+#hero-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+.hero-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 2rem;
+}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-family: var(--mono);
+  color: var(--cyan);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 2rem;
+  background: rgba(6,182,212,0.05);
+}
+.hero-badge .dot {
+  width: 6px; height: 6px;
+  background: var(--cyan);
+  border-radius: 50%;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; box-shadow: 0 0 4px var(--cyan); }
+  50% { opacity: 0.3; box-shadow: none; }
+}
+.hero h1 {
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 800;
+  letter-spacing: -2px;
+  line-height: 1.1;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #fff 0%, var(--cyan) 50%, var(--purple) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero h1 .cursor-blink {
+  display: inline-block;
+  width: 3px;
+  height: 0.85em;
+  background: var(--cyan);
+  margin-left: 4px;
+  vertical-align: text-bottom;
+  animation: blink 1s step-end infinite;
+}
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+.hero-sub {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  color: var(--text-dim);
+  max-width: 600px;
+  margin: 0 auto 2.5rem;
+  font-weight: 300;
+}
+.hero-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  background: var(--cyan);
+  color: #000;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 20px rgba(6,182,212,0.3);
+}
+.hero-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 40px rgba(6,182,212,0.5);
+}
+.scroll-hint {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  animation: float 3s ease-in-out infinite;
+  color: var(--text-dim);
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-family: var(--mono);
+}
+@keyframes float {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-8px); }
+}
+.scroll-hint svg { display: block; margin: 8px auto 0; }
+
+/* ── Stats Bar ── */
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  max-width: 900px;
+  margin: -4rem auto 0;
+  position: relative;
+  z-index: 2;
+  padding: 0 1rem;
+}
+.stat-item {
+  text-align: center;
+  padding: 1.5rem 1rem;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+.stat-item:first-child { border-radius: var(--radius) 0 0 var(--radius); }
+.stat-item:last-child { border-radius: 0 var(--radius) var(--radius) 0; }
+.stat-item:hover {
+  border-color: var(--border-hover);
+  background: var(--bg-card-hover);
+}
+.stat-number {
+  font-family: var(--mono);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--cyan);
+  line-height: 1;
+}
+.stat-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-dim);
+  margin-top: 6px;
+}
+
+/* ── Section Common ── */
+.section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 6rem 1.5rem;
+}
+.section-label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--cyan);
+  margin-bottom: 0.75rem;
+}
+.section-title {
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: -1px;
+  margin-bottom: 1rem;
+}
+.section-desc {
+  color: var(--text-dim);
+  max-width: 600px;
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+/* ── Page Showcase Cards ── */
+.showcase-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+  margin-top: 3rem;
+}
+.showcase-row.reverse { direction: rtl; }
+.showcase-row.reverse > * { direction: ltr; }
+
+.showcase-visual {
+  position: relative;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  transition: all 0.4s ease;
+  perspective: 800px;
+}
+.showcase-visual:hover {
+  border-color: var(--border-hover);
+  box-shadow: 0 0 40px rgba(6,182,212,0.1), 0 20px 60px rgba(0,0,0,0.5);
+}
+.showcase-visual img {
+  width: 100%;
+  display: block;
+  transition: transform 0.5s ease;
+}
+.showcase-visual:hover img { transform: scale(1.02); }
+.showcase-visual .hud-corner {
+  position: absolute;
+  width: 16px; height: 16px;
+  border-color: var(--cyan);
+  border-style: solid;
+  opacity: 0.6;
+  transition: opacity 0.3s;
+}
+.showcase-visual:hover .hud-corner { opacity: 1; }
+.hud-corner.tl { top: 8px; left: 8px; border-width: 2px 0 0 2px; }
+.hud-corner.tr { top: 8px; right: 8px; border-width: 2px 2px 0 0; }
+.hud-corner.bl { bottom: 8px; left: 8px; border-width: 0 0 2px 2px; }
+.hud-corner.br { bottom: 8px; right: 8px; border-width: 0 2px 2px 0; }
+
+.showcase-features { list-style: none; }
+.showcase-features li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(63,63,70,0.2);
+  font-size: 0.95rem;
+  color: var(--text-dim);
+  transition: color 0.3s;
+}
+.showcase-features li:hover { color: var(--text); }
+.showcase-features li:last-child { border-bottom: none; }
+.feat-icon {
+  flex-shrink: 0;
+  width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  margin-top: 1px;
+}
+.feat-icon.cyan { background: var(--cyan-dim); color: var(--cyan); }
+.feat-icon.purple { background: var(--purple-dim); color: var(--purple); }
+
+/* ── Interactive Demo ── */
+.demo-section {
+  background: linear-gradient(180deg, var(--bg) 0%, rgba(6,182,212,0.03) 50%, var(--bg) 100%);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 6rem 0;
+}
+.demo-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  text-align: center;
+}
+#demo-canvas {
+  width: 100%;
+  height: 450px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-card);
+  margin-top: 2rem;
+  cursor: grab;
+  transition: border-color 0.3s;
+}
+#demo-canvas:hover { border-color: var(--border-hover); }
+.demo-hint {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  margin-top: 1rem;
+  letter-spacing: 1px;
+}
+
+/* ── Tech Stack ── */
+.tech-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  margin-top: 2.5rem;
+}
+.tech-card {
+  padding: 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-card);
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: default;
+}
+.tech-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+}
+.tech-card .icon { font-size: 1.8rem; margin-bottom: 0.5rem; }
+.tech-card .name {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text);
+}
+.tech-card .kind {
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+/* ── Footer ── */
+.footer {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  font-family: var(--mono);
+}
+
+/* ── Scroll Animations ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-delay-1 { transition-delay: 0.15s; }
+.reveal-delay-2 { transition-delay: 0.3s; }
+.reveal-delay-3 { transition-delay: 0.45s; }
+
+/* ── 3D Tilt on cards ── */
+.tilt-card {
+  transform-style: preserve-3d;
+  transition: transform 0.15s ease-out;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .stats-bar { grid-template-columns: repeat(2, 1fr); margin-top: -2rem; }
+  .stat-item:first-child { border-radius: var(--radius) 0 0 0; }
+  .stat-item:nth-child(2) { border-radius: 0 var(--radius) 0 0; }
+  .stat-item:nth-child(3) { border-radius: 0 0 0 var(--radius); }
+  .stat-item:last-child { border-radius: 0 0 var(--radius) 0; }
+  .showcase-row, .showcase-row.reverse {
+    grid-template-columns: 1fr;
+    direction: ltr;
+  }
+  #demo-canvas { height: 300px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ HERO ═══════════ -->
+<section class="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-content">
+    <div class="hero-badge"><span class="dot"></span> System Online</div>
+    <h1>Agent Command<br>Center<span class="cursor-blink"></span></h1>
+    <p class="hero-sub">Unified platform for managing AI agent hierarchies, orchestrating workflows, and engineering prompts — in real time.</p>
+    <a href="#dashboard" class="hero-cta">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
+      Explore the System
+    </a>
+  </div>
+  <div class="scroll-hint">
+    Scroll
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+  </div>
+</section>
+
+<!-- ═══════════ STATS ═══════════ -->
+<div class="stats-bar reveal">
+  <div class="stat-item">
+    <div class="stat-number" data-target="12">0</div>
+    <div class="stat-label">Active Agents</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number" data-target="5">0</div>
+    <div class="stat-label">Workflows</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number" data-target="28">0</div>
+    <div class="stat-label">Prompt Templates</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number" data-target="3">0</div>
+    <div class="stat-label">Role Tiers</div>
+  </div>
+</div>
+
+<!-- ═══════════ DASHBOARD ═══════════ -->
+<section class="section" id="dashboard">
+  <div class="showcase-row">
+    <div class="reveal">
+      <div class="section-label">// 01</div>
+      <h2 class="section-title">Dashboard</h2>
+      <p class="section-desc">Central command view — monitor agent health, track execution metrics, and manage the entire fleet from a single pane of glass.</p>
+      <ul class="showcase-features" style="margin-top:1.5rem">
+        <li><span class="feat-icon cyan">&#9672;</span> Real-time WebSocket health monitoring</li>
+        <li><span class="feat-icon purple">&#9672;</span> Animated KPI strip with live counters</li>
+        <li><span class="feat-icon cyan">&#9672;</span> Agent performance heatmap</li>
+        <li><span class="feat-icon purple">&#9672;</span> Quick actions panel for fast operations</li>
+        <li><span class="feat-icon cyan">&#9672;</span> System health cards with trend sparklines</li>
+      </ul>
+    </div>
+    <div class="showcase-visual tilt-card reveal reveal-delay-2">
+      <div class="hud-corner tl"></div>
+      <div class="hud-corner tr"></div>
+      <div class="hud-corner bl"></div>
+      <div class="hud-corner br"></div>
+      <img src="dashboard.png" alt="Dashboard view" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ HIERARCHY ═══════════ -->
+<section class="section" id="hierarchy">
+  <div class="showcase-row reverse">
+    <div class="reveal">
+      <div class="section-label">// 02</div>
+      <h2 class="section-title">Agent Hierarchy</h2>
+      <p class="section-desc">Interactive 2D graph visualization of your agent topology — explore connections, inspect roles, and navigate multi-tier architectures with drag, zoom, and minimap.</p>
+      <ul class="showcase-features" style="margin-top:1.5rem">
+        <li><span class="feat-icon cyan">&#9672;</span> React Flow canvas with dagre / radial / grid layouts</li>
+        <li><span class="feat-icon purple">&#9672;</span> 3 role tiers: Orchestrator, Manager, Worker</li>
+        <li><span class="feat-icon cyan">&#9672;</span> Connection filtering by edge type</li>
+        <li><span class="feat-icon purple">&#9672;</span> Animated node glow and edge particles</li>
+        <li><span class="feat-icon cyan">&#9672;</span> Group sidebar with role-based filtering</li>
+      </ul>
+    </div>
+    <div class="showcase-visual tilt-card reveal reveal-delay-2">
+      <div class="hud-corner tl"></div>
+      <div class="hud-corner tr"></div>
+      <div class="hud-corner bl"></div>
+      <div class="hud-corner br"></div>
+      <img src="hierarchy.png" alt="Hierarchy view" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ INTERACTIVE DEMO ═══════════ -->
+<section class="demo-section" id="demo">
+  <div class="demo-container">
+    <div class="reveal">
+      <div class="section-label">// Live Demo</div>
+      <h2 class="section-title">Interactive Agent Graph</h2>
+      <p class="section-desc" style="margin:0 auto">Hover over nodes to see connections. Drag to reposition. A miniature version of the Hierarchy canvas — running entirely in your browser.</p>
+    </div>
+    <canvas id="demo-canvas" class="reveal reveal-delay-1"></canvas>
+    <div class="demo-hint reveal reveal-delay-2">HOVER NODES &bull; DRAG TO REPOSITION &bull; DOUBLE-CLICK TO RESET</div>
+  </div>
+</section>
+
+<!-- ═══════════ WORKFLOWS ═══════════ -->
+<section class="section" id="workflows">
+  <div class="showcase-row">
+    <div class="reveal">
+      <div class="section-label">// 03</div>
+      <h2 class="section-title">Workflow Engine</h2>
+      <p class="section-desc">Design, execute, and analyze multi-step agent workflows — from simple chains to complex branching pipelines with LLM evaluation built in.</p>
+      <ul class="showcase-features" style="margin-top:1.5rem">
+        <li><span class="feat-icon cyan">&#9672;</span> Visual pipeline editor with step reordering</li>
+        <li><span class="feat-icon purple">&#9672;</span> Real-time execution with message streaming</li>
+        <li><span class="feat-icon cyan">&#9672;</span> LLM-based step evaluation with scoring</li>
+        <li><span class="feat-icon purple">&#9672;</span> Workflow history with full execution logs</li>
+        <li><span class="feat-icon cyan">&#9672;</span> Template library for common patterns</li>
+      </ul>
+    </div>
+    <div class="showcase-visual tilt-card reveal reveal-delay-2">
+      <div class="hud-corner tl"></div>
+      <div class="hud-corner tr"></div>
+      <div class="hud-corner bl"></div>
+      <div class="hud-corner br"></div>
+      <img src="workflows.png" alt="Workflows view" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ TECH STACK ═══════════ -->
+<section class="section" id="tech">
+  <div class="reveal" style="text-align:center">
+    <div class="section-label">// Built With</div>
+    <h2 class="section-title">Tech Stack</h2>
+  </div>
+  <div class="tech-grid reveal reveal-delay-1">
+    <div class="tech-card"><div class="icon">&#9883;</div><div class="name">Next.js 16</div><div class="kind">Framework</div></div>
+    <div class="tech-card"><div class="icon">&#9881;</div><div class="name">TypeScript</div><div class="kind">Language</div></div>
+    <div class="tech-card"><div class="icon">&#9670;</div><div class="name">Tailwind 4</div><div class="kind">Styling</div></div>
+    <div class="tech-card"><div class="icon">&#8644;</div><div class="name">React Flow</div><div class="kind">Graph Viz</div></div>
+    <div class="tech-card"><div class="icon">&#9729;</div><div class="name">Prisma</div><div class="kind">ORM</div></div>
+    <div class="tech-card"><div class="icon">&#9889;</div><div class="name">WebSocket</div><div class="kind">Real-time</div></div>
+    <div class="tech-card"><div class="icon">&#10070;</div><div class="name">shadcn/ui</div><div class="kind">Components</div></div>
+    <div class="tech-card"><div class="icon">&#9635;</div><div class="name">Bun</div><div class="kind">Runtime</div></div>
+  </div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer class="footer">
+  Agent Command Center &bull; Built with Next.js, React Flow &amp; AI &bull; 2025
+</footer>
+
+<script>
+// ═══════════════════════════════════════════════
+// 1. PARTICLE FIELD (Hero Canvas)
+// ═══════════════════════════════════════════════
+(function() {
+  const canvas = document.getElementById('hero-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [], mouse = { x: -1000, y: -1000 };
+
+  function resize() {
+    W = canvas.width = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+  document.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+
+  const COUNT = 80;
+  for (let i = 0; i < COUNT; i++) {
+    particles.push({
+      x: Math.random() * W, y: Math.random() * H,
+      vx: (Math.random() - 0.5) * 0.4, vy: (Math.random() - 0.5) * 0.4,
+      r: Math.random() * 1.5 + 0.5, a: Math.random() * 0.5 + 0.2
+    });
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    // lines
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 150) {
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = `rgba(6,182,212,${0.08 * (1 - dist / 150)})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+    }
+    // dots
+    for (const p of particles) {
+      // mouse repulsion
+      const dx = p.x - mouse.x, dy = p.y - mouse.y;
+      const md = Math.sqrt(dx * dx + dy * dy);
+      if (md < 120 && md > 0) {
+        p.vx += (dx / md) * 0.02;
+        p.vy += (dy / md) * 0.02;
+      }
+      p.x += p.vx; p.y += p.vy;
+      p.vx *= 0.99; p.vy *= 0.99;
+      if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
+      if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(6,182,212,${p.a})`;
+      ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ═══════════════════════════════════════════════
+// 2. ANIMATED COUNTERS
+// ═══════════════════════════════════════════════
+(function() {
+  const counters = document.querySelectorAll('.stat-number[data-target]');
+  let started = false;
+  function animateCounters() {
+    if (started) return;
+    const rect = document.querySelector('.stats-bar').getBoundingClientRect();
+    if (rect.top < window.innerHeight * 0.9) {
+      started = true;
+      counters.forEach(el => {
+        const target = +el.dataset.target;
+        const duration = 1500;
+        const start = performance.now();
+        function tick(now) {
+          const t = Math.min((now - start) / duration, 1);
+          const ease = 1 - Math.pow(1 - t, 3); // ease-out cubic
+          el.textContent = Math.round(target * ease);
+          if (t < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+      });
+    }
+  }
+  window.addEventListener('scroll', animateCounters);
+  animateCounters();
+})();
+
+// ═══════════════════════════════════════════════
+// 3. SCROLL REVEAL (Intersection Observer)
+// ═══════════════════════════════════════════════
+(function() {
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+})();
+
+// ═══════════════════════════════════════════════
+// 4. 3D TILT on visual cards
+// ═══════════════════════════════════════════════
+(function() {
+  document.querySelectorAll('.tilt-card').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const rect = card.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      card.style.transform = `perspective(800px) rotateY(${x * 8}deg) rotateX(${-y * 8}deg) scale(1.02)`;
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = 'perspective(800px) rotateY(0) rotateX(0) scale(1)';
+    });
+  });
+})();
+
+// ═══════════════════════════════════════════════
+// 5. INTERACTIVE DEMO HIERARCHY (Canvas)
+// ═══════════════════════════════════════════════
+(function() {
+  const canvas = document.getElementById('demo-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, dpr;
+
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    W = canvas.offsetWidth;
+    H = canvas.offsetHeight;
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  resize();
+  window.addEventListener('resize', () => { resize(); initPositions(); });
+
+  // Node data
+  const roles = { orchestrator: '#06B6D4', manager: '#8B5CF6', worker: '#22D3EE' };
+  function hexRGBA(hex, a) {
+    const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+    return `rgba(${r},${g},${b},${a})`;
+  }
+  const nodes = [
+    { id: 'orch', label: 'Orchestrator', role: 'orchestrator', x: 0, y: 0, r: 28 },
+    { id: 'm1', label: 'Router', role: 'manager', x: 0, y: 0, r: 22 },
+    { id: 'm2', label: 'Evaluator', role: 'manager', x: 0, y: 0, r: 22 },
+    { id: 'w1', label: 'Researcher', role: 'worker', x: 0, y: 0, r: 18 },
+    { id: 'w2', label: 'Coder', role: 'worker', x: 0, y: 0, r: 18 },
+    { id: 'w3', label: 'Reviewer', role: 'worker', x: 0, y: 0, r: 18 },
+    { id: 'w4', label: 'Analyst', role: 'worker', x: 0, y: 0, r: 18 },
+  ];
+  const edges = [
+    { from: 'orch', to: 'm1' }, { from: 'orch', to: 'm2' },
+    { from: 'm1', to: 'w1' }, { from: 'm1', to: 'w2' },
+    { from: 'm2', to: 'w3' }, { from: 'm2', to: 'w4' },
+  ];
+  const edgeParticles = edges.map(() => ({ t: Math.random() }));
+
+  const nodeMap = {};
+  nodes.forEach(n => nodeMap[n.id] = n);
+
+  function initPositions() {
+    const cx = W / 2, cy = 60;
+    nodeMap.orch.x = cx; nodeMap.orch.y = cy;
+    nodeMap.m1.x = cx - 140; nodeMap.m1.y = cy + 120;
+    nodeMap.m2.x = cx + 140; nodeMap.m2.y = cy + 120;
+    nodeMap.w1.x = cx - 210; nodeMap.w1.y = cy + 240;
+    nodeMap.w2.x = cx - 70; nodeMap.w2.y = cy + 240;
+    nodeMap.w3.x = cx + 70; nodeMap.w3.y = cy + 240;
+    nodeMap.w4.x = cx + 210; nodeMap.w4.y = cy + 240;
+  }
+  initPositions();
+
+  let hoveredNode = null, dragNode = null, dragOffset = { x: 0, y: 0 };
+
+  function getNode(mx, my) {
+    for (let i = nodes.length - 1; i >= 0; i--) {
+      const n = nodes[i];
+      const dx = mx - n.x, dy = my - n.y;
+      if (dx * dx + dy * dy < (n.r + 8) * (n.r + 8)) return n;
+    }
+    return null;
+  }
+
+  canvas.addEventListener('mousemove', e => {
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+    if (dragNode) {
+      dragNode.x = mx - dragOffset.x;
+      dragNode.y = my - dragOffset.y;
+    } else {
+      hoveredNode = getNode(mx, my);
+      canvas.style.cursor = hoveredNode ? 'pointer' : 'grab';
+    }
+  });
+  canvas.addEventListener('mousedown', e => {
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+    const n = getNode(mx, my);
+    if (n) {
+      dragNode = n;
+      dragOffset = { x: mx - n.x, y: my - n.y };
+      canvas.style.cursor = 'grabbing';
+    }
+  });
+  canvas.addEventListener('mouseup', () => { dragNode = null; });
+  canvas.addEventListener('mouseleave', () => { dragNode = null; hoveredNode = null; });
+  canvas.addEventListener('dblclick', () => { initPositions(); });
+
+  // touch support
+  canvas.addEventListener('touchstart', e => {
+    e.preventDefault();
+    const t = e.touches[0];
+    const rect = canvas.getBoundingClientRect();
+    const mx = t.clientX - rect.left, my = t.clientY - rect.top;
+    const n = getNode(mx, my);
+    if (n) { dragNode = n; dragOffset = { x: mx - n.x, y: my - n.y }; }
+  }, { passive: false });
+  canvas.addEventListener('touchmove', e => {
+    e.preventDefault();
+    if (!dragNode) return;
+    const t = e.touches[0];
+    const rect = canvas.getBoundingClientRect();
+    dragNode.x = t.clientX - rect.left - dragOffset.x;
+    dragNode.y = t.clientY - rect.top - dragOffset.y;
+  }, { passive: false });
+  canvas.addEventListener('touchend', () => { dragNode = null; });
+
+  function drawEdge(from, to, alpha, idx) {
+    const cpY = (from.y + to.y) / 2;
+    ctx.beginPath();
+    ctx.moveTo(from.x, from.y + from.r);
+    ctx.bezierCurveTo(from.x, cpY, to.x, cpY, to.x, to.y - to.r);
+    ctx.strokeStyle = `rgba(6,182,212,${0.15 * alpha})`;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // animated dot
+    const ep = edgeParticles[idx];
+    ep.t += 0.004;
+    if (ep.t > 1) ep.t = 0;
+    const t = ep.t;
+    const mt = 1 - t;
+    const px = mt*mt*mt*from.x + 3*mt*mt*t*from.x + 3*mt*t*t*to.x + t*t*t*to.x;
+    const py = mt*mt*mt*(from.y+from.r) + 3*mt*mt*t*cpY + 3*mt*t*t*cpY + t*t*t*(to.y-to.r);
+    ctx.beginPath();
+    ctx.arc(px, py, 2.5, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(6,182,212,${0.8 * alpha})`;
+    ctx.fill();
+  }
+
+  function drawNode(n, alpha) {
+    // glow
+    const grad = ctx.createRadialGradient(n.x, n.y, n.r * 0.5, n.x, n.y, n.r * 2.5);
+    grad.addColorStop(0, `rgba(6,182,212,${0.1 * alpha})`);
+    grad.addColorStop(1, 'rgba(6,182,212,0)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(n.x - n.r * 3, n.y - n.r * 3, n.r * 6, n.r * 6);
+
+    // circle
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(10,10,10,${alpha})`;
+    ctx.fill();
+    ctx.strokeStyle = hexRGBA(roles[n.role], alpha);
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // label
+    ctx.font = `${n.role === 'orchestrator' ? 600 : 500} ${n.role === 'orchestrator' ? 11 : 10}px Inter, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.fillStyle = `rgba(228,228,231,${alpha})`;
+    ctx.fillText(n.label, n.x, n.y + n.r + 18);
+
+    // role badge
+    ctx.font = '500 8px "JetBrains Mono", monospace';
+    ctx.fillStyle = hexRGBA(roles[n.role], 0.7 * alpha);
+    ctx.fillText(n.role.toUpperCase(), n.x, n.y + 4);
+  }
+
+  function render() {
+    ctx.clearRect(0, 0, W, H);
+    const connected = new Set();
+    if (hoveredNode) {
+      connected.add(hoveredNode.id);
+      edges.forEach(e => {
+        if (e.from === hoveredNode.id) connected.add(e.to);
+        if (e.to === hoveredNode.id) connected.add(e.from);
+      });
+    }
+
+    edges.forEach((e, i) => {
+      const from = nodeMap[e.from], to = nodeMap[e.to];
+      if (hoveredNode) {
+        const active = e.from === hoveredNode.id || e.to === hoveredNode.id;
+        drawEdge(from, to, active ? 1 : 0.15, i);
+      } else {
+        drawEdge(from, to, 0.6, i);
+      }
+    });
+
+    nodes.forEach(n => {
+      if (hoveredNode) {
+        const alpha = connected.has(n.id) ? 1 : 0.15;
+        drawNode(n, alpha);
+      } else {
+        drawNode(n, 0.85);
+      }
+    });
+
+    requestAnimationFrame(render);
+  }
+  render();
+})();
+</script>
+</body>
+</html>
