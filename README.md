@@ -8,7 +8,20 @@
 [![Prisma](https://img.shields.io/badge/Prisma-SQLite-2D3748?style=flat-square)](https://www.prisma.io)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
 
----
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Architecture](#architecture)
+- [Tech Stack](#tech-stack)
+- [Features](#features)
+- [Getting Started](#getting-started)
+- [Project Structure](#project-structure)
+- [API Reference](#api-reference)
+- [@stsgs/prompting Library](#@stsgsprompting-library)
+- [Design System](#design-system)
+- [Scripts](#scripts)
+- [License](#license)
 
 ## Overview
 
@@ -52,7 +65,6 @@ CoT, ToT, GoT, CoVe, ReAct, Reflexion, ReWOO, MoA, and 12 more -- each mapped to
 - **Hierarchy (Dagre)** -- Directed acyclic graph auto-layout
 - **Grid** -- Uniform grid placement
 
----
 
 ## Tech Stack
 
@@ -70,7 +82,6 @@ CoT, ToT, GoT, CoVe, ReAct, Reflexion, ReWOO, MoA, and 12 more -- each mapped to
 | Forms           | React Hook Form + Zod                               |
 | Icons           | Lucide React                                        |
 
----
 
 ## Features
 
@@ -89,7 +100,6 @@ CoT, ToT, GoT, CoVe, ReAct, Reflexion, ReWOO, MoA, and 12 more -- each mapped to
 - **7 theme presets** -- 3 dark (Champagne, Cyan Night, Zinc) + 4 light
 - **Responsive design** -- Mobile-friendly layout
 
----
 
 ## Getting Started
 
@@ -118,11 +128,10 @@ Populate the database with 26 agents, 26 tasks, and 8 role groups:
 curl -X POST http://localhost:3000/api/seed
 ```
 
----
 
 ## Project Structure
 
-```
+```bash
 src/
   app/                    # Next.js App Router pages and API routes
   components/
@@ -141,7 +150,6 @@ mini-services/
   ws-service/             # WebSocket service (Socket.IO, port 3003)
 ```
 
----
 
 ## API Reference
 
@@ -187,7 +195,6 @@ mini-services/
 | `/api/interpret-prompt`| POST   | AI prompt interpretation via z-ai-web-dev-sdk     |
 | `/api/recipes`         | GET    | Layout recipes for the Layout Explorer             |
 
----
 
 ## @stsgs/prompting Library
 
@@ -201,7 +208,6 @@ Located at `src/lib/prompting/` with 5 modules across 21 files:
 | **agents**      | 20 cognitive formulas, 12 orchestration patterns, resilience     |
 | **instructions**| 6 behavioral + 4 architectural instructions (inline)             |
 
----
 
 ## Design System
 
@@ -211,7 +217,6 @@ Located at `src/lib/prompting/` with 5 modules across 21 files:
 - **Glow effects**: Active nodes breathe with subtle pulsing animation
 - **High contrast**: Everything reads instantly against the dark background
 
----
 
 ## Scripts
 
@@ -225,7 +230,6 @@ Located at `src/lib/prompting/` with 5 modules across 21 files:
 | `bun run db:migrate`  | Run Prisma migrations            |
 | `bun run db:reset`    | Reset database                   |
 
----
 
 ## License
 
