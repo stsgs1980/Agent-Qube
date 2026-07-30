@@ -46,11 +46,11 @@ jobs:
           done
           exit $MISSING
 
-      - name: Check for emoji in skills and instructions
+      - name: Check for emoji in our skills and instructions
         run: |
-          echo "Checking for emoji (U+1F000+)..."
+          echo "Checking for emoji (U+1F000+) in our files..."
           ERRORS=0
-          for f in skills/**/*.md docs/instructions/*.md; do
+          for f in skills/git-safe-ops/**/*.md skills/dev-watchdog/**/*.md docs/instructions/*.md; do
             if [ -f "$f" ]; then
               if rg -l '[\x{1F000}-\x{1FFFF}]' "$f" 2>/dev/null; then
                 echo "EMOJI FOUND in $f"
@@ -81,12 +81,13 @@ jobs:
 
       - name: Check no trailing whitespace
         run: |
-          echo "Checking trailing whitespace in text files..."
+          echo "Checking trailing whitespace in our files only..."
           if grep -rn ' $' \
             --include='*.md' --include='*.py' --include='*.js' --include='*.ts' --include='*.tsx' \
             --include='*.yml' --include='*.yaml' --include='*.json' --include='*.css' \
             --include='*.xsd' --include='*.tex' --include='*.sty' \
-            skills/ docs/instructions/ docs/standards/ docs/templates/ \
+            skills/git-safe-ops/ skills/dev-watchdog/ \
+            docs/instructions/ docs/standards/ docs/templates/ \
             AGENT_RULES.md README.md PROJECT_CONFIG.md 2>/dev/null; then
             echo "Found trailing whitespace"
             exit 1
@@ -95,12 +96,13 @@ jobs:
 
       - name: Check no tabs (spaces only)
         run: |
-          echo "Checking for tabs in text files..."
+          echo "Checking for tabs in our files only..."
           if grep -Pn '\t' \
             --include='*.md' --include='*.py' --include='*.js' --include='*.ts' --include='*.tsx' \
             --include='*.yml' --include='*.yaml' --include='*.json' --include='*.css' \
             --include='*.xsd' --include='*.tex' --include='*.sty' \
-            skills/ docs/instructions/ docs/standards/ docs/templates/ \
+            skills/git-safe-ops/ skills/dev-watchdog/ \
+            docs/instructions/ docs/standards/ docs/templates/ \
             AGENT_RULES.md README.md PROJECT_CONFIG.md 2>/dev/null; then
             echo "Found tabs (use spaces only)"
             exit 1
