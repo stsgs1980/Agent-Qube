@@ -55,12 +55,14 @@ export function useHierarchyState(reactFlowInstanceRef: MutableRefObject<any>) {
   }, [selectedAgentId, reactFlowInstanceRef])
 
   const handleFitView = useCallback(() => {
-    setFitMode(prev => {
-      const next = !prev;
-      if (next) setDetailPanelOpen(false);
-      return next;
-    } )
-  }, [])
+    if (fitMode && reactFlowInstanceRef.current) {
+      // Already in fit mode — just re-center
+      reactFlowInstanceRef.current.fitView({ padding: 0.15, duration: 500 })
+    } else {
+      setFitMode(true)
+      setDetailPanelOpen(false)
+    }
+  }, [fitMode, reactFlowInstanceRef])
 
   useEffect(() => {
     if (fitMode && reactFlowInstanceRef.current) {
