@@ -1,14 +1,13 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-// Protected API routes that require authentication
-const PROTECTED_API_ROUTES = [
+// API routes that require authentication for MUTATING operations (POST/PUT/PATCH/DELETE)
+// GET requests to these routes remain public (dashboard reads data without auth)
+const MUTATION_PROTECTED_ROUTES = [
   '/api/agents',
   '/api/tasks',
   '/api/workflows',
-  '/api/stats',
   '/api/prompt-history',
-  '/api/hierarchy',
 ]
 
 // Routes that should be completely blocked in production
@@ -17,7 +16,7 @@ const BLOCKED_IN_PRODUCTION = [
   '/api/workflows/seed',
 ]
 
-// Mutating methods that need CSRF protection
+// Mutating methods that need CSRF protection and auth
 const MUTATING_METHODS = ['POST', 'PUT', 'PATCH', 'DELETE']
 
 // Rate limiting store (in-memory, resets on restart)
@@ -163,16 +162,18 @@ export function middleware(request: NextRequest) {
     )
   }
 
-  // Check authentication for protected routes
-  for (const route of PROTECTED_API_ROUTES) {
-    if (pathname === route || pathname.startsWith(route + '/')) {
-      if (!validateAuth(request)) {
-        return NextResponse.json(
-          { error: 'Authentication required' },
-          { status: 401 }
-        )
+  // Check authentication for mutating requests on protected routes
+  if (MUTATING_METHODS.includes(request.method)) {
+    for (const route of MUTATION_PROTECTED_ROUTES) {
+      if (pathname === route || pathname.startsWith(route + '/')) {
+        if (!validateAuth(request)) {
+          return NextResponse.json(
+            { error: 'Authentication required for this operation' },
+            { status: 401 }
+          )
+        }
+        break
       }
-      break
     }
   }
 
