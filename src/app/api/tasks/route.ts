@@ -1,5 +1,6 @@
 import { db } from '@/lib/db'
 import { NextResponse } from 'next/server'
+import { TaskCreateSchema, validateRequest } from '@/lib/validation'
 
 export async function GET(request: Request) {
   try {
@@ -30,13 +31,15 @@ export async function POST(request: Request) {
   try {
     const body = await request.json()
 
-    if (!body.title || !body.title.trim()) {
-      return NextResponse.json({ error: 'Title is required' }, { status: 400 })
+    // Validate input
+    const validation = validateRequest(TaskCreateSchema, body)
+    if (!validation.success) {
+      return NextResponse.json({ error: validation.error }, { status: 400 })
     }
 
     // Verify agent exists if agentId provided
-    if (body.agentId) {
-      const agent = await db.agent.findUnique({ where: { id: body.agentId } })
+    if (validation.data.agentId) {
+      const agent = await db.agent.findUnique({ where: { id: validation.data.agentId } })
       if (!agent) {
         return NextResponse.json({ error: 'Agent not found' }, { status: 404 })
       }
@@ -44,11 +47,11 @@ export async function POST(request: Request) {
 
     const task = await db.task.create({
       data: {
-        title: body.title.trim(),
-        description: body.description || '',
-        status: body.status || 'pending',
-        priority: body.priority || 'medium',
-        agentId: body.agentId || null,
+        title: validation.data.title,
+        description: validation.data.description,
+        status: validation.data.status,
+        priority: validation.data.priority,
+        agentId: validation.data.agentId || null,
       },
       include: { agent: true },
     })

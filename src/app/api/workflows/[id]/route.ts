@@ -32,9 +32,9 @@ export async function GET(
     }
 
     return NextResponse.json({ workflow })
-  } catch (error: any) {
+  } catch (error) {
     console.error('[/api/workflows/[id] GET]', error)
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to fetch workflow' }, { status: 500 })
   }
 }
 
@@ -87,9 +87,9 @@ export async function PUT(
     })
 
     return NextResponse.json({ workflow })
-  } catch (error: any) {
+  } catch (error) {
     console.error('[/api/workflows/[id] PUT]', error)
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to update workflow' }, { status: 500 })
   }
 }
 
@@ -103,8 +103,8 @@ export async function DELETE(
     const { id } = await params
     await db.workflow.delete({ where: { id } })
     return NextResponse.json({ success: true })
-  } catch (error: any) {
+  } catch (error) {
     console.error('[/api/workflows/[id] DELETE]', error)
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to delete workflow' }, { status: 500 })
   }
 }

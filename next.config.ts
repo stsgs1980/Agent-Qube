@@ -4,9 +4,9 @@ const nextConfig: NextConfig = {
   /* config options here */
   transpilePackages: ['@zai/select-element'],
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
-  reactStrictMode: false,
+  reactStrictMode: true,
   allowedDevOrigins: [
     '.space-z.ai',
     'localhost',

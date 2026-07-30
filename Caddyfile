@@ -1,9 +1,23 @@
 :81 {
+	# Whitelist of allowed ports for reverse proxy
+	@allowed_port {
+		# Only allow specific ports: 3000 (Next.js), 3001 (WebSocket)
+		query XTransformPort=3000
+		query XTransformPort=3001
+	}
+
 	@transform_port_query {
 		query XTransformPort=*
 	}
 
+	# Block requests with disallowed port
 	handle @transform_port_query {
+		@blocked_port not @allowed_port
+		respond @blocked_port "Port not allowed" 403
+	}
+
+	# Allow requests to whitelisted ports
+	handle @allowed_port {
 		reverse_proxy localhost:{query.XTransformPort} {
 			header_up Host {host}
 			header_up X-Forwarded-For {remote_host}

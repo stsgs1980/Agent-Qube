@@ -1,6 +1,7 @@
 import { db } from '@/lib/db'
 import { NextResponse } from 'next/server'
 import { resolvePromptingMeta, resolveFormulaMeta, resolveSystemPrompt } from '@/lib/agent-helpers'
+import { AgentCreateSchema, validateRequest } from '@/lib/validation'
 
 export async function GET(request: Request) {
   try {
@@ -23,18 +24,31 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json()
+
+    // Validate input
+    const validation = validateRequest(AgentCreateSchema, body)
+    if (!validation.success) {
+      return NextResponse.json({ error: validation.error }, { status: 400 })
+    }
+
     const [promptingMeta, formulaMeta, generatedSystemPrompt] = await Promise.all([
-      resolvePromptingMeta(body.role, body.description),
-      resolveFormulaMeta(body.formula),
-      resolveSystemPrompt(body.role),
+      resolvePromptingMeta(validation.data.role, validation.data.description),
+      resolveFormulaMeta(validation.data.formula),
+      resolveSystemPrompt(validation.data.role),
     ])
 
     const agent = await db.agent.create({
       data: {
-        name: body.name, role: body.role, roleGroup: body.roleGroup,
-        status: body.status || 'active', formula: body.formula,
-        parentId: body.parentId || null, twinId: body.twinId || null,
-        skills: body.skills || '', description: body.description || '', avatar: body.avatar || '',
+        name: validation.data.name,
+        role: validation.data.role,
+        roleGroup: validation.data.roleGroup,
+        status: validation.data.status,
+        formula: validation.data.formula,
+        parentId: validation.data.parentId || null,
+        twinId: validation.data.twinId || null,
+        skills: validation.data.skills,
+        description: validation.data.description,
+        avatar: validation.data.avatar,
       },
     })
 

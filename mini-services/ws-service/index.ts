@@ -2,8 +2,8 @@ import { createServer } from 'http'
 import { Server } from 'socket.io'
 import Database from 'bun:sqlite'
 
-const PORT = 3003
-const DB_PATH = '/home/z/my-project/db/custom.db'
+const PORT = parseInt(process.env.WS_PORT || '3003', 10)
+const DB_PATH = process.env.DB_PATH || './db/custom.db'
 
 // ─── SQLite Setup ─────────────────────────────────────────────────────────────
 
@@ -43,17 +43,51 @@ function updateAgentStatus(id: string, newStatus: string): AgentRow | null {
   return getAgentById(id)
 }
 
+// ─── Allowed origins for CORS ─────────────────────────────────────────────────
+
+const ALLOWED_ORIGINS = [
+  process.env.APP_URL || 'http://localhost:3000',
+  'http://localhost:3001',
+  'http://localhost:3003',
+].filter(Boolean)
+
 // ─── HTTP Server + Socket.IO ──────────────────────────────────────────────────
 
 const httpServer = createServer()
 const io = new Server(httpServer, {
   cors: {
-    origin: '*',
+    origin: (origin, callback) => {
+      // Allow requests with no origin (e.g., mobile apps, Postman)
+      if (!origin || ALLOWED_ORIGINS.includes(origin)) {
+        callback(null, true)
+      } else {
+        callback(new Error('Not allowed by CORS'))
+      }
+    },
     methods: ['GET', 'POST'],
+    credentials: true,
   },
   pingTimeout: 60000,
   pingInterval: 25000,
 })
+
+// ─── Authentication middleware for WebSocket ───────────────────────────────────
+
+function authenticateSocket(socket: any): boolean {
+  const token = socket.handshake.auth?.token || socket.handshake.query?.token
+  if (!token) {
+    return false
+  }
+
+  // In production, verify JWT signature here
+  // For now, presence of token is sufficient
+  return typeof token === 'string' && token.length > 0
+}
+
+// ─── Valid status values ──────────────────────────────────────────────────────
+
+const VALID_STATUSES = ['active', 'idle', 'paused', 'standby', 'error', 'offline']
+const VALID_ROLES = ['Strategy', 'Tactics', 'Control', 'Execution', 'Memory', 'Monitoring', 'Communication', 'Learning']
 
 // ─── Status simulation constants ──────────────────────────────────────────────
 
@@ -105,6 +139,14 @@ function scheduleStatusChange(): void {
 
 // ─── Connection Handler ───────────────────────────────────────────────────────
 
+io.use((socket, next) => {
+  if (authenticateSocket(socket)) {
+    next()
+  } else {
+    next(new Error('Authentication required'))
+  }
+})
+
 io.on('connection', (socket) => {
   console.log(`[connect] client ${socket.id}`)
 
@@ -114,8 +156,22 @@ io.on('connection', (socket) => {
 
   // Handle manual status change requests from clients
   socket.on('agent:change-status', (data: { agentId: string; newStatus: string }) => {
+    // Validate input
+    if (!data.agentId || !data.newStatus) {
+      socket.emit('error', { message: 'agentId and newStatus are required' })
+      return
+    }
+
+    if (!VALID_STATUSES.includes(data.newStatus)) {
+      socket.emit('error', { message: `Invalid status. Must be one of: ${VALID_STATUSES.join(', ')}` })
+      return
+    }
+
     const agent = getAgentById(data.agentId)
-    if (!agent) return
+    if (!agent) {
+      socket.emit('error', { message: 'Agent not found' })
+      return
+    }
 
     const oldStatus = agent.status
     const updated = updateAgentStatus(data.agentId, data.newStatus)
@@ -131,18 +187,40 @@ io.on('connection', (socket) => {
 
   // Handle agent created notification
   socket.on('agent:created', (data: { agent: AgentRow }) => {
+    // Validate agent data
+    if (!data.agent?.name || !data.agent?.role || !data.agent?.roleGroup) {
+      socket.emit('error', { message: 'Invalid agent data' })
+      return
+    }
+
+    if (!VALID_ROLES.includes(data.agent.roleGroup)) {
+      socket.emit('error', { message: `Invalid roleGroup. Must be one of: ${VALID_ROLES.join(', ')}` })
+      return
+    }
+
     io.emit('agent:created', data)
     console.log(`[created] ${data.agent.name}`)
   })
 
   // Handle agent updated notification
   socket.on('agent:updated', (data: { agent: AgentRow }) => {
+    // Validate agent data
+    if (!data.agent?.name || !data.agent?.role || !data.agent?.roleGroup) {
+      socket.emit('error', { message: 'Invalid agent data' })
+      return
+    }
+
     io.emit('agent:updated', data)
     console.log(`[updated] ${data.agent.name}`)
   })
 
   // Handle agent deleted notification
   socket.on('agent:deleted', (data: { agentId: string }) => {
+    if (!data.agentId) {
+      socket.emit('error', { message: 'agentId is required' })
+      return
+    }
+
     io.emit('agent:deleted', data)
     console.log(`[deleted] ${data.agentId}`)
   })
