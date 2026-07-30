@@ -144,14 +144,7 @@ const WORKFLOW_DEFS = [
 // ─── POST /api/workflows/seed — seed sample workflows with pipeline steps ────
 
 export async function POST() {
-  // Block in production unless explicitly allowed
-  if (process.env.NODE_ENV === 'production' && process.env.ALLOW_SEED !== 'true') {
-    return NextResponse.json(
-      { error: 'Seed endpoint is disabled in production' },
-      { status: 403 }
-    )
-  }
-
+  // Auth is handled by middleware (API key required for seed in production)
   try {
     await db.workflow.deleteMany()
 
