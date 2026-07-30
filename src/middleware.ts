@@ -10,11 +10,10 @@ const MUTATION_PROTECTED_ROUTES = [
   '/api/prompt-history',
 ]
 
-// Routes that should be completely blocked in production
-const BLOCKED_IN_PRODUCTION = [
-  '/api/seed',
-  '/api/workflows/seed',
-]
+// Routes that are fully blocked in production (no auth bypass)
+// Seed endpoints are protected by auth but not fully blocked —
+// they require a valid API key to run.
+const BLOCKED_IN_PRODUCTION: string[] = []
 
 // Mutating methods that need CSRF protection and auth
 const MUTATING_METHODS = ['POST', 'PUT', 'PATCH', 'DELETE']
