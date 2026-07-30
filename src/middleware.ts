@@ -165,7 +165,9 @@ export function middleware(request: NextRequest) {
   }
 
   // Check authentication for mutating requests on protected routes
-  if (MUTATING_METHODS.includes(request.method)) {
+  // Seed endpoints are excluded — they use their own auth logic
+  const isSeedEndpoint = pathname.includes('/seed')
+  if (MUTATING_METHODS.includes(request.method) && !isSeedEndpoint) {
     for (const route of MUTATION_PROTECTED_ROUTES) {
       if (pathname === route || pathname.startsWith(route + '/')) {
         if (!validateAuth(request)) {
