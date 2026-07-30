@@ -13,6 +13,12 @@ if [ ! -d "$PATCH_DIR" ]; then
   exit 0
 fi
 
+# Check if patch command is available
+if ! command -v patch &> /dev/null; then
+  echo "[patches] 'patch' command not found, skipping (Vercel build?)"
+  exit 0
+fi
+
 shopt -s nullglob
 for patch_file in "$PATCH_DIR"/*.patch; do
   # Parse package name + version from filename: @zai+select-element+1.2.0.patch
