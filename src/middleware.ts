@@ -132,14 +132,17 @@ export function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // Block dangerous routes in production
+  // Block dangerous routes in production (allow with valid API key for seeding)
   if (process.env.NODE_ENV === 'production') {
     for (const route of BLOCKED_IN_PRODUCTION) {
       if (pathname === route || pathname.startsWith(route + '/')) {
-        return NextResponse.json(
-          { error: 'This endpoint is disabled in production' },
-          { status: 403 }
-        )
+        if (!validateAuth(request)) {
+          return NextResponse.json(
+            { error: 'This endpoint is disabled in production' },
+            { status: 403 }
+          )
+        }
+        // API key valid, allow through
       }
     }
   }
