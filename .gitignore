@@ -37,3 +37,9 @@ download/*.xlsx
 cascade-state.json.bak
 skills/sp-*
 standards/
+
+# IDE
+.idea/
+
+# Dev logs
+dev-err.log
