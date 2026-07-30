@@ -119,3 +119,17 @@ model AgentMessage {
   metadata        String        @default("{}") // JSON: routing info, headers, correlation IDs
   timestamp       DateTime      @default(now())
 }
+
+model PromptHistory {
+  id          String   @id @default(cuid())
+  prompt      String
+  intent      String   @default("")
+  confidence  Float    @default(0)
+  formula     String   @default("")
+  avgScore    Float    @default(0)
+  verdict     String   @default("")
+  stepCount   Int      @default(0)
+  executionId String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

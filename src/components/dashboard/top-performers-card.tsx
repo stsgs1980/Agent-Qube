@@ -22,7 +22,7 @@ function PerformerBar({ agent, barColor, width, rank }: { agent: typeof TOP_PERF
   )
 }
 
-export function TopPerformersCard({ topPerformers: topPerformersProp, roleGroups: roleGroupsProp }: { topPerformersProp?: typeof TOP_PERFORMERS; roleGroupsProp?: typeof ROLE_GROUPS }) {
+export function TopPerformersCard({ topPerformersProp, roleGroupsProp }: { topPerformersProp?: typeof TOP_PERFORMERS; roleGroupsProp?: typeof ROLE_GROUPS }) {
   const topPerformers = topPerformersProp || TOP_PERFORMERS
   const roleGroupsData = roleGroupsProp || ROLE_GROUPS
   const [barWidths, setBarWidths] = useState<number[]>(topPerformers.map(() => 0))

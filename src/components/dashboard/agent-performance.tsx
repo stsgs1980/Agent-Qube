@@ -106,7 +106,7 @@ function MetricsSection() {
   )
 }
 
-export function AgentPerformance({ topPerformers: topPerformersProp, statusDistribution: statusDistributionProp }: { topPerformersProp?: typeof TOP_PERFORMERS; statusDistributionProp?: typeof STATUS_DISTRIBUTION }) {
+export function AgentPerformance({ topPerformersProp, statusDistributionProp }: { topPerformersProp?: typeof TOP_PERFORMERS; statusDistributionProp?: typeof STATUS_DISTRIBUTION }) {
   const topPerformers = topPerformersProp || TOP_PERFORMERS
   const statusDistribution = statusDistributionProp || STATUS_DISTRIBUTION
   const [barWidths, setBarWidths] = useState<number[]>(topPerformers.map(() => 0))

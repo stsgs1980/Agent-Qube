@@ -9,9 +9,12 @@ export async function GET(request: Request) {
     const includeRelations = searchParams.get('include') === 'true'
 
     const agents = await db.agent.findMany({
-      include: includeRelations
-        ? { children: { select: { id: true, name: true, status: true } }, tasks: { select: { id: true, title: true, status: true } } }
-        : false,
+      ...(includeRelations && {
+        include: {
+          children: { select: { id: true, name: true, status: true } },
+          tasks: { select: { id: true, title: true, status: true } },
+        },
+      }),
       orderBy: { createdAt: 'asc' },
     })
     return NextResponse.json(agents)

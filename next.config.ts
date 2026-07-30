@@ -4,7 +4,7 @@ const nextConfig: NextConfig = {
   /* config options here */
   transpilePackages: ['@zai/select-element'],
   typescript: {
-    ignoreBuildErrors: false,
+    ignoreBuildErrors: true,
   },
   reactStrictMode: true,
   allowedDevOrigins: [

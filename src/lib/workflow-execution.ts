@@ -2,12 +2,12 @@ import { db } from '@/lib/db'
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
-export type AgentRecord = { id: string; name: string; role: string; formula: string }
+export type AgentRecord = { id: string; name: string; role: string; roleGroup: string; description: string; formula: string }
 
 export interface ResolvedStep {
   step: {
     id: string; name: string; action: string; order: number;
-    roleGroup: string | null; config: string; fallbackStepId: string | null;
+    agentId: string | null; roleGroup: string | null; config: string; fallbackStepId: string | null;
   }
   resolvedAgentId: string | null
 }
