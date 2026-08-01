@@ -58,4 +58,4 @@ prisma/               Database schema and seed
 
 ## Stack
 Next.js 16, React 19, TypeScript 5, Tailwind CSS 4, shadcn/ui,
-Prisma SQLite, React Flow, Framer Motion, Zustand
+Prisma PostgreSQL, React Flow, Framer Motion, Zustand

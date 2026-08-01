@@ -1,9 +1,1 @@
-[submodule "anti-hallucination-guard"]
-	path = anti-hallucination-guard
-	url = https://github.com/stsgs1980/Anti-hallucination-guard.git
-[submodule "cascade-guard"]
-	path = cascade-guard
-	url = https://github.com/stsgs1980/cascade-guard.git
-[submodule ".superpowers-zai"]
-	path = .superpowers-zai
-	url = https://github.com/stsgs1980/Superpowers-Z.ai.git
+# No active submodules

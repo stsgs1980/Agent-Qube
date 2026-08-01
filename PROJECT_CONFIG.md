@@ -13,7 +13,7 @@
 Built with: Next.js 16 + TypeScript + Tailwind CSS
 ```
 
-> Full stack: Next.js 16 + React 19 + TypeScript 5 + Tailwind CSS 4 + shadcn/ui + Prisma SQLite + React Flow + Dagre + Framer Motion + Zustand
+> Full stack: Next.js 16 + React 19 + TypeScript 5 + Tailwind CSS 4 + shadcn/ui + Prisma PostgreSQL + React Flow + Dagre + Framer Motion + Zustand
 
 ---
 
@@ -21,7 +21,7 @@ Built with: Next.js 16 + TypeScript + Tailwind CSS
 
 | Setting | Value |
 |---------|-------|
-| Command | `npx next dev -p 3000` |
+| Command | `pnpm run dev` |
 | Health check | `curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:3000` |
 | Host | `127.0.0.1` (NOT `localhost`) |
 | Startup wait | 6 seconds (Turbopack compile time) |
@@ -49,12 +49,8 @@ Built with: Next.js 16 + TypeScript + Tailwind CSS
 | `src/lib/` | Utilities, Prisma client, API helpers |
 | `src/lib/prompting/` | @stsgs/prompting library |
 | `src/data/` | Dashboard configuration constants |
-| `prisma/` | Database schema and seed |
+| `prisma/` | Database schema |
 | `mini-services/ws-service/` | WebSocket service (port 3003) |
-| `instructions/` | Agent behavioral instructions |
-| `skills/` | Automated agent skills |
-| `standards/` | Governance documents (Group B) |
-| `templates/` | Operational templates (Group A) |
 
 ---
 
@@ -71,9 +67,9 @@ Built with: Next.js 16 + TypeScript + Tailwind CSS
 All environment variables must be documented in `.env.example`
 per `REPRODUCIBILITY-STANDARD`.
 
-See `.env.example`:
+See `.env`:
 ```env
-DATABASE_URL="file:./db/dev.db"
+DATABASE_URL="postgresql://..."
 ```
 
 ---

@@ -7,7 +7,7 @@ workflow execution.
 [![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat-square)](https://nextjs.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square)](https://www.typescriptlang.org)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?style=flat-square)](https://tailwindcss.com)
-[![Prisma](https://img.shields.io/badge/Prisma-SQLite-2D3748?style=flat-square)](https://www.prisma.io)
+[![Prisma](https://img.shields.io/badge/Prisma-PostgreSQL-2D3748?style=flat-square)](https://www.prisma.io)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
 
 ## Table of Contents
@@ -79,7 +79,7 @@ mapped to specific agents via the `@stsgs/prompting` library.
 | Framework    | Next.js 16 (App Router) + React 19               |
 | Language     | TypeScript 5 (strict)                            |
 | Styling      | Tailwind CSS 4 + shadcn/ui (New York)            |
-| Database     | Prisma ORM + SQLite                              |
+| Database     | Prisma ORM + PostgreSQL (Neon)                  |
 | Visualization | React Flow (`@xyflow/react`) + Dagre + Recharts |
 | Animation    | Framer Motion                                    |
 | State        | Zustand (client) + TanStack Query (server)       |
@@ -113,7 +113,8 @@ mapped to specific agents via the `@stsgs/prompting` library.
 
 ### Prerequisites
 
-- Node.js 20+ or [Bun](https://bun.sh)
+- Node.js 20.19+ or 22.12+ or 24.0+
+- [pnpm](https://pnpm.io)
 - Git
 
 ### Installation
@@ -121,12 +122,12 @@ mapped to specific agents via the `@stsgs/prompting` library.
 ```bash
 git clone https://github.com/stsgs1980/agent-qube.git
 cd agent-qube
-bun install
-bun run db:push
-bun run dev
+pnpm install
+pnpm run db:push
+pnpm run dev
 ```
 
-Open the **Preview Panel** to view the application.
+Open http://localhost:3000 to view the application.
 
 ### Seed the Database
 
@@ -226,15 +227,15 @@ Located at `src/lib/prompting/` with 5 modules across 21 files:
 
 ## Scripts
 
-| Script              | Description                      |
-| ------------------- | -------------------------------- |
-| `bun run dev`       | Development server on port 3000  |
-| `bun run build`     | Production build                 |
-| `bun run lint`      | ESLint check                     |
-| `bun run db:push`   | Push Prisma schema to database   |
-| `bun run db:generate` | Generate Prisma client         |
-| `bun run db:migrate`  | Run Prisma migrations          |
-| `bun run db:reset`    | Reset database                  |
+| Script                | Description                      |
+| --------------------- | -------------------------------- |
+| `pnpm run dev`        | Development server on port 3000  |
+| `pnpm run build`      | Production build                 |
+| `pnpm run lint`       | ESLint check                     |
+| `pnpm run db:push`    | Push Prisma schema to database   |
+| `pnpm run db:generate`| Generate Prisma client           |
+| `pnpm run db:migrate` | Run Prisma migrations            |
+| `pnpm run db:reset`   | Reset database                   |
 
 ## License
 
