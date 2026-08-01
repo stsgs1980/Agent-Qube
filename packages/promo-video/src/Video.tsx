@@ -4,6 +4,7 @@ import { IntroScene } from "./scenes/IntroScene";
 import { HierarchyScene } from "./scenes/HierarchyScene";
 import { WorkflowScene } from "./scenes/WorkflowScene";
 import { StatsScene } from "./scenes/StatsScene";
+import { OutroScene } from "./scenes/OutroScene";
 
 export const Video: React.FC = () => {
   return (
@@ -20,7 +21,9 @@ export const Video: React.FC = () => {
       <Sequence from={750} durationInFrames={300}>
         <StatsScene />
       </Sequence>
-      {/* OutroScene will be added in Task 8 */}
+      <Sequence from={1050} durationInFrames={150}>
+        <OutroScene />
+      </Sequence>
     </AbsoluteFill>
   );
 };
