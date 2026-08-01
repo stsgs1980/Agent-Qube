@@ -27,15 +27,6 @@ jobs:
               echo "OK: $f"
             fi
           done
-          # Skills
-          for f in skills/git-safe-ops/SKILL.md skills/dev-watchdog/SKILL.md; do
-            if [ ! -f "$f" ]; then
-              echo "MISSING: $f"
-              MISSING=1
-            else
-              echo "OK: $f"
-            fi
-          done
           # Instructions
           for f in docs/instructions/onboarding-protocol.md docs/instructions/git-workflow-rules.md docs/instructions/language-rule.md docs/instructions/diagnostic-disclosure.md docs/instructions/writing-plans.md; do
             if [ ! -f "$f" ]; then
@@ -69,7 +60,7 @@ jobs:
         run: |
           echo "Checking for emoji in markdown files..."
           FAIL=0
-          for f in $(find . -name '*.md' -not -path './.git/*' -not -path './node_modules/*' -not -path './skills/*' -not -path './.superpowers-zai/*' -not -path './standards/*'); do
+          for f in $(find . -name '*.md' -not -path './.git/*' -not -path './node_modules/*' -not -path './standards/*'); do
             if rg -l '[\x{1F000}-\x{1FFFF}]' "$f" 2>/dev/null; then
               echo "FOUND emoji in: $f"
               FAIL=1
